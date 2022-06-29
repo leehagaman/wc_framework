@@ -1,0 +1,13 @@
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_numi_nu_overlay_run1.root	outFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_numi_nu_overlay_run1.root	NCDeltainFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_numi_nu_overlay_run1.root	nueCCinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_numi_nu_overlay_run1.root	NC1Pi0inFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_numi_nu_overlay_run1.root	numuCC1Pi0inFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_numi_nu_overlay_run1.root	numuCCotherinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_numi_nu_overlay_run1.root	NCotherinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_numi_nu_overlay_run1.root	badmatch
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_data_numi_run1_full_FHC.root		all
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_data_extnumi_run1.root			all
+end												end
+#file												#cut
+

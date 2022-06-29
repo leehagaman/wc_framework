@@ -1,0 +1,6 @@
+numuCC_bnb_fc_0p			nc_delta_score	14	-17.39	10.61	1	0		0	0		0		0		5	unity		0
+numuCC_overlay_fc_0p			nc_delta_score	14	-17.39	10.61	1	1		1	0		0		1		2	cv_spline	0
+BG_numuCC_ext_fc_0p			nc_delta_score	14	-17.39	10.61	1	0		0	0		0		2		3	unity		0
+BG_numuCC_dirt_fc_0p			nc_delta_score	14	-17.39	10.61	1	0		0	0.5		0		1		4	cv_spline	0
+End					End		-1	-1	-1	-1	-1		-1	-1		-1		-1		-1	end		-1
+Name:					#Var:		#bin	#start	#end	#obs	#xs_flux	#det	#add_sys	#same_mc	#cov_sec	#file	#weight		#lee_strength
