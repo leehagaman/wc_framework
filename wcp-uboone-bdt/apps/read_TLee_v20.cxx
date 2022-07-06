@@ -357,7 +357,7 @@ if (make_proton_pi0_invariant_mass_plots) {
 
 
 
-  int make_more_constrained_plots = 0;
+  int make_more_constrained_plots = 1;
 
 
   if (make_more_constrained_plots) {    
@@ -533,6 +533,96 @@ if (make_proton_pi0_invariant_mass_plots) {
     Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, plot_num);
   }
 
+  if (make_more_constrained_plots) {
+    bool target_nc_delta_Np = 0; bool target_nc_delta_0p = 0; bool target_nc_delta_Xp = 0;
+    bool target_nc_pi0_Np = 0; bool target_nc_pi0_0p = 0; bool target_nc_pi0_Xp = 0;
+    bool target_nc_pi0_Np_pi0_energy = 0; bool target_nc_pi0_0p_pi0_energy = 0; bool target_nc_pi0_Xp_pi0_energy = 0;
+    bool target_numuCC_Np = 0; bool target_numuCC_0p = 0; bool target_numuCC_Xp = 0; bool target_cc_pi0_Np = 0; bool target_cc_pi0_0p = 0; bool target_cc_pi0_Xp = 0;
+    bool target_cc_pi0_Np_pi0_energy = 0; bool target_cc_pi0_0p_pi0_energy = 0; bool target_cc_pi0_Xp_pi0_energy = 0;
+    bool support_nc_delta_Np = 0; bool support_nc_delta_0p = 0; bool support_nc_delta_Xp = 0;
+    bool support_nc_pi0_Np = 0; bool support_nc_pi0_0p = 0; bool support_nc_pi0_Xp = 0;
+    bool support_nc_pi0_Np_pi0_energy = 0; bool support_nc_pi0_0p_pi0_energy = 0; bool support_nc_pi0_Xp_pi0_energy = 0;
+    bool support_numuCC_Np = 0; bool support_numuCC_0p = 0; bool support_numuCC_Xp = 0;
+    bool support_cc_pi0_Np = 0; bool support_cc_pi0_0p = 0; bool support_cc_pi0_Xp = 0;
+    bool support_cc_pi0_Np_pi0_energy = 0; bool support_cc_pi0_0p_pi0_energy = 0; bool support_cc_pi0_Xp_pi0_energy = 0;
+
+    int plot_num = 55005;
+
+    target_nc_delta_Np = 1;
+    target_nc_delta_0p = 1;
+
+    support_nc_pi0_Np = 1;
+    support_nc_pi0_0p = 1;
+    support_cc_pi0_Np = 1;
+    support_cc_pi0_0p = 1;
+
+
+    Lee_test->scaleF_Lee = 0;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    if (target_nc_delta_Np) vc_target_chs.push_back(0); if (target_nc_delta_0p) vc_target_chs.push_back(2); if (target_nc_delta_Xp) vc_target_chs.push_back(4);
+    if (target_nc_pi0_Np) {for (int i=6; i < 6 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_0p) {for (int i=22; i < 22 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_Xp) {for (int i=38; i < 38 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_nc_pi0_Np_pi0_energy) {for (int i=54; i < 54 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_0p_pi0_energy) {for (int i=63; i < 63 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_Xp_pi0_energy) {for (int i=72; i < 72 + 9; i++) {vc_target_chs.push_back(i);}}
+    if (target_numuCC_Np) {for (int i=81; i < 81 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_numuCC_0p) {for (int i=97; i < 97 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_numuCC_Xp) {for (int i=113; i < 113 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_cc_pi0_Np) {for (int i=129; i < 129 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_0p) {for (int i=145; i < 145 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_Xp) {for (int i=161; i < 161 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_cc_pi0_Np_pi0_energy) {for (int i=177; i < 177 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_0p_pi0_energy) {for (int i=186; i < 186 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_Xp_pi0_energy) {for (int i=195; i < 195 + 9; i++) {vc_target_chs.push_back(i);}}
+    // so the total number of bins is 204, which makes sense, since we have 2*3=6 bins for nc delta, 16*3*3=144 for kine_reco_Enu, and 9*2*3=54 for pi0_energy, summing to 204
+    vector<int>vc_support_chs;
+    if (support_nc_delta_Np) vc_support_chs.push_back(0); if (support_nc_delta_0p) vc_support_chs.push_back(2); if (support_nc_delta_Xp) vc_support_chs.push_back(4);
+    if (support_nc_pi0_Np) {for (int i=6; i < 6 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_0p) {for (int i=22; i < 22 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_Xp) {for (int i=38; i < 38 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_nc_pi0_Np_pi0_energy) {for (int i=54; i < 54 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_0p_pi0_energy) {for (int i=63; i < 63 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_Xp_pi0_energy) {for (int i=72; i < 72 + 9; i++) {vc_support_chs.push_back(i);}}
+    if (support_numuCC_Np) {for (int i=81; i < 81 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_numuCC_0p) {for (int i=97; i < 97 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_numuCC_Xp) {for (int i=113; i < 113 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_cc_pi0_Np) {for (int i=129; i < 129 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_0p) {for (int i=145; i < 145 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_Xp) {for (int i=161; i < 161 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_cc_pi0_Np_pi0_energy) {for (int i=177; i < 177 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_0p_pi0_energy) {for (int i=186; i < 186 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_Xp_pi0_energy) {for (int i=195; i < 195 + 9; i++) {vc_support_chs.push_back(i);}}
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, plot_num);
+  }
+
+  if (make_more_constrained_plots) {
+    bool target_nc_delta_Np = 0; bool target_nc_delta_0p = 0; bool target_nc_delta_Xp = 0;
+    bool target_nc_pi0_Np = 0; bool target_nc_pi0_0p = 0; bool target_nc_pi0_Xp = 0;
+    bool target_nc_pi0_Np_pi0_energy = 0; bool target_nc_pi0_0p_pi0_energy = 0; bool target_nc_pi0_Xp_pi0_energy = 0;
+    bool target_numuCC_Np = 0; bool target_numuCC_0p = 0; bool target_numuCC_Xp = 0; bool target_cc_pi0_Np = 0; bool target_cc_pi0_0p = 0; bool target_cc_pi0_Xp = 0;
+    bool target_cc_pi0_Np_pi0_energy = 0; bool target_cc_pi0_0p_pi0_energy = 0; bool target_cc_pi0_Xp_pi0_energy = 0;
+    bool support_nc_delta_Np = 0; bool support_nc_delta_0p = 0; bool support_nc_delta_Xp = 0;
+    bool support_nc_pi0_Np = 0; bool support_nc_pi0_0p = 0; bool support_nc_pi0_Xp = 0;
+    bool support_nc_pi0_Np_pi0_energy = 0; bool support_nc_pi0_0p_pi0_energy = 0; bool support_nc_pi0_Xp_pi0_energy = 0;
+    bool support_numuCC_Np = 0; bool support_numuCC_0p = 0; bool support_numuCC_Xp = 0;
+    bool support_cc_pi0_Np = 0; bool support_cc_pi0_0p = 0; bool support_cc_pi0_Xp = 0;
+    bool support_cc_pi0_Np_pi0_energy = 0; bool support_cc_pi0_0p_pi0_energy = 0; bool support_cc_pi0_Xp_pi0_energy = 0;
+
+    int plot_num = 55006;
+
+    target_nc_delta_Np = 1;
+    target_nc_delta_0p = 1;
+    
+    support_nc_pi0_Np = 1;
+    support_nc_pi0_0p = 1;
+    support_numuCC_Np = 1;
+    support_numuCC_0p = 1;
+    support_cc_pi0_Np = 1;
+    support_cc_pi0_0p = 1;
+
+
+    Lee_test->scaleF_Lee = 0;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    if (target_nc_delta_Np) vc_target_chs.push_back(0); if (target_nc_delta_0p) vc_target_chs.push_back(2); if (target_nc_delta_Xp) vc_target_chs.push_back(4);
+    if (target_nc_pi0_Np) {for (int i=6; i < 6 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_0p) {for (int i=22; i < 22 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_Xp) {for (int i=38; i < 38 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_nc_pi0_Np_pi0_energy) {for (int i=54; i < 54 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_0p_pi0_energy) {for (int i=63; i < 63 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_Xp_pi0_energy) {for (int i=72; i < 72 + 9; i++) {vc_target_chs.push_back(i);}}
+    if (target_numuCC_Np) {for (int i=81; i < 81 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_numuCC_0p) {for (int i=97; i < 97 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_numuCC_Xp) {for (int i=113; i < 113 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_cc_pi0_Np) {for (int i=129; i < 129 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_0p) {for (int i=145; i < 145 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_Xp) {for (int i=161; i < 161 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_cc_pi0_Np_pi0_energy) {for (int i=177; i < 177 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_0p_pi0_energy) {for (int i=186; i < 186 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_Xp_pi0_energy) {for (int i=195; i < 195 + 9; i++) {vc_target_chs.push_back(i);}}
+    // so the total number of bins is 204, which makes sense, since we have 2*3=6 bins for nc delta, 16*3*3=144 for kine_reco_Enu, and 9*2*3=54 for pi0_energy, summing to 204
+    vector<int>vc_support_chs;
+    if (support_nc_delta_Np) vc_support_chs.push_back(0); if (support_nc_delta_0p) vc_support_chs.push_back(2); if (support_nc_delta_Xp) vc_support_chs.push_back(4);
+    if (support_nc_pi0_Np) {for (int i=6; i < 6 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_0p) {for (int i=22; i < 22 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_Xp) {for (int i=38; i < 38 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_nc_pi0_Np_pi0_energy) {for (int i=54; i < 54 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_0p_pi0_energy) {for (int i=63; i < 63 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_Xp_pi0_energy) {for (int i=72; i < 72 + 9; i++) {vc_support_chs.push_back(i);}}
+    if (support_numuCC_Np) {for (int i=81; i < 81 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_numuCC_0p) {for (int i=97; i < 97 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_numuCC_Xp) {for (int i=113; i < 113 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_cc_pi0_Np) {for (int i=129; i < 129 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_0p) {for (int i=145; i < 145 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_Xp) {for (int i=161; i < 161 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_cc_pi0_Np_pi0_energy) {for (int i=177; i < 177 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_0p_pi0_energy) {for (int i=186; i < 186 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_Xp_pi0_energy) {for (int i=195; i < 195 + 9; i++) {vc_support_chs.push_back(i);}}
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, plot_num);
+  }
+
 
 
 
@@ -579,19 +669,303 @@ if (make_proton_pi0_invariant_mass_plots) {
   }
 
 
+  if (make_more_constrained_plots) {
+    bool target_nc_delta_Np = 0; bool target_nc_delta_0p = 0; bool target_nc_delta_Xp = 0;
+    bool target_nc_pi0_Np = 0; bool target_nc_pi0_0p = 0; bool target_nc_pi0_Xp = 0;
+    bool target_nc_pi0_Np_pi0_energy = 0; bool target_nc_pi0_0p_pi0_energy = 0; bool target_nc_pi0_Xp_pi0_energy = 0;
+    bool target_numuCC_Np = 0; bool target_numuCC_0p = 0; bool target_numuCC_Xp = 0; bool target_cc_pi0_Np = 0; bool target_cc_pi0_0p = 0; bool target_cc_pi0_Xp = 0;
+    bool target_cc_pi0_Np_pi0_energy = 0; bool target_cc_pi0_0p_pi0_energy = 0; bool target_cc_pi0_Xp_pi0_energy = 0;
+    bool support_nc_delta_Np = 0; bool support_nc_delta_0p = 0; bool support_nc_delta_Xp = 0;
+    bool support_nc_pi0_Np = 0; bool support_nc_pi0_0p = 0; bool support_nc_pi0_Xp = 0;
+    bool support_nc_pi0_Np_pi0_energy = 0; bool support_nc_pi0_0p_pi0_energy = 0; bool support_nc_pi0_Xp_pi0_energy = 0;
+    bool support_numuCC_Np = 0; bool support_numuCC_0p = 0; bool support_numuCC_Xp = 0;
+    bool support_cc_pi0_Np = 0; bool support_cc_pi0_0p = 0; bool support_cc_pi0_Xp = 0;
+    bool support_cc_pi0_Np_pi0_energy = 0; bool support_cc_pi0_0p_pi0_energy = 0; bool support_cc_pi0_Xp_pi0_energy = 0;
+
+    int plot_num = 56002;
+
+    target_nc_pi0_Np = 1;
+    target_nc_pi0_0p = 1;
+
+    support_cc_pi0_Np = 1;
+    support_cc_pi0_0p = 1;
 
 
+    Lee_test->scaleF_Lee = 0;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    if (target_nc_delta_Np) vc_target_chs.push_back(0); if (target_nc_delta_0p) vc_target_chs.push_back(2); if (target_nc_delta_Xp) vc_target_chs.push_back(4);
+    if (target_nc_pi0_Np) {for (int i=6; i < 6 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_0p) {for (int i=22; i < 22 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_Xp) {for (int i=38; i < 38 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_nc_pi0_Np_pi0_energy) {for (int i=54; i < 54 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_0p_pi0_energy) {for (int i=63; i < 63 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_Xp_pi0_energy) {for (int i=72; i < 72 + 9; i++) {vc_target_chs.push_back(i);}}
+    if (target_numuCC_Np) {for (int i=81; i < 81 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_numuCC_0p) {for (int i=97; i < 97 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_numuCC_Xp) {for (int i=113; i < 113 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_cc_pi0_Np) {for (int i=129; i < 129 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_0p) {for (int i=145; i < 145 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_Xp) {for (int i=161; i < 161 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_cc_pi0_Np_pi0_energy) {for (int i=177; i < 177 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_0p_pi0_energy) {for (int i=186; i < 186 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_Xp_pi0_energy) {for (int i=195; i < 195 + 9; i++) {vc_target_chs.push_back(i);}}
+    // so the total number of bins is 204, which makes sense, since we have 2*3=6 bins for nc delta, 16*3*3=144 for kine_reco_Enu, and 9*2*3=54 for pi0_energy, summing to 204
+    vector<int>vc_support_chs;
+    if (support_nc_delta_Np) vc_support_chs.push_back(0); if (support_nc_delta_0p) vc_support_chs.push_back(2); if (support_nc_delta_Xp) vc_support_chs.push_back(4);
+    if (support_nc_pi0_Np) {for (int i=6; i < 6 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_0p) {for (int i=22; i < 22 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_Xp) {for (int i=38; i < 38 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_nc_pi0_Np_pi0_energy) {for (int i=54; i < 54 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_0p_pi0_energy) {for (int i=63; i < 63 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_Xp_pi0_energy) {for (int i=72; i < 72 + 9; i++) {vc_support_chs.push_back(i);}}
+    if (support_numuCC_Np) {for (int i=81; i < 81 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_numuCC_0p) {for (int i=97; i < 97 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_numuCC_Xp) {for (int i=113; i < 113 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_cc_pi0_Np) {for (int i=129; i < 129 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_0p) {for (int i=145; i < 145 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_Xp) {for (int i=161; i < 161 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_cc_pi0_Np_pi0_energy) {for (int i=177; i < 177 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_0p_pi0_energy) {for (int i=186; i < 186 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_Xp_pi0_energy) {for (int i=195; i < 195 + 9; i++) {vc_support_chs.push_back(i);}}
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, plot_num);
+  }
+
+  if (make_more_constrained_plots) {
+    bool target_nc_delta_Np = 0; bool target_nc_delta_0p = 0; bool target_nc_delta_Xp = 0;
+    bool target_nc_pi0_Np = 0; bool target_nc_pi0_0p = 0; bool target_nc_pi0_Xp = 0;
+    bool target_nc_pi0_Np_pi0_energy = 0; bool target_nc_pi0_0p_pi0_energy = 0; bool target_nc_pi0_Xp_pi0_energy = 0;
+    bool target_numuCC_Np = 0; bool target_numuCC_0p = 0; bool target_numuCC_Xp = 0; bool target_cc_pi0_Np = 0; bool target_cc_pi0_0p = 0; bool target_cc_pi0_Xp = 0;
+    bool target_cc_pi0_Np_pi0_energy = 0; bool target_cc_pi0_0p_pi0_energy = 0; bool target_cc_pi0_Xp_pi0_energy = 0;
+    bool support_nc_delta_Np = 0; bool support_nc_delta_0p = 0; bool support_nc_delta_Xp = 0;
+    bool support_nc_pi0_Np = 0; bool support_nc_pi0_0p = 0; bool support_nc_pi0_Xp = 0;
+    bool support_nc_pi0_Np_pi0_energy = 0; bool support_nc_pi0_0p_pi0_energy = 0; bool support_nc_pi0_Xp_pi0_energy = 0;
+    bool support_numuCC_Np = 0; bool support_numuCC_0p = 0; bool support_numuCC_Xp = 0;
+    bool support_cc_pi0_Np = 0; bool support_cc_pi0_0p = 0; bool support_cc_pi0_Xp = 0;
+    bool support_cc_pi0_Np_pi0_energy = 0; bool support_cc_pi0_0p_pi0_energy = 0; bool support_cc_pi0_Xp_pi0_energy = 0;
+
+    int plot_num = 56003;
+
+    target_nc_pi0_Np = 1;
+    target_nc_pi0_0p = 1;
+
+    support_numuCC_Np = 1;
+    support_numuCC_0p = 1;
+    support_cc_pi0_Np = 1;
+    support_cc_pi0_0p = 1;
 
 
+    Lee_test->scaleF_Lee = 0;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    if (target_nc_delta_Np) vc_target_chs.push_back(0); if (target_nc_delta_0p) vc_target_chs.push_back(2); if (target_nc_delta_Xp) vc_target_chs.push_back(4);
+    if (target_nc_pi0_Np) {for (int i=6; i < 6 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_0p) {for (int i=22; i < 22 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_Xp) {for (int i=38; i < 38 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_nc_pi0_Np_pi0_energy) {for (int i=54; i < 54 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_0p_pi0_energy) {for (int i=63; i < 63 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_Xp_pi0_energy) {for (int i=72; i < 72 + 9; i++) {vc_target_chs.push_back(i);}}
+    if (target_numuCC_Np) {for (int i=81; i < 81 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_numuCC_0p) {for (int i=97; i < 97 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_numuCC_Xp) {for (int i=113; i < 113 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_cc_pi0_Np) {for (int i=129; i < 129 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_0p) {for (int i=145; i < 145 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_Xp) {for (int i=161; i < 161 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_cc_pi0_Np_pi0_energy) {for (int i=177; i < 177 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_0p_pi0_energy) {for (int i=186; i < 186 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_Xp_pi0_energy) {for (int i=195; i < 195 + 9; i++) {vc_target_chs.push_back(i);}}
+    // so the total number of bins is 204, which makes sense, since we have 2*3=6 bins for nc delta, 16*3*3=144 for kine_reco_Enu, and 9*2*3=54 for pi0_energy, summing to 204
+    vector<int>vc_support_chs;
+    if (support_nc_delta_Np) vc_support_chs.push_back(0); if (support_nc_delta_0p) vc_support_chs.push_back(2); if (support_nc_delta_Xp) vc_support_chs.push_back(4);
+    if (support_nc_pi0_Np) {for (int i=6; i < 6 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_0p) {for (int i=22; i < 22 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_Xp) {for (int i=38; i < 38 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_nc_pi0_Np_pi0_energy) {for (int i=54; i < 54 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_0p_pi0_energy) {for (int i=63; i < 63 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_Xp_pi0_energy) {for (int i=72; i < 72 + 9; i++) {vc_support_chs.push_back(i);}}
+    if (support_numuCC_Np) {for (int i=81; i < 81 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_numuCC_0p) {for (int i=97; i < 97 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_numuCC_Xp) {for (int i=113; i < 113 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_cc_pi0_Np) {for (int i=129; i < 129 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_0p) {for (int i=145; i < 145 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_Xp) {for (int i=161; i < 161 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_cc_pi0_Np_pi0_energy) {for (int i=177; i < 177 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_0p_pi0_energy) {for (int i=186; i < 186 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_Xp_pi0_energy) {for (int i=195; i < 195 + 9; i++) {vc_support_chs.push_back(i);}}
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, plot_num);
+  }
+
+  if (make_more_constrained_plots) {
+    bool target_nc_delta_Np = 0; bool target_nc_delta_0p = 0; bool target_nc_delta_Xp = 0;
+    bool target_nc_pi0_Np = 0; bool target_nc_pi0_0p = 0; bool target_nc_pi0_Xp = 0;
+    bool target_nc_pi0_Np_pi0_energy = 0; bool target_nc_pi0_0p_pi0_energy = 0; bool target_nc_pi0_Xp_pi0_energy = 0;
+    bool target_numuCC_Np = 0; bool target_numuCC_0p = 0; bool target_numuCC_Xp = 0; bool target_cc_pi0_Np = 0; bool target_cc_pi0_0p = 0; bool target_cc_pi0_Xp = 0;
+    bool target_cc_pi0_Np_pi0_energy = 0; bool target_cc_pi0_0p_pi0_energy = 0; bool target_cc_pi0_Xp_pi0_energy = 0;
+    bool support_nc_delta_Np = 0; bool support_nc_delta_0p = 0; bool support_nc_delta_Xp = 0;
+    bool support_nc_pi0_Np = 0; bool support_nc_pi0_0p = 0; bool support_nc_pi0_Xp = 0;
+    bool support_nc_pi0_Np_pi0_energy = 0; bool support_nc_pi0_0p_pi0_energy = 0; bool support_nc_pi0_Xp_pi0_energy = 0;
+    bool support_numuCC_Np = 0; bool support_numuCC_0p = 0; bool support_numuCC_Xp = 0;
+    bool support_cc_pi0_Np = 0; bool support_cc_pi0_0p = 0; bool support_cc_pi0_Xp = 0;
+    bool support_cc_pi0_Np_pi0_energy = 0; bool support_cc_pi0_0p_pi0_energy = 0; bool support_cc_pi0_Xp_pi0_energy = 0;
+
+    int plot_num = 56004;
+
+    target_nc_pi0_Np_pi0_energy = 1;
+    target_nc_pi0_0p_pi0_energy = 1;
+
+    support_numuCC_Np = 1;
+    support_numuCC_0p = 1;
+    support_cc_pi0_Np = 1;
+    support_cc_pi0_0p = 1;
 
 
+    Lee_test->scaleF_Lee = 0;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    if (target_nc_delta_Np) vc_target_chs.push_back(0); if (target_nc_delta_0p) vc_target_chs.push_back(2); if (target_nc_delta_Xp) vc_target_chs.push_back(4);
+    if (target_nc_pi0_Np) {for (int i=6; i < 6 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_0p) {for (int i=22; i < 22 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_Xp) {for (int i=38; i < 38 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_nc_pi0_Np_pi0_energy) {for (int i=54; i < 54 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_0p_pi0_energy) {for (int i=63; i < 63 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_Xp_pi0_energy) {for (int i=72; i < 72 + 9; i++) {vc_target_chs.push_back(i);}}
+    if (target_numuCC_Np) {for (int i=81; i < 81 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_numuCC_0p) {for (int i=97; i < 97 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_numuCC_Xp) {for (int i=113; i < 113 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_cc_pi0_Np) {for (int i=129; i < 129 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_0p) {for (int i=145; i < 145 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_Xp) {for (int i=161; i < 161 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_cc_pi0_Np_pi0_energy) {for (int i=177; i < 177 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_0p_pi0_energy) {for (int i=186; i < 186 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_Xp_pi0_energy) {for (int i=195; i < 195 + 9; i++) {vc_target_chs.push_back(i);}}
+    // so the total number of bins is 204, which makes sense, since we have 2*3=6 bins for nc delta, 16*3*3=144 for kine_reco_Enu, and 9*2*3=54 for pi0_energy, summing to 204
+    vector<int>vc_support_chs;
+    if (support_nc_delta_Np) vc_support_chs.push_back(0); if (support_nc_delta_0p) vc_support_chs.push_back(2); if (support_nc_delta_Xp) vc_support_chs.push_back(4);
+    if (support_nc_pi0_Np) {for (int i=6; i < 6 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_0p) {for (int i=22; i < 22 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_Xp) {for (int i=38; i < 38 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_nc_pi0_Np_pi0_energy) {for (int i=54; i < 54 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_0p_pi0_energy) {for (int i=63; i < 63 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_Xp_pi0_energy) {for (int i=72; i < 72 + 9; i++) {vc_support_chs.push_back(i);}}
+    if (support_numuCC_Np) {for (int i=81; i < 81 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_numuCC_0p) {for (int i=97; i < 97 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_numuCC_Xp) {for (int i=113; i < 113 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_cc_pi0_Np) {for (int i=129; i < 129 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_0p) {for (int i=145; i < 145 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_Xp) {for (int i=161; i < 161 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_cc_pi0_Np_pi0_energy) {for (int i=177; i < 177 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_0p_pi0_energy) {for (int i=186; i < 186 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_Xp_pi0_energy) {for (int i=195; i < 195 + 9; i++) {vc_support_chs.push_back(i);}}
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, plot_num);
+  }
 
+  if (make_more_constrained_plots) {
+    bool target_nc_delta_Np = 0; bool target_nc_delta_0p = 0; bool target_nc_delta_Xp = 0;
+    bool target_nc_pi0_Np = 0; bool target_nc_pi0_0p = 0; bool target_nc_pi0_Xp = 0;
+    bool target_nc_pi0_Np_pi0_energy = 0; bool target_nc_pi0_0p_pi0_energy = 0; bool target_nc_pi0_Xp_pi0_energy = 0;
+    bool target_numuCC_Np = 0; bool target_numuCC_0p = 0; bool target_numuCC_Xp = 0; bool target_cc_pi0_Np = 0; bool target_cc_pi0_0p = 0; bool target_cc_pi0_Xp = 0;
+    bool target_cc_pi0_Np_pi0_energy = 0; bool target_cc_pi0_0p_pi0_energy = 0; bool target_cc_pi0_Xp_pi0_energy = 0;
+    bool support_nc_delta_Np = 0; bool support_nc_delta_0p = 0; bool support_nc_delta_Xp = 0;
+    bool support_nc_pi0_Np = 0; bool support_nc_pi0_0p = 0; bool support_nc_pi0_Xp = 0;
+    bool support_nc_pi0_Np_pi0_energy = 0; bool support_nc_pi0_0p_pi0_energy = 0; bool support_nc_pi0_Xp_pi0_energy = 0;
+    bool support_numuCC_Np = 0; bool support_numuCC_0p = 0; bool support_numuCC_Xp = 0;
+    bool support_cc_pi0_Np = 0; bool support_cc_pi0_0p = 0; bool support_cc_pi0_Xp = 0;
+    bool support_cc_pi0_Np_pi0_energy = 0; bool support_cc_pi0_0p_pi0_energy = 0; bool support_cc_pi0_Xp_pi0_energy = 0;
 
+    int plot_num = 58001;
 
+    target_cc_pi0_Np = 1;
+    target_cc_pi0_0p = 1;
 
+    support_numuCC_Np = 1;
+    support_numuCC_0p = 1;
 
+    Lee_test->scaleF_Lee = 0;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    if (target_nc_delta_Np) vc_target_chs.push_back(0); if (target_nc_delta_0p) vc_target_chs.push_back(2); if (target_nc_delta_Xp) vc_target_chs.push_back(4);
+    if (target_nc_pi0_Np) {for (int i=6; i < 6 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_0p) {for (int i=22; i < 22 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_Xp) {for (int i=38; i < 38 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_nc_pi0_Np_pi0_energy) {for (int i=54; i < 54 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_0p_pi0_energy) {for (int i=63; i < 63 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_Xp_pi0_energy) {for (int i=72; i < 72 + 9; i++) {vc_target_chs.push_back(i);}}
+    if (target_numuCC_Np) {for (int i=81; i < 81 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_numuCC_0p) {for (int i=97; i < 97 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_numuCC_Xp) {for (int i=113; i < 113 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_cc_pi0_Np) {for (int i=129; i < 129 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_0p) {for (int i=145; i < 145 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_Xp) {for (int i=161; i < 161 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_cc_pi0_Np_pi0_energy) {for (int i=177; i < 177 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_0p_pi0_energy) {for (int i=186; i < 186 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_Xp_pi0_energy) {for (int i=195; i < 195 + 9; i++) {vc_target_chs.push_back(i);}}
+    // so the total number of bins is 204, which makes sense, since we have 2*3=6 bins for nc delta, 16*3*3=144 for kine_reco_Enu, and 9*2*3=54 for pi0_energy, summing to 204
+    vector<int>vc_support_chs;
+    if (support_nc_delta_Np) vc_support_chs.push_back(0); if (support_nc_delta_0p) vc_support_chs.push_back(2); if (support_nc_delta_Xp) vc_support_chs.push_back(4);
+    if (support_nc_pi0_Np) {for (int i=6; i < 6 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_0p) {for (int i=22; i < 22 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_Xp) {for (int i=38; i < 38 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_nc_pi0_Np_pi0_energy) {for (int i=54; i < 54 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_0p_pi0_energy) {for (int i=63; i < 63 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_Xp_pi0_energy) {for (int i=72; i < 72 + 9; i++) {vc_support_chs.push_back(i);}}
+    if (support_numuCC_Np) {for (int i=81; i < 81 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_numuCC_0p) {for (int i=97; i < 97 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_numuCC_Xp) {for (int i=113; i < 113 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_cc_pi0_Np) {for (int i=129; i < 129 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_0p) {for (int i=145; i < 145 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_Xp) {for (int i=161; i < 161 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_cc_pi0_Np_pi0_energy) {for (int i=177; i < 177 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_0p_pi0_energy) {for (int i=186; i < 186 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_Xp_pi0_energy) {for (int i=195; i < 195 + 9; i++) {vc_support_chs.push_back(i);}}
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, plot_num);
+  }
 
+  if (make_more_constrained_plots) {
+    bool target_nc_delta_Np = 0; bool target_nc_delta_0p = 0; bool target_nc_delta_Xp = 0;
+    bool target_nc_pi0_Np = 0; bool target_nc_pi0_0p = 0; bool target_nc_pi0_Xp = 0;
+    bool target_nc_pi0_Np_pi0_energy = 0; bool target_nc_pi0_0p_pi0_energy = 0; bool target_nc_pi0_Xp_pi0_energy = 0;
+    bool target_numuCC_Np = 0; bool target_numuCC_0p = 0; bool target_numuCC_Xp = 0; bool target_cc_pi0_Np = 0; bool target_cc_pi0_0p = 0; bool target_cc_pi0_Xp = 0;
+    bool target_cc_pi0_Np_pi0_energy = 0; bool target_cc_pi0_0p_pi0_energy = 0; bool target_cc_pi0_Xp_pi0_energy = 0;
+    bool support_nc_delta_Np = 0; bool support_nc_delta_0p = 0; bool support_nc_delta_Xp = 0;
+    bool support_nc_pi0_Np = 0; bool support_nc_pi0_0p = 0; bool support_nc_pi0_Xp = 0;
+    bool support_nc_pi0_Np_pi0_energy = 0; bool support_nc_pi0_0p_pi0_energy = 0; bool support_nc_pi0_Xp_pi0_energy = 0;
+    bool support_numuCC_Np = 0; bool support_numuCC_0p = 0; bool support_numuCC_Xp = 0;
+    bool support_cc_pi0_Np = 0; bool support_cc_pi0_0p = 0; bool support_cc_pi0_Xp = 0;
+    bool support_cc_pi0_Np_pi0_energy = 0; bool support_cc_pi0_0p_pi0_energy = 0; bool support_cc_pi0_Xp_pi0_energy = 0;
 
+    int plot_num = 58002;
+
+    target_cc_pi0_Np = 1;
+    target_cc_pi0_0p = 1;
+
+    support_nc_pi0_Np = 1;
+    support_nc_pi0_0p = 1;
+
+    Lee_test->scaleF_Lee = 0;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    if (target_nc_delta_Np) vc_target_chs.push_back(0); if (target_nc_delta_0p) vc_target_chs.push_back(2); if (target_nc_delta_Xp) vc_target_chs.push_back(4);
+    if (target_nc_pi0_Np) {for (int i=6; i < 6 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_0p) {for (int i=22; i < 22 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_Xp) {for (int i=38; i < 38 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_nc_pi0_Np_pi0_energy) {for (int i=54; i < 54 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_0p_pi0_energy) {for (int i=63; i < 63 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_Xp_pi0_energy) {for (int i=72; i < 72 + 9; i++) {vc_target_chs.push_back(i);}}
+    if (target_numuCC_Np) {for (int i=81; i < 81 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_numuCC_0p) {for (int i=97; i < 97 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_numuCC_Xp) {for (int i=113; i < 113 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_cc_pi0_Np) {for (int i=129; i < 129 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_0p) {for (int i=145; i < 145 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_Xp) {for (int i=161; i < 161 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_cc_pi0_Np_pi0_energy) {for (int i=177; i < 177 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_0p_pi0_energy) {for (int i=186; i < 186 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_Xp_pi0_energy) {for (int i=195; i < 195 + 9; i++) {vc_target_chs.push_back(i);}}
+    // so the total number of bins is 204, which makes sense, since we have 2*3=6 bins for nc delta, 16*3*3=144 for kine_reco_Enu, and 9*2*3=54 for pi0_energy, summing to 204
+    vector<int>vc_support_chs;
+    if (support_nc_delta_Np) vc_support_chs.push_back(0); if (support_nc_delta_0p) vc_support_chs.push_back(2); if (support_nc_delta_Xp) vc_support_chs.push_back(4);
+    if (support_nc_pi0_Np) {for (int i=6; i < 6 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_0p) {for (int i=22; i < 22 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_Xp) {for (int i=38; i < 38 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_nc_pi0_Np_pi0_energy) {for (int i=54; i < 54 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_0p_pi0_energy) {for (int i=63; i < 63 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_Xp_pi0_energy) {for (int i=72; i < 72 + 9; i++) {vc_support_chs.push_back(i);}}
+    if (support_numuCC_Np) {for (int i=81; i < 81 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_numuCC_0p) {for (int i=97; i < 97 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_numuCC_Xp) {for (int i=113; i < 113 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_cc_pi0_Np) {for (int i=129; i < 129 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_0p) {for (int i=145; i < 145 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_Xp) {for (int i=161; i < 161 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_cc_pi0_Np_pi0_energy) {for (int i=177; i < 177 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_0p_pi0_energy) {for (int i=186; i < 186 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_Xp_pi0_energy) {for (int i=195; i < 195 + 9; i++) {vc_support_chs.push_back(i);}}
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, plot_num);
+  }
+  
+  if (make_more_constrained_plots) {
+    bool target_nc_delta_Np = 0; bool target_nc_delta_0p = 0; bool target_nc_delta_Xp = 0;
+    bool target_nc_pi0_Np = 0; bool target_nc_pi0_0p = 0; bool target_nc_pi0_Xp = 0;
+    bool target_nc_pi0_Np_pi0_energy = 0; bool target_nc_pi0_0p_pi0_energy = 0; bool target_nc_pi0_Xp_pi0_energy = 0;
+    bool target_numuCC_Np = 0; bool target_numuCC_0p = 0; bool target_numuCC_Xp = 0; bool target_cc_pi0_Np = 0; bool target_cc_pi0_0p = 0; bool target_cc_pi0_Xp = 0;
+    bool target_cc_pi0_Np_pi0_energy = 0; bool target_cc_pi0_0p_pi0_energy = 0; bool target_cc_pi0_Xp_pi0_energy = 0;
+    bool support_nc_delta_Np = 0; bool support_nc_delta_0p = 0; bool support_nc_delta_Xp = 0;
+    bool support_nc_pi0_Np = 0; bool support_nc_pi0_0p = 0; bool support_nc_pi0_Xp = 0;
+    bool support_nc_pi0_Np_pi0_energy = 0; bool support_nc_pi0_0p_pi0_energy = 0; bool support_nc_pi0_Xp_pi0_energy = 0;
+    bool support_numuCC_Np = 0; bool support_numuCC_0p = 0; bool support_numuCC_Xp = 0;
+    bool support_cc_pi0_Np = 0; bool support_cc_pi0_0p = 0; bool support_cc_pi0_Xp = 0;
+    bool support_cc_pi0_Np_pi0_energy = 0; bool support_cc_pi0_0p_pi0_energy = 0; bool support_cc_pi0_Xp_pi0_energy = 0;
+
+    int plot_num = 58003;
+
+    target_cc_pi0_Np = 1;
+    target_cc_pi0_0p = 1;
+
+    support_nc_pi0_Np = 1;
+    support_nc_pi0_0p = 1;
+    support_numuCC_Np = 1;
+    support_numuCC_0p = 1;
+
+    Lee_test->scaleF_Lee = 0;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    if (target_nc_delta_Np) vc_target_chs.push_back(0); if (target_nc_delta_0p) vc_target_chs.push_back(2); if (target_nc_delta_Xp) vc_target_chs.push_back(4);
+    if (target_nc_pi0_Np) {for (int i=6; i < 6 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_0p) {for (int i=22; i < 22 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_Xp) {for (int i=38; i < 38 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_nc_pi0_Np_pi0_energy) {for (int i=54; i < 54 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_0p_pi0_energy) {for (int i=63; i < 63 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_Xp_pi0_energy) {for (int i=72; i < 72 + 9; i++) {vc_target_chs.push_back(i);}}
+    if (target_numuCC_Np) {for (int i=81; i < 81 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_numuCC_0p) {for (int i=97; i < 97 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_numuCC_Xp) {for (int i=113; i < 113 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_cc_pi0_Np) {for (int i=129; i < 129 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_0p) {for (int i=145; i < 145 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_Xp) {for (int i=161; i < 161 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_cc_pi0_Np_pi0_energy) {for (int i=177; i < 177 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_0p_pi0_energy) {for (int i=186; i < 186 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_Xp_pi0_energy) {for (int i=195; i < 195 + 9; i++) {vc_target_chs.push_back(i);}}
+    // so the total number of bins is 204, which makes sense, since we have 2*3=6 bins for nc delta, 16*3*3=144 for kine_reco_Enu, and 9*2*3=54 for pi0_energy, summing to 204
+    vector<int>vc_support_chs;
+    if (support_nc_delta_Np) vc_support_chs.push_back(0); if (support_nc_delta_0p) vc_support_chs.push_back(2); if (support_nc_delta_Xp) vc_support_chs.push_back(4);
+    if (support_nc_pi0_Np) {for (int i=6; i < 6 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_0p) {for (int i=22; i < 22 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_Xp) {for (int i=38; i < 38 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_nc_pi0_Np_pi0_energy) {for (int i=54; i < 54 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_0p_pi0_energy) {for (int i=63; i < 63 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_Xp_pi0_energy) {for (int i=72; i < 72 + 9; i++) {vc_support_chs.push_back(i);}}
+    if (support_numuCC_Np) {for (int i=81; i < 81 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_numuCC_0p) {for (int i=97; i < 97 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_numuCC_Xp) {for (int i=113; i < 113 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_cc_pi0_Np) {for (int i=129; i < 129 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_0p) {for (int i=145; i < 145 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_Xp) {for (int i=161; i < 161 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_cc_pi0_Np_pi0_energy) {for (int i=177; i < 177 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_0p_pi0_energy) {for (int i=186; i < 186 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_Xp_pi0_energy) {for (int i=195; i < 195 + 9; i++) {vc_support_chs.push_back(i);}}
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, plot_num);
+  }
+
+  if (make_more_constrained_plots) {
+    bool target_nc_delta_Np = 0; bool target_nc_delta_0p = 0; bool target_nc_delta_Xp = 0;
+    bool target_nc_pi0_Np = 0; bool target_nc_pi0_0p = 0; bool target_nc_pi0_Xp = 0;
+    bool target_nc_pi0_Np_pi0_energy = 0; bool target_nc_pi0_0p_pi0_energy = 0; bool target_nc_pi0_Xp_pi0_energy = 0;
+    bool target_numuCC_Np = 0; bool target_numuCC_0p = 0; bool target_numuCC_Xp = 0; bool target_cc_pi0_Np = 0; bool target_cc_pi0_0p = 0; bool target_cc_pi0_Xp = 0;
+    bool target_cc_pi0_Np_pi0_energy = 0; bool target_cc_pi0_0p_pi0_energy = 0; bool target_cc_pi0_Xp_pi0_energy = 0;
+    bool support_nc_delta_Np = 0; bool support_nc_delta_0p = 0; bool support_nc_delta_Xp = 0;
+    bool support_nc_pi0_Np = 0; bool support_nc_pi0_0p = 0; bool support_nc_pi0_Xp = 0;
+    bool support_nc_pi0_Np_pi0_energy = 0; bool support_nc_pi0_0p_pi0_energy = 0; bool support_nc_pi0_Xp_pi0_energy = 0;
+    bool support_numuCC_Np = 0; bool support_numuCC_0p = 0; bool support_numuCC_Xp = 0;
+    bool support_cc_pi0_Np = 0; bool support_cc_pi0_0p = 0; bool support_cc_pi0_Xp = 0;
+    bool support_cc_pi0_Np_pi0_energy = 0; bool support_cc_pi0_0p_pi0_energy = 0; bool support_cc_pi0_Xp_pi0_energy = 0;
+
+    int plot_num = 58004;
+
+    target_cc_pi0_Np_pi0_energy = 1;
+    target_cc_pi0_0p_pi0_energy = 1;
+
+    support_nc_pi0_Np = 1;
+    support_nc_pi0_0p = 1;
+    support_numuCC_Np = 1;
+    support_numuCC_0p = 1;
+
+    Lee_test->scaleF_Lee = 0;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    if (target_nc_delta_Np) vc_target_chs.push_back(0); if (target_nc_delta_0p) vc_target_chs.push_back(2); if (target_nc_delta_Xp) vc_target_chs.push_back(4);
+    if (target_nc_pi0_Np) {for (int i=6; i < 6 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_0p) {for (int i=22; i < 22 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_Xp) {for (int i=38; i < 38 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_nc_pi0_Np_pi0_energy) {for (int i=54; i < 54 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_0p_pi0_energy) {for (int i=63; i < 63 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_nc_pi0_Xp_pi0_energy) {for (int i=72; i < 72 + 9; i++) {vc_target_chs.push_back(i);}}
+    if (target_numuCC_Np) {for (int i=81; i < 81 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_numuCC_0p) {for (int i=97; i < 97 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_numuCC_Xp) {for (int i=113; i < 113 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_cc_pi0_Np) {for (int i=129; i < 129 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_0p) {for (int i=145; i < 145 + 16; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_Xp) {for (int i=161; i < 161 + 16; i++) {vc_target_chs.push_back(i);}}
+    if (target_cc_pi0_Np_pi0_energy) {for (int i=177; i < 177 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_0p_pi0_energy) {for (int i=186; i < 186 + 9; i++) {vc_target_chs.push_back(i);}}; if (target_cc_pi0_Xp_pi0_energy) {for (int i=195; i < 195 + 9; i++) {vc_target_chs.push_back(i);}}
+    // so the total number of bins is 204, which makes sense, since we have 2*3=6 bins for nc delta, 16*3*3=144 for kine_reco_Enu, and 9*2*3=54 for pi0_energy, summing to 204
+    vector<int>vc_support_chs;
+    if (support_nc_delta_Np) vc_support_chs.push_back(0); if (support_nc_delta_0p) vc_support_chs.push_back(2); if (support_nc_delta_Xp) vc_support_chs.push_back(4);
+    if (support_nc_pi0_Np) {for (int i=6; i < 6 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_0p) {for (int i=22; i < 22 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_Xp) {for (int i=38; i < 38 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_nc_pi0_Np_pi0_energy) {for (int i=54; i < 54 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_0p_pi0_energy) {for (int i=63; i < 63 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_nc_pi0_Xp_pi0_energy) {for (int i=72; i < 72 + 9; i++) {vc_support_chs.push_back(i);}}
+    if (support_numuCC_Np) {for (int i=81; i < 81 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_numuCC_0p) {for (int i=97; i < 97 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_numuCC_Xp) {for (int i=113; i < 113 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_cc_pi0_Np) {for (int i=129; i < 129 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_0p) {for (int i=145; i < 145 + 16; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_Xp) {for (int i=161; i < 161 + 16; i++) {vc_support_chs.push_back(i);}}
+    if (support_cc_pi0_Np_pi0_energy) {for (int i=177; i < 177 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_0p_pi0_energy) {for (int i=186; i < 186 + 9; i++) {vc_support_chs.push_back(i);}}; if (support_cc_pi0_Xp_pi0_energy) {for (int i=195; i < 195 + 9; i++) {vc_support_chs.push_back(i);}}
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, plot_num);
+  }
 
 
 
@@ -620,7 +994,7 @@ if (make_proton_pi0_invariant_mass_plots) {
   }
 
 
-  int make_constrained_one_bin_plots = 1;
+  int make_constrained_one_bin_plots = 0;
 
   if (make_constrained_one_bin_plots) {
 

@@ -1683,6 +1683,19 @@ int main( int argc, char** argv )
 	
 	// lhagaman setting plot names 2021_07_19
 	
+	if (obschannel<=6){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Energy Transfer (MeV)");
+        }else if(obschannel<=9){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed #pi^{0} Kinetic Energy (MeV)");
+	}else if(obschannel<=15){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Neutrino Energy (MeV)");
+	}else if(obschannel<=18){
+		gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed #pi^{0} Kinetic Energy (MeV)");
+	}else{
+		gratio_mc[obschannel-1]->GetXaxis()->SetTitle("No axis label given");
+	}
+
+
 	/*
 	if (obschannel==1){
                 gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Proton Multiplicity");
@@ -1730,7 +1743,7 @@ int main( int argc, char** argv )
 	}else gratio_mc[obschannel-1]->GetXaxis()->SetTitle("No X axis label given");
 	*/
 
-	gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Neutrino Energy (MeV)");
+	//gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Neutrino Energy (MeV)");
 
 	// x axis channel labeling
 	/*

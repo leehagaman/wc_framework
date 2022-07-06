@@ -2276,7 +2276,7 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
   cout<<endl;
   */
   
-  TLegend *lg_top_total = new TLegend(0.5, 0.45, 0.85, 0.85);
+  TLegend *lg_top_total = new TLegend(0.5, 0.2, 0.85, 0.85); // lhagaman changed 0.45 to 0.2
   // h1_pred_Y_wiConstraint->SetMaximum(40);
   // lg_top_total->SetX1(0.55); lg_top_total->SetX2(0.95);
   // lg_top_total->SetX1(0.2); lg_top_total->SetX2(0.4);
@@ -2422,47 +2422,156 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
   }
 
 
-  if (index/1000 == 55) {
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gNp                                     1g0p"); 
-  }
-  if (index/1000 == 56) {
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Energy Transfer (x100 MeV)");
-  }
-
-
   if (index==55001) {
     lg_top_total->AddEntry("", "", "");
     lg_top_total->AddEntry("", "1gNp and 1g0p", "");
+    lg_top_total->AddEntry("", "", "");
     lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
     lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gNp                                     1g0p");
   }
   if (index==55002) {
     lg_top_total->AddEntry("", "", "");
     lg_top_total->AddEntry("", "1gNp and 1g0p", "");
+    lg_top_total->AddEntry("", "", "");
     lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
     lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
     lg_top_total->AddEntry("", "reco Pi0 energy", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gNp                                     1g0p");
   }
   if (index==55003) {
     lg_top_total->AddEntry("", "", "");
     lg_top_total->AddEntry("", "1gNp and 1g0p", "");
+    lg_top_total->AddEntry("", "", "");
     lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
     lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
+    lg_top_total->AddEntry("", "", "");
     lg_top_total->AddEntry("", "numuCC Np and 0p", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gNp                                     1g0p");
   }
   if (index==55004) {
     lg_top_total->AddEntry("", "", "");
     lg_top_total->AddEntry("", "1gNp and 1g0p", "");
+    lg_top_total->AddEntry("", "", "");
     lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
     lg_top_total->AddEntry("", "numuCC Np and 0p", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gNp                                     1g0p");
+  }
+  if (index==55005) {
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "1gNp and 1g0p", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "CC Pi0 Np and 0p", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gNp                                     1g0p");
+  }
+  if (index==55006) {
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "1gNp and 1g0p", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "CC Pi0 Np and 0p", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gNp                                     1g0p");
   }
 
   if (index==56001) {
     lg_top_total->AddEntry("", "", "");
     lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
+    lg_top_total->AddEntry("", "", "");
     lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
     lg_top_total->AddEntry("", "numuCC Np and 0p", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Energy Transfer (x100 MeV)");
   }
+  if (index==56002) {
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "CC Pi0 Np and 0p", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Energy Transfer (x100 MeV)");
+  }
+  if (index==56003) {
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "CC Pi0 Np and 0p", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Energy Transfer (x100 MeV)");
+  }
+  if (index==56004) {
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "CC Pi0 Np and 0p", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Pi0 Kinetic Energy (x100 MeV)");
+  }
+
+  if (index==58001) {
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "CC Pi0 Np and 0p", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Energy Transfer (x100 MeV)");
+  }
+  if (index==58002) {
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "CC Pi0 Np and 0p", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Energy Transfer (x100 MeV)");
+  }
+  if (index==58003) {
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "CC Pi0 Np and 0p", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Energy Transfer (x100 MeV)");
+  }
+  if (index==58004) {
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "CC Pi0 Np and 0p", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Pi0 Kinetic Energy (x100 MeV)");
+  }
+
+
+
+
+
 
 
   if (index==57001) {

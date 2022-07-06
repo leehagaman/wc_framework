@@ -160,59 +160,87 @@ double LEEana::get_reco_Epion(KineInfo& kine){
 
 double LEEana::get_weight(TString weight_name, EvalInfo& eval, PFevalInfo& pfeval){
  
+    double addtl_weight = 1.0;
+    int use_reweight = 2;//0: no reweight, 1:reweight without accouting for constraint, 2: reweight accounting for numuCC constraint
+                     //modify the variables inside the if() statment if you wish to change the reweighting
+  //Calculates reweighting for the event
+  if(use_reweight !=0){
+    //initiates variables needed for reweighting
+    double var;
+    double min_var_Np;
+    double max_var_Np;
+    double min_var_0p;
+    double max_var_0p;
+    int nbins_Np;
+    int nbins_0p;
+    bool use_overflow;
+    std::vector<double> reweight;
+    std::vector<double> overflow;
+  
+    //sets up your desired reweighting
+    if(use_reweight==1){
+      var = eval.truth_energyInside;
+      min_var_Np = 200;
+      max_var_Np = 1100;
+      min_var_0p = 100;
+      max_var_0p = 800;
+      nbins_Np = 15;
+      nbins_0p = 15;
+      use_overflow = 1;
+      reweight = {0.47346, 0.513817, 0.620152, 0.711642, 0.683565, 0.599427, 0.487592, 0.368639, 0.306867, 0.316878, 0.3627, 0.382381, 0.370914, 0.339537, 0.327263,
+                  2.18203, 1.99804, 1.8456, 1.85226, 1.88324, 1.8381, 1.62346, 1.321, 1.08835, 1.0664, 1.26347, 1.62921, 2.07742, 2.68451, 3.2522};
+      overflow = {0.246093, 2.67171};
+    } 
+    if(use_reweight==2){
+      var = eval.truth_energyInside;
+      min_var_Np = 200;
+      max_var_Np = 1400;
+      min_var_0p = 100;
+      max_var_0p = 800;
+      nbins_Np = 24;
+      nbins_0p = 14;
+      use_overflow = 0;
+      reweight = {0.279332, 0.388117, 0.553707, 0.679725, 0.688555, 0.617495, 0.567947, 0.560433, 0.59077, 0.617946, 0.584057, 0.519013, 0.471467, 0.458097, 0.553915, 0.735836, 0.990822, 1.26522, 1.57029, 1.73207, 1.9213, 1.99958, 2.05557, 2.18402,
+                  1.2466, 1.18207, 1.16923, 1.37165, 1.51289, 1.42552, 1.11135, 0.76296, 0.574159, 0.617545, 0.864722, 1.15229, 1.64071, 2.08024};//, 2.30331, 2.67676, 3.12894, 3.86247, 4.37093, 5.51674, 7.10849, 8.05162, 7.80566, 9.49697};
+      overflow = {1.0, 1.0};
+    }
+  
+    //Finds the number of true protons for the given event
+    int nTrueP = 0;
+    double Eproton = 0;
+    for(size_t i=0; i<pfeval.truth_Ntrack; i++){
+      if(pfeval.truth_pdg[i] != 2212) continue;
+      if(pfeval.truth_startMomentum[i][3] - 0.938272 < 0.035) continue;
+      nTrueP+=1;
+      if(pfeval.truth_startMomentum[i][3] - 0.938272 < Eproton) continue;
+      Eproton = (pfeval.truth_startMomentum[i][3] - 0.938272)*1000;
+    }
 
-  bool use_reweight = 0; // set this to one to use the NC Pi0 reweighting
-  
-  if (use_reweight) {
-  	double addtl_weight = 1.0;
-  
-  	//setup
-  	double var = eval.truth_energyInside;
-  	double min_var_Np = 200;
-  	double max_var_Np = 1500;
-  	double min_var_0p = 150;
-  	double max_var_0p = 1450;
-  	int nbins = 26;
-  	bool use_overflow = 0;
-  	double reweight[nbins*2]  = {0.205346, 0.315154, 0.481152, 0.623623, 0.658733, 0.616425, 0.597855, 0.567075, 0.516445, 0.448222, 0.370096, 0.330786, 0.364599, 0.440628, 0.583612, 0.74158, 0.853511, 0.919217, 0.927914, 0.886704, 0.847255, 0.776822, 0.673921, 0.580391, 0.560413, 0.441197,
-  	                             1.1436, 1.09174, 1.25336, 1.39715, 1.35268, 1.09956, 0.808944, 0.649844, 0.697509, 0.894454, 1.10369, 1.38847, 1.72206, 1.90356, 2.21028, 2.46232, 2.65695, 2.85627, 3.09243, 3.62661, 3.56036, 3.54319, 3.55732, 4.00118, 4.18981, 4.1782};
-  	double overflow[2] = {1, 1};
-  	//end setup
-  	
-  	//get the true proton multiplicity
-  	int nTrueP = 0;
-  	for(size_t i=0; i<pfeval.truth_Ntrack; i++){
-  	  if(pfeval.truth_mother[i] != 0) continue;
-  	  if(pfeval.truth_pdg[i] != 2212) continue;
-  	  if(pfeval.truth_startMomentum[i][3] - 0.938272 < 0.035) continue;
-  	  nTrueP+=1;
-  	}
-  	
-  	//get the reweight
-  	double bin_len_Np = (max_var_Np-min_var_Np)/nbins;
-  	double bin_len_0p = (max_var_0p-min_var_0p)/nbins;
-  	if (eval.truth_isCC==0 && pfeval.truth_NprimPio>0 && eval.match_isFC){
-  	  if(nTrueP>0 && var>min_var_Np){
-  	    if (var>max_var_Np && use_overflow) addtl_weight = overflow[0];
-  	    else if(var>max_var_Np) addtl_weight = 1;
-  	    else{
-  	      int wbin = floor((var-min_var_Np)/bin_len_Np);
-  	      addtl_weight = reweight[wbin];
-  	    }
-  	  }
-  	  else if(var>min_var_0p){
-  	    if (var>max_var_0p && use_overflow) addtl_weight = overflow[1];
-  	    else if(var>max_var_0p) addtl_weight = 1;
-  	    else{
-  	      int wbin = floor((var-min_var_0p)/bin_len_0p)+nbins;
-  	      addtl_weight = reweight[wbin];
-  	    }
-  	  }
-  	}	
-  }	
+    //determines the reweighting bin the event falls into to assign the reweighing for the event 
+    double bin_len_Np = (max_var_Np-min_var_Np)/nbins_Np;
+    double bin_len_0p = (max_var_0p-min_var_0p)/nbins_0p;
+    if (eval.truth_isCC==0 && pfeval.truth_NprimPio>0 && eval.match_isFC){
+      if(nTrueP>0 && var>min_var_Np){
+        if (var>max_var_Np && use_overflow) addtl_weight = overflow[0];
+        else if(var>max_var_Np) addtl_weight = 1;
+        else{
+          int wbin = floor((var-min_var_Np)/bin_len_Np);
+          addtl_weight = reweight[wbin];
+        }
+      }
+      else if(var>min_var_0p){
+        if (var>max_var_0p && use_overflow) addtl_weight = overflow[1];
+        else if(var>max_var_0p) addtl_weight = 1;
+        else{
+          int wbin = floor((var-min_var_0p)/bin_len_0p)+nbins_Np;
+          addtl_weight = reweight[wbin];
+        }
+      }
+    }
+  }    
 	
   if (weight_name == "cv_spline"){
-    return eval.weight_cv * eval.weight_spline;
+    return addtl_weight * eval.weight_cv * eval.weight_spline;
   }else if (weight_name == "cv_spline_cv_spline"){
     return pow(eval.weight_cv * eval.weight_spline,2);
   }else if (weight_name == "unity" || weight_name == "unity_unity"){
