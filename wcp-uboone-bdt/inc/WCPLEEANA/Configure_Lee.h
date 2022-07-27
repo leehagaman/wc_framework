@@ -40,7 +40,8 @@ namespace config_Lee
   */  
   
   //int array_LEE_ch[6] = {2,4,6,8,10,12};// element value "0" will note be set to the LEE_ch
-  int array_LEE_ch[4] = {0,0,0,0};// this is for no LEE
+  int array_LEE_ch[12] = {2,3, 5,6, 8,9, 11,12, 14,15, 17,18}; // for 2d cov_input 
+  //int array_LEE_ch[4] = {0,0,0,0};// this is for no LEE
   
   int channels_observation = 0;// data channels (=hdata_obsch_# in spectra_file above)
                                // which is equal to the channels after collapse
@@ -50,8 +51,8 @@ namespace config_Lee
   int syst_cov_flux_Xs_end   = 17;
  
   int syst_cov_mc_stat_begin = 0;// files in mc_directory above
-  //int syst_cov_mc_stat_end   = 99;
-  int syst_cov_mc_stat_end   = 0; // this version should be for no LEE
+  int syst_cov_mc_stat_end   = 99;
+  //int syst_cov_mc_stat_end   = 0; // this version should be for no LEE
 
   /// some places may need to be changed when use different file-formats
   /// void TLee::Set_Spectra_MatrixCov()

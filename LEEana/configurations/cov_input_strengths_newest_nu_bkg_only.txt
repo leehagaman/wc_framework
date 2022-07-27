@@ -1,0 +1,29 @@
+nc_delta_Np_01                  	kine_reco_Enu	1	0       1500    1       0               0       0               0               0               5       unity           0
+nc_delta_Np_01_ext              	kine_reco_Enu	1	0       1500    1       0               0       0               0               7               3       unity           0
+nc_delta_Np_01_overlay          	kine_reco_Enu	1	0       1500    1       1               1       0               0               1               2       cv_spline       0
+nc_delta_Np_01_dirt             	kine_reco_Enu	1       0       1500    1       1               0       0.5             0               1               4       cv_spline       0
+nc_delta_0p_01                          kine_reco_Enu   1       0       1500    2       0               0       0               0               0               5       unity           0
+nc_delta_0p_01_ext                      kine_reco_Enu   1       0       1500    2       0               0       0               0               8               3       unity           0
+nc_delta_0p_01_overlay                  kine_reco_Enu   1       0       1500    2       1               1       0               0               2               2       cv_spline       0
+nc_delta_0p_01_dirt                     kine_reco_Enu   1       0       1500    2       1               0       0.5             0               2               4       cv_spline       0
+
+nc_pi0_Np				kine_reco_Enu   15      0       1500    3       0               0       0               0               0               5       unity           0
+nc_pi0_Np_ext				kine_reco_Enu   15      0       1500    3       0               0       0               0               9               3       unity           0
+nc_pi0_Np_overlay                  	kine_reco_Enu   15      0       1500    3       1               1       0               0               3               2       cv_spline       0
+nc_pi0_Np_dirt                     	kine_reco_Enu   15      0       1500    3       1               0       0.5             0               3               4       cv_spline       0
+nc_pi0_0p                          	kine_reco_Enu   15      0       1500    4       0               0       0               0               0               5       unity           0
+nc_pi0_0p_ext                      	kine_reco_Enu   15      0       1500    4       0               0       0               0               10              3       unity           0
+nc_pi0_0p_overlay                  	kine_reco_Enu   15      0       1500    4       1               1       0               0               4               2       cv_spline       0
+nc_pi0_0p_dirt                     	kine_reco_Enu   15      0       1500    4       1               0       0.5             0               4               4       cv_spline       0
+
+numuCC_Np_old                               kine_reco_Enu   15      0       1500    5       0               0       0               0               0               5       unity           0
+numuCC_Np_old_ext                           kine_reco_Enu   15      0       1500    5       0               0       0               0               11              3       unity           0
+numuCC_Np_old_overlay                       kine_reco_Enu   15      0       1500    5       1               1       0               0               5               2       cv_spline       0
+numuCC_Np_old_dirt                          kine_reco_Enu   15      0       1500    5       1               0       0.5             0               5               4       cv_spline       0
+numuCC_0p_old                               kine_reco_Enu   15      0       1500    6       0               0       0               0               0               5       unity           0
+numuCC_0p_old_ext                           kine_reco_Enu   15      0       1500    6       0               0       0               0               12              3       unity           0
+numuCC_0p_old_overlay                       kine_reco_Enu   15      0       1500    6       1               1       0               0               6              2       cv_spline       0
+numuCC_0p_old_dirt                          kine_reco_Enu   15      0       1500    6       1               0       0.5             0               6              4       cv_spline       0
+
+End				End			-1	-1	-1	-1	-1		-1	-1		-1		-1		-1	end		-1
+Name:				#Var:			#bin	#start	#end	#obs	#xs_flux	#det	#add_sys	#same_mc	#cov_sec	#file	#weight		#lee_strength

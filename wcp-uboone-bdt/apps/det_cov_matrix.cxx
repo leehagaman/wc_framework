@@ -43,6 +43,26 @@ int main( int argc, char** argv )
   CovMatrix cov("./configurations/cov_input.txt", "./configurations/det_input.txt", "./configurations/det_file_ch.txt");
   
   // use names from cov input, choose channels to turn off
+ 
+  /* 
+  cov.add_disabled_ch_name("nc_delta_Np_01_overlay");
+  cov.add_disabled_ch_name("nc_delta_0p_01_overlay");
+  cov.add_disabled_ch_name("nc_pi0_Np_overlay");
+  cov.add_disabled_ch_name("nc_pi0_0p_overlay");
+  */
+
+  /*
+  cov.add_disabled_ch_name("nc_delta_Np_01_overlay");
+  cov.add_disabled_ch_name("nc_delta_0p_01_overlay");
+  cov.add_disabled_ch_name("nc_delta_Xp_01_overlay");
+  cov.add_disabled_ch_name("nc_pi0_Np_overlay");
+  cov.add_disabled_ch_name("nc_pi0_0p_overlay");
+  cov.add_disabled_ch_name("nc_pi0_Xp_overlay");
+  cov.add_disabled_ch_name("nc_pi0_2_Np_overlay");
+  cov.add_disabled_ch_name("nc_pi0_2_0p_overlay");
+  cov.add_disabled_ch_name("nc_pi0_2_Xp_overlay");
+  */
+
 
   //cov.add_disabled_ch_name("nc_delta_Np_01_overlay");
   //cov.add_disabled_ch_name("nc_delta_0p_01_overlay");

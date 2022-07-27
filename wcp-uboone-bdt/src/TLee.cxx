@@ -2485,6 +2485,74 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
     lg_top_total->AddEntry("", "numuCC Np and 0p", "");
     h1_pred_Y_noConstraint_rel_error->SetXTitle("1gNp                                     1g0p");
   }
+  if (index==55007) {
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "1gXp", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "NC Pi0 Xp", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "numuCC Xp", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gXp");
+  }
+  if (index==55008) {
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "1gXp", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gXp");
+  }
+  if (index==55009) {
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "1gXp", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "NC Pi0 Xp", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gXp");
+  }
+  if (index==55010) {
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "1gXp", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gXp");
+  }
+  if (index==55011) {
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "1gXp", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "NC Pi0 Xp", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "numuCC Xp", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "CC Pi0 Xp", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gXp");
+  }
+  if (index==55012) {
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "1gXp", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "CC Pi0 Np and 0p", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gXp");
+  }
+
+
 
   if (index==56001) {
     lg_top_total->AddEntry("", "", "");
@@ -2526,6 +2594,47 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
     lg_top_total->AddEntry("", "CC Pi0 Np and 0p", "");
     h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Pi0 Kinetic Energy (x100 MeV)");
   }
+  if (index==56005) {
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "NC Pi0 Xp", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "numuCC Xp", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Energy Transfer (x100 MeV)");
+  }
+  if (index==56006) {
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "NC Pi0 Xp", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "numuCC Xp", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "CC Pi0 Xp", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Energy Transfer (x100 MeV)");
+  }
+  if (index==56007) {
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "NC Pi0 Xp", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Energy Transfer (x100 MeV)");
+  }
+  if (index==56008) {
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "NC Pi0 Xp", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "CC Pi0 Np and 0p", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Energy Transfer (x100 MeV)");
+  }
+
 
   if (index==58001) {
     lg_top_total->AddEntry("", "", "");
@@ -2534,7 +2643,7 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
     lg_top_total->AddEntry("", "constrained by:", "");
     lg_top_total->AddEntry("", "", "");
     lg_top_total->AddEntry("", "numuCC Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Energy Transfer (x100 MeV)");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Neutrino Energy (x100 MeV)");
   }
   if (index==58002) {
     lg_top_total->AddEntry("", "", "");
@@ -2543,7 +2652,7 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
     lg_top_total->AddEntry("", "constrained by:", "");
     lg_top_total->AddEntry("", "", "");
     lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Energy Transfer (x100 MeV)");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Neutrino Energy (x100 MeV)");
   }
   if (index==58003) {
     lg_top_total->AddEntry("", "", "");
@@ -2554,7 +2663,7 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
     lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
     lg_top_total->AddEntry("", "", "");
     lg_top_total->AddEntry("", "numuCC Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Energy Transfer (x100 MeV)");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Neutrino Energy (x100 MeV)");
   }
   if (index==58004) {
     lg_top_total->AddEntry("", "", "");
@@ -2567,6 +2676,47 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
     lg_top_total->AddEntry("", "numuCC Np and 0p", "");
     h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Pi0 Kinetic Energy (x100 MeV)");
   }
+  if (index==58005) {
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "CC Pi0 Xp", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "numuCC Xp", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Neutrino Energy (x100 MeV)");
+  }
+  if (index==58006) {
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "CC Pi0 Xp", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "NC Pi0 Xp", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Neutrino Energy (x100 MeV)");
+  }
+  if (index==58007) {
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "CC Pi0 Xp", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "NC Pi0 Xp", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "numuCC Xp", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Neutrino Energy (x100 MeV)");
+  }
+  if (index==58008) {
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "CC Pi0 Xp", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "constrained by:", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
+    lg_top_total->AddEntry("", "", "");
+    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Neutrino Energy (x100 MeV)");
+  }
+
 
 
 
@@ -3318,6 +3468,74 @@ void TLee::Set_Spectra_MatrixCov()
 	}		
       }
     }
+
+    
+    int disable_nc_delta_Xs_uncertainty_2d = 1;
+    if (disable_nc_delta_Xs_uncertainty_2d) {
+      if (idx == 17) {
+        //*map_matrix_flux_Xs_frac[idx]
+        for (int ibin=0; ibin<bins_oldworld; ibin++) {
+          for (int jbin=0; jbin<bins_oldworld; jbin++) {
+            bool flag_user = 0;
+            if (ibin >= 2*1 && ibin < 2*1+2*2) flag_user=1; // uncollapsed channels 2 and 3
+            if (ibin >= 2*4 && ibin < 2*4+2*2) flag_user=1; // channels 5 and 6
+            if (ibin >= 2*6+16*1 && ibin < 2*6+16*1+16*2) flag_user=1; // channels 8 and 9
+            if (ibin >= 2*6+16*4 && ibin < 2*6+16*4+16*2) flag_user=1; // channels 11 and 12
+            if (ibin >= 2*6+16*7 && ibin < 2*6+16*7+16*2) flag_user=1; // channels 14 and 15
+            if (ibin >= 2*6+16*10 && ibin < 2*6+16*10+16*2) flag_user=1; // channels 17 and 18
+
+            if (flag_user==1) {
+              (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0;
+              (*map_matrix_flux_Xs_frac[idx])(jbin, ibin) = 0;
+            }
+          }
+        }
+      }
+    }
+
+    int disable_BR_uncertainty_2d = 0;
+    if (disable_BR_uncertainty_2d) {
+      // would have to update these numbers in the future!
+      float num_true_signal_uncollapsed[6*2+16*12] = {
+        0., 0., 0., 0., 0., 0., // 1gNp and overflow, background, then Np sig, then 0p sig
+	0., 0., 0., 0., 0., 0., // 1g0p
+        0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0., // NC Pi0 Np with overflow, background	
+        0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0., // NC Pi0 Np with overflow, Np sig	
+        0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0., // NC Pi0 Np with overflow, 0p sig	
+        0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0., // NC Pi0 0p with overflow, background	
+        0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0., // NC Pi0 0p with overflow, Np sig	
+        0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0., // NC Pi0 0p with overflow, 0p sig	
+        0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0., // numuCC Np with overflow, background	
+        0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0., // numuCC Np with overflow, Np sig	
+        0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0., // numuCC Np with overflow, 0p sig	
+        0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0., // numuCC 0p with overflow, background	
+        0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0., // numuCC 0p with overflow, Np sig	
+        0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0., // numuCC 0p with overflow, 0p sig	
+      };
+	      
+      if (idx == 17) {
+        for (int ibin=0; ibin<bins_oldworld; ibin++) {
+          for (int jbin=0; jbin<bins_oldworld; jbin++) {
+            
+            // Here, we assume that true Np NC Delta events are fully correlated with 
+	    // true Np NC Delta events in other selection channels. Even if this isn't fully accurate,
+	    // the non-1g signal channels should basically not matter at all (the gLEE data release didn't
+	    // include this information because of a similar approximation).
+	    
+	    // So, the covariance matrix associated with the NC Delta BR uncertainty is fully correlated,
+	    // so we just need the sigma associated with the row and column to calculate it and subtract it off.
+	    // See 2022_06_01 slack between Mark and Lee for more information about this approximation.
+
+            float sigma_BR_row = num_true_signal_uncollapsed[ibin];
+            float sigma_BR_col = num_true_signal_uncollapsed[jbin];
+            
+            (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= sigma_BR_row * sigma_BR_column;
+            }
+          }
+        }
+      }
+    }
+
 
  
     //if( idx==17 )
