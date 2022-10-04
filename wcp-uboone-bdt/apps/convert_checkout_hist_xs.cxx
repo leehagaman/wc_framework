@@ -32,6 +32,7 @@ int main( int argc, char** argv )
   
   std::cout << "Xs mode: " << std::endl;
 
+  cov.print_rw(cov.get_rw_info());
   
   TTree *T_BDTvars = (TTree*)file->Get("wcpselection/T_BDTvars");
   TTree *T_eval = (TTree*)file->Get("wcpselection/T_eval");
@@ -240,6 +241,16 @@ int main( int argc, char** argv )
   T_KINEvars->SetBranchStatus("kine_pio_phi_2",1);
   T_KINEvars->SetBranchStatus("kine_pio_dis_2",1);
   T_KINEvars->SetBranchStatus("kine_pio_angle",1);
+  if (T_KINEvars->GetBranch("vlne_v4_numu_full_primaryE")) {
+    T_KINEvars->SetBranchStatus("vlne_v4_numu_full_primaryE",1);
+    T_KINEvars->SetBranchStatus("vlne_v4_numu_full_totalE",1);
+    T_KINEvars->SetBranchStatus("vlne_v4_numu_partial_primaryE",1);
+    T_KINEvars->SetBranchStatus("vlne_v4_numu_partial_totalE",1);
+    // T_KINEvars->SetBranchStatus("vlne_nue_full_primaryE",1);
+    // T_KINEvars->SetBranchStatus("vlne_nue_full_totalE",1);
+    // T_KINEvars->SetBranchStatus("vlne_nue_partial_primaryE",1);
+    // T_KINEvars->SetBranchStatus("vlne_nue_partial_totalE",1);
+  }
 
 
   T_PFeval->SetBranchStatus("*",0);
@@ -257,34 +268,13 @@ int main( int argc, char** argv )
       T_PFeval->SetBranchStatus("muonvtx_diff",1);
       T_PFeval->SetBranchStatus("truth_nuIntType",1);
       T_PFeval->SetBranchStatus("truth_muonMomentum",1);
-  }
-  
-  if (!flag_data){
-      T_PFeval->SetBranchStatus("nuvtx_diff",1);
-      T_PFeval->SetBranchStatus("showervtx_diff",1);
-      T_PFeval->SetBranchStatus("muonvtx_diff",1);
-      T_PFeval->SetBranchStatus("truth_nuIntType",1);
-      T_PFeval->SetBranchStatus("truth_muonMomentum",1);
-      T_PFeval->SetBranchStatus("truth_pio_energy_1",1);
-      T_PFeval->SetBranchStatus("truth_pio_energy_2",1);
-      T_PFeval->SetBranchStatus("truth_pio_angle",1);
       if(T_PFeval->GetBranch("truth_mother")){//prevents throwing an error for the non _PF files
-        T_PFeval->SetBranchStatus("truth_Ntrack",1); //new
-        T_PFeval->SetBranchStatus("truth_pdg",1); //new
-        T_PFeval->SetBranchStatus("truth_mother",1); //new
-        T_PFeval->SetBranchStatus("truth_startMomentum",1); //new
+        T_PFeval->SetBranchStatus("truth_Ntrack",1);
+        T_PFeval->SetBranchStatus("truth_pdg",1); 
+        T_PFeval->SetBranchStatus("truth_mother",1); 
+        T_PFeval->SetBranchStatus("truth_startMomentum",1);
       }
   }
-
-  /*
-  // lhagaman added
-  if (T_PFeval->GetBranch("reco_Ntrack")) {
-        T_PFeval->SetBranchStatus("reco_Ntrack",1);
-        T_PFeval->SetBranchStatus("reco_startMomentum",1);
-        T_PFeval->SetBranchStatus("reco_pdg",1);
-  }
-  */
-
   if (pfeval.flag_NCDelta){
     
       if (!flag_data){
@@ -336,7 +326,7 @@ int main( int argc, char** argv )
 
       if (!((signal_bin != -1) || flag_pass)) continue;
       // get weight ...
-      double weight_val = get_weight(weight, eval, pfeval);
+      double weight_val = get_weight(weight, eval, pfeval, kine, tagger, cov.get_rw_info(), flag_data);
 
       //  if (ch_name == "numuCC_signal_Enu_FC_overlay" && weight == "cv_spline") std::cout << "Xin: " << " " << flag_pass << " " << signal_bin << " " << weight_val << " " <<eval.run << " " << eval.subrun << " " << eval.event << std::endl;
       

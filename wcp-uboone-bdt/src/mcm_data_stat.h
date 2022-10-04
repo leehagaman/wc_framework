@@ -577,6 +577,16 @@ void LEEana::CovMatrix::get_data_events_info(TString input_filename, std::map<TS
   T_KINEvars->SetBranchStatus("kine_pio_phi_2",1);
   T_KINEvars->SetBranchStatus("kine_pio_dis_2",1);
   T_KINEvars->SetBranchStatus("kine_pio_angle",1);
+  if (T_KINEvars->GetBranch("vlne_v4_numu_full_primaryE")) {
+    T_KINEvars->SetBranchStatus("vlne_v4_numu_full_primaryE",1);
+    T_KINEvars->SetBranchStatus("vlne_v4_numu_full_totalE",1);
+    T_KINEvars->SetBranchStatus("vlne_v4_numu_partial_primaryE",1);
+    T_KINEvars->SetBranchStatus("vlne_v4_numu_partial_totalE",1);
+    // T_KINEvars->SetBranchStatus("vlne_nue_full_primaryE",1);
+    // T_KINEvars->SetBranchStatus("vlne_nue_full_totalE",1);
+    // T_KINEvars->SetBranchStatus("vlne_nue_partial_primaryE",1);
+    // T_KINEvars->SetBranchStatus("vlne_nue_partial_totalE",1);
+  }
 
   T_PFeval->SetBranchStatus("*",0);
   T_PFeval->SetBranchStatus("reco_nuvtxX",1);
@@ -587,16 +597,6 @@ void LEEana::CovMatrix::get_data_events_info(TString input_filename, std::map<TS
   T_PFeval->SetBranchStatus("reco_showervtxZ",1);
   T_PFeval->SetBranchStatus("reco_muonMomentum",1);
   T_PFeval->SetBranchStatus("reco_showerKE",1);
-
-  // lhagaman added
-  if (T_PFeval->GetBranch("reco_Ntrack")) {
-        T_PFeval->SetBranchStatus("reco_Ntrack",1);
-        T_PFeval->SetBranchStatus("reco_startMomentum",1);
-        T_PFeval->SetBranchStatus("reco_pdg",1);
-  }
-
-
-
   //  T_PFeval->SetBranchStatus("nuvtx_diff",1);
   //T_PFeval->SetBranchStatus("showervtx_diff",1);
   //T_PFeval->SetBranchStatus("muonvtx_diff",1);

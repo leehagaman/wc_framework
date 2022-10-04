@@ -5,38 +5,38 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 namespace DataBase {
-  double x1[101]={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-                  11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-                  21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
-                  31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-                  41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
-                  51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
-                  61, 62, 63, 64, 65, 66, 67, 68, 69, 70,
-                  71, 72, 73, 74, 75, 76, 77, 78, 79, 80,
-                  81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
-                  91, 92, 93, 94, 95, 96, 97, 98, 99, 100};
-  
-  double yl[101]={0, 0, 0, 0.856632, 1.70317, 2.51005, 3.32075, 4.14046, 4.9693, 5.80646, 6.65117,
-                  7.5025, 8.35978, 9.22237, 10.0898, 10.9615, 11.8372, 12.7165, 13.5992, 14.4849, 15.3734,
-                  16.2646, 17.1583, 18.0543, 18.9524, 19.8526, 20.7547, 21.6586, 22.5642, 23.4715, 24.3803,
-                  25.2906, 26.2023, 27.1153, 28.0297, 28.9452, 29.8619, 30.7797, 31.6987, 32.6187, 33.5396,
-                  34.4616, 35.3845, 36.3083, 37.2329, 38.1584, 39.0847, 40.0118, 40.9396, 41.8682, 42.7975,
-                  43.7275, 44.6581, 45.5895, 46.5215, 47.454, 48.3873, 49.321, 50.2554, 51.1903, 52.1257,
-                  53.0617, 53.9982, 54.9352, 55.8727, 56.8107, 57.7491, 58.6881, 59.6274, 60.5673, 61.5075,
-                  62.4482, 63.3892, 64.3307, 65.2725, 66.2148, 67.1575, 68.1005, 69.0438, 69.9876, 70.9317,
-                  71.8761, 72.8209, 73.766, 74.7114, 75.6572, 76.6033, 77.5497, 78.4964, 79.4434, 80.3907,
-                  81.3383, 82.2862, 83.2342, 84.1827, 85.1314, 86.0804, 87.0296, 87.9791, 88.9288, 89.8788};
+	double x1[101]={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+		11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+		21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+		31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+		41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
+		51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
+		61, 62, 63, 64, 65, 66, 67, 68, 69, 70,
+		71, 72, 73, 74, 75, 76, 77, 78, 79, 80,
+		81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
+		91, 92, 93, 94, 95, 96, 97, 98, 99, 100};
 
-  double yh[101]={1.1478, 2.35971, 3.51917, 4.72422, 5.98186, 7.21064, 8.41858, 9.61053, 10.7896, 11.9582, 13.1179,
-                  14.27, 15.4155, 16.5552, 17.6898, 18.8197, 19.9454, 21.0673, 22.1858, 23.3011, 24.4133,
-                  25.5229, 26.6299, 27.7346, 28.837, 29.9374, 31.0358, 32.1322, 33.2271, 34.3201, 35.4117,
-                  36.5017, 37.5904, 38.6776, 39.7635, 40.8483, 41.9318, 43.0141, 44.0955, 45.1757, 46.2549,
-                  47.3331, 48.4104, 49.4868, 50.5623, 51.637, 52.7108, 53.7839, 54.8561, 55.9277, 56.9985,
-                  58.0686, 59.1381, 60.2068, 61.275, 62.3425, 63.4094, 64.4757, 65.5415, 66.6066, 67.6713,
-                  68.7354, 69.7989, 70.862, 71.9246, 72.9866, 74.0483, 75.1094, 76.1701, 77.2304, 78.2902,
-                  79.3496, 80.4085, 81.4672, 82.5253, 83.5831, 84.6406, 85.6976, 86.7542, 87.8105, 88.8665,
-                  89.9221, 90.9774, 92.0323, 93.0869, 94.1411, 95.1951, 96.2488, 97.3021, 98.3552, 99.4079,
-                  100.46, 101.513, 102.564, 103.616, 104.667, 105.718, 106.769, 107.82, 108.87, 109.92};
+	double yl[101]={0, 0, 0, 0.856632, 1.70317, 2.51005, 3.32075, 4.14046, 4.9693, 5.80646, 6.65117,
+		7.5025, 8.35978, 9.22237, 10.0898, 10.9615, 11.8372, 12.7165, 13.5992, 14.4849, 15.3734,
+		16.2646, 17.1583, 18.0543, 18.9524, 19.8526, 20.7547, 21.6586, 22.5642, 23.4715, 24.3803,
+		25.2906, 26.2023, 27.1153, 28.0297, 28.9452, 29.8619, 30.7797, 31.6987, 32.6187, 33.5396,
+		34.4616, 35.3845, 36.3083, 37.2329, 38.1584, 39.0847, 40.0118, 40.9396, 41.8682, 42.7975,
+		43.7275, 44.6581, 45.5895, 46.5215, 47.454, 48.3873, 49.321, 50.2554, 51.1903, 52.1257,
+		53.0617, 53.9982, 54.9352, 55.8727, 56.8107, 57.7491, 58.6881, 59.6274, 60.5673, 61.5075,
+		62.4482, 63.3892, 64.3307, 65.2725, 66.2148, 67.1575, 68.1005, 69.0438, 69.9876, 70.9317,
+		71.8761, 72.8209, 73.766, 74.7114, 75.6572, 76.6033, 77.5497, 78.4964, 79.4434, 80.3907,
+		81.3383, 82.2862, 83.2342, 84.1827, 85.1314, 86.0804, 87.0296, 87.9791, 88.9288, 89.8788};
+
+	double yh[101]={1.1478, 2.35971, 3.51917, 4.72422, 5.98186, 7.21064, 8.41858, 9.61053, 10.7896, 11.9582, 13.1179,
+		14.27, 15.4155, 16.5552, 17.6898, 18.8197, 19.9454, 21.0673, 22.1858, 23.3011, 24.4133,
+		25.5229, 26.6299, 27.7346, 28.837, 29.9374, 31.0358, 32.1322, 33.2271, 34.3201, 35.4117,
+		36.5017, 37.5904, 38.6776, 39.7635, 40.8483, 41.9318, 43.0141, 44.0955, 45.1757, 46.2549,
+		47.3331, 48.4104, 49.4868, 50.5623, 51.637, 52.7108, 53.7839, 54.8561, 55.9277, 56.9985,
+		58.0686, 59.1381, 60.2068, 61.275, 62.3425, 63.4094, 64.4757, 65.5415, 66.6066, 67.6713,
+		68.7354, 69.7989, 70.862, 71.9246, 72.9866, 74.0483, 75.1094, 76.1701, 77.2304, 78.2902,
+		79.3496, 80.4085, 81.4672, 82.5253, 83.5831, 84.6406, 85.6976, 86.7542, 87.8105, 88.8665,
+		89.9221, 90.9774, 92.0323, 93.0869, 94.1411, 95.1951, 96.2488, 97.3021, 98.3552, 99.4079,
+		100.46, 101.513, 102.564, 103.616, 104.667, 105.718, 106.769, 107.82, 108.87, 109.92};
 }
 
 
@@ -44,44 +44,42 @@ namespace DataBase {
 
 void TLee::Exe_Fiedman_Cousins_Data(TMatrixD matrix_fakedata, double Lee_true_low, double Lee_true_hgh, double step)
 {
-  cout<<endl;
-  cout<<" -----------------------------------"<<endl;
-  cout<<" Exe LEEx scan by data"<<endl;
-  cout<<" -----------------------------------"<<endl;			      
+	cout<<endl;
+	cout<<" -----------------------------------"<<endl;
+	cout<<" Exe LEEx scan by data"<<endl;
+	cout<<" -----------------------------------"<<endl;			      
 
-  Set_fakedata( matrix_fakedata );
-  
-  //////////////////
-  
-  Minimization_Lee_strength_FullCov(1, 0);
-  
-  cout<<endl<<TString::Format(" ---> Best-fit Lee strength: LEEx = %6.4f, chi2 = %6.3f",
-			      minimization_Lee_strength_val,
-			      minimization_chi2
-			      )<<endl;    
-  
-  //////////////////
+	Set_fakedata( matrix_fakedata );
 
-  double Lee_bestFit_data = minimization_Lee_strength_val;
-  double Lee_bestFit_err = minimization_Lee_strength_err;
-  double chi2_gmin_data = minimization_chi2;
-  vector<int>Lee_scan100_data;
-  vector<double>chi2_null_scan_data;
- 
-  // temporary new file names lhagaman 2022_04_05
-  //TFile *file_data = new TFile("file_Asimov_new_format.root", "recreate"); 
-  TFile *file_data = new TFile("file_data.root", "recreate");
-  TTree *tree_data = new TTree("tree_data", "Feldman-Cousins");
+	//////////////////
 
-  tree_data->Branch( "Lee_bestFit_data", &Lee_bestFit_data, "Lee_bestFit_data/D" );
-  tree_data->Branch( "Lee_bestFit_err", &Lee_bestFit_err, "Lee_bestFit_err/D" );
-  tree_data->Branch( "chi2_gmin_data", &chi2_gmin_data, "chi2_gmin_data/D");
-  tree_data->Branch( "Lee_scan100_data", &Lee_scan100_data );
-  tree_data->Branch( "chi2_null_scan_data", &chi2_null_scan_data );
+	Minimization_Lee_strength_FullCov(1, 0);
 
-  int num_scan = int(((Lee_true_hgh-Lee_true_low)/step)+0.5) + 1;
-  
-  for(int idx=1; idx<=num_scan; idx++ ) {
+	cout<<endl<<TString::Format(" ---> Best-fit Lee strength: LEEx = %6.4f, chi2 = %6.3f",
+			minimization_Lee_strength_val,
+			minimization_chi2
+			)<<endl;    
+
+	//////////////////
+
+	double Lee_bestFit_data = minimization_Lee_strength_val;
+	double Lee_bestFit_err = minimization_Lee_strength_err;
+	double chi2_gmin_data = minimization_chi2;
+	vector<int>Lee_scan100_data;
+	vector<double>chi2_null_scan_data;
+
+	TFile *file_data = new TFile("file_data.root", "recreate");
+	TTree *tree_data = new TTree("tree_data", "Feldman-Cousins");
+
+	tree_data->Branch( "Lee_bestFit_data", &Lee_bestFit_data, "Lee_bestFit_data/D" );
+	tree_data->Branch( "Lee_bestFit_err", &Lee_bestFit_err, "Lee_bestFit_err/D" );
+	tree_data->Branch( "chi2_gmin_data", &chi2_gmin_data, "chi2_gmin_data/D");
+	tree_data->Branch( "Lee_scan100_data", &Lee_scan100_data );
+	tree_data->Branch( "chi2_null_scan_data", &chi2_null_scan_data );
+
+	int num_scan = int(((Lee_true_hgh-Lee_true_low)/step)+0.5) + 1;
+
+	for(int idx=1; idx<=num_scan; idx++ ) {
     //if( idx%(max(1, (num_scan-1)/10))==0 ) cout<<Form(" ---> scan %4.2f, %3d", idx*1./(num_scan-1), idx)<<endl;
     if( idx%(max(1, (num_scan-1)/10))==0 ) cout<<Form(" ---> scan %4.2f", idx*1./(num_scan-1))<<endl;
     
@@ -200,14 +198,8 @@ void TLee::Exe_Feldman_Cousins(double Lee_true_low, double Lee_true_hgh, double 
 
       Minimization_Lee_strength_FullCov(Lee_strength, 1);
       double val_chi2_null = minimization_chi2;
-
-      if (Lee_strength == 0) {
-        Minimization_Lee_strength_FullCov(0.37, 0); 
-        // 2022_04_28, random starting point, it seems like the derivative was messed up at the boundary
-      } else {
-        Minimization_Lee_strength_FullCov(Lee_strength, 0);
-      }
       
+      Minimization_Lee_strength_FullCov(Lee_strength, 0);
       double val_chi2_gmin = minimization_chi2;
       if( minimization_status!=0 ) continue;
 
@@ -265,10 +257,7 @@ void TLee::Minimization_Lee_strength_FullCov(double Lee_initial_value, bool flag
 
       /////////
       TMatrixD matrix_cov_syst = matrix_absolute_cov_newworld;
-     
-      TMatrixD matrix_cov_syst_temp = matrix_cov_syst;
-
- 
+      
       for(int ibin=0; ibin<matrix_cov_syst.GetNrows(); ibin++) {
         double val_stat_cov = 0;        
         double val_meas = matrix_meas(0, ibin);
@@ -302,7 +291,7 @@ void TLee::Minimization_Lee_strength_FullCov(double Lee_initial_value, bool flag
       TMatrixD matrix_chi2 = matrix_delta * matrix_cov_total_inv *matrix_delta_T;
       chi2 = matrix_chi2(0,0);
 
-      if( 0 ) { // code for choosing specific channels, constraining with background channels (assuming zero strength in those)
+      if( 0 ) {
 	// TMatrixD matrix_gof_trans( bins_newworld, 20*2+26*2+11*3 );// oldworld, newworld
 	// for(int idx=1; idx<=20; idx++) matrix_gof_trans(6+idx-1, idx-1) = 1;
 	// for(int idx=1; idx<=20; idx++) matrix_gof_trans(26+6+idx-1, 20+idx-1) = 1;
@@ -335,7 +324,6 @@ void TLee::Minimization_Lee_strength_FullCov(double Lee_initial_value, bool flag
 	*/
 	
 	/// check
-	/*
 	TMatrixD matrix_gof_trans( bins_newworld, bins_newworld );// oldworld, newworld
 	for(int idx=1; idx<=bins_newworld; idx++) matrix_gof_trans(idx-1, idx-1) = 1;
 	TMatrixD matrix_gof_trans_T = matrix_gof_trans.T(); matrix_gof_trans.T();
@@ -348,343 +336,10 @@ void TLee::Minimization_Lee_strength_FullCov(double Lee_initial_value, bool flag
 	TMatrixD matrix_user_cov_total_inv = matrix_user_cov_total; matrix_user_cov_total_inv.Invert();
 	minimization_NDF = matrix_user_delta.GetNcols();
 	chi2 = (matrix_user_delta*matrix_user_cov_total_inv*matrix_user_delta_T)(0,0);
-        */
-
-	//cout << "starting custom chi2 calculation\n";
-	
-	TMatrixD matrix_cov_total_user = matrix_cov_syst_temp;
-
-	int both_1g_channels = 1;
-	int just_Np = 0;
-	int just_0p = 0;
-
-	int both_1g_channels_no_numu = 0;
-	int just_Np_no_numu = 0;
-	int just_0p_no_numu = 0;
-
-	int test_split_constr = 0;	
-	int just_Np_channels = 0;
-	int just_0p_channels = 0;
-
-	int ind_tar_start = 0;
-        int ind_tar_end = 0; // up to but not including
-        int ind_constr_start = 0;
-        int ind_constr_end = 0;	
-	int ind_constr_part_1_start = 0;
-	int ind_constr_part_1_end = 0;
-	int ind_constr_part_2_start = 0;
-	int ind_constr_part_2_end = 0;
-	int split_constr_channels = 0;
-
-	if (both_1g_channels) {
-	  ind_tar_start = 0;
-	  ind_tar_end = 0 + 2*2; // up to but not including
-	  ind_constr_start = 4;
-	  ind_constr_end = 4 + 4*16;
-	}
-
-	if (just_Np) { // also removing target overflows
-          ind_tar_start = 0;
-          ind_tar_end = 1; // up to but not including
-          ind_constr_start = 4;
-          ind_constr_end = 4 + 4*16;
-        }
-
-	if (just_0p) { // also removing target overflows
-          ind_tar_start = 2;
-          ind_tar_end = 3; // up to but not including
-          ind_constr_start = 4;
-          ind_constr_end = 4 + 4*16;
-        }
-
-	if (both_1g_channels_no_numu) {
-          ind_tar_start = 0;
-          ind_tar_end = 0 + 2*2; // up to but not including
-          ind_constr_start = 4;
-          ind_constr_end = 4 + 2*16;
-        }
-
-	if (just_Np_no_numu) {
-          ind_tar_start = 0;
-          ind_tar_end = 0 + 2; // up to but not including
-          ind_constr_start = 4;
-          ind_constr_end = 4 + 2*16;
-        }
-
-	if (just_0p_no_numu) {
-          ind_tar_start = 2;
-          ind_tar_end = 2 + 2; // up to but not including
-          ind_constr_start = 4;
-          ind_constr_end = 4 + 2*16;
-        }
-
-
-	if (test_split_constr) { // should be the same as both_1g_channels
-	  ind_tar_start = 0;
-	  ind_tar_end = 0 + 2*2;
-	  ind_constr_part_1_start = 4;
-	  ind_constr_part_1_end = 13;
-	  ind_constr_part_2_start = 13;
-	  ind_constr_part_2_end = 4 + 4*16;
-	}
-
-	if (just_Np_channels) {
-	  ind_tar_start = 0;
-	  ind_tar_end = 1;
-	  ind_constr_part_1_start = 4;
-	  ind_constr_part_1_end = 4 + 1*16;
-	  ind_constr_part_1_start = 4 + 2*16;
-	  ind_constr_part_2_end = 4 + 3*16;
-	  split_constr_channels = 1;
-	} 
-
-	if (just_0p_channels) {
-          ind_tar_start = 2;
-          ind_tar_end = 3;
-          ind_constr_part_1_start = 4 + 1*16;
-          ind_constr_part_1_end = 4 + 2*16;
-          ind_constr_part_1_start = 4 + 3*16;
-          ind_constr_part_2_end = 4 + 4*16;
-	  split_constr_channels = 1;
-        }
-
-	//int constr_size = 0;
-	//int target_size = 0;
-
-	//if (split_constr_channels) {
-	
-	//}
-	
-
-	
-	TMatrixD matrix_pred_X;
-	TMatrixD matrix_data_X;
-	TMatrixD matrix_pred_Y;
-	TMatrixD matrix_data_Y;
-	TMatrixD matrix_Y_under_X;
-	TMatrixD matrix_YY_under_XX;
-	
-	
-	if (split_constr_channels) {
-		for(int ibin=ind_constr_part_1_start; ibin<ind_constr_part_1_end; ibin++) {
-
-                  double val_meas = matrix_meas(0, ibin);
-                  double val_pred = matrix_pred(0, ibin);
-
-                  double val_stat_cov;
-
-                  /// CNP
-                  if( val_meas==0 ) val_stat_cov = val_pred/2;
-                  else val_stat_cov = 3./( 1./val_meas + 2./val_pred );
-                  if( val_meas==0 && val_pred==0 ) val_stat_cov = 1e-6;
-
-                  /// Pearson
-                  //val_stat_cov = val_pred;
-
-                  /// Neyman
-                  val_stat_cov = val_meas;
-
-                  matrix_cov_total_user(ibin, ibin) += val_stat_cov;
-
-                }
-		for(int ibin=ind_constr_part_2_start; ibin<ind_constr_part_2_end; ibin++) {
-
-                  double val_meas = matrix_meas(0, ibin);
-                  double val_pred = matrix_pred(0, ibin);
-
-                  double val_stat_cov;
-
-                  /// CNP
-                  if( val_meas==0 ) val_stat_cov = val_pred/2;
-                  else val_stat_cov = 3./( 1./val_meas + 2./val_pred );
-                  if( val_meas==0 && val_pred==0 ) val_stat_cov = 1e-6;
-
-                  /// Pearson
-                  //val_stat_cov = val_pred;
-
-                  /// Neyman
-                  //val_stat_cov = val_meas;
-
-                  matrix_cov_total_user(ibin, ibin) += val_stat_cov;
-
-                }
-		int part_1_bins = ind_constr_part_1_end - ind_constr_part_1_start;
-		int part_2_bins = ind_constr_part_2_end - ind_constr_part_2_start;
-		
-		matrix_pred_X.Clear();
-		matrix_pred_X.ResizeTo(1, part_1_bins + part_2_bins);
-		TMatrixDSub(matrix_pred_X, 0, 0, 0, part_1_bins - 1) = matrix_pred.GetSub(0, 0, ind_constr_part_1_start, ind_constr_part_1_end);
-		TMatrixDSub(matrix_pred_X, 0, 0, part_1_bins, part_1_bins + part_2_bins - 1) = matrix_pred.GetSub(0, 0, ind_constr_part_2_start, ind_constr_part_2_end - 1);
-
-		matrix_data_X.Clear();
-                matrix_data_X.ResizeTo(1, part_1_bins + part_2_bins);
-                TMatrixDSub(matrix_data_X, 0, 0, 0, part_1_bins - 1) = matrix_meas.GetSub(0, 0, ind_constr_part_1_start, ind_constr_part_1_end);
-                TMatrixDSub(matrix_data_X, 0, 0, part_1_bins, part_1_bins + part_2_bins - 1) = matrix_meas.GetSub(0, 0, ind_constr_part_2_start, ind_constr_part_2_end - 1);
-
-		//TMatrixD matrix_pred_X = matrix_pred.GetSub(0, 0, ind_constr_start, ind_constr_end - 1);
-        	//TMatrixD matrix_data_X = matrix_meas.GetSub(0, 0, ind_constr_start, ind_constr_end - 1);
-
-        	TMatrixD matrix_pred_Y = matrix_pred.GetSub(0, 0, ind_tar_start, ind_tar_end - 1);
-        	TMatrixD matrix_data_Y = matrix_meas.GetSub(0, 0, ind_tar_start, ind_tar_end - 1);
-
-		TMatrixD matrix_XX(part_1_bins + part_2_bins, part_1_bins + part_2_bins);
-		TMatrixDSub(matrix_XX, 0, part_1_bins - 1, 0, part_1_bins - 1) = matrix_cov_total_user.GetSub(ind_constr_part_1_start, ind_constr_part_1_end - 1, ind_constr_part_1_start, ind_constr_part_1_end - 1);
-		TMatrixDSub(matrix_XX, 0, part_1_bins - 1, part_1_bins, part_1_bins + part_2_bins - 1) = matrix_cov_total_user.GetSub(ind_constr_part_1_start, ind_constr_part_1_end - 1, ind_constr_part_2_start, ind_constr_part_2_end - 1);
-		TMatrixDSub(matrix_XX, part_1_bins, part_1_bins + part_2_bins - 1, 0, part_1_bins - 1) = matrix_cov_total_user.GetSub(ind_constr_part_2_start, ind_constr_part_2_end - 1, ind_constr_part_1_start, ind_constr_part_1_end - 1);
-		TMatrixDSub(matrix_XX, part_1_bins, part_1_bins + part_2_bins - 1, part_1_bins, part_1_bins + part_2_bins - 1) = matrix_cov_total_user.GetSub(ind_constr_part_2_start, ind_constr_part_2_end - 1, ind_constr_part_2_start, ind_constr_part_2_end - 1);
-
-        	//TMatrixD matrix_XX = matrix_cov_total_user.GetSub(ind_constr_start, ind_constr_end - 1, ind_constr_start, ind_constr_end - 1);
-
-        	TMatrixD matrix_XX_inv = matrix_XX;
-        	matrix_XX_inv.Invert();
-
-        	TMatrixD matrix_YY = matrix_cov_total_user.GetSub(ind_tar_start, ind_tar_end - 1, ind_tar_start, ind_tar_end - 1);
-
-		TMatrixD matrix_YX(ind_tar_end - ind_tar_start, part_1_bins + part_2_bins);
-		TMatrixDSub(matrix_YX, 0, ind_tar_end - ind_tar_start - 1, 0, part_1_bins - 1) = matrix_cov_total_user.GetSub(ind_tar_start, ind_tar_end - 1, ind_constr_part_1_start, ind_constr_part_1_end - 1);
-		TMatrixDSub(matrix_YX, 0, ind_tar_end - ind_tar_start - 1, part_1_bins, part_1_bins + part_2_bins - 1) = matrix_cov_total_user.GetSub(ind_tar_start, ind_tar_end - 1, ind_constr_part_2_start, ind_constr_part_2_end);
-
-        	//TMatrixD matrix_YX = matrix_cov_total_user.GetSub(ind_tar_start, ind_tar_end - 1, ind_constr_start, ind_constr_end - 1);
-        	
-		TMatrixD matrix_XY(part_1_bins + part_2_bins, ind_tar_end - ind_tar_start);
-
-		//TMatrixD matrix_XY(ind_constr_end - ind_constr_start, ind_tar_end - ind_tar_start);
-        	matrix_XY.Transpose(matrix_YX);
-
-        	matrix_pred_X.T();
-        	matrix_data_X.T();
-        	matrix_pred_Y.T();
-        	matrix_data_Y.T();
-
-        	TMatrixD matrix_Y_under_X = matrix_pred_Y + matrix_YX * matrix_XX_inv *(matrix_data_X - matrix_pred_X);
-        	TMatrixD matrix_YY_under_XX = matrix_YY - matrix_YX * matrix_XX_inv * matrix_XY;	
-	
-	} else {
-		//cout << "branch, no split target\n";
-		for(int ibin=ind_constr_start; ibin<ind_constr_end; ibin++) {
-
-    	  	  double val_meas = matrix_meas(0, ibin);
-          	  double val_pred = matrix_pred(0, ibin);
-		
-		  double val_stat_cov;
-
-		  /// CNP
-        	  if( val_meas==0 ) val_stat_cov = val_pred/2;
-        	  else val_stat_cov = 3./( 1./val_meas + 2./val_pred );   
-        	  if( val_meas==0 && val_pred==0 ) val_stat_cov = 1e-6;
-
-		  /// Pearson
- 		  //val_stat_cov = val_pred;
- 
-		  /// Neyman
-		  val_stat_cov = val_meas;
-        	  
-        	  matrix_cov_total_user(ibin, ibin) += val_stat_cov;		
-		}
-		//cout << "lhagaman debug 1\n";
-		matrix_pred_X.Clear();
-                matrix_pred_X.ResizeTo(1, ind_constr_end - ind_constr_start);
-		matrix_pred_X = matrix_pred.GetSub(0, 0, ind_constr_start, ind_constr_end - 1);
-        	matrix_data_X.Clear();
-                matrix_data_X.ResizeTo(1, ind_constr_end - ind_constr_start);
-		matrix_data_X = matrix_meas.GetSub(0, 0, ind_constr_start, ind_constr_end - 1);
-		
-		matrix_pred_Y.Clear();
-                matrix_pred_Y.ResizeTo(1, ind_tar_end - ind_tar_start);
-        	matrix_pred_Y = matrix_pred.GetSub(0, 0, ind_tar_start, ind_tar_end - 1);
-        	matrix_data_Y.Clear();
-                matrix_data_Y.ResizeTo(1, ind_tar_end - ind_tar_start);
-		matrix_data_Y = matrix_meas.GetSub(0, 0, ind_tar_start, ind_tar_end - 1);
-
-        	TMatrixD matrix_XX = matrix_cov_total_user.GetSub(ind_constr_start, ind_constr_end - 1, ind_constr_start, ind_constr_end - 1);
-		//cout << "lhagaman debug 2\n";
-        	TMatrixD matrix_XX_inv = matrix_XX;
-        	matrix_XX_inv.Invert();
-
-        	TMatrixD matrix_YY = matrix_cov_total_user.GetSub(ind_tar_start, ind_tar_end - 1, ind_tar_start, ind_tar_end - 1);
-			
-        	TMatrixD matrix_YX = matrix_cov_total_user.GetSub(ind_tar_start, ind_tar_end - 1, ind_constr_start, ind_constr_end - 1);
-        	TMatrixD matrix_XY(ind_constr_end - ind_constr_start, ind_tar_end - ind_tar_start);
-        	matrix_XY.Transpose(matrix_YX);
-		//cout << "lhagaman debug 3\n";	
-        	matrix_pred_X.T();
-        	matrix_data_X.T();
-        	matrix_pred_Y.T();
-        	matrix_data_Y.T();
-		
-
-		matrix_Y_under_X.Clear();
-		matrix_Y_under_X.ResizeTo(ind_tar_end - ind_tar_start, 1);	
-        	matrix_Y_under_X = matrix_pred_Y + matrix_YX * matrix_XX_inv *(matrix_data_X - matrix_pred_X);
-        	matrix_YY_under_XX.Clear();
-                matrix_YY_under_XX.ResizeTo(ind_tar_end - ind_tar_start, ind_tar_end - ind_tar_start);
-		matrix_YY_under_XX = matrix_YY - matrix_YX * matrix_XX_inv * matrix_XY;
-		//cout << "lhagaman debug 4\n";
-	}
-
-
-      //cout << "lhagaman debug 5\n";	
-      for(int ibin=0; ibin<matrix_YY_under_XX.GetNrows(); ibin++) {
-        double val_stat_cov = 0;
-        double val_meas = matrix_data_Y(ibin, 0);
-        double val_pred = matrix_Y_under_X(ibin, 0);
-
-	/// CNP
-        if( val_meas==0 ) val_stat_cov = val_pred/2;
-        else val_stat_cov = 3./( 1./val_meas + 2./val_pred );   
-        if( val_meas==0 && val_pred==0 ) val_stat_cov = 1e-6;
-
-	/// Pearson
-	//val_stat_cov = val_pred;
-
-	/// Neyman
-	//val_stat_cov = val_meas;
-	
-	//if (val_meas==0) {
-	//  val_stat_cov = 1e-10; 
-	//}
-	
-	//if (val_pred==0 && val_meas==0) {
-	//  val_stat_cov = 1e-6;
-	//}
-	
-        matrix_YY_under_XX(ibin, ibin) += val_stat_cov;
-        //matrix_YY_under_XX(ibin, ibin) = val_stat_cov; // temp, stat only uncertainty	
-      }
-
-      //cout << "lhagaman debug 6\n";
-	
-      TMatrixD matrix_delta_user = matrix_Y_under_X - matrix_data_Y; 
-      TMatrixD matrix_delta_user_t = matrix_delta_user;
-      matrix_delta_user_t.T();
-      //cout << "lhagaman debug 6.1\n";
-      TMatrixD matrix_YY_under_XX_inv = matrix_YY_under_XX;
-      matrix_YY_under_XX_inv.Invert();
-      //cout << "lhagaman debug 6.2\n";
-      
-      //cout << "rows and cols: " << matrix_delta_user_t.GetNrows() << ", " << matrix_delta_user_t.GetNcols() << "; " << matrix_YY_under_XX_inv.GetNrows() << ", " << matrix_YY_under_XX_inv.GetNcols() << "; " << matrix_delta_user.GetNrows() << ", " << matrix_delta_user.GetNcols() << "\n"; 
-
-      double chi2_user = (matrix_delta_user_t * matrix_YY_under_XX_inv * matrix_delta_user)(0,0);
-
-      //cout << "new chi2 calculation " << chi2_user << "\n";
-	
-      //cout << "lhagaman debug 7\n";
-      chi2 = chi2_user;
-
       }
             
       ///////////////////////////////////////////////////////////////////////////      
-      
-
-	// adding constraints
-	//
-	
-	// constrain 1 and 2 with 3, 4, 5, 6
-	
-      
-
-
- 
+                  
       return chi2;
       
     },// end of FCN
@@ -832,32 +487,22 @@ void TLee::Set_Variations(int num_toy)
     bool FLAG_negtive = 0;
     for(int ibin=0; ibin<bins_newworld; ibin++) {
       double val_with_syst = matrix_variation(ibin,0) + map_pred_spectrum_newworld_bin[ibin];// key point
-   
-     // lhagaman 2022_02_11, temporarily commenting this out since I have low statistics bins
-     // lhagaman 2022_02_16, removing this temp change
-     if( val_with_syst<0 ) {
+      if( val_with_syst<0 ) {
     	FLAG_negtive = 1;
     	break;
       }
     }
+    
     if( FLAG_negtive ) goto RANDOM_AGAIN;    
     
     for(int ibin=0; ibin<bins_newworld; ibin++) {
       double val_with_syst = matrix_variation(ibin,0) + map_pred_spectrum_newworld_bin[ibin];// key point
-      
-      // lhagaman 2022_02_11, temporarily adding this since I have low statistics bins
-      // lhagaman 2022_02_16, removing this temp change
-      //if (val_with_syst < 0) {
-	//val_with_syst = 0;
-      //}
-
       map_toy_variation[itoy][ibin] = rand->PoissonD( val_with_syst );
     }
 
     //cout<<" effline "<<eff_line<<endl;
-    //
-    //cout << "toy number" << itoy << endl;
-  } 
+  }
+  
   
 }
 
@@ -1712,11 +1357,8 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
     	cout<<" --------> Protection Protection"<<endl;
       }
     }
-    if (0) { // hack to reduce data uncertainty
-        double stat1 = matrix_goodness_cov_total_noConstraint(i,i);
-        stat1 = stat1 / 11.9561; // scaling error down by factor of 10 
-        matrix_goodness_cov_total_noConstraint(i,i) = stat1;
-    }
+    
+    
     if( (val_pred==val_data) && (val_pred==0) ) matrix_goodness_cov_total_noConstraint(i,i) = 1e-6;
   }  
   matrix_goodness_cov_total_noConstraint = matrix_goodness_cov_total_noConstraint + matrix_YY;
@@ -1936,12 +1578,7 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
         double denominator = 2*( val_pred - val_meas + val_meas*log(val_meas/val_pred) );
 	user_stat = numerator/denominator;
       }
-    }
-    
-    if (0) {
-    	// hack again
-    	user_stat = user_stat / 11.9561;
-    }
+    }    
     matrix_XX(ibin-1, ibin-1) += user_stat;
     
     
@@ -1954,10 +1591,6 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 
   TMatrixD matrix_Y_under_X = matrix_pred_Y + matrix_YX * matrix_XX_inv * (matrix_data_X - matrix_pred_X);
   TMatrixD matrix_YY_under_XX = matrix_YY - matrix_YX * matrix_XX_inv * matrix_XY;
-
-  // here matrix_Y_under_X is the prediction after constraint
-  // matrix_YY_under_XX is the total systematic covariance matrix after constraint (no data statistical uncertainty) 
-
   // Here, only for systetmaics uncertainty because of no stat in matrix_YY
   
   if( flag_lookelsewhere ) {
@@ -2022,12 +1655,6 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
       }
     }
     
-    if (0) { // hack again
-    	double stat = matrix_goodness_cov_total_wiConstraint(i,i);
-    	stat = stat / 11.9561;
-    	matrix_goodness_cov_total_wiConstraint(i,i) = stat; 
-    }
-
     if( (val_pred==val_data) && (val_pred==0) ) matrix_goodness_cov_total_wiConstraint(i,i) = 1e-6;
   }  
   matrix_goodness_cov_total_wiConstraint = matrix_goodness_cov_total_wiConstraint + matrix_YY_under_XX;
@@ -2131,16 +1758,6 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
     if( val_cv==0 ) rel_err = 0;
     h1_pred_Y_wiConstraint_rel_error->SetBinContent(ibin, 1);
     h1_pred_Y_wiConstraint_rel_error->SetBinError(ibin, rel_err);
-    
-    bool print_constrained_error = 1;
-
-    if (print_constrained_error && (ibin==1 || ibin==2)) {
-       // here print out constrtained error for certain bins, var_err / val_cv_after_constraint
-       double val_cv_after_constraint = h1_pred_Y_wiConstraint->GetBinContent(ibin);
-       cout << "total constrained systematic error, bin " << ibin << " : " << val_err / val_cv_after_constraint << "\n";
-    }
-
-    
   }
 
   h1_pred_Y_wiConstraint_rel_error->Draw("e2");
@@ -2276,23 +1893,18 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
   cout<<endl;
   */
   
-  TLegend *lg_top_total = new TLegend(0.5, 0.2, 0.85, 0.85); // lhagaman changed 0.45 to 0.2
+  TLegend *lg_top_total = new TLegend(0.5, 0.45, 0.85, 0.85);
   // h1_pred_Y_wiConstraint->SetMaximum(40);
   // lg_top_total->SetX1(0.55); lg_top_total->SetX2(0.95);
   // lg_top_total->SetX1(0.2); lg_top_total->SetX2(0.4);
   if( index==1 || index==7 ) { lg_top_total->SetX1(0.2); lg_top_total->SetX2(0.4);}
   
-  if( index==1001 || index==1002 || index==1003  || index==1004) {
+  if( index==1001 || index==1002 || index==1003 ) {
     lg_top_total->SetX1(0.2); lg_top_total->SetX2(0.4);
 
-    if( index==1001 || index==1002 || index==1003 || index==1004)
+    if( index==1001 || index==1002 )
       lg_top_total->AddEntry("", TString::Format("#color[%d]{LEEx = %3.1f}", kGreen+1, scaleF_Lee), "");
-
-      if (index==1001) h1_pred_Y_wiConstraint->GetYaxis()->SetRangeUser(0, 200);
-      else if (index==1002) h1_pred_Y_wiConstraint->GetYaxis()->SetRangeUser(0, 125); 
-      else  h1_pred_Y_wiConstraint->GetYaxis()->SetRangeUser(0, 350);   
-
-  if( index==2001 || index==2002 || index==2003 )
+    if( index==1003 )
       lg_top_total->AddEntry("", TString::Format("#color[%d]{Best-fit LEEx = %3.1f}", kGreen+1, scaleF_Lee), "");
   }
   
@@ -2335,427 +1947,10 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
     if( flag_axis_userAB ) axis_userAB_clone->Draw();    
   }
 
-  if (index==1001) {
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gNp                                     1g0p"); 
+  if( index==1001 || index==1002 || index==1003 ) {
+    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reco neutrino energy (x100 MeV)");
   }
-
-  if(index==1002) {
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gNp");
-  }
-
-  if(index==1003) {
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("1g0p");
-  }
- 
-  if(index==1004) {
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gXp");
-  }
- 
-
-
-
-  if (index==44001) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "Constrained by:", "");
-    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
-    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gNp                                     1g0p");
-  }
-  if (index==44002) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "Constrained by:", "");
-    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gNp                                     1g0p");
-  }
-  if (index==44003) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "Constrained by:", "");
-    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gNp                                     1g0p");
-  }
-  if (index==44004) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "Constrained by:", "");
-    lg_top_total->AddEntry("", "NC Pi0 Xp", "");
-    lg_top_total->AddEntry("", "numuCC Xp", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gXp");
-  }
-  if (index==44005) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "Constrained by:", "");
-    lg_top_total->AddEntry("", "NC Pi0 Xp", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gXp");
-  }
-  if (index==44006) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "Constrained by:", "");
-    lg_top_total->AddEntry("", "numuCC Xp", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gXp");
-  }
-  if (index==44007) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "Constrained by:", "");
-    lg_top_total->AddEntry("", "NC Pi0 Xp", "");
-    lg_top_total->AddEntry("", "numuCC Xp", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gNp                                     1g0p");
-  }
-  if (index==44008) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Np", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Neutrino Energy (x100 MeV)");
-  }
-  if (index==44009) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 0p", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Neutrino Energy (x100 MeV)");
-  }
-  if (index==44010) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Xp", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "numuCC Xp", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Neutrino Energy (x100 MeV)");
-  }
-
-
-  if (index==55001) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "1gNp and 1g0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gNp                                     1g0p");
-  }
-  if (index==55002) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "1gNp and 1g0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
-    lg_top_total->AddEntry("", "reco Pi0 energy", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gNp                                     1g0p");
-  }
-  if (index==55003) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "1gNp and 1g0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gNp                                     1g0p");
-  }
-  if (index==55004) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "1gNp and 1g0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gNp                                     1g0p");
-  }
-  if (index==55005) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "1gNp and 1g0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "CC Pi0 Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gNp                                     1g0p");
-  }
-  if (index==55006) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "1gNp and 1g0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "CC Pi0 Np and 0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gNp                                     1g0p");
-  }
-  if (index==55007) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "1gXp", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Xp", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "numuCC Xp", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gXp");
-  }
-  if (index==55008) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "1gXp", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gXp");
-  }
-  if (index==55009) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "1gXp", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Xp", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gXp");
-  }
-  if (index==55010) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "1gXp", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gXp");
-  }
-  if (index==55011) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "1gXp", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Xp", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "numuCC Xp", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "CC Pi0 Xp", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gXp");
-  }
-  if (index==55012) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "1gXp", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "CC Pi0 Np and 0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("1gXp");
-  }
-
-
-
-  if (index==56001) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Energy Transfer (x100 MeV)");
-  }
-  if (index==56002) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "CC Pi0 Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Energy Transfer (x100 MeV)");
-  }
-  if (index==56003) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "CC Pi0 Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Energy Transfer (x100 MeV)");
-  }
-  if (index==56004) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "CC Pi0 Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Pi0 Kinetic Energy (x100 MeV)");
-  }
-  if (index==56005) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Xp", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "numuCC Xp", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Energy Transfer (x100 MeV)");
-  }
-  if (index==56006) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Xp", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "numuCC Xp", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "CC Pi0 Xp", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Energy Transfer (x100 MeV)");
-  }
-  if (index==56007) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Xp", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Energy Transfer (x100 MeV)");
-  }
-  if (index==56008) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Xp", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "CC Pi0 Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Energy Transfer (x100 MeV)");
-  }
-
-
-  if (index==58001) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "CC Pi0 Np and 0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Neutrino Energy (x100 MeV)");
-  }
-  if (index==58002) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "CC Pi0 Np and 0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Neutrino Energy (x100 MeV)");
-  }
-  if (index==58003) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "CC Pi0 Np and 0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Neutrino Energy (x100 MeV)");
-  }
-  if (index==58004) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "CC Pi0 Np and 0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Pi0 Kinetic Energy (x100 MeV)");
-  }
-  if (index==58005) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "CC Pi0 Xp", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "numuCC Xp", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Neutrino Energy (x100 MeV)");
-  }
-  if (index==58006) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "CC Pi0 Xp", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Xp", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Neutrino Energy (x100 MeV)");
-  }
-  if (index==58007) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "CC Pi0 Xp", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Xp", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "numuCC Xp", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Neutrino Energy (x100 MeV)");
-  }
-  if (index==58008) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "CC Pi0 Xp", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 Np and 0p", "");
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Neutrino Energy (x100 MeV)");
-  }
-
-
-
-
-
-
-
-
-  if (index==57001) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 1p", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Proton-Pi0 Invariant Mass (x200 MeV + 1000 MeV)");
-  }
-  if (index==57002) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "NC Pi0 1p", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Proton-Pi0 Total Momentum (x100 MeV/c)");
-  }
-  if (index==57003) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "CC Pi0 1p", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Proton-Pi0 Invariant Mass (x200 MeV + 1000 MeV)");
-  }
-  if (index==57004) {
-    lg_top_total->AddEntry("", "", "");
-    lg_top_total->AddEntry("", "CC Pi0 1p", "");
-    lg_top_total->AddEntry("", "constrained by:", "");
-    lg_top_total->AddEntry("", "numuCC Np and 0p", "");
-    h1_pred_Y_noConstraint_rel_error->SetXTitle("Reconstructed Proton-Pi0 Total Momentum (x100 MeV/c)");
-  }
-
-
-
-
+  
   // h1_spectra_wi2no->Draw("same");
   // h1_spectra_wi2no->SetLineColor(kGreen+1);  
   // TLegend *lg_wi2no = new TLegend(0.92, 0.15, 0.94, 0.60);
@@ -2853,7 +2048,9 @@ void TLee::Plotting_systematics()
   int color_additional = kOrange-3;
   int color_mc_stat    = kGreen+1;
   int color_total      = kBlack;
-    
+  int color_reweight   = kYellow+1;
+  int color_reweight_cor = kYellow-9;
+
   int rows = bins_newworld;
   int num_ch = map_data_spectrum_ch_bin.size();
   
@@ -2886,12 +2083,18 @@ void TLee::Plotting_systematics()
   TH1D *h1_detector_relerr = new TH1D("h1_detector_relerr", "", rows, 0, rows);
   TH1D *h1_mc_stat_relerr = new TH1D("h1_mc_stat_relerr", "", rows, 0, rows);
   TH1D *h1_additional_relerr = new TH1D("h1_additional_relerr", "", rows, 0, rows);
+  TH1D *h1_reweight_relerr = new TH1D("h1_reweight_relerr", "", rows, 0, rows); 
+  TH1D *h1_reweight_cor_relerr = new TH1D("h1_reweight_cor_relerr", "", rows, 0, rows); 
   
+  //cout << "lhagaman debug, rows = " << rows << "\n";
+
   TH1D *h1_flux_fraction = new TH1D("h1_flux_fraction", "", rows, 0, rows);
   TH1D *h1_Xs_fraction = new TH1D("h1_Xs_fraction", "", rows, 0, rows);
   TH1D *h1_detector_fraction = new TH1D("h1_detector_fraction", "", rows, 0, rows);
   TH1D *h1_mc_stat_fraction = new TH1D("h1_mc_stat_fraction", "", rows, 0, rows);
   TH1D *h1_additional_fraction = new TH1D("h1_additional_fraction", "", rows, 0, rows);
+  TH1D *h1_reweight_fraction = new TH1D("h1_reweight_fraction", "", rows, 0, rows);
+  TH1D *h1_reweight_cor_fraction = new TH1D("h1_reweight_cor_fraction", "", rows, 0, rows);
   
   TH1D *h1_pred_totalsyst = new TH1D("h1_pred_totalsyst", "", rows, 0, rows);
   TH1D *h1_meas = new TH1D("h1_meas", "", rows, 0, rows);
@@ -2917,6 +2120,10 @@ void TLee::Plotting_systematics()
         double cov_detector   = matrix_absolute_detector_cov_newworld(ibin-1, ibin-1);
         double cov_mc_stat    = matrix_absolute_mc_stat_cov_newworld(ibin-1, ibin-1);
         double cov_additional = matrix_absolute_additional_cov_newworld(ibin-1, ibin-1);
+	double cov_reweight   = matrix_absolute_reweight_cov_newworld(ibin-1, ibin-1);
+	double cov_reweight_cor   = matrix_absolute_reweight_cor_cov_newworld(ibin-1, ibin-1);
+
+        //cout << "lhagaman debug, cov_reweight_cor = " << cov_reweight_cor << "\n";
 
         if(val_cv!=0) {
           h1_total_relerr->SetBinContent( ibin, sqrt( cov_total )/val_cv );
@@ -2925,6 +2132,8 @@ void TLee::Plotting_systematics()
           h1_detector_relerr->SetBinContent( ibin, sqrt( cov_detector )/val_cv );
           h1_mc_stat_relerr->SetBinContent( ibin, sqrt( cov_mc_stat )/val_cv );
           h1_additional_relerr->SetBinContent( ibin, sqrt( cov_additional )/val_cv );
+          h1_reweight_relerr->SetBinContent( ibin, sqrt( cov_reweight )/val_cv );
+          h1_reweight_cor_relerr->SetBinContent( ibin, sqrt( cov_reweight_cor )/val_cv );
         }
 
         if( cov_total!=0 ) {
@@ -2933,6 +2142,8 @@ void TLee::Plotting_systematics()
           h1_detector_fraction->SetBinContent(ibin, cov_detector*100./cov_total );
           h1_mc_stat_fraction->SetBinContent(ibin, cov_mc_stat*100./cov_total );
           h1_additional_fraction->SetBinContent(ibin, cov_additional*100./cov_total );
+          h1_reweight_fraction->SetBinContent(ibin, cov_reweight*100./cov_total );
+	  h1_reweight_cor_fraction->SetBinContent(ibin, cov_reweight_cor*100./cov_total );
         }
         
         h1_pred_totalsyst->SetBinContent( ibin, val_cv ); h1_pred_totalsyst->SetBinError( ibin, sqrt(cov_total) );
@@ -2978,41 +2189,25 @@ void TLee::Plotting_systematics()
   h1_mc_stat_relerr->Draw("same hist"); h1_mc_stat_relerr->SetLineColor(color_mc_stat);  
   h1_flux_relerr->Draw("same hist"); h1_flux_relerr->SetLineColor(color_flux);  
   h1_Xs_relerr->Draw("same hist"); h1_Xs_relerr->SetLineColor(color_Xs);  
+  if(flag_syst_reweight) h1_reweight_relerr->Draw("same hist"); h1_reweight_relerr->SetLineColor(color_reweight);
+  if(flag_syst_reweight_cor) h1_reweight_cor_relerr->Draw("same hist"); h1_reweight_cor_relerr->SetLineColor(color_reweight_cor);
   h1_detector_relerr->Draw("same hist"); h1_detector_relerr->SetLineColor(color_detector);
- 
-  bool print_category_errors = 1;
-  if (print_category_errors) {
-
-    cout << "bin 1 total rel err " << h1_total_relerr->GetBinContent(1) << "\n";
-    cout << "bin 1 dirt err " << h1_additional_relerr->GetBinContent(1) << "\n";
-    cout << "bin 1 mc stat rel err " << h1_mc_stat_relerr->GetBinContent(1) << "\n";
-    cout << "bin 1 flux rel err " << h1_flux_relerr->GetBinContent(1) << "\n";
-    cout << "bin 1 XS rel err " << h1_Xs_relerr->GetBinContent(1) << "\n";
-    cout << "bin 1 detector rel err " << h1_detector_relerr->GetBinContent(1) << "\n";
-
-    cout << "bin 3 total rel err " << h1_total_relerr->GetBinContent(3) << "\n";
-    cout << "bin 3 dirt err " << h1_additional_relerr->GetBinContent(3) << "\n";
-    cout << "bin 3 mc stat rel err " << h1_mc_stat_relerr->GetBinContent(3) << "\n";
-    cout << "bin 3 flux rel err " << h1_flux_relerr->GetBinContent(3) << "\n";
-    cout << "bin 3 XS rel err " << h1_Xs_relerr->GetBinContent(3) << "\n";
-    cout << "bin 3 detector rel err " << h1_detector_relerr->GetBinContent(13) << "\n";
-
-
-  }
- 
+  
   for(int idx=1; idx<num_ch; idx++) {
     line_root_xx[idx]->Draw(); line_root_xx[idx]->SetLineStyle(7); line_root_xx[idx]->SetY2(2.5);
   }
 
-  TLegend *lg_relerr_total = new TLegend(0.82, 0.5, 0.95, 0.89);
+  TLegend *lg_relerr_total = new TLegend(0.81, 0.5, 0.98, 0.89);
   lg_relerr_total->AddEntry(h1_total_relerr, "Total", "l");
   lg_relerr_total->AddEntry(h1_flux_relerr, "Flux", "l");
   lg_relerr_total->AddEntry(h1_Xs_relerr, "Xs", "l");
+  if(flag_syst_reweight) lg_relerr_total->AddEntry(h1_reweight_relerr, "Reweight", "l");
+  if(flag_syst_reweight_cor) lg_relerr_total->AddEntry(h1_reweight_cor_relerr, "Reweight cor", "l");
   lg_relerr_total->AddEntry(h1_detector_relerr, "Detector", "l");
   lg_relerr_total->AddEntry(h1_mc_stat_relerr, "MC stat", "l");
   lg_relerr_total->AddEntry(h1_additional_relerr, "Dirt", "l");
   lg_relerr_total->Draw();
-  lg_relerr_total->SetTextSize(0.05);
+  lg_relerr_total->SetTextSize(0.04);
     
   h2_relerr_total->Draw("same axis");
   canv_h2_relerr_total->SaveAs("canv_h2_relerr_total.png");
@@ -3024,6 +2219,16 @@ void TLee::Plotting_systematics()
   h1_flux_fraction->SetFillColor(color_flux); h1_flux_fraction->SetLineColor(kBlack);
   h1_stack_fraction->Add(h1_Xs_fraction);
   h1_Xs_fraction->SetFillColor(color_Xs); h1_Xs_fraction->SetLineColor(kBlack);
+  
+  if(flag_syst_reweight){
+    h1_stack_fraction->Add(h1_reweight_fraction);
+    h1_reweight_fraction->SetFillColor(color_reweight); h1_reweight_fraction->SetLineColor(kBlack);
+  }
+  if(flag_syst_reweight_cor){
+    h1_stack_fraction->Add(h1_reweight_cor_fraction);
+    h1_reweight_cor_fraction->SetFillColor(color_reweight_cor); h1_reweight_cor_fraction->SetLineColor(kBlack);
+  }
+  
   h1_stack_fraction->Add(h1_detector_fraction);
   h1_detector_fraction->SetFillColor(color_detector); h1_detector_fraction->SetLineColor(kBlack);
   h1_stack_fraction->Add(h1_mc_stat_fraction);
@@ -3047,14 +2252,16 @@ void TLee::Plotting_systematics()
     line_root_xx[idx]->Draw(); line_root_xx[idx]->SetLineStyle(7); line_root_xx[idx]->SetY2(110);
   }
 
-  TLegend *lg_fraction_total = new TLegend(0.82, 0.55, 0.95, 0.89);
+  TLegend *lg_fraction_total = new TLegend(0.81, 0.55, 0.98, 0.89);
   lg_fraction_total->AddEntry(h1_flux_fraction, "Flux", "f");
-  lg_fraction_total->AddEntry(h1_Xs_fraction, "Xs", "f");  
+  lg_fraction_total->AddEntry(h1_Xs_fraction, "Xs", "f");
+  if(flag_syst_reweight) lg_fraction_total->AddEntry(h1_reweight_fraction, "Reweight", "f");
+  if(flag_syst_reweight_cor) lg_fraction_total->AddEntry(h1_reweight_cor_fraction, "Reweight cor", "f");  
   lg_fraction_total->AddEntry(h1_detector_fraction, "Detector", "f");
   lg_fraction_total->AddEntry(h1_mc_stat_fraction, "MC stat", "f");
   lg_fraction_total->AddEntry(h1_additional_fraction, "Dirt", "f");
   lg_fraction_total->Draw();
-  lg_fraction_total->SetTextSize(0.05);
+  lg_fraction_total->SetTextSize(0.04);
       
   h2_basic_fraction->Draw("same axis");
   canv_h2_basic_fraction->SaveAs("canv_h2_basic_fraction.png");
@@ -3121,7 +2328,7 @@ void TLee::Set_Collapse()
   matrix_absolute_cov_oldworld.Clear();
   matrix_absolute_cov_oldworld.ResizeTo( bins_oldworld, bins_oldworld );
 
-  if( flag_syst_flux_Xs ) matrix_absolute_cov_oldworld += matrix_input_cov_flux_Xs;
+  if( flag_syst_flux_Xs || flag_syst_reweight || flag_syst_reweight_cor) matrix_absolute_cov_oldworld += matrix_input_cov_flux_Xs;
   if( flag_syst_detector ) matrix_absolute_cov_oldworld += matrix_input_cov_detector;
   if( flag_syst_additional ) matrix_absolute_cov_oldworld += matrix_input_cov_additional;
 
@@ -3174,13 +2381,17 @@ void TLee::Set_Collapse()
     matrix_absolute_detector_cov_newworld.Clear();
     matrix_absolute_mc_stat_cov_newworld.Clear();
     matrix_absolute_additional_cov_newworld.Clear();
-    
+    matrix_absolute_reweight_cov_newworld.Clear();
+    matrix_absolute_reweight_cor_cov_newworld.Clear();
+
     matrix_absolute_flux_cov_newworld.ResizeTo( bins_newworld, bins_newworld );
     matrix_absolute_Xs_cov_newworld.ResizeTo( bins_newworld, bins_newworld );
     matrix_absolute_detector_cov_newworld.ResizeTo( bins_newworld, bins_newworld );
     matrix_absolute_mc_stat_cov_newworld.ResizeTo( bins_newworld, bins_newworld );
     matrix_absolute_additional_cov_newworld.ResizeTo( bins_newworld, bins_newworld );
-                
+    matrix_absolute_reweight_cov_newworld.ResizeTo( bins_newworld, bins_newworld );
+    matrix_absolute_reweight_cor_cov_newworld.ResizeTo( bins_newworld, bins_newworld );
+
     for(auto it=matrix_input_cov_detector_sub.begin(); it!=matrix_input_cov_detector_sub.end(); it++) {
       int idx = it->first;
       matrix_absolute_detector_sub_cov_newworld[idx].Clear();
@@ -3192,6 +2403,9 @@ void TLee::Set_Collapse()
     matrix_absolute_Xs_cov_newworld = matrix_transform_Lee_T * matrix_input_cov_Xs * matrix_transform_Lee;
     matrix_absolute_detector_cov_newworld = matrix_transform_Lee_T * matrix_input_cov_detector * matrix_transform_Lee;
     matrix_absolute_additional_cov_newworld = matrix_transform_Lee_T * matrix_input_cov_additional * matrix_transform_Lee;
+    matrix_absolute_reweight_cov_newworld = matrix_transform_Lee_T * matrix_input_cov_reweight * matrix_transform_Lee;
+    matrix_absolute_reweight_cor_cov_newworld = matrix_transform_Lee_T * matrix_input_cov_reweight_cor * matrix_transform_Lee;
+    
     for(int ibin=0; ibin<bins_newworld; ibin++) {
       double val_mc_stat_cov = gh_mc_stat_bin[ibin]->Eval( scaleF_Lee );
       matrix_absolute_mc_stat_cov_newworld(ibin, ibin) = val_mc_stat_cov;
@@ -3257,7 +2471,9 @@ void TLee::Set_POT_implement()
       matrix_input_cov_Xs(ibin, jbin) *= scaleF_POT2;      
       matrix_input_cov_detector(ibin, jbin) *= scaleF_POT2;
       matrix_input_cov_additional(ibin, jbin) *= scaleF_POT2;
-            
+      matrix_input_cov_reweight(ibin, jbin) *= scaleF_POT2;
+      matrix_input_cov_reweight_cor(ibin, jbin) *= scaleF_POT2;
+
       for(auto it=matrix_input_cov_detector_sub.begin(); it!=matrix_input_cov_detector_sub.end(); it++) {
         int idx = it->first;
         matrix_input_cov_detector_sub[idx](ibin, jbin) *= scaleF_POT2;
@@ -3300,8 +2516,7 @@ void TLee::Set_Spectra_MatrixCov()
   /// spectra should be consist with matrix-cov order
   
   cout<<endl<<" ---> Set_Spectra_MatrixCov"<<endl<<endl;
-	
-  TString roostr;
+  TString roostr = "";
 
   ////////////////////////////////////// pred
 
@@ -3409,8 +2624,72 @@ void TLee::Set_Spectra_MatrixCov()
   TMatrixD matrix_flux_Xs_frac(bins_oldworld, bins_oldworld);
   TMatrixD matrix_flux_frac(bins_oldworld, bins_oldworld);
   TMatrixD matrix_Xs_frac(bins_oldworld, bins_oldworld);
+  TMatrixD matrix_reweight_frac(bins_oldworld, bins_oldworld);
+  TMatrixD matrix_reweight_cor_frac(bins_oldworld, bins_oldworld); 
   
   for(int idx=syst_cov_flux_Xs_begin; idx<=syst_cov_flux_Xs_end; idx++) {
+
+    int disable_BR_uncertainty_2d = 0;
+    if (disable_BR_uncertainty_2d) {
+      // See python_tools/BR_uncertainty_tool.ipynb for calculation using merge.root
+      float num_true_signal_uncollapsed[6*2+16*12] = {
+        0.0, 0.0, 2.644611, 0.000343, 0.673658, 0.0, // 1gNp and overflow, background, then Np sig, then 0p sig
+        0.0, 0.0, 1.682415, 0.0, 7.545532, 0.0, // 1g0p
+        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, // NC Pi0 Np with overflow, background
+        0.0, 0.007581, 0.301092, 0.915457, 1.216862, 0.943092, 0.705134, 0.442833, 0.27205, 0.16602, 0.109717, 0.05772, 0.043725, 0.031384, 0.01067, 0.025455, // NC Pi0 Np with overflow, Np sig
+        0.0, 0.004736, 0.126005, 0.225691, 0.232783, 0.175976, 0.118599, 0.079376, 0.055884, 0.020959, 0.018903, 0.008332, 0.007212, 0.007277, 0.001588, 0.003381, // NC Pi0 Np with overflow, 0p sig
+        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, // NC Pi0 0p with overflow, background
+        0.0, 0.085884, 0.754236, 0.821747, 0.6168, 0.429712, 0.249044, 0.138809, 0.073667, 0.032466, 0.015823, 0.012726, 0.00759, 0.003995, 0.002124, 0.001004, // NC Pi0 0p with overflow, Np sig
+        0.0, 0.315534, 1.423453, 1.225524, 0.859233, 0.449364, 0.228664, 0.119037, 0.05052, 0.024253, 0.014229, 0.01067, 0.003947, 0.001939, 0.000935, 0.000536, // NC Pi0 0p with overflow, 0p sig
+        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, // numuCC Np with overflow, background
+        0.0, 0.0, 0.000935, 0.02213, 0.057373, 0.09009, 0.101077, 0.095272, 0.090972, 0.076396, 0.052182, 0.043912, 0.041074, 0.020143, 0.012091, 0.023455, // numuCC Np with overflow, Np sig
+        0.0, 0.0, 0.000536, 0.006925, 0.017063, 0.021858, 0.026183, 0.01784, 0.016127, 0.011606, 0.009666, 0.007745, 0.003342, 0.003801, 0.000468, 0.005037, // numuCC Np with overflow, 0p sig
+        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, // numuCC 0p with overflow, background
+        0.0, 0.0, 0.003265, 0.027962, 0.059328, 0.067674, 0.060308, 0.052051, 0.036982, 0.036833, 0.021614, 0.009714, 0.011606, 0.007795, 0.002523, 0.008174, // numuCC 0p with overflow, Np sig
+        0.0, 0.000468, 0.02352, 0.04728, 0.066435, 0.067755, 0.065967, 0.049516, 0.029441, 0.017715, 0.013262, 0.009452, 0.005088, 0.002592, 0.000935, 0.001939, // numuCC 0p with overflow, 0p sig
+      };
+
+      if (idx == 17) {
+        for (int ibin=0; ibin<bins_oldworld; ibin++) {
+          for (int jbin=0; jbin<bins_oldworld; jbin++) {
+
+            // Here, we assume that true Np NC Delta events are fully correlated with 
+            // true Np NC Delta events in other selection channels. Even if this isn't fully accurate,
+            // the non-1g signal channels should basically not matter at all (the gLEE data release didn't
+            // include this information because of a similar approximation).
+
+            // So, the covariance matrix associated with the NC Delta BR uncertainty is fully correlated,
+            // so we just need the sigma associated with the row and column to calculate it and subtract it off.
+            // See 2022_06_01 slack between Mark and Lee for more information about this approximation.
+
+            float sigma_BR_row = num_true_signal_uncollapsed[ibin];
+            float sigma_BR_col = num_true_signal_uncollapsed[jbin];
+
+            (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= sigma_BR_row * sigma_BR_col;
+
+          }
+        }
+      }
+    }
+
+
+
+
+    if( !(flag_syst_flux_Xs) && idx<18 ){
+      matrix_flux_Xs_frac = 0;
+      matrix_flux_frac = 0;
+      matrix_Xs_frac = 0;
+      continue;
+    }
+    if( !(flag_syst_reweight) && idx==18 ){
+      matrix_reweight_frac = 0;
+      continue;
+    }
+    if( !(flag_syst_reweight_cor) && idx==19 ){
+      matrix_reweight_cor_frac = 0;
+      continue;
+    }
+
     roostr = TString::Format(flux_Xs_directory+"cov_%d.root", idx);
     map_file_flux_Xs_frac[idx] = new TFile(roostr, "read");
     map_matrix_flux_Xs_frac[idx] = (TMatrixD*)map_file_flux_Xs_frac[idx]->Get(TString::Format("frac_cov_xf_mat_%d", idx));
@@ -3420,132 +2699,18 @@ void TLee::Set_Spectra_MatrixCov()
     matrix_sub_flux_geant4_Xs_oldworld[idx].ResizeTo(bins_oldworld, bins_oldworld);
     matrix_sub_flux_geant4_Xs_oldworld[idx] += (*map_matrix_flux_Xs_frac[idx]); 
     
-    // comes from discussion with Mark on slack, 2022_06_03
-    // need to change this after running read_TLee_v20 and seeing the channel nums
-    int disable_BR_uncertainty = 0;
-    if (disable_BR_uncertainty) {
-      if (idx == 17) {
-        //*map_matrix_flux_Xs_frac[idx]
-        for (int ibin=0; ibin<bins_oldworld; ibin++) {
-          for (int jbin=0; jbin<bins_oldworld; jbin++) {
-            bool flag_user = 0;
-            if (ibin >= 2 && ibin < 2+2) flag_user=1; // uncollapsed channel 2
-            if (ibin >= 3*2 && ibin < 3*2+2) flag_user=1; // channel 4
-            if (ibin >= 4*2+16 && ibin < 4*2+16+16) flag_user=1; // channel 6
-            if (ibin >= 4*2+16*3 && ibin < 4*2+16*3+16) flag_user=1; // channel 8
-            if (ibin >= 4*2+16*5 && ibin < 4*2+16*5+16) flag_user=1; // channel 10
-            if (ibin >= 4*2+16*7 && ibin < 4*2+16*7+16) flag_user=1; // channel 12
-
-            if (flag_user==1) {
-              (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0;
-              (*map_matrix_flux_Xs_frac[idx])(jbin, ibin) = 0;
-            }
-          }
-        }
-      }
-    }
-
- 
-    int disable_nc_delta_Xs_uncertainty = 0;
-    if (disable_nc_delta_Xs_uncertainty) {
-      if (idx == 17) {
-	//*map_matrix_flux_Xs_frac[idx]
-	for (int ibin=0; ibin<bins_oldworld; ibin++) {
-	  for (int jbin=0; jbin<bins_oldworld; jbin++) {
-            bool flag_user = 0;
-	    if (ibin >= 2 && ibin < 2+2) flag_user=1; // uncollapsed channel 2
-            if (ibin >= 3*2 && ibin < 3*2+2) flag_user=1; // channel 4	
-            if (ibin >= 4*2+16 && ibin < 4*2+16+16) flag_user=1; // channel 6
-            if (ibin >= 4*2+16*3 && ibin < 4*2+16*3+16) flag_user=1; // channel 8
-            if (ibin >= 4*2+16*5 && ibin < 4*2+16*5+16) flag_user=1; // channel 10
-            if (ibin >= 4*2+16*7 && ibin < 4*2+16*7+16) flag_user=1; // channel 12
-
-	    if (flag_user==1) {
-	      (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0;
-              (*map_matrix_flux_Xs_frac[idx])(jbin, ibin) = 0;
-	    }
-          }	  
-	}		
-      }
-    }
-
-    
-    int disable_nc_delta_Xs_uncertainty_2d = 1;
-    if (disable_nc_delta_Xs_uncertainty_2d) {
-      if (idx == 17) {
-        //*map_matrix_flux_Xs_frac[idx]
-        for (int ibin=0; ibin<bins_oldworld; ibin++) {
-          for (int jbin=0; jbin<bins_oldworld; jbin++) {
-            bool flag_user = 0;
-            if (ibin >= 2*1 && ibin < 2*1+2*2) flag_user=1; // uncollapsed channels 2 and 3
-            if (ibin >= 2*4 && ibin < 2*4+2*2) flag_user=1; // channels 5 and 6
-            if (ibin >= 2*6+16*1 && ibin < 2*6+16*1+16*2) flag_user=1; // channels 8 and 9
-            if (ibin >= 2*6+16*4 && ibin < 2*6+16*4+16*2) flag_user=1; // channels 11 and 12
-            if (ibin >= 2*6+16*7 && ibin < 2*6+16*7+16*2) flag_user=1; // channels 14 and 15
-            if (ibin >= 2*6+16*10 && ibin < 2*6+16*10+16*2) flag_user=1; // channels 17 and 18
-
-            if (flag_user==1) {
-              (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0;
-              (*map_matrix_flux_Xs_frac[idx])(jbin, ibin) = 0;
-            }
-          }
-        }
-      }
-    }
-
-    int disable_BR_uncertainty_2d = 0;
-    if (disable_BR_uncertainty_2d) {
-      // would have to update these numbers in the future!
-      float num_true_signal_uncollapsed[6*2+16*12] = {
-        0., 0., 0., 0., 0., 0., // 1gNp and overflow, background, then Np sig, then 0p sig
-	0., 0., 0., 0., 0., 0., // 1g0p
-        0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0., // NC Pi0 Np with overflow, background	
-        0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0., // NC Pi0 Np with overflow, Np sig	
-        0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0., // NC Pi0 Np with overflow, 0p sig	
-        0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0., // NC Pi0 0p with overflow, background	
-        0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0., // NC Pi0 0p with overflow, Np sig	
-        0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0., // NC Pi0 0p with overflow, 0p sig	
-        0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0., // numuCC Np with overflow, background	
-        0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0., // numuCC Np with overflow, Np sig	
-        0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0., // numuCC Np with overflow, 0p sig	
-        0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0., // numuCC 0p with overflow, background	
-        0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0., // numuCC 0p with overflow, Np sig	
-        0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0., // numuCC 0p with overflow, 0p sig	
-      };
-	      
-      if (idx == 17) {
-        for (int ibin=0; ibin<bins_oldworld; ibin++) {
-          for (int jbin=0; jbin<bins_oldworld; jbin++) {
-            
-            // Here, we assume that true Np NC Delta events are fully correlated with 
-	    // true Np NC Delta events in other selection channels. Even if this isn't fully accurate,
-	    // the non-1g signal channels should basically not matter at all (the gLEE data release didn't
-	    // include this information because of a similar approximation).
-	    
-	    // So, the covariance matrix associated with the NC Delta BR uncertainty is fully correlated,
-	    // so we just need the sigma associated with the row and column to calculate it and subtract it off.
-	    // See 2022_06_01 slack between Mark and Lee for more information about this approximation.
-
-            float sigma_BR_row = num_true_signal_uncollapsed[ibin];
-            float sigma_BR_col = num_true_signal_uncollapsed[jbin];
-            
-            (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= sigma_BR_row * sigma_BR_column;
-            }
-          }
-        }
-      }
-    }
-
-
- 
-    //if( idx==17 )
     matrix_flux_Xs_frac += (*map_matrix_flux_Xs_frac[idx]);    
-    
+
     if( idx<=16 ) {// flux
       matrix_flux_frac += (*map_matrix_flux_Xs_frac[idx]);
-    }
-    else {// interaction
+    }else if( idx==17 ){// interaction
       matrix_Xs_frac += (*map_matrix_flux_Xs_frac[idx]);
+    }else if( idx==18 ) {//reweight
+      matrix_reweight_frac += (*map_matrix_flux_Xs_frac[idx]);
+    }else if( idx==19 ) {//reweight cor
+      //cout << "lhagaman debug, matrix_reweight_cor_frac = " << (*map_matrix_flux_Xs_frac[idx]) << "\n";
+      cout << "lhagaman debug, adding to reweight_cor_frac\n";
+      matrix_reweight_cor_frac += (*map_matrix_flux_Xs_frac[idx]);
     }    
   }
   cout<<endl;  
@@ -3555,10 +2720,7 @@ void TLee::Set_Spectra_MatrixCov()
   cout<<" Detector systematics"<<endl;
     
   map<int, TString>map_detectorfile_str;
-  
-  
 
-   
   map_detectorfile_str[1] = detector_directory+"cov_LYDown.root";
   map_detectorfile_str[2] = detector_directory+"cov_LYRayleigh.root";
   map_detectorfile_str[3] = detector_directory+"cov_Recomb2.root";
@@ -3569,7 +2731,6 @@ void TLee::Set_Spectra_MatrixCov()
   map_detectorfile_str[8] = detector_directory+"cov_WMX.root";
   map_detectorfile_str[9] = detector_directory+"cov_WMYZ.root";
   map_detectorfile_str[10]= detector_directory+"cov_LYatt.root";
-  
 
   map<int, TFile*>map_file_detector_frac;
   map<int, TMatrixD*>map_matrix_detector_frac;
@@ -3642,12 +2803,16 @@ void TLee::Set_Spectra_MatrixCov()
   matrix_input_cov_Xs.Clear();
   matrix_input_cov_detector.Clear();
   matrix_input_cov_additional.Clear();
-  
+  matrix_input_cov_reweight.Clear();
+  matrix_input_cov_reweight_cor.Clear(); 
+
   matrix_input_cov_flux_Xs.ResizeTo( bins_oldworld, bins_oldworld );
   matrix_input_cov_flux.ResizeTo( bins_oldworld, bins_oldworld );
   matrix_input_cov_Xs.ResizeTo( bins_oldworld, bins_oldworld );  
   matrix_input_cov_detector.ResizeTo( bins_oldworld, bins_oldworld );
   matrix_input_cov_additional.ResizeTo( bins_oldworld, bins_oldworld );
+  matrix_input_cov_reweight.ResizeTo(bins_oldworld, bins_oldworld);
+  matrix_input_cov_reweight_cor.ResizeTo(bins_oldworld, bins_oldworld);
 
   for(auto it=matrix_detector_sub_frac.begin(); it!=matrix_detector_sub_frac.end(); it++) {
     int idx = it->first;
@@ -3673,6 +2838,12 @@ void TLee::Set_Spectra_MatrixCov()
       val_cov = matrix_detector_frac(ibin, jbin);
       matrix_input_cov_detector(ibin, jbin) = val_cov * val_i * val_j;
       
+      val_cov = matrix_reweight_frac(ibin, jbin);
+      matrix_input_cov_reweight(ibin, jbin) = val_cov * val_i * val_j;
+
+      val_cov = matrix_reweight_cor_frac(ibin, jbin);
+      matrix_input_cov_reweight_cor(ibin, jbin) = val_cov * val_i * val_j;
+
       for(auto it=matrix_input_cov_detector_sub.begin(); it!=matrix_input_cov_detector_sub.end(); it++) {
 	int idx = it->first;
 	val_cov = matrix_detector_sub_frac[idx](ibin, jbin);
@@ -3767,4 +2938,5 @@ void TLee::Set_Spectra_MatrixCov()
   cout<<endl;
   
 }
+
 

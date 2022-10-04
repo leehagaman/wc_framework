@@ -757,6 +757,16 @@ void LEEana::CovMatrix::get_pred_events_info(TString input_filename, std::map<TS
   T_KINEvars->SetBranchStatus("kine_pio_phi_2",1);
   T_KINEvars->SetBranchStatus("kine_pio_dis_2",1);
   T_KINEvars->SetBranchStatus("kine_pio_angle",1);
+  if (T_KINEvars->GetBranch("vlne_v4_numu_full_primaryE")) {
+    T_KINEvars->SetBranchStatus("vlne_v4_numu_full_primaryE",1);
+    T_KINEvars->SetBranchStatus("vlne_v4_numu_full_totalE",1);
+    T_KINEvars->SetBranchStatus("vlne_v4_numu_partial_primaryE",1);
+    T_KINEvars->SetBranchStatus("vlne_v4_numu_partial_totalE",1);
+    // T_KINEvars->SetBranchStatus("vlne_nue_full_primaryE",1);
+    // T_KINEvars->SetBranchStatus("vlne_nue_full_totalE",1);
+    // T_KINEvars->SetBranchStatus("vlne_nue_partial_primaryE",1);
+    // T_KINEvars->SetBranchStatus("vlne_nue_partial_totalE",1);
+  }
 
   T_PFeval->SetBranchStatus("*",0);
   T_PFeval->SetBranchStatus("reco_nuvtxX",1);
@@ -766,14 +776,6 @@ void LEEana::CovMatrix::get_pred_events_info(TString input_filename, std::map<TS
   T_PFeval->SetBranchStatus("reco_showervtxY",1);
   T_PFeval->SetBranchStatus("reco_showervtxZ",1);
   T_PFeval->SetBranchStatus("reco_muonMomentum",1);
-
-  // lhagaman added
-  if (T_PFeval->GetBranch("reco_Ntrack")) {
-        T_PFeval->SetBranchStatus("reco_Ntrack",1);
-        T_PFeval->SetBranchStatus("reco_startMomentum",1);
-        T_PFeval->SetBranchStatus("reco_pdg",1);
-  }
-
   T_PFeval->SetBranchStatus("reco_showerKE",1);
   if (!flag_data){
     T_PFeval->SetBranchStatus("nuvtx_diff",1);
@@ -801,10 +803,17 @@ void LEEana::CovMatrix::get_pred_events_info(TString input_filename, std::map<TS
       // oscillation formula ...
       T_PFeval->SetBranchStatus("truth_nu_momentum",1);
       T_PFeval->SetBranchStatus("neutrino_type",1);
+      T_PFeval->SetBranchStatus("mcflux_ntype",1);
       T_PFeval->SetBranchStatus("mcflux_dk2gen",1);
       T_PFeval->SetBranchStatus("mcflux_gen2vtx",1);
       T_PFeval->SetBranchStatus("mcflux_ndecay",1);
     }
+  }
+  if (T_PFeval->GetBranch("truth_pdg")){
+     T_PFeval->SetBranchStatus("truth_Ntrack",1); 
+     T_PFeval->SetBranchStatus("truth_pdg",1); 
+     T_PFeval->SetBranchStatus("truth_mother",1); 
+     T_PFeval->SetBranchStatus("truth_startMomentum",1); 
   }
 
   std::vector<std::tuple<int, int, double, double, std::set<std::tuple<int, double, bool> > > > vec_events;
@@ -854,10 +863,11 @@ void LEEana::CovMatrix::get_pred_events_info(TString input_filename, std::map<TS
 	flag_updated = true;
       }
     }
-    if (!flag_data)
+    if (!flag_data){
       std::get<2>(vec_events.at(i)) *= osc_weight;
-    
-  }
+      std::get<2>(vec_events.at(i)) *= get_weight("add_weight", eval, pfeval, kine, tagger, get_rw_info());
+    }  
+}
 
   map_all_events[input_filename] = vec_events;
 

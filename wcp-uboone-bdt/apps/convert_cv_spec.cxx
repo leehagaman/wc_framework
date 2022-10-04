@@ -425,6 +425,16 @@ int main( int argc, char** argv )
   T_KINEvars_cv->SetBranchStatus("kine_pio_phi_2",1);
   T_KINEvars_cv->SetBranchStatus("kine_pio_dis_2",1);
   T_KINEvars_cv->SetBranchStatus("kine_pio_angle",1);
+  if (T_KINEvars_cv->GetBranch("vlne_v4_numu_full_primaryE")) {
+    T_KINEvars_cv->SetBranchStatus("vlne_v4_numu_full_primaryE",1);
+    T_KINEvars_cv->SetBranchStatus("vlne_v4_numu_full_totalE",1);
+    T_KINEvars_cv->SetBranchStatus("vlne_v4_numu_partial_primaryE",1);
+    T_KINEvars_cv->SetBranchStatus("vlne_v4_numu_partial_totalE",1);
+    // T_KINEvars_cv->SetBranchStatus("vlne_nue_full_primaryE",1);
+    // T_KINEvars_cv->SetBranchStatus("vlne_nue_full_totalE",1);
+    // T_KINEvars_cv->SetBranchStatus("vlne_nue_partial_primaryE",1);
+    // T_KINEvars_cv->SetBranchStatus("vlne_nue_partial_totalE",1);
+  }
 
   T_PFeval_cv->SetBranchStatus("*",0);
   T_PFeval_cv->SetBranchStatus("reco_nuvtxX",1);
@@ -463,11 +473,14 @@ int main( int argc, char** argv )
       // oscillation formula ...
       T_PFeval_cv->SetBranchStatus("truth_nu_momentum",1);
       T_PFeval_cv->SetBranchStatus("neutrino_type",1);
+      T_PFeval_cv->SetBranchStatus("mcflux_ntype",1);
       T_PFeval_cv->SetBranchStatus("mcflux_dk2gen",1);
       T_PFeval_cv->SetBranchStatus("mcflux_gen2vtx",1);
       T_PFeval_cv->SetBranchStatus("mcflux_ndecay",1);
     }
   }
+
+
   
  
 
@@ -562,10 +575,10 @@ int main( int argc, char** argv )
   put_tree_address(t2_cv, pot_cv);
   put_tree_address(t5_cv, kine_cv);
   
-  // T_eval_cv->SetBranchStatus("*",1);
-  // T_PFeval_cv->SetBranchStatus("*",1);
-  // T_BDTvars_cv->SetBranchStatus("*",1);
-  // T_KINEvars_cv->SetBranchStatus("*",1);
+  T_eval_cv->SetBranchStatus("*",1);
+  T_PFeval_cv->SetBranchStatus("*",1);
+  T_BDTvars_cv->SetBranchStatus("*",1);
+  T_KINEvars_cv->SetBranchStatus("*",1);
 
   std::cout << "start filling" << std::endl;
   

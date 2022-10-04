@@ -1,3 +1,5 @@
+#include "TRandom.h"
+#include "TRandom3.h"
 
 void LEEana::CovMatrix::gen_xf_cov_matrix(int run, std::map<int, TH1F*>& map_covch_hist, std::map<TString, TH1F*>& map_histoname_hist, TVectorD* vec_mean,  TMatrixD* cov_xf_mat){
   // prepare the maps ... name --> no,  covch, lee
@@ -247,7 +249,7 @@ void LEEana::CovMatrix::fill_xf_histograms(int num, int tot_num, int acc_no, int
       float weight = std::get<0>(*it1);
       float weight_lee = std::get<1>(*it1);
       if (std::get<3>(*it1).size() != tot_num) std::cout << "Incorrect Match Sys No! " << std::endl;
-      if (std::get<3>(*it1).at(num) != tot_no) std::cout << "Mismatch No of Universe! , lhagaman " << std::get<3>(*it1).at(num) << ", " << tot_no  << std::endl;
+      if (std::get<3>(*it1).at(num) != tot_no) std::cout << "Mismatch No of Universe! " << std::endl;
       float rel_weight_diff = std::get<2>(*it1).at(acc_no+no);
       for (auto it2 = std::get<4>(*it1).begin(); it2 != std::get<4>(*it1).end(); it2++){
 	int no = (*it2).first;
@@ -687,6 +689,16 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
   T_KINEvars->SetBranchStatus("kine_pio_phi_2",1);
   T_KINEvars->SetBranchStatus("kine_pio_dis_2",1);
   T_KINEvars->SetBranchStatus("kine_pio_angle",1);
+  if (T_KINEvars->GetBranch("vlne_v4_numu_full_primaryE")) {
+    T_KINEvars->SetBranchStatus("vlne_v4_numu_full_primaryE",1);
+    T_KINEvars->SetBranchStatus("vlne_v4_numu_full_totalE",1);
+    T_KINEvars->SetBranchStatus("vlne_v4_numu_partial_primaryE",1);
+    T_KINEvars->SetBranchStatus("vlne_v4_numu_partial_totalE",1);
+    // T_KINEvars->SetBranchStatus("vlne_nue_full_primaryE",1);
+    // T_KINEvars->SetBranchStatus("vlne_nue_full_totalE",1);
+    // T_KINEvars->SetBranchStatus("vlne_nue_partial_primaryE",1);
+    // T_KINEvars->SetBranchStatus("vlne_nue_partial_totalE",1);
+  }
 
   T_PFeval->SetBranchStatus("*",0);
   T_PFeval->SetBranchStatus("reco_nuvtxX",1);
@@ -701,14 +713,6 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
   T_PFeval->SetBranchStatus("showervtx_diff",1);
   T_PFeval->SetBranchStatus("muonvtx_diff",1);
   T_PFeval->SetBranchStatus("truth_muonMomentum",1);
-  
-  // lhagaman added
-  if (T_PFeval->GetBranch("reco_Ntrack")) {
-        T_PFeval->SetBranchStatus("reco_Ntrack",1);
-        T_PFeval->SetBranchStatus("reco_startMomentum",1);
-        T_PFeval->SetBranchStatus("reco_pdg",1);
-  }
-
   if (pfeval.flag_NCDelta){
     T_PFeval->SetBranchStatus("truth_NCDelta",1);
     T_PFeval->SetBranchStatus("truth_NprimPio",1);
@@ -724,9 +728,16 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
     // oscillation formula ...
     T_PFeval->SetBranchStatus("truth_nu_momentum",1);
     T_PFeval->SetBranchStatus("neutrino_type",1);
+    T_PFeval->SetBranchStatus("mcflux_ntype",1);
     T_PFeval->SetBranchStatus("mcflux_dk2gen",1);
     T_PFeval->SetBranchStatus("mcflux_gen2vtx",1);
     T_PFeval->SetBranchStatus("mcflux_ndecay",1);
+  }
+  if (T_PFeval->GetBranch("truth_startMomentum")){
+    T_PFeval->SetBranchStatus("truth_Ntrack",1);
+    T_PFeval->SetBranchStatus("truth_pdg",1); 
+    T_PFeval->SetBranchStatus("truth_mother",1); 
+    T_PFeval->SetBranchStatus("truth_startMomentum",1); 
   }
 
   WeightInfo weight;
@@ -768,7 +779,11 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
   weight.reinteractions_proton_Geant4 = new std::vector<float>; 
   
   TString option;
-  if (T_weight->GetBranch("expskin_FluxUnisim")){
+  if (rw_type == 1){
+    option = "reweight";
+  }else if (rw_type == 2){
+    option = "reweight_cor";
+  }else if (T_weight->GetBranch("expskin_FluxUnisim")){
     option = "expskin_FluxUnisim";
   }else if (T_weight->GetBranch("horncurrent_FluxUnisim")){
     option = "horncurrent_FluxUnisim";
@@ -803,9 +818,11 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
   }else if (T_weight->GetBranch("reinteractions_proton_Geant4")){
     option = "reinteractions_proton_Geant4";
   }
+
+  //std::cout << "lhagaman debug, option: " << option << "\n";
   
   set_tree_address(T_weight, weight, option);
-  //std::cout << T_eval->GetEntries() << " " << T_weight->GetEntries() << " " << option << std::endl;
+  //std::cout << "lhagaman debug, T_eval getentries: "  << T_eval->GetEntries() << ", T_weight getentries: " << T_weight->GetEntries() << ", option: " << option << std::endl;
 
   std::vector< std::tuple<TString,  int, float, float, TString, TString, TString, TString > > histo_infos = get_histograms(input_filename,0);
 
@@ -831,10 +848,12 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
 
     double osc_weight = 1.0;
     bool flag_updated = false;
-    
+
     for (auto it = histo_infos.begin(); it != histo_infos.end(); it++){
       TString histoname = std::get<0>(*it);
       
+      //std::cout << "lhagaman debug, histoname = " << histoname << "\n";
+
       auto it2 = map_histoname_infos.find(histoname);
       int no = std::get<0>(it2->second);
       
@@ -846,9 +865,15 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
       if (it3 != disabled_ch_names.end()) continue;
       
       float val = get_kine_var(kine, eval, pfeval, tagger, false, var_name);
+
+      //std::cout << "\nlhagaman checking get_cut_pass function\n";
+
       bool flag_pass = get_cut_pass(ch_name, add_cut, false, eval, pfeval, tagger, kine);
 
+      //std::cout << "lhagaman finished checking get_cut_pass function, flag_pass = " << flag_pass << "\n";
+      
       if (flag_pass) {
+        //std::cout << "lhagaman debug inside flag_pass\n";
 	std::get<4>(event_info).insert(std::make_pair(no, val));
 	if (flag_osc && is_osc_channel(ch_name) && (!flag_updated)){
 	  osc_weight = get_osc_weight(eval, pfeval);
@@ -858,8 +883,15 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
     }
     // apply oscillation ...
     std::get<0>(event_info) *= osc_weight;
-    
+    //apply reweight
+    double reweight = get_weight("add_weight", eval, pfeval, kine, tagger, get_rw_info());//automatically 1 if reweighting is not applied
+    std::get<0>(event_info) *= reweight; 
+
+    //if (reweight != 1) std::cout << "lhagaman debug, reweight = " << reweight << "\n";
+  
+    //std::cout << "lhagaman before before ifs\n";
     if (std::get<4>(event_info).size()>0){
+      //std::cout << "lhagaman before ifs\n";
       if (option == "expskin_FluxUnisim"){
 	std::get<2>(event_info).resize(weight.expskin_FluxUnisim->size());
 	std::get<3>(event_info).push_back(weight.expskin_FluxUnisim->size());
@@ -1031,7 +1063,43 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
 	  for (size_t j=0; j!= weight.reinteractions_proton_Geant4->size(); j++){
 	    std::get<2>(event_info).at(j) = weight.reinteractions_proton_Geant4->at(j) - 1.0;
 	  }
-	}
+        }
+	
+      }else if (option == "reweight"){
+        std::get<2>(event_info).resize(1000);
+        std::get<3>(event_info).push_back(1000);
+        if(!(flag_reweight)) reweight = get_weight("add_weight", eval, pfeval, kine, tagger, get_rw_info(true));
+        for (size_t j=0;j!=1000;j++){
+          if(flag_reweight){
+            if (weight.weight_cv>0 && reweight!=1){
+              gRandom->SetSeed(j*reweight*77777);
+              double rand = gRandom->Gaus(reweight,abs(1-reweight));
+              std::get<2>(event_info).at(j) = (rand-reweight)/reweight;
+            }else std::get<2>(event_info).at(j) = 0;
+          }else{
+            gRandom->SetSeed(j*reweight*77777);
+            double rand = gRandom->Gaus(1,abs(1-reweight));
+            std::get<2>(event_info).at(j) = rand-1;
+          }
+        }
+      }else if (option == "reweight_cor"){
+	//std::cout << "lhagaman debug inside larger if\n";
+        std::get<2>(event_info).resize(1);
+        std::get<3>(event_info).push_back(1);
+        //if (reweight != 1) std::cout << "lhagaman debug outside if, reweight = " << reweight << "\n";
+	if(flag_reweight){
+          //if (reweight != 1) std::cout << "lhagaman debug inside if, reweight = " << reweight << "\n";
+          if (weight.weight_cv>0 && reweight!=1){
+            std::get<2>(event_info).at(0) = (1-reweight)/reweight;
+	   //std::cout << "lhagaman debug, reweight cor value: " << reweight << "\n";
+	  }else{
+            std::get<2>(event_info).at(0) = 0;
+          }
+        }else{
+           reweight = get_weight("add_weight", eval, pfeval, kine, tagger, get_rw_info(true));
+	   std::get<2>(event_info).at(0) = reweight-1;
+        }
+
       }else if (option == "UBGenieFluxSmallUni"){
 	int acc_no = 0;
 	std::get<2>(event_info).resize(weight.All_UBGenie->size());
@@ -1247,6 +1315,10 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
     sup_lengths.push_back(1000);
   }else if (option == "reinteractions_proton_Geant4"){
     sup_lengths.push_back(1000);
+  }else if (option == "reweight"){
+    sup_lengths.push_back(1000);
+  }else if (option == "reweight_cor"){
+    sup_lengths.push_back(1);
   }else if (option == "UBGenieFluxSmallUni"){
     sup_lengths.push_back(600); // all_ubgenie
     sup_lengths.push_back(1);   // AxFFCCQEshape_UBGenie-

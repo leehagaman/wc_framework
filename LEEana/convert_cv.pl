@@ -12,9 +12,9 @@ while(<infile>){
     }
 
     if ($num % 12 == 11){
-	system("bin/convert_cv $temp[2]$temp[1] $temp[3]$temp[1] ");
+	system("bin/convert_cv_spec $temp[2]$temp[1] $temp[3]$temp[1] ");
     }else{
-	system("bin/convert_cv $temp[2]$temp[1] $temp[3]$temp[1] &");
+	system("bin/convert_cv_spec $temp[2]$temp[1] $temp[3]$temp[1] &");
     }
     
     $num++;

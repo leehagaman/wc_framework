@@ -1,0 +1,7 @@
+nc_delta_Np_01                  	kine_reco_Enu	1	0       1500    1       0               0       0               0               0               5       unity           0
+nc_delta_Np_01_ext              	kine_reco_Enu	1	0       1500    1       0               0       0               0               3               3       unity           0
+nc_delta_Np_01_true_Np_nc_delta_overlay kine_reco_Enu	1	0       1500    1       1               1       0               0               1               7       cv_spline   1
+nc_delta_Np_01_true_0p_nc_delta_overlay kine_reco_Enu	1	0       1500    1       1               1       0               0               2               7       cv_spline   1
+
+End				End			-1	-1	-1	-1	-1		-1	-1		-1		-1		-1	end		-1
+Name:				#Var:			#bin	#start	#end	#obs	#xs_flux	#det	#add_sys	#same_mc	#cov_sec	#file	#weight		#lee_strength

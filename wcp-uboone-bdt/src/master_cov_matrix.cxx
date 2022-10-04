@@ -43,9 +43,74 @@ float leeweight(float Enu)
 #include "mcm_data_stat.h"
 #include "mcm_pred_stat.h"
 
-LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString file_filename){
+LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString file_filename, TString rw_filename){
   flag_osc = false;
+
+  rw_type = 0;
+  flag_reweight = false;
+
+  std::vector< std::tuple<bool, TString, TString, double, double, bool, bool, bool, std::vector<double>, std::vector<double>  > >  rw_info_vec;
+  std::tuple<bool, TString, TString, double, double, bool, bool, bool, std::vector<double>, std::vector<double>  >  rw_info_i;
+
+  std::ifstream infile_rw(rw_filename);
+  if(infile_rw.is_open()){
+    while(!infile_rw.eof()){
+      bool flag_reweight_i = 0;
+      TString cut_str;
+      TString var_str;
+      double min_var;
+      double max_var;
+      bool use_underflow;
+      bool use_overflow;
+      bool equal_bins=true;
+      std::vector<double> reweight;
+      std::vector<double> bins;
+      //reads the gerneral reweighig parameters
+      std::string line;
+      std::getline(infile_rw, line);
+      while(line.empty()) {std::getline(infile_rw, line);}
+      if(line == "end") break;
+      std::istringstream iss(line);
+      iss >> flag_reweight_i >> cut_str >> var_str >> min_var >> max_var >> use_underflow >> use_overflow >> equal_bins;
+      if(flag_reweight_i) flag_reweight=1;
+
+      if(!(equal_bins)){
+        double tb;
+        std::getline(infile_rw, line);
+        while(line.empty()) {std::getline(infile_rw, line);} //skips spaces
+        std::istringstream iss_rw(line);
+        while(iss_rw>>tb){bins.push_back(tb);}
+        if(bins[0]!=min_var) {
+          min_var=bins[0];
+          std::cerr<<"WARNING: bins and min_var do not match for "<<cut_str<<". Forcing min_var=bins[0]. Check reweighting configuration"<<std::endl;
+        }
+        if(bins.back()!=max_var){
+          max_var=bins.back();
+          std::cerr<<"WARNING: bins and max_var do not match for "<<cut_str<<". Forcing max_var=bins.back(). Check reweighting configuration"<<std::endl;
+        }
+      }
+
+      //now get the weights
+      double trw;
+      std::getline(infile_rw, line);
+      while(line.empty()) {std::getline(infile_rw, line);} //skips spaces
+      std::istringstream iss_rw(line);
+      while(iss_rw>>trw){reweight.push_back(trw);}
+      rw_info_i = std::make_tuple(flag_reweight_i, cut_str, var_str, min_var, max_var, use_underflow, use_overflow, equal_bins, reweight, bins);
+      rw_info_vec.push_back(rw_info_i);
+      if(!(equal_bins)){
+        if(use_underflow && use_overflow){
+          if(bins.size()+1!=reweight.size()) std::cerr<<"WARNING: bins and reweighting function for "<<cut_str<<" do not match. Check reweighting configuration"<<std::endl;
+        }else if(use_underflow || use_overflow){
+           if(bins.size()!=reweight.size()) std::cerr<<"WARNING: bins and reweighting function for "<<cut_str<<" do not match. Check reweighting configuration"<<std::endl;
+        }else if(bins.size()-1!=reweight.size()) std::cerr<<"WARNING: bins and reweighting function for "<<cut_str<<" do not match. Check reweighting configuration"<<std::endl;
+      } 
+    }
+  }
+  rw_info = std::make_tuple(flag_reweight, rw_info_vec); 
   
+
+
   std::ifstream infile(cov_filename);
   TString name, var_name;
   Int_t bin_num;
@@ -347,7 +412,7 @@ LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString 
 
 
   flag_spec_weights = false;
-  //init_spec_weights(2800,1000,0.15); // binning 25 neutrino energy, 7 cos theta, 20, muon energy ... 
+  //init_spec_weights(2800,1000,0.15); // binning 25 neutrino energy, 7 cos theta, 20, muon energy ...
 }
 
 
@@ -457,11 +522,34 @@ void LEEana::CovMatrix::add_osc_config(TString osc_ch_filename, TString osc_pars
   }
   std::ifstream infile2(osc_pars_filename);
   infile2 >> osc_par_delta_m2_eV2 >> osc_par_sin22theta_ee;
+  infile2 >> osc_par_delta_m2_41_eV2 >> osc_par_sin2_2theta_14 >> osc_par_sin2_theta_24 >> osc_par_sin2_theta_34;
 
-  std::cout << "Oscillation Mode: " << std::endl;
-  std::cout << "Dm2: " << osc_par_delta_m2_eV2 << " eV2 " << std::endl;
-  std::cout << "sin22theta_ee: " << osc_par_sin22theta_ee << std::endl;
+  std::cout << "===> Oscillation Mode: " << std::endl;
+  std::cout << "===> Dm2: " << osc_par_delta_m2_eV2 << " eV2 " << std::endl;
+  std::cout << "===> sin22theta_ee: " << osc_par_sin22theta_ee << std::endl;
+  std::cout << "=====> Full oscillation mode: " << std::endl;
+  std::cout << "=====> Dm2_41: " << osc_par_delta_m2_41_eV2 << " eV2 " << std::endl;
+  std::cout << "=====> sin2_2theta_14: " << osc_par_sin2_2theta_14 << std::endl;
+  std::cout << "=====> sin2_theta_24: " << osc_par_sin2_theta_24 << std::endl;
+  std::cout << "=====> sin2_theta_34: " << osc_par_sin2_theta_34 << std::endl;
   
+}
+
+void LEEana::CovMatrix::add_rw_config( int run ){
+  if (run==18) rw_type=1;
+  if (run==19) rw_type=2;
+  if (run==0) rw_type=3;
+}
+
+void LEEana::CovMatrix::print_rw(std::tuple< bool, std::vector< std::tuple<bool, TString, TString, double, double, bool, bool, bool, std::vector<double>, std::vector<double>  > > > rw_info ){
+  std::tuple<bool, TString, TString, double, double, bool, bool, bool, std::vector<double>, std::vector<double> > rw_info_i;
+
+  if(std::get<0>(rw_info)){//Are you applying any reweighting?
+    for(size_t rw=0; rw<std::get<1>(rw_info).size(); rw++){
+      rw_info_i = std::get<1>(rw_info)[rw];
+      if(std::get<0>(rw_info_i)) std::cout<<"Applying reweighting to "<<std::get<1>(rw_info_i)<<" in "<<std::get<2>(rw_info_i)<<std::endl;
+    }
+  }
 }
 
 bool LEEana::CovMatrix::is_osc_channel(TString ch_name){
@@ -474,8 +562,39 @@ bool LEEana::CovMatrix::is_osc_channel(TString ch_name){
 double LEEana::CovMatrix::get_osc_weight(EvalInfo& eval, PFevalInfo& pfeval){
   double weight = 1.0;
   // only support nueCC disappearance now ...
-  if (fabs(eval.truth_nuPdg)==12){
+  if (fabs(eval.truth_nuPdg)==12){  
     weight = 1 - osc_par_sin22theta_ee * pow(TMath::Sin(1.267 * osc_par_delta_m2_eV2 * (pfeval.mcflux_gen2vtx + pfeval.mcflux_dk2gen)/pfeval.truth_nu_momentum[3]/1000.),2);
+  }
+  
+  if(osc_par_delta_m2_41_eV2>=0){
+  // nueCC to nueCC 
+  if (fabs(eval.truth_nuPdg)==12 && fabs(pfeval.mcflux_ntype)==12 && eval.truth_isCC){ 
+    weight = 0.0; 
+  }
+  // numuCC to numuCC
+  else if (fabs(eval.truth_nuPdg)==14 && fabs(pfeval.mcflux_ntype)==14 && eval.truth_isCC){
+    weight = 0.0;
+  }
+  // numuCC to nueCC 
+  else if (fabs(eval.truth_nuPdg)==12 && fabs(pfeval.mcflux_ntype)==14 && eval.truth_isCC){ 
+    weight = 0.006; 
+  }
+  // nueCC to numuCC 
+  else if (fabs(eval.truth_nuPdg)==14 && fabs(pfeval.mcflux_ntype)==12 && eval.truth_isCC){ 
+    weight = 0.; 
+  }
+  // 1 - (nue to sterile) NC  
+  else if (fabs(eval.truth_nuPdg)==12 && fabs(pfeval.mcflux_ntype)==12 && !eval.truth_isCC){ 
+    weight = 0.0; 
+  }
+  // 1 - (numu to sterile) NC  
+  else if (fabs(eval.truth_nuPdg)==14 && fabs(pfeval.mcflux_ntype)==14 && !eval.truth_isCC){ 
+    weight = 0.0; 
+  }
+  else{
+    std::cout << "Error: unknown file/osc type: final nu flavor: "<<eval.truth_nuPdg<<" initial nu flavor: "<<pfeval.mcflux_ntype<<" CC interaction: "<<eval.truth_isCC<<std::endl;
+    exit(1);
+  }
   }
   return weight;
 }
@@ -711,38 +830,11 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
   // // hack: add a factor onto the CV hpred (reco) and hsigmabar (true)
   // if (nsize==600 and (covch==1 or covch==2)) {
   //     std::cout << "hack CV, covch: " << covch << " hpred: " << hpred->GetNbinsX() << " hsigmabar: " << hsigmabar->GetNbinsX() << std::endl;
-
-  //     // // sanity check
-  //     // double reco1[26] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}; // FC
-  //     // double signal1[10] = {1,1,1,1,1,1,1,1,1,1};
-  //     // double reco2[26] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}; // PC
-  //     // double signal2[10] = {1,1,1,1,1,1,1,1,1,1};
-
-  //     // universe #10
-  //     double reco1[26] = {1.15544, 1.01601, 1.10671, 1.16643, 1.18122, 1.19366, 1.21337, 1.23608, 1.24923, 1.25753, 1.27421, 1.26822, 1.27691, 1.27185, 1.28811, 1.28284, 1.27537, 1.26845, 1.31184, 1.25023, 1.28769, 1.23154, 1.25389, 1.204, 1.29575, 1.17228}; // FC
-  //     double signal1[10] = {1.07612, 1.13412, 1.16191, 1.18975, 1.21469, 1.24133, 1.26417, 1.28709, 1.31289, 1.33121};
-  //     double reco2[26] = {1.18328, 1.16488, 1.16178, 1.15987, 1.16234, 1.17969, 1.19259, 1.20503, 1.21837, 1.22735, 1.23534, 1.25808, 1.2755, 1.26789, 1.28027, 1.27195, 1.27833, 1.29626, 1.30398, 1.29206, 1.31517, 1.27693, 1.23945, 1.25303, 1.21948, 1.22376}; // PC
-  //     double signal2[10] = {1.07612, 1.13412, 1.16191, 1.18975, 1.21469, 1.24133, 1.26417, 1.28709, 1.31289, 1.33121};
-
-  //     // // universe #20
-  //     // double reco1[26] = {0.992982, 1.20967, 1.09658, 1.08109, 1.0721, 1.05364, 1.04987, 1.0382, 1.022, 1.01696, 1.00588, 1.01479, 1.01191, 1.03234, 1.03125, 1.05156, 1.03979, 1.03825, 1.00906, 1.00495, 1.04883, 0.972295, 1.0443, 0.924342, 0.90578, 1.01559}; // FC
-  //     // double signal1[10] = {1.0854, 1.07367, 1.06976, 1.06098, 1.05738, 1.05184, 1.05421, 1.04815, 1.0418, 1.01227};
-  //     // double reco2[26] = {1.11301, 1.08599, 1.08825, 1.08644, 1.08431, 1.0759, 1.06601, 1.05867, 1.05756, 1.04323, 1.04703, 1.03479, 1.04541, 1.04383, 1.03994, 1.04551, 1.0561, 1.04584, 1.02275, 1.0314, 0.994499, 1.04009, 0.952018, 1.06343, 0.990966, 0.996142}; // PC
-  //     // double signal2[10] = {1.0854, 1.07367, 1.06976, 1.06098, 1.05738, 1.05184, 1.05421, 1.04815, 1.0418, 1.01227};
-
-  //     // // universe #30
-  //     // double reco1[26] = {0.876538, 0.861736, 0.914066, 0.923016, 0.93596, 0.931965, 0.922019, 0.922583, 0.914259, 0.904193, 0.90166, 0.898244, 0.88502, 0.877614, 0.887884, 0.873123, 0.881785, 0.905745, 0.891306, 0.891413, 0.898962, 0.977477, 0.903402, 0.948813, 1.02272, 1.06504}; // FC
-  //     // double signal1[10] = {0.91637, 0.938375, 0.934476, 0.93014, 0.932957, 0.937463, 0.935564, 0.934465, 0.939694, 0.987671};
-  //     // double reco2[26] = {0.901012, 0.91087, 0.927336, 0.950435, 0.964766, 0.963674, 0.955021, 0.951623, 0.949155, 0.946879, 0.930978, 0.935261, 0.928834, 0.915442, 0.916933, 0.904826, 0.936526, 0.920638, 0.942837, 0.939482, 0.934553, 0.946315, 0.992394, 1.03342, 1.01518, 1.01065}; // PC
-  //     // double signal2[10] = {0.91637, 0.938375, 0.934476, 0.93014, 0.932957, 0.937463, 0.935564, 0.934465, 0.939694, 0.987671};
-
-  //     // // universe #450
-  //     // double reco1[26] = {0.775025, 0.778931, 0.902054, 0.891595, 0.868683, 0.856287, 0.839721, 0.826733, 0.823029, 0.81763, 0.816336, 0.819113, 0.825171, 0.827854, 0.819509, 0.814784, 0.82175, 0.822185, 0.841672, 0.867768, 0.858879, 0.906656, 0.86976, 0.900973, 0.947299, 0.93384}; // FC
-  //     // double signal1[10] = {0.909232, 0.884066, 0.859239, 0.846319, 0.838245, 0.830874, 0.821119, 0.822615, 0.820209, 0.85052};
-  //     // double reco2[26] = {0.891959, 0.911274, 0.908243, 0.90012, 0.8764, 0.86151, 0.844594, 0.838283, 0.828599, 0.823095, 0.811427, 0.821875, 0.807368, 0.821052, 0.816432, 0.816646, 0.840389, 0.832217, 0.840177, 0.888031, 0.845707, 0.850362, 0.89464, 0.880185, 0.912752, 0.894323}; // PC
-  //     // double signal2[10] = {0.909232, 0.884066, 0.859239, 0.846319, 0.838245, 0.830874, 0.821119, 0.822615, 0.820209, 0.85052};
-
-
+  //     // sanity check
+  //     double reco1[26] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}; // FC
+  //     double signal1[10] = {1,1,1,1,1,1,1,1,1,1};
+  //     double reco2[26] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}; // PC
+  //     double signal2[10] = {1,1,1,1,1,1,1,1,1,1};
   //     for (int i=0; i<=hpred->GetNbinsX(); i++) { // overflow bin
   //       if (covch==1) hpred->SetBinContent(i+1, reco1[i] * hpred->GetBinContent(i+1));
   //       else if (covch==2) hpred->SetBinContent(i+1, reco2[i] * hpred->GetBinContent(i+1));
@@ -751,7 +843,6 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
   //       if (covch==1) hsigmabar->SetBinContent(i+1, signal1[i] * hsigmabar->GetBinContent(i+1));
   //       else if (covch==2) hsigmabar->SetBinContent(i+1, signal2[i] * hsigmabar->GetBinContent(i+1));
   //     }
-
   // } // end of hack
 
      	int start_bin = map_covch_startbin[covch];
@@ -772,16 +863,15 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
 	    }
 	  }
 	  
-    // // hack: wg CV
+    //// hack: save CV for UBGenieAll
     // if (nsize==600 and i==0) { // only save CV once
     //   auto ofile = new TFile("wgu_cv.root", "update");
     //   hpred->Write();
     //   hsigmabar->Write();
     //   ofile->Close();
     // }
-
-    // // hack: wg all_genie: 
-    // // in fill_xs_histograms: if (flag_pass) h1->Fill(val, (1+rel_weight_diff)*weight); // CV as the central one
+    //// hack: save reweighted for UBGenieAll
+    //// change accordingly in fill_xs_histograms()
     // auto ofile = TFile::Open("wgu_all_genie.root", "update");
     // auto hpred1 = (TH1F*)hpred->Clone(Form("%s_%d", hpred->GetName(), i));
     // auto hsigma1 = (TH1F*)hsigma->Clone(Form("%s_%d", hsigma->GetName(), i));
@@ -1611,6 +1701,16 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
   T_KINEvars->SetBranchStatus("kine_pio_phi_2",1);
   T_KINEvars->SetBranchStatus("kine_pio_dis_2",1);
   T_KINEvars->SetBranchStatus("kine_pio_angle",1);
+  if (T_KINEvars->GetBranch("vlne_v4_numu_full_primaryE")) {
+    T_KINEvars->SetBranchStatus("vlne_v4_numu_full_primaryE",1);
+    T_KINEvars->SetBranchStatus("vlne_v4_numu_full_totalE",1);
+    T_KINEvars->SetBranchStatus("vlne_v4_numu_partial_primaryE",1);
+    T_KINEvars->SetBranchStatus("vlne_v4_numu_partial_totalE",1);
+    // T_KINEvars->SetBranchStatus("vlne_nue_full_primaryE",1);
+    // T_KINEvars->SetBranchStatus("vlne_nue_full_totalE",1);
+    // T_KINEvars->SetBranchStatus("vlne_nue_partial_primaryE",1);
+    // T_KINEvars->SetBranchStatus("vlne_nue_partial_totalE",1);
+  }
 
   T_PFeval->SetBranchStatus("*",0);
   T_PFeval->SetBranchStatus("reco_nuvtxX",1);
@@ -1625,16 +1725,6 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
   T_PFeval->SetBranchStatus("showervtx_diff",1);
   T_PFeval->SetBranchStatus("muonvtx_diff",1);
   T_PFeval->SetBranchStatus("truth_muonMomentum",1);
-
-  /*
-  // lhagaman added
-  if (T_PFeval->GetBranch("reco_Ntrack")) {
-        T_PFeval->SetBranchStatus("reco_Ntrack",1);
-        T_PFeval->SetBranchStatus("reco_startMomentum",1);
-        T_PFeval->SetBranchStatus("reco_pdg",1);
-  }
-  */
-
   if (pfeval.flag_NCDelta){
     
     T_PFeval->SetBranchStatus("truth_NCDelta",1);
@@ -1648,6 +1738,12 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
     T_PFeval->SetBranchStatus("reco_Nproton",1);
     T_PFeval->SetBranchStatus("truth_showerMomentum",1);
     T_PFeval->SetBranchStatus("truth_nuScatType",1);
+  }
+  if (T_PFeval->GetBranch("truth_startMomentum")){
+    T_PFeval->SetBranchStatus("truth_Ntrack",1); 
+    T_PFeval->SetBranchStatus("truth_pdg",1); 
+    T_PFeval->SetBranchStatus("truth_mother",1); 
+    T_PFeval->SetBranchStatus("truth_startMomentum",1); 
   }
 
 
@@ -1690,7 +1786,11 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
   weight.reinteractions_proton_Geant4 = new std::vector<float>; 
   
   TString option;
-  if (T_weight->GetBranch("expskin_FluxUnisim")){
+  if (rw_type == 1){
+    option = "reweight";
+  }else if (rw_type == 2){
+    option = "reweight_cor";
+  }else if (T_weight->GetBranch("expskin_FluxUnisim")){
     option = "expskin_FluxUnisim";
   }else if (T_weight->GetBranch("horncurrent_FluxUnisim")){
     option = "horncurrent_FluxUnisim";
@@ -1749,7 +1849,10 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
     std::tuple<float, float, std::vector<float>, std::vector<int>, std::set<std::tuple<int, float, bool, int> > > event_info;
     std::get<0>(event_info) = eval.weight_cv * eval.weight_spline;
     std::get<1>(event_info) = leeweight(eval.truth_nuEnergy);
-    
+     
+    double reweight = get_weight("add_weight", eval, pfeval, kine, tagger, get_rw_info());//automatically 1 if reweighting is not applied
+    std::get<0>(event_info) *= reweight;
+ 
      for (auto it = histo_infos.begin(); it != histo_infos.end(); it++){
       TString histoname = std::get<0>(*it);
 
@@ -1877,6 +1980,36 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
 	for (size_t j=0; j!= weight.reinteractions_proton_Geant4->size(); j++){
 	  std::get<2>(event_info).at(j) = weight.reinteractions_proton_Geant4->at(j) - 1.0;
 	}
+      }else if (option == "reweight"){
+        std::get<2>(event_info).resize(1000);
+        std::get<3>(event_info).push_back(1000);
+        if(!(flag_reweight)) reweight = get_weight("add_weight", eval, pfeval, kine, tagger, get_rw_info(true));
+        for (size_t j=0;j!=1000;j++){
+          if(flag_reweight){
+            if (weight.weight_cv>0 && reweight!=1){
+              gRandom->SetSeed(j*reweight*77777);
+              double rand = gRandom->Gaus(reweight,abs(1-reweight));
+              std::get<2>(event_info).at(j) = (rand-reweight)/reweight;
+            }else std::get<2>(event_info).at(j) = 0;
+          }else{
+            gRandom->SetSeed(j*reweight*77777);
+            double rand = gRandom->Gaus(1,abs(1-reweight));
+            std::get<2>(event_info).at(j) = rand-1;
+          }
+        }
+      }else if (option == "reweight_cor"){
+        std::get<2>(event_info).resize(1);
+        std::get<3>(event_info).push_back(1);
+        if(flag_reweight){
+          if (weight.weight_cv>0 && reweight!=1){
+            std::get<2>(event_info).at(0) = (1-reweight)/reweight;
+          }else{
+            std::get<2>(event_info).at(0) = 0;
+          }
+        }else{
+           reweight = get_weight("add_weight", eval, pfeval, kine, tagger, get_rw_info(true));
+           std::get<2>(event_info).at(0) = reweight-1;
+        }
       }else if (option == "UBGenieFluxSmallUni"){
 	int acc_no = 0;
 	std::get<2>(event_info).resize(weight.All_UBGenie->size());
@@ -1889,6 +2022,39 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
 	  }
 	}
 	acc_no += weight.All_UBGenie->size();
+
+        if(rw_type==3){
+          std::get<2>(event_info).resize(acc_no+1000);
+          std::get<3>(event_info).push_back(1000);
+          if(!(flag_reweight)) reweight = get_weight("add_weight", eval, pfeval, kine, tagger, get_rw_info(true));
+          for (size_t j=0;j!=1000;j++){
+            if(flag_reweight){
+              if (weight.weight_cv>0 && reweight!=1){
+                gRandom->SetSeed(j*reweight*77777);
+                double rand = gRandom->Gaus(reweight,abs(1-reweight));
+                std::get<2>(event_info).at(acc_no+j) = (rand-reweight)/reweight;
+              }else std::get<2>(event_info).at(acc_no+j) = 0;
+            }else{
+              gRandom->SetSeed(j*reweight*77777);
+              double rand = gRandom->Gaus(1,abs(1-reweight));
+              std::get<2>(event_info).at(acc_no+j) = rand-1;
+            }
+          }
+          acc_no+=1000;
+          std::get<2>(event_info).resize(acc_no+1);
+          std::get<3>(event_info).push_back(1);
+          if(flag_reweight){
+            if (weight.weight_cv>0 && reweight!=1){
+              std::get<2>(event_info).at(acc_no) = (1-reweight)/reweight;
+            }else{
+              std::get<2>(event_info).at(acc_no) = 0;
+            }
+          }else{
+             reweight = get_weight("add_weight", eval, pfeval, kine, tagger, get_rw_info(true));
+             std::get<2>(event_info).at(acc_no) = reweight-1;
+          }
+          acc_no++; 
+        }
 
 	std::get<2>(event_info).resize(acc_no + weight.AxFFCCQEshape_UBGenie->size());
 	std::get<3>(event_info).push_back(weight.AxFFCCQEshape_UBGenie->size());
@@ -2082,8 +2248,16 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
     sup_lengths.push_back(1000);
   }else if (option == "reinteractions_proton_Geant4"){
     sup_lengths.push_back(1000);
+  }else if (option == "reweight"){
+    sup_lengths.push_back(1000);
+  }else if (option == "reweight_cor"){
+    sup_lengths.push_back(1);
   }else if (option == "UBGenieFluxSmallUni"){
     sup_lengths.push_back(600); // all_ubgenie
+    if(rw_type==3){
+      sup_lengths.push_back(1000); //reweighting syst
+      sup_lengths.push_back(1); //cor reweighting syst
+    } 
     sup_lengths.push_back(1);   // AxFFCCQEshape_UBGenie-
     sup_lengths.push_back(1);   // DecayAngMEC_UBGenie
     sup_lengths.push_back(1); // NormCCCOH_UBGenie

@@ -32,7 +32,7 @@ int main( int argc, char** argv )
   if (argc < 2){
     std::cout << "./merge_hist -r[#run, 0 for all] -e[1 for standard, 2 for Bayesian] -L[LEE strength]" << std::endl;
   }
-  //std::cout << "lhagaman debug 10001\n"; 
+  
   int run = 1; // run 1 ...
   int flag_err = 1;// 1 for standard, 2 for Bayesian ...
   float lee_strength = 0; // no LEE strength ...
@@ -59,7 +59,6 @@ int main( int argc, char** argv )
     }
   }
 
-  //std::cout << "lhagaman debug 10002\n"; 
   CovMatrix cov;
 
   // get data histograms ...
@@ -77,7 +76,6 @@ int main( int argc, char** argv )
   std::map<int, double> map_data_period_pot;
   //  std::vector<TH1F*> temp_histograms;
   
-  //std::cout << "lhagaman debug 10003\n"; 
   // open all the histograms ...
   for (auto it = map_inputfile_info.begin(); it != map_inputfile_info.end(); it++){
     TString input_filename = it->first;
@@ -115,7 +113,6 @@ int main( int argc, char** argv )
   }
 
   
-  //std::cout << "lhagaman debug 10004\n"; 
  
   
   // create histograms for data, create histograms for predictions
@@ -174,13 +171,11 @@ int main( int argc, char** argv )
   }
 
 
-  //std::cout << "lhagaman debug 10005\n"; 
   
   // get data histograms ...
   cov.fill_data_histograms(run, map_obsch_histos, map_name_histogram);
 
 
-  //std::cout << "lhagaman debug 100055\n"; 
   
   // get predictions and its uncertainties ...,
   cov.fill_pred_histograms(run, map_obsch_histos, map_obsch_bayes, map_obsch_infos, map_name_histogram, lee_strength, map_data_period_pot, flag_breakdown, map_obsch_subhistos);
@@ -192,7 +187,6 @@ int main( int argc, char** argv )
     /* } */ 
 
   
-  //std::cout << "lhagaman debug 10006\n"; 
   
   // get Bayesian errrors ...
 
@@ -258,7 +252,6 @@ int main( int argc, char** argv )
     }
   }
 
-  //std::cout << "lhagaman debug 10007\n"; 
   if (flag_display == 1){
     // plotting ...
     TApplication theApp("theApp",&argc,argv);
@@ -690,8 +683,6 @@ int main( int argc, char** argv )
     
   }
   theApp.Run();
-
-  //std::cout << "lhagaman debug 10008\n"; 
   }
   else // flag_breakdown == true
   {
@@ -997,7 +988,6 @@ int main( int argc, char** argv )
 
 
   
-  //std::cout << "lhagaman debug 10009\n"; 
   
   // std::map<TString, std::pair<TString, int> > map_pred_histo_hist_err2_lee = cov.get_map_pred_histo_histo_err2_lee();
   // std::map<std::pair<TString, TString>, std::pair<TString, int> > map_pair_histo_histos_cross = cov.get_map_pair_hist_hists_cros();
