@@ -1766,7 +1766,14 @@ bool LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, Eval
   if (eval.match_completeness_energy>0.1*eval.truth_energyInside && eval.truth_vtxInside==1 && eval.truth_isCC==0 && pfeval.truth_NprimPio!=1 && pfeval.truth_NCDelta==0) map_cuts_flag["NCotherinFV"] = true;
   else map_cuts_flag["NCotherinFV"] = false;
   // done with NC Delta breakdown categories
-  
+  // adding additional CC Pi0 cuts for file_ch.txt since I need to treat the runs differently, runs 1 and 3 only processed
+  if (eval.truth_vtxInside==1 && eval.truth_isCC==1 && abs(eval.truth_nuPdg)==14 && pfeval.truth_NprimPio==1){
+	 map_cuts_flag["trueNumuCC1Pi0"] = true;
+	 map_cuts_flag["notTrueNumuCC1Pi0"] = false;
+  }else {
+	 map_cuts_flag["trueNumuCC1Pi0"] = false;
+	 map_cuts_flag["notTrueNumuCC1Pi0"] = true;
+  }// done adding additional CC Pi0 cuts
   
   if(pfeval.truth_nuScatType==10 && eval.truth_isCC==1 && eval.match_completeness_energy>0.1*eval.truth_energyInside) map_cuts_flag["CCMEC"] = true;
   else map_cuts_flag["CCMEC"] = false;
@@ -2877,7 +2884,8 @@ bool LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, Eval
     else return false;
 
  // generic selection nu PC+FC 1 obs channel   
-  }else if (ch_name == "generic_nu_overlay" || ch_name == "BG_generic_nu_ext" || ch_name =="BG_generic_nu_dirt" || ch_name == "generic_nu_bnb"){
+  }else if (ch_name == "generic_nu_overlay" || ch_name == "generic_nu_ext" || ch_name =="generic_nu_dirt" || ch_name == "generic_nu_bnb" || "generic_nc_delta_overlay" || "generic_nc_pi0_overlay" || "generic_cc_pi0_overlay"){
+    // warning: filtered overlays added for testing, if you use these here it will include overlaps
     if (flag_generic) return true;
     else return false;
  // numuCC selection PC+FC 1 obs channel   
@@ -3086,12 +3094,12 @@ bool LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, Eval
 	|| ch_name == "nc_pio_energy_FC_dirt" ){
       if (flag_ncpio_sel && flag_FC) return true;
     }else if (ch_name == "nc_pio_energy_FC_ncpio_overlay" ){
-      if (flag_ncpio_sel && flag_FC && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0 
+      if (flag_ncpio_sel && flag_FC && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
 					&& !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true; 
     }else if (ch_name == "nc_pio_energy_FC_ncdelta_overlay" ){
       if (flag_ncpio_sel && flag_FC && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside)) return true;
     }else if (ch_name == "nc_pio_energy_FC_overlay" ){
-      if (flag_ncpio_sel && flag_FC && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+      if (flag_ncpio_sel && flag_FC && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
       					  && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside)))
       	  && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
       //if (flag_ncpio_sel && flag_FC) return true;
@@ -3100,12 +3108,12 @@ bool LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, Eval
 	|| ch_name == "nc_pio_score_FC_dirt"){
       if (flag_FC) return true;
     }else if (ch_name == "nc_pio_score_FC_ncpio_overlay"){ 
-      if (flag_FC && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0 
+      if (flag_FC && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
       && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true; 
     }else if (ch_name == "nc_pio_score_FC_ncdelta_overlay"){
       if (flag_FC && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside)) return true;
     }else if (ch_name == "nc_pio_score_FC_overlay"){
-      if (flag_FC && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+      if (flag_FC && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
 			&& (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))))
 	  && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
       //  if (flag_FC) return true;
@@ -3188,7 +3196,7 @@ bool LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, Eval
             || ch_name == "nc_delta_0p_09_nc_pi0_overlay" || ch_name == "nc_delta_0p_10_nc_pi0_overlay" || ch_name == "nc_delta_0p_11_nc_pi0_overlay" || ch_name == "nc_delta_0p_12_nc_pi0_overlay"
             || ch_name == "nc_delta_0p_13_nc_pi0_overlay" || ch_name == "nc_delta_0p_14_nc_pi0_overlay" || ch_name == "nc_delta_0p_15_nc_pi0_overlay" || ch_name == "nc_delta_0p_16_nc_pi0_overlay"
             || ch_name == "nc_delta_0p_17_nc_pi0_overlay" || ch_name == "nc_delta_0p_18_nc_pi0_overlay" || ch_name == "nc_delta_0p_19_nc_pi0_overlay" || ch_name == "nc_delta_0p_20_nc_pi0_overlay"){
-                  if (flag_FC && flag_ncdelta_sel && flag_0p && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_ncdelta_sel && flag_0p && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                      && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
     }else if (ch_name == "nc_delta_Np_01_nc_pi0_overlay" || ch_name == "nc_delta_Np_02_nc_pi0_overlay" || ch_name == "nc_delta_Np_03_nc_pi0_overlay" || ch_name == "nc_delta_Np_04_nc_pi0_overlay"
@@ -3196,15 +3204,31 @@ bool LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, Eval
             || ch_name == "nc_delta_Np_09_nc_pi0_overlay" || ch_name == "nc_delta_Np_10_nc_pi0_overlay" || ch_name == "nc_delta_Np_11_nc_pi0_overlay" || ch_name == "nc_delta_Np_12_nc_pi0_overlay"
             || ch_name == "nc_delta_Np_13_nc_pi0_overlay" || ch_name == "nc_delta_Np_14_nc_pi0_overlay" || ch_name == "nc_delta_Np_15_nc_pi0_overlay" || ch_name == "nc_delta_Np_16_nc_pi0_overlay"
             || ch_name == "nc_delta_Np_17_nc_pi0_overlay" || ch_name == "nc_delta_Np_18_nc_pi0_overlay" || ch_name == "nc_delta_Np_19_nc_pi0_overlay" || ch_name == "nc_delta_Np_20_nc_pi0_overlay"){
-                  if (flag_FC && flag_ncdelta_sel && (!flag_0p) && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_ncdelta_sel && (!flag_0p) && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                         && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
-   }else if (ch_name == "nc_delta_0p_01_overlay" || ch_name == "nc_delta_0p_02_overlay" || ch_name == "nc_delta_0p_03_overlay" || ch_name == "nc_delta_0p_04_overlay"
+   }else if (ch_name == "nc_delta_0p_01_cc_pi0_overlay" || ch_name == "nc_delta_0p_02_cc_pi0_overlay" || ch_name == "nc_delta_0p_03_cc_pi0_overlay" || ch_name == "nc_delta_0p_04_cc_pi0_overlay"
+            || ch_name == "nc_delta_0p_05_cc_pi0_overlay" || ch_name == "nc_delta_0p_06_cc_pi0_overlay" || ch_name == "nc_delta_0p_07_cc_pi0_overlay" || ch_name == "nc_delta_0p_08_cc_pi0_overlay"
+            || ch_name == "nc_delta_0p_09_cc_pi0_overlay" || ch_name == "nc_delta_0p_10_cc_pi0_overlay" || ch_name == "nc_delta_0p_11_cc_pi0_overlay" || ch_name == "nc_delta_0p_12_cc_pi0_overlay"
+            || ch_name == "nc_delta_0p_13_cc_pi0_overlay" || ch_name == "nc_delta_0p_14_cc_pi0_overlay" || ch_name == "nc_delta_0p_15_cc_pi0_overlay" || ch_name == "nc_delta_0p_16_cc_pi0_overlay"
+            || ch_name == "nc_delta_0p_17_cc_pi0_overlay" || ch_name == "nc_delta_0p_18_cc_pi0_overlay" || ch_name == "nc_delta_0p_19_cc_pi0_overlay" || ch_name == "nc_delta_0p_20_cc_pi0_overlay"){
+                  if (flag_FC && flag_ncdelta_sel && flag_0p && (eval.truth_isCC==1 && flag_truth_inside && pfeval.truth_NprimPio==1
+                                                     && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
+                  return false;
+    }else if (ch_name == "nc_delta_Np_01_cc_pi0_overlay" || ch_name == "nc_delta_Np_02_cc_pi0_overlay" || ch_name == "nc_delta_Np_03_cc_pi0_overlay" || ch_name == "nc_delta_Np_04_cc_pi0_overlay"
+            || ch_name == "nc_delta_Np_05_cc_pi0_overlay" || ch_name == "nc_delta_Np_06_cc_pi0_overlay" || ch_name == "nc_delta_Np_07_cc_pi0_overlay" || ch_name == "nc_delta_Np_08_cc_pi0_overlay"
+            || ch_name == "nc_delta_Np_09_cc_pi0_overlay" || ch_name == "nc_delta_Np_10_cc_pi0_overlay" || ch_name == "nc_delta_Np_11_cc_pi0_overlay" || ch_name == "nc_delta_Np_12_cc_pi0_overlay"
+            || ch_name == "nc_delta_Np_13_cc_pi0_overlay" || ch_name == "nc_delta_Np_14_cc_pi0_overlay" || ch_name == "nc_delta_Np_15_cc_pi0_overlay" || ch_name == "nc_delta_Np_16_cc_pi0_overlay"
+            || ch_name == "nc_delta_Np_17_cc_pi0_overlay" || ch_name == "nc_delta_Np_18_cc_pi0_overlay" || ch_name == "nc_delta_Np_19_cc_pi0_overlay" || ch_name == "nc_delta_Np_20_cc_pi0_overlay"){
+                  if (flag_FC && flag_ncdelta_sel && (!flag_0p) && (eval.truth_isCC==1 && flag_truth_inside && pfeval.truth_NprimPio==1
+                                        && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
+                  return false;
+    }else if (ch_name == "nc_delta_0p_01_overlay" || ch_name == "nc_delta_0p_02_overlay" || ch_name == "nc_delta_0p_03_overlay" || ch_name == "nc_delta_0p_04_overlay"
             || ch_name == "nc_delta_0p_05_overlay" || ch_name == "nc_delta_0p_06_overlay" || ch_name == "nc_delta_0p_07_overlay" || ch_name == "nc_delta_0p_08_overlay"
             || ch_name == "nc_delta_0p_09_overlay" || ch_name == "nc_delta_0p_10_overlay" || ch_name == "nc_delta_0p_11_overlay" || ch_name == "nc_delta_0p_12_overlay"
             || ch_name == "nc_delta_0p_13_overlay" || ch_name == "nc_delta_0p_14_overlay" || ch_name == "nc_delta_0p_15_overlay" || ch_name == "nc_delta_0p_16_overlay"
             || ch_name == "nc_delta_0p_17_overlay" || ch_name == "nc_delta_0p_18_overlay" || ch_name == "nc_delta_0p_19_overlay" || ch_name == "nc_delta_0p_20_overlay"){
-                  if (flag_FC && flag_ncdelta_sel && flag_0p && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_ncdelta_sel && flag_0p && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))))
        && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
@@ -3213,7 +3237,7 @@ bool LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, Eval
             || ch_name == "nc_delta_Np_09_overlay" || ch_name == "nc_delta_Np_10_overlay" || ch_name == "nc_delta_Np_11_overlay" || ch_name == "nc_delta_Np_12_overlay"
             || ch_name == "nc_delta_Np_13_overlay" || ch_name == "nc_delta_Np_14_overlay" || ch_name == "nc_delta_Np_15_overlay" || ch_name == "nc_delta_Np_16_overlay"
             || ch_name == "nc_delta_Np_17_overlay" || ch_name == "nc_delta_Np_18_overlay" || ch_name == "nc_delta_Np_19_overlay" || ch_name == "nc_delta_Np_20_overlay"){
-                  if (flag_FC && flag_ncdelta_sel && (!flag_0p) && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_ncdelta_sel && (!flag_0p) && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                        && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))))
           && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
@@ -3256,7 +3280,7 @@ bool LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, Eval
             || ch_name == "nc_delta_Xp_09_nc_pi0_overlay" || ch_name == "nc_delta_Xp_10_nc_pi0_overlay" || ch_name == "nc_delta_Xp_11_nc_pi0_overlay" || ch_name == "nc_delta_Xp_12_nc_pi0_overlay"
             || ch_name == "nc_delta_Xp_13_nc_pi0_overlay" || ch_name == "nc_delta_Xp_14_nc_pi0_overlay" || ch_name == "nc_delta_Xp_15_nc_pi0_overlay" || ch_name == "nc_delta_Xp_16_nc_pi0_overlay"
             || ch_name == "nc_delta_Xp_17_nc_pi0_overlay" || ch_name == "nc_delta_Xp_18_nc_pi0_overlay" || ch_name == "nc_delta_Xp_19_nc_pi0_overlay" || ch_name == "nc_delta_Xp_20_nc_pi0_overlay"){
-                  if (flag_FC && flag_ncdelta_sel && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_ncdelta_sel && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                      && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
     }else if (ch_name == "nc_delta_Xp_01_overlay" || ch_name == "nc_delta_Xp_02_overlay" || ch_name == "nc_delta_Xp_03_overlay" || ch_name == "nc_delta_Xp_04_overlay"
@@ -3264,7 +3288,7 @@ bool LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, Eval
             || ch_name == "nc_delta_Xp_09_overlay" || ch_name == "nc_delta_Xp_10_overlay" || ch_name == "nc_delta_Xp_11_overlay" || ch_name == "nc_delta_Xp_12_overlay"
             || ch_name == "nc_delta_Xp_13_overlay" || ch_name == "nc_delta_Xp_14_overlay" || ch_name == "nc_delta_Xp_15_overlay" || ch_name == "nc_delta_Xp_16_overlay"
             || ch_name == "nc_delta_Xp_17_overlay" || ch_name == "nc_delta_Xp_18_overlay" || ch_name == "nc_delta_Xp_19_overlay" || ch_name == "nc_delta_Xp_20_overlay"){
-                  if (flag_FC && flag_ncdelta_sel && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_ncdelta_sel && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                        && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))))
           && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
@@ -3316,29 +3340,41 @@ bool LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, Eval
             }
             return false;
     }else if (ch_name == "nc_pi0_0p_nc_pi0_overlay" || ch_name == "nc_pi0_2_0p_nc_pi0_overlay"){
-                  if (flag_FC && flag_ncpio_sel && (!flag_ncdelta_sel) && flag_0p && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_ncpio_sel && (!flag_ncdelta_sel) && flag_0p && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                      && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
     }else if (ch_name == "nc_pi0_Np_nc_pi0_overlay" || ch_name == "nc_pi0_2_Np_nc_pi0_overlay"){
-                  if (flag_FC && flag_ncpio_sel && (!flag_ncdelta_sel) && (!flag_0p) && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_ncpio_sel && (!flag_ncdelta_sel) && (!flag_0p) && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                      && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
     }else if (ch_name == "nc_pi0_Xp_nc_pi0_overlay" || ch_name == "nc_pi0_2_Xp_nc_pi0_overlay"){
-                  if (flag_FC && flag_ncpio_sel && (!flag_ncdelta_sel) && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_ncpio_sel && (!flag_ncdelta_sel) && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
+                                                     && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
+                  return false;
+    }else if (ch_name == "nc_pi0_0p_cc_pi0_overlay" || ch_name == "nc_pi0_2_0p_cc_pi0_overlay"){
+                  if (flag_FC && flag_ncpio_sel && (!flag_ncdelta_sel) && flag_0p && (eval.truth_isCC==1 && flag_truth_inside && pfeval.truth_NprimPio==1
+                                                     && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
+                  return false;
+    }else if (ch_name == "nc_pi0_Np_cc_pi0_overlay" || ch_name == "nc_pi0_2_Np_cc_pi0_overlay"){
+                  if (flag_FC && flag_ncpio_sel && (!flag_ncdelta_sel) && (!flag_0p) && (eval.truth_isCC==1 && flag_truth_inside && pfeval.truth_NprimPio==1
+                                                     && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
+                  return false;
+    }else if (ch_name == "nc_pi0_Xp_nc_pi0_overlay" || ch_name == "nc_pi0_2_Xp_nc_pi0_overlay"){
+                  if (flag_FC && flag_ncpio_sel && (!flag_ncdelta_sel) && (eval.truth_isCC==1 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                      && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
     }else if (ch_name == "nc_pi0_0p_overlay" || ch_name == "nc_pi0_2_0p_overlay"){
-                  if (flag_FC && flag_ncpio_sel && (!flag_ncdelta_sel) && flag_0p && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_ncpio_sel && (!flag_ncdelta_sel) && flag_0p && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                        && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))))
           && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
     }else if (ch_name == "nc_pi0_Np_overlay" || ch_name == "nc_pi0_2_Np_overlay"){
-                  if (flag_FC && flag_ncpio_sel && (!flag_ncdelta_sel) && (!flag_0p) && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_ncpio_sel && (!flag_ncdelta_sel) && (!flag_0p) && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                        && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))))
           && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
     }else if (ch_name == "nc_pi0_Xp_overlay" || ch_name == "nc_pi0_2_Xp_overlay"){
-                  if (flag_FC && flag_ncpio_sel && (!flag_ncdelta_sel) && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_ncpio_sel && (!flag_ncdelta_sel) && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                        && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))))
           && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
@@ -3380,29 +3416,29 @@ bool LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, Eval
                   if (flag_FC && flag_cc_pi0 && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside)) return true;
                   return false;
     }else if (ch_name == "cc_pi0_0p_nc_pi0_overlay" || ch_name == "cc_pi0_2_0p_nc_pi0_overlay"){
-                  if (flag_FC && flag_cc_pi0 && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && flag_0p && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_cc_pi0 && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && flag_0p && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                      && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
     }else if (ch_name == "cc_pi0_Np_nc_pi0_overlay" || ch_name == "cc_pi0_2_Np_nc_pi0_overlay"){
-                  if (flag_FC && flag_cc_pi0 && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_0p) && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_cc_pi0 && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_0p) && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                      && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
     }else if (ch_name == "cc_pi0_Xp_nc_pi0_overlay" || ch_name == "cc_pi0_2_Xp_nc_pi0_overlay"){
-                  if (flag_FC && flag_cc_pi0 && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_cc_pi0 && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                      && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
     }else if (ch_name == "cc_pi0_0p_overlay" || ch_name == "cc_pi0_2_0p_overlay"){
-                  if (flag_FC && flag_cc_pi0 && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && flag_0p && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_cc_pi0 && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && flag_0p && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                        && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))))
           && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
     }else if (ch_name == "cc_pi0_Np_overlay" || ch_name == "cc_pi0_2_Np_overlay"){
-                  if (flag_FC && flag_cc_pi0 && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_0p) && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_cc_pi0 && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_0p) && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                        && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))))
           && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
     }else if (ch_name == "cc_pi0_Xp_overlay" || ch_name == "cc_pi0_2_Xp_overlay"){
-                  if (flag_FC && flag_cc_pi0 && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_cc_pi0 && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                        && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))))
           && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
@@ -3444,29 +3480,29 @@ bool LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, Eval
                   if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_cc_pi0) && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside)) return true;
                   return false;
     }else if (ch_name == "numuCC_noCCpi0_0p_nc_pi0_overlay"){
-                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_cc_pi0) && flag_0p && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_cc_pi0) && flag_0p && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                      && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
     }else if (ch_name == "numuCC_noCCpi0_Np_nc_pi0_overlay"){
-                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_cc_pi0) && (!flag_0p) && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_cc_pi0) && (!flag_0p) && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                      && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
     }else if (ch_name == "numuCC_noCCpi0_Xp_nc_pi0_overlay"){
-                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_cc_pi0)  && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_cc_pi0)  && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                      && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
     }else if (ch_name == "numuCC_noCCpi0_0p_overlay"){
-                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_cc_pi0) && flag_0p && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_cc_pi0) && flag_0p && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                        && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))))
           && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
     }else if (ch_name == "numuCC_noCCpi0_Np_overlay"){
-                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_cc_pi0) && (!flag_0p) && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_cc_pi0) && (!flag_0p) && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                        && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))))
           && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
     }else if (ch_name == "numuCC_noCCpi0_Xp_overlay"){
-                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_cc_pi0) && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_cc_pi0) && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                        && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))))
           && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
@@ -3518,29 +3554,41 @@ bool LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, Eval
             }
             return false;
     }else if (ch_name == "numuCC_0p_nc_pi0_overlay"){
-                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && flag_0p && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && flag_0p && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                      && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
     }else if (ch_name == "numuCC_Np_nc_pi0_overlay"){
-                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_0p) && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_0p) && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                      && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
     }else if (ch_name == "numuCC_Xp_nc_pi0_overlay"){
-                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
+                                                     && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
+                  return false;
+    }else if (ch_name == "numuCC_0p_cc_pi0_overlay"){
+                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && flag_0p && (eval.truth_isCC==1 && flag_truth_inside && pfeval.truth_NprimPio==1
+                                                     && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
+                  return false;
+    }else if (ch_name == "numuCC_Np_cc_pi0_overlay"){
+                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_0p) && (eval.truth_isCC==1 && flag_truth_inside && pfeval.truth_NprimPio==1
+                                                     && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
+                  return false;
+    }else if (ch_name == "numuCC_Xp_cc_pi0_overlay"){
+                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (eval.truth_isCC==1 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                      && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
     }else if (ch_name == "numuCC_0p_overlay"){
-                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && flag_0p && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && flag_0p && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                        && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))))
           && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
     }else if (ch_name == "numuCC_Np_overlay"){
-                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_0p) && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_0p) && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                        && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))))
           && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
     }else if (ch_name == "numuCC_Xp_overlay"){
-                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+                  if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
                                                        && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))))
           && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
                   return false;
@@ -3574,24 +3622,24 @@ bool LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, Eval
     if (ch_name == "nc_delta_energy_FC_0p" ||  ch_name == "nc_delta_energy_FC_0p_ext" || ch_name == "nc_delta_energy_FC_0p_dirt"){
       if (flag_FC && flag_ncdelta_sel && flag_0p) return true;
     }else if (ch_name == "nc_delta_energy_FC_0p_ncpio_overlay"){
-      if (flag_FC && flag_ncdelta_sel && flag_0p && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0 
+      if (flag_FC && flag_ncdelta_sel && flag_0p && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1 
 						     && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
     }else if (ch_name == "nc_delta_energy_FC_0p_ncdelta_overlay"){
       if (flag_FC && flag_ncdelta_sel && flag_0p && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside)) return true;
     }else if (ch_name == "nc_delta_energy_FC_0p_overlay"){
-      if (flag_FC && flag_ncdelta_sel && flag_0p && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+      if (flag_FC && flag_ncdelta_sel && flag_0p && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
       						       && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))))
       	  && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
       //      if (flag_FC && flag_ncdelta_sel && flag_0p) return true;
     }else if (ch_name == "nc_delta_score_FC_0p" ||  ch_name == "nc_delta_score_FC_0p_ext" || ch_name == "nc_delta_score_FC_0p_dirt"){
       if (flag_FC  && flag_0p) return true;
     }else if (ch_name == "nc_delta_score_FC_0p_ncpio_overlay"){
-      if (flag_FC  && flag_0p && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0 
+      if (flag_FC  && flag_0p && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
 				  && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
     }else if (ch_name == "nc_delta_score_FC_0p_ncdelta_overlay"){
       if (flag_FC  && flag_0p && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside)) return true;
     }else if (ch_name == "nc_delta_score_FC_0p_overlay"){
-      if (flag_FC  && flag_0p && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+      if (flag_FC  && flag_0p && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
       					       && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))))
        && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
       //      if (flag_FC  && flag_0p) return true;
@@ -3608,24 +3656,24 @@ bool LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, Eval
     if (ch_name == "nc_delta_energy_FC_Np" ||  ch_name == "nc_delta_energy_FC_Np_ext" || ch_name == "nc_delta_energy_FC_Np_dirt"){
       if (flag_FC && flag_ncdelta_sel && (!flag_0p)) return true;
     }else if (ch_name == "nc_delta_energy_FC_Np_ncpio_overlay"){
-      if (flag_FC && flag_ncdelta_sel && (!flag_0p) && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+      if (flag_FC && flag_ncdelta_sel && (!flag_0p) && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
       					&& !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
     }else if (ch_name == "nc_delta_energy_FC_Np_ncdelta_overlay"){
       if (flag_FC && flag_ncdelta_sel && (!flag_0p) && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside)) return true;
     }else if (ch_name == "nc_delta_energy_FC_Np_overlay"){
-      if (flag_FC && flag_ncdelta_sel && (!flag_0p) && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+      if (flag_FC && flag_ncdelta_sel && (!flag_0p) && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
       						       && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))))
       	  && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
       //      if (flag_FC && flag_ncdelta_sel && (!flag_0p)) return true;
     }else if (ch_name == "nc_delta_score_FC_Np" ||  ch_name == "nc_delta_score_FC_Np_ext" || ch_name == "nc_delta_score_FC_Np_dirt"){
       if (flag_FC  && (!flag_0p)) return true;
     }else if (ch_name == "nc_delta_score_FC_Np_ncpio_overlay"){
-      if (flag_FC  && (!flag_0p) && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+      if (flag_FC  && (!flag_0p) && (eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
       					&& !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
     }else if (ch_name == "nc_delta_score_FC_Np_ncdelta_overlay"){
       if (flag_FC  && (!flag_0p) && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside)) return true; 
     }else if (ch_name == "nc_delta_score_FC_Np_overlay"){
-      if (flag_FC  && (!flag_0p) && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio>0
+      if (flag_FC  && (!flag_0p) && (!(eval.truth_isCC==0 && flag_truth_inside && pfeval.truth_NprimPio==1
       						       && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))))
       	  && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
       // if (flag_FC  && (!flag_0p)) return true;
@@ -3654,6 +3702,12 @@ bool LEEana::get_rw_cut_pass(TString cut, EvalInfo& eval, PFevalInfo& pfeval, Ta
     return false;
   }else if(cut == "NCDelta0p_scale"){
     if(is_NCdelta_sel(tagger, pfeval) && eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && is_0p(tagger, kine, pfeval)) return true;
+    return false;
+  }else if(cut == "NCPi0_NCDelta_Np"){
+    if(eval.truth_isCC==0 && !(is_true_0p(pfeval)) && (pfeval.truth_NprimPio>0 || pfeval.truth_NCDelta==1)) return true;
+    return false;
+  }else if(cut == "NCPi0_NCDelta_0p"){
+    if(eval.truth_isCC==0 && is_true_0p(pfeval) && (pfeval.truth_NprimPio>0 || pfeval.truth_NCDelta==1)) return true;
     return false;
   }else{
     std::cout<<"No matching reweighting cut, check reweight configuration file"<<std::endl;

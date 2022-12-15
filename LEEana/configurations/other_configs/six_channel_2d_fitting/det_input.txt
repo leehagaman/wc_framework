@@ -68,5 +68,43 @@
 7       nc_delta_overlay             9               /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_delta_overlay_WCP_DetVar_WireModYZ_run3.root                      ./hist_rootfiles/DetVar/cov_WMYZ.root           0               62      6.89e20    3
 7       nc_delta_overlay             10              /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_delta_overlay_WCP_DetVar_LYAttenuation_run3.root                  ./hist_rootfiles/DetVar/cov_LYatt.root          0               63      6.89e20    3
 
+
+
+
+8       cc_pi0_overlay              1               /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_LYDown_run1.root                         ./hist_rootfiles/DetVar/cov_LYDown.root         0               64       5.91e20    1
+8       cc_pi0_overlay              2               /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_LYRayleigh_run1.root                     ./hist_rootfiles/DetVar/cov_LYRayleigh.root     0               65       5.91e20    1
+8       cc_pi0_overlay              3               /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_Recomb2_run1.root                        ./hist_rootfiles/DetVar/cov_Recomb2.root        0               66       5.91e20    1
+8       cc_pi0_overlay              4               /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_SCE_run1.root                            ./hist_rootfiles/DetVar/cov_SCE.root            0               67       5.91e20    1
+8       cc_pi0_overlay              6               /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_WireModThetaXZ_run1.root                 ./hist_rootfiles/DetVar/cov_WMThetaXZ.root      0               68       5.91e20    1
+8       cc_pi0_overlay              7               /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_WireModThetaYZ_run1.root                 ./hist_rootfiles/DetVar/cov_WMThetaYZ.root      0               69       5.91e20    1
+8       cc_pi0_overlay              8               /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_WireModX_run1.root                       ./hist_rootfiles/DetVar/cov_WMX.root            0               70       5.91e20    1
+8       cc_pi0_overlay              9               /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_WireModYZ_run1.root                      ./hist_rootfiles/DetVar/cov_WMYZ.root           0               71       5.91e20    1
+8       cc_pi0_overlay              10              /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_LYAttenuation_run1.root                  ./hist_rootfiles/DetVar/cov_LYatt.root          0               72       5.91e20    1
+
+8       cc_pi0_overlay              1               /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_LYDown_run3.root                         ./hist_rootfiles/DetVar/cov_LYDown.root         0               73      6.42e20 3
+8       cc_pi0_overlay              2               /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_LYRayleigh_run3.root                     ./hist_rootfiles/DetVar/cov_LYRayleigh.root     0               74      6.42e20 3
+8       cc_pi0_overlay              3               /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_Recomb2_run3.root                        ./hist_rootfiles/DetVar/cov_Recomb2.root        0               75      6.42e20 3
+8       cc_pi0_overlay              4               /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_SCE_run3.root                            ./hist_rootfiles/DetVar/cov_SCE.root            0               76      6.42e20 3
+8       cc_pi0_overlay              6               /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_WireModThetaXZ_run3.root                 ./hist_rootfiles/DetVar/cov_WMThetaXZ.root      0               77      6.42e20 3
+8       cc_pi0_overlay              7               /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_WireModThetaYZ_run3.root                 ./hist_rootfiles/DetVar/cov_WMThetaYZ.root      0               78      6.42e20 3
+8       cc_pi0_overlay              8               /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_WireModX_run3.root                       ./hist_rootfiles/DetVar/cov_WMX.root            0               79      6.42e20 3
+8       cc_pi0_overlay              9               /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_WireModYZ_run3.root                      ./hist_rootfiles/DetVar/cov_WMYZ.root           0               80      6.42e20 3
+8       cc_pi0_overlay              10              /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_LYAttenuation_run3.root                  ./hist_rootfiles/DetVar/cov_LYatt.root          0               81      6.42e20 3
+
+8       cc_pi0_overlay              1               /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_LYDown_run3b.root                         ./hist_rootfiles/DetVar/cov_LYDown.root         0               82     9.9e19    30
+8       cc_pi0_overlay              2               /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_LYRayleigh_run3b.root                     ./hist_rootfiles/DetVar/cov_LYRayleigh.root     0               83     9.9e19    30
+8       cc_pi0_overlay              3               /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_Recomb2_run3b.root                        ./hist_rootfiles/DetVar/cov_Recomb2.root        0               84     9.9e19    30
+8       cc_pi0_overlay              4               /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_SCE_run3b.root                            ./hist_rootfiles/DetVar/cov_SCE.root            0               85     9.9e19    30
+8       cc_pi0_overlay              6               /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_WireModThetaXZ_run3b.root                 ./hist_rootfiles/DetVar/cov_WMThetaXZ.root      0               86     9.9e19    30
+8       cc_pi0_overlay              7               /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_WireModThetaYZ_run3b.root                 ./hist_rootfiles/DetVar/cov_WMThetaYZ.root      0               87     9.9e19    30
+8       cc_pi0_overlay              8               /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_WireModX_run3b.root                       ./hist_rootfiles/DetVar/cov_WMX.root            0               88     9.9e19    30
+8       cc_pi0_overlay              9               /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_WireModYZ_run3b.root                      ./hist_rootfiles/DetVar/cov_WMYZ.root           0               89     9.9e19    30
+8       cc_pi0_overlay              10              /data1/hagaman/xin_files/hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_LYAttenuation_run3b.root                  ./hist_rootfiles/DetVar/cov_LYatt.root          0               90     9.9e19    30
+
+
+
+
+
+
 -1	end			-1		end																				end						-1		-1	-1	-1
 #file	#type			#period		#filename																			#outfile_name					#ext_pot	#file_no  #norm	#norm_period

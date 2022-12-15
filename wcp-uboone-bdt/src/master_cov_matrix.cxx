@@ -17,15 +17,15 @@
 //#include "WCPLEEANA/kine.h"
 //#include "WCPLEEANA/tagger.h"
 
-
 #include <algorithm>
-
 
 using namespace LEEana;
 
 
 float leeweight(float Enu)
  {
+	 return 1; // hacked because we're using lee weight for nc delta scaling
+
          if(Enu<200 || Enu>=800) return 0.0;
          else if(Enu>=200 && Enu<250) return 6.37441;
          else if(Enu>=250 && Enu<300) return 5.64554;

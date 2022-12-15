@@ -130,7 +130,6 @@ int main( int argc, char** argv )
     }
   }
 
-  
  
   
   // create histograms for data, create histograms for predictions
@@ -266,16 +265,20 @@ int main( int argc, char** argv )
     double cov_lee_strength = 0;
     std::vector<double> *vc_val_GOF = new std::vector<double>;
     std::vector<int> *vc_val_GOF_NDF = new std::vector<int>;
+    //std::cout << "lhagaman debug 101\n";
     TTree* t_covconfig = (TTree*)f_cov->Get("tree");
+    //std::cout << "lhagaman debug 102\n";
     t_covconfig->SetBranchAddress("flag_syst_flux_Xs", &flag_syst_flux_Xs);
+    //std::cout << "lhagaman debug 1001\n";
     t_covconfig->SetBranchAddress("flag_syst_detector", &flag_syst_detector);
     t_covconfig->SetBranchAddress("flag_syst_additional", &flag_syst_additional);
     t_covconfig->SetBranchAddress("flag_syst_mc_stat", &flag_syst_mc_stat);
     t_covconfig->SetBranchAddress("user_Lee_strength_for_output_covariance_matrix", &cov_lee_strength);
     t_covconfig->SetBranchAddress("vc_val_GOF", &vc_val_GOF);
     t_covconfig->SetBranchAddress("vc_val_GOF_NDF", &vc_val_GOF_NDF);
+    //std::cout << "lhagaman debug 1002\n";
     t_covconfig->GetEntry(0);
-
+    //std::cout << "lhagaman debug 103\n";
     // fill GOF map
     for(size_t vv=0; vv<vc_val_GOF->size(); vv++)
     {
@@ -353,7 +356,6 @@ int main( int argc, char** argv )
       }
     }
   }
-
 
 
   if (flag_display == 1){
@@ -922,20 +924,29 @@ int main( int argc, char** argv )
         int obschannel = it->first;
         std::cout<<"Channel: "<<obschannel<<std::endl;
         canvas[obschannel-1] = new TCanvas(Form("canvas%d", obschannel), Form("channel%d", obschannel), 1200, 900);
-        TPad *pad1 = new TPad("pad1", "", 0.01,0.3,0.99,0.99,0,0,0);
-        TPad *pad2 = new TPad("pad2", "", 0.01,0.01,0.99,0.3,0,0,0);
-        pad1->SetBottomMargin(0);
+        TPad *pad1 = new TPad("pad1", "", 0.01,0.3,0.99,0.99,0,0,0); // lhagaman 2022_03_21, changing first num from 0.01 to 0.02 in this and the next line
+        TPad *pad2 = new TPad("pad2", "", 0.01,0.01,0.99,0.29,0,0,0);
+        pad1->SetBottomMargin(0.03); // changed from 0, lhagaman 08/17/21
         pad1->SetLeftMargin(0.12);
         pad1->SetRightMargin(0.1);
-        pad2->SetTopMargin(0.05);
+        pad2->SetTopMargin(0.06); // changed from 0.05, lhagaman 08/17/21
         pad2->SetLeftMargin(0.12);
         pad2->SetRightMargin(0.1);
-        pad2->SetBottomMargin(0.20);
+        pad2->SetBottomMargin(0.3); //  changing from 0.2, lhagaman 2022_03_21
         pad1->Draw();
         pad2->Draw();
         hstack[obschannel-1] = new THStack(Form("hs%d", obschannel),"");
-        legend[obschannel-1] = new TLegend(0.3, 0.65, 0.85, 0.92);
-        TH1F* hdata = (TH1F*)map_obsch_histos[obschannel].at(0)->Clone("hdata");
+        //legend[obschannel-1] = new TLegend(0.25, 0.55, 0.88, 0.9); // changed x1 from 0.3, x2 from 0.85, changed y1 from 0.65, lhagaman 08/17/21
+        //legend[obschannel-1] = new TLegend(0.35, 0.55, 0.88, 0.93); // changed x1 from 0.3, x2 from 0.85, changed y1 from 0.65, lhagaman 08/17/21
+	//legend[obschannel-1]->SetBorderSize(1);
+	//legend[obschannel-1]->SetFillColor(3);
+	
+	legend[obschannel-1] = new TLegend(0.2, 0.55, 0.9, 0.92); // lhagaman 2022_04_20
+	//legend[obschannel-1] = new TLegend(0.3, 0.55, 0.9, 0.92); // lhagaman 2022_03_21
+	legend[obschannel-1]->SetFillStyle(0);
+	//legend[obschannel-1]->SetTextSize(0.035);
+	legend[obschannel-1]->SetTextSize(0.042); // lhagaman 2022_03_21   // lhagaman 2022_05_20 changed from 0.042, then back from 0.05
+	TH1F* hdata = (TH1F*)map_obsch_histos[obschannel].at(0)->Clone("hdata");
         TH1F* hbadmatch = (TH1F*)hdata->Clone("hbadmatch");
         TH1F* hnumuCCinFV = (TH1F*)hdata->Clone("hnumuCCinFV");
         TH1F* hRnumuCCinFV = (TH1F*)hdata->Clone("hRnumuCCinFV");
@@ -961,6 +972,13 @@ int main( int argc, char** argv )
         TH1F* hXsecNumuCCinFV = (TH1F*)hdata->Clone("hXsecNumuCCinFV");
         TH1F* hXsecNC = (TH1F*)hdata->Clone("hXsecNC");
         TH1F* hXsecBkgCC = (TH1F*)hdata->Clone("hXsecBkgCC");
+	
+	TH1F* hNCDeltainFV = (TH1F*)hdata->Clone("hNCDeltainFV");
+        TH1F* hNC1Pi0inFV = (TH1F*)hdata->Clone("hNC1Pi0inFV");
+        TH1F* hnumuCC1Pi0inFV = (TH1F*)hdata->Clone("hnumuCC1Pi0inFV");
+        TH1F* hnumuCCotherinFV = (TH1F*)hdata->Clone("hnumuCCotherinFV");
+        TH1F* hNCotherinFV = (TH1F*)hdata->Clone("hNCotherinFV");		
+
         hbadmatch->Reset();
         hnumuCCinFV->Reset();
         hRnumuCCinFV->Reset();
@@ -986,6 +1004,13 @@ int main( int argc, char** argv )
         hXsecNumuCCinFV->Reset();
         hXsecNC->Reset();
         hXsecBkgCC->Reset();
+
+	hNCDeltainFV->Reset();
+	hNC1Pi0inFV->Reset();
+	hnumuCC1Pi0inFV->Reset();
+	hnumuCCotherinFV->Reset();
+	hNCotherinFV->Reset();
+
         bool flag_leeexist = false;
         //hack
         double scalePOT = 1.0; // overall POT scaling
@@ -1128,6 +1153,32 @@ int main( int argc, char** argv )
                     hXsecBkgCC->Add(htemp);
                     break;
                 }
+
+		if(line == "NCDeltainFV") {
+                    std::cout<<"NCDeltainFV"<<" "<<histname<<std::endl;
+                    hNCDeltainFV->Add(htemp);
+                    break;
+                }
+		if(line == "NC1Pi0inFV") {
+                    std::cout<<"NC1Pi0inFV"<<" "<<histname<<std::endl;
+                    hNC1Pi0inFV->Add(htemp);
+                    break;
+                }
+		if(line == "numuCC1Pi0inFV") {
+                    std::cout<<"numuCC1Pi0inFV"<<" "<<histname<<std::endl;
+                    hnumuCC1Pi0inFV->Add(htemp);
+                    break;
+                }
+		if(line == "numuCCotherinFV") {
+                    std::cout<<"numuCCotherinFV"<<" "<<histname<<std::endl;
+                    hnumuCCotherinFV->Add(htemp);
+                    break;
+                }
+		if(line == "NCotherinFV") {
+                    std::cout<<"NCotherinFV"<<" "<<histname<<std::endl;
+                    hNCotherinFV->Add(htemp);
+                    break;
+                }
             }
         }
         pad1->cd();
@@ -1141,22 +1192,50 @@ int main( int argc, char** argv )
                 if(it->first>10) datapot_numi += it->second;
             }
         }else datapot = map_data_period_pot[run];
+	
+	TH1F* hmc = (TH1F*)map_obsch_histos[obschannel].at(1)->Clone("hmc");
+        TH1F* hmc2 = (TH1F*)map_obsch_histos[obschannel].at(2)->Clone("hmc2");
+        TH1F* hmcerror = (TH1F*)hmc->Clone("hmcerror");
+
 
         gr[obschannel-1] = new TGraphAsymmErrors();
         legend[obschannel-1]->SetNColumns(2);
-        // numi channels
-        if(obschannel==999) legend[obschannel-1]->AddEntry((TObject*)0, Form("NuMI POT: %.3e", datapot_numi*scalePOT), "");
-        else legend[obschannel-1]->AddEntry((TObject*)0, Form("Data POT: %.3e", datapot*scalePOT), "");
+        
+	bool fakedata5 = 0;
+	bool fakedata7 = 0;
+	bool fakedata8 = 0;
+	bool numidata = 0;
+	bool nodata = 0;
+        if (nodata) {
+		
+	} else if (fakedata5) {
+		legend[obschannel-1]->AddEntry((TObject*)0, Form("%.3e POT Fake Data Set 5, %.1f", datapot*scalePOT, hdata->Integral()*scalePOT), "");
+        } else if (fakedata7) {
+		legend[obschannel-1]->AddEntry((TObject*)0, Form("%.3e POT Fake Data Set 7, %.1f", datapot*scalePOT, hdata->Integral()*scalePOT), "");
+        } else if (fakedata8) {
+                legend[obschannel-1]->AddEntry((TObject*)0, Form("%.3e POT Fake Data Set 8, %.1f", datapot*scalePOT, hdata->Integral()*scalePOT), "");
+        } else if (numidata) {
+                legend[obschannel-1]->AddEntry((TObject*)0, Form("%.3e POT NuMI run1 FHC Data, %.1f", datapot*scalePOT, hdata->Integral()*scalePOT), "");
+	} else {
+		if(obschannel==999) legend[obschannel-1]->AddEntry((TObject*)0, Form("%.3e POT NuMI Data, %.1f", datapot_numi*scalePOT, hdata->Integral()*scalePOT),"");
+	        else legend[obschannel-1]->AddEntry((TObject*)0, Form("%.3e POT BNB Data, %.1f", datapot*scalePOT, hdata->Integral()*scalePOT), "");
+	}
+ 
+
+	// numi channels
         //else legend[obschannel-1]->AddEntry((TObject*)0, Form("Scaled to POT: %.3e", datapot*scalePOT), "");
-        legend[obschannel-1]->AddEntry((TObject*)0, Form("#chi^{2}/ndf=%.2f/%d", GOF[obschannel-1].first, GOF[obschannel-1].second), "");
-        legend[obschannel-1]->AddEntry(gr[obschannel-1], Form("BNB data, %.1f", hdata->Integral()*scalePOT), "lp");
+        if (!nodata) {
+		legend[obschannel-1]->AddEntry((TObject*)0, Form("#chi^{2}/ndf=%.2f/%d, p=%.3f", GOF[obschannel-1].first, GOF[obschannel-1].second, TMath::Prob(GOF[obschannel-1].first, GOF[obschannel-1].second)), "");
+	}
+	//legend[obschannel-1]->AddEntry((TObject*)0, Form("#chi^{2}/ndf=%.2f/%d", GOF[obschannel-1].first, GOF[obschannel-1].second), "");
+        // added by lhagaman 2021_08_04
+        legend[obschannel-1]->AddEntry((TObject*)0, Form("Total Pred, %.1f", hmc->Integral()), "");
+        //legend[obschannel-1]->AddEntry(gr[obschannel-1], Form("%.3e POT BNB DATA, %.1f", datapot*scalePOT, hdata->Integral()*scalePOT)), "lp");
         //legend[obschannel-1]->AddEntry(gr[obschannel-1], Form("Fake data, %.1f", hdata->Integral()*scalePOT), "lp");
         //legend[obschannel-1]->AddEntry(gr[obschannel-1], Form("Scaled BNB data, %.1f", hdata->Integral()*scalePOT), "lp");
+	
 
-        TH1F* hmc = (TH1F*)map_obsch_histos[obschannel].at(1)->Clone("hmc");
-        TH1F* hmc2 = (TH1F*)map_obsch_histos[obschannel].at(2)->Clone("hmc2");
-        TH1F* hmcerror = (TH1F*)hmc->Clone("hmcerror");
-        legend[obschannel-1]->AddEntry(hmcerror, "Pred. uncertainty", "lf");
+        legend[obschannel-1]->AddEntry(hmcerror, "Pred. Uncertainty", "lf");
 
         if(flag_truthlabel==0){
         // truth labels start
@@ -1386,14 +1465,90 @@ int main( int argc, char** argv )
         hXsecNumuCCinFV->SetLineWidth(1);
         // truth labels end
         }
+	if (flag_truthlabel==3) {
+
+
+	hstack[obschannel-1]->Add(hNCDeltainFV);
+        legend[obschannel-1]->AddEntry(hNCDeltainFV, Form("NC #Delta#rightarrowN#gamma, %.1f", hNCDeltainFV->Integral()), "F");
+        hNCDeltainFV->SetFillStyle(1001);
+        hNCDeltainFV->SetFillColorAlpha(kYellow-7, 0.5);
+        hNCDeltainFV->SetLineColor(kBlack);
+        hNCDeltainFV->SetLineWidth(1);
+
+	hstack[obschannel-1]->Add(hNC1Pi0inFV);
+        legend[obschannel-1]->AddEntry(hNC1Pi0inFV, Form("NC 1#pi^{0}, %.1f", hNC1Pi0inFV->Integral()), "F");
+        hNC1Pi0inFV->SetFillStyle(1001);
+        hNC1Pi0inFV->SetFillColorAlpha(kRed-4, 0.5);
+        hNC1Pi0inFV->SetLineColor(kBlack);
+        hNC1Pi0inFV->SetLineWidth(1);
+
+	hstack[obschannel-1]->Add(hnumuCC1Pi0inFV);
+        legend[obschannel-1]->AddEntry(hnumuCC1Pi0inFV, Form("#nu_{#mu}CC 1#pi^{0}, %.1f", hnumuCC1Pi0inFV->Integral()), "F");
+        hnumuCC1Pi0inFV->SetFillStyle(1001);
+        hnumuCC1Pi0inFV->SetFillColorAlpha(kBlue-4, 0.5);
+        hnumuCC1Pi0inFV->SetLineColor(kBlack);
+        hnumuCC1Pi0inFV->SetLineWidth(1);
+        
+	hstack[obschannel-1]->Add(hnueCCinFV);
+        legend[obschannel-1]->AddEntry(hnueCCinFV, Form("#nu_{e}CC, %.1f", hnueCCinFV->Integral()), "F");
+        hnueCCinFV->SetFillStyle(1001);
+        hnueCCinFV->SetFillColorAlpha(kMagenta-3, 0.5);
+        hnueCCinFV->SetLineColor(kBlack);
+        hnueCCinFV->SetLineWidth(1);
+
+	hstack[obschannel-1]->Add(hnumuCCotherinFV);
+        legend[obschannel-1]->AddEntry(hnumuCCotherinFV, Form("#nu_{#mu}CC Other, %.1f", hnumuCCotherinFV->Integral()), "F");
+        hnumuCCotherinFV->SetFillStyle(1001);
+        hnumuCCotherinFV->SetFillColorAlpha(kOrange+1, 0.5);
+        hnumuCCotherinFV->SetLineColor(kBlack);
+        hnumuCCotherinFV->SetLineWidth(1);
+
+	hstack[obschannel-1]->Add(hNCotherinFV);
+        legend[obschannel-1]->AddEntry(hNCotherinFV, Form("NC Other, %.1f", hNCotherinFV->Integral()), "F");
+        hNCotherinFV->SetFillStyle(1001);
+        hNCotherinFV->SetFillColorAlpha(kRed-9, 0.5);
+        hNCotherinFV->SetLineColor(kBlack);
+        hNCotherinFV->SetLineWidth(1);
+
+	hstack[obschannel-1]->Add(houtFV);
+        legend[obschannel-1]->AddEntry(houtFV, Form("out FV, %.1f", houtFV->Integral()), "F");
+        houtFV->SetFillStyle(1001);
+        houtFV->SetFillColorAlpha(kCyan-7, 0.5);
+        houtFV->SetLineColor(kBlack);
+        houtFV->SetLineWidth(1);
+
+	hstack[obschannel-1]->Add(hbadmatch);
+        legend[obschannel-1]->AddEntry(hbadmatch, Form("Cosmic, %.1f", hbadmatch->Integral()), "F");
+        hbadmatch->SetFillStyle(1001);
+        hbadmatch->SetFillColorAlpha(kCyan+2, 0.5);
+        hbadmatch->SetLineColor(kBlack);
+        hbadmatch->SetLineWidth(1);
+
+        hstack[obschannel-1]->Add(hext);
+        legend[obschannel-1]->AddEntry(hext, Form("EXT, %.1f", hext->Integral()), "F");
+        hext->SetFillStyle(1001);
+        hext->SetFillColorAlpha(kGreen-3, 0.5);
+        hext->SetLineColor(kBlack);
+        hext->SetLineWidth(1);
+
+        hstack[obschannel-1]->Add(hdirt);
+        legend[obschannel-1]->AddEntry(hdirt, Form("Dirt, %.1f", hdirt->Integral()), "F");
+        hdirt->SetFillStyle(1001);
+        hdirt->SetFillColorAlpha(kOrange+4, 0.5);
+        hdirt->SetLineColor(kBlack);
+        hdirt->SetLineWidth(1);
+
+
+	}
 
         hmc->Sumw2();
         hmc->Scale(scalePOT);
         hmc->Draw("hist");
         hmc->GetYaxis()->SetTitle("Event counts");
-        hmc->GetYaxis()->SetTitleSize(0.05);
+	hmc->SetTitle(""); // lhagaman 2022_03_21
+	hmc->GetYaxis()->SetTitleSize(0.06); // lhagaman 2022_03_21, used to be 0.05
         hmc->GetYaxis()->SetTitleFont(132);
-        hmc->GetYaxis()->SetTitleOffset(0.73);
+        hmc->GetYaxis()->SetTitleOffset(1.0); // 2022_05_26, increased from 0.73
         hmc->GetYaxis()->SetLabelFont(132);
         hmc->GetYaxis()->SetLabelSize(0.04);
         //if(obschannel==9) hmc->GetXaxis()->SetRangeUser(0.5,1);
@@ -1401,9 +1556,14 @@ int main( int argc, char** argv )
         float dataymax = hdata->GetBinContent(hdata->GetMaximumBin())*scalePOT/normalization;
         if(dataymax>mcymax) mcymax = dataymax;
         hmc->SetMaximum(2.0*mcymax);
-        hmc->GetYaxis()->SetRangeUser(-0.02*mcymax, 1.6*mcymax);
+	if (mcymax > 4) hmc->GetYaxis()->SetRangeUser(-0.0*mcymax, 2.0*mcymax); // lhagaman 2022_03_21, changed from 2.0 to 3.0
+	else hmc->GetYaxis()->SetRangeUser(-0.0*mcymax, 3.0*mcymax); // changed min from -0.02, changed max factor from 1.6 to 2, lhagaman 08/17/21
         hmc->SetLineColor(kBlack);
-        hmc->SetLineWidth(5);
+        hmc->SetLineWidth(2); // changed from 5, lhagaman 08/17/21
+	
+	// added by lhagaman 08/17/21
+	hmc->GetXaxis()->SetTickLength(0);
+   	hmc->GetXaxis()->SetLabelOffset(999);
 
 
         hstack[obschannel-1]->Draw("hist same");
@@ -1411,12 +1571,13 @@ int main( int argc, char** argv )
         hmcerror->Scale(scalePOT);
         hmcerror->Draw("same E2");
         hmcerror->SetFillColor(kGray+2);
-        hmcerror->SetFillStyle(3002);
+        hmcerror->SetFillStyle(3254);
         hmcerror->SetLineWidth(0);
         hmcerror->SetLineColor(12);
         hmcerror->SetMarkerColor(0);
         hmcerror->SetMarkerSize(0);
         
+
         gratio_mc[obschannel-1] = new TGraphAsymmErrors();
         gratio_mc2[obschannel-1] = new TGraphAsymmErrors();
         gratio_data[obschannel-1] = new TGraphAsymmErrors();
@@ -1465,12 +1626,18 @@ int main( int argc, char** argv )
                 else gratio_data2[obschannel-1]->SetPointError(i, x_err, x_err, 0, 0);
             }
         }
-        gr[obschannel-1]->Draw("P same"); 
-        gr[obschannel-1]->SetLineWidth(2);
+
+	// lhagaman 2022_03_21
+        if (!nodata) {
+            gr[obschannel-1]->Draw("P same"); 
+        }
+	gr[obschannel-1]->SetLineWidth(2);
         gr[obschannel-1]->SetMarkerStyle(20);
         gr[obschannel-1]->SetMarkerSize(1.5);
         gr[obschannel-1]->SetLineColor(kBlack);
         if(flag_check == 1){
+
+
             TH1F* hcheck_data = (TH1F*)map_obsch_histos[obschannel].at(3);
             TH1F* hcheck_pred = (TH1F*)map_obsch_histos[obschannel].at(4);
             hcheck_data->Draw("hist same");
@@ -1487,16 +1654,23 @@ int main( int argc, char** argv )
         double relerr_data = 1./TMath::Sqrt(hdata->Integral());
         double relerr_pred = TMath::Sqrt(sumtotalcov[obschannel])/hmc->Integral();
         double data_pred_ratio = hdata->Integral()/normalization/hmc->Integral();
-        legend[obschannel-1]->SetHeader(Form("#SigmaDATA/#Sigma(MC+EXT)=%.2f#pm%.2f(data err)#pm%.2f(pred err)", data_pred_ratio, relerr_data*data_pred_ratio, relerr_pred*data_pred_ratio), "C");
-        legend[obschannel-1]->Draw();
+	if (!nodata) {
+        	legend[obschannel-1]->SetHeader(Form("#SigmaDATA/#Sigma(MC+EXT)=%.2f#pm%.2f(data err)#pm%.2f(pred err)", data_pred_ratio, relerr_data*data_pred_ratio, relerr_pred*data_pred_ratio), "C");
+        }
+	legend[obschannel-1]->Draw();
         pad1->Modified();
         pad2->cd();
         gratio_mc[obschannel-1]->Draw("a2");
         gratio_mc[obschannel-1]->SetFillColor(kBlue-10);
         //gratio_mc[obschannel-1]->SetFillColor(kRed-10);
-        gratio_mc[obschannel-1]->GetYaxis()->SetRangeUser(0,int(1.5*maxratio)<2?int(1.5*maxratio):2);
+        // lhagaman, 2022_03_05, modifying next line
+        //cout << "maxratio:" << maxratio << "\n";
+        gratio_mc[obschannel-1]->GetYaxis()->SetRangeUser(0,maxratio>2&&maxratio<3?3:2);
+        //gratio_mc[obschannel-1]->GetYaxis()->SetRangeUser(0,int(1.5*maxratio)<2?int(1.5*maxratio):2);
         gratio_mc[obschannel-1]->GetXaxis()->SetRangeUser(hmc->GetXaxis()->GetXmin(),hmc->GetXaxis()->GetXmax());
-        gratio_mc[obschannel-1]->GetYaxis()->SetNdivisions(210);
+        
+	//gratio_mc[obschannel-1]->GetYaxis()->SetTickLength(0.0);
+	gratio_mc[obschannel-1]->GetYaxis()->SetNdivisions(2); //lhagaman changed from 210, 08/17/21
         //if(obschannel==5 || obschannel==6) gratio_mc[obschannel-1]->GetXaxis()->SetRangeUser(0,1200);
         gratio_mc[obschannel-1]->GetYaxis()->SetTitle("Data/Pred");
         gratio_mc[obschannel-1]->GetYaxis()->SetTitleOffset(0.5);
@@ -1506,11 +1680,173 @@ int main( int argc, char** argv )
         gratio_mc2[obschannel-1]->GetYaxis()->SetRangeUser(0,int(1.5*maxratio)<2?int(1.5*maxratio):2);
         gratio_mc2[obschannel-1]->GetXaxis()->SetRangeUser(hmc->GetXaxis()->GetXmin(),hmc->GetXaxis()->GetXmax());
         }
-        if(obschannel>=5) //hard coded at this moment
-        {
-            gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reco #pi^{0} energy [MeV]");
-        }
-        else gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reco neutrino energy [MeV]");
+	
+	// lhagaman setting plot names 2021_07_19
+	
+	/*
+	if (obschannel==1){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Proton Multiplicity");
+        }else if(obschannel<=3){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Non-proton Track Multiplicity");
+        }else gratio_mc[obschannel-1]->GetXaxis()->SetTitle("No X axis label given");
+	*/
+
+	/*		
+	if (obschannel<=2){
+		gratio_mc[obschannel-1]->GetXaxis()->SetTitle("One Bin Reconstructed Shower Energy (MeV)");
+	}else if(obschannel<=4){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Shower Energy (MeV)");
+	} else if(obschannel<=6){
+        	hmc->GetYaxis()->SetRangeUser(0.001, 1e9);
+		pad1->SetLogy();
+		gratio_mc[obschannel-1]->GetXaxis()->SetTitle("NC Delta Radiative BDT Score");	
+	}else gratio_mc[obschannel-1]->GetXaxis()->SetTitle("No X axis label given"); 
+	*/
+
+	
+	/*
+	if(obschannel<=2){
+		hmc->GetYaxis()->SetRangeUser(0.001, 1e9);
+                pad1->SetLogy();
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("NC Delta Radiative BDT Score");
+
+                pad1->cd();
+                TLine *ll1 = new TLine(2.61, 0.001, 2.61, 1e9);
+                ll1->SetLineStyle(7);
+                ll1->Draw("same");
+
+                pad2->cd();
+                TLine *ll2 = new TLine(2.61, 0., 2.61, 3.);
+                ll2->SetLineStyle(7);
+                ll2->Draw("same");
+	}else if (obschannel<=4){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Neutrino Energy (MeV)");
+        }else if(obschannel<=6){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Shower Energy (MeV)");
+        } else if(obschannel<=8){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Shower Cos(theta)");
+        }else if (obschannel<=10){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Neutrino Energy (MeV)");
+	}else gratio_mc[obschannel-1]->GetXaxis()->SetTitle("No X axis label given");
+	*/
+
+	gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Neutrino Energy (MeV)");
+	
+	/*
+	if (obschannel<=8){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Neutrino Energy (MeV)");
+        }else if(obschannel<=10){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Shower Energy (MeV)");
+        }else if(obschannel<=12){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Shower Cos(theta)");
+        } else if(obschannel<=14){
+                hmc->GetYaxis()->SetRangeUser(0.001, 1e9);
+                pad1->SetLogy();
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("NC Delta Radiative BDT Score");
+
+                pad1->cd();
+                TLine *ll1 = new TLine(2.61, 0.001, 2.61, 1e9);
+                ll1->SetLineStyle(7);
+                ll1->Draw("same");
+
+                pad2->cd();
+                TLine *ll2 = new TLine(2.61, 0., 2.61, 3.);
+                ll2->SetLineStyle(7);
+                ll2->Draw("same");
+	}else if (obschannel==15){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Proton Multiplicity");
+        }else if(obschannel<=17){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Non-proton Track Multiplicity");
+        }else if(obschannel<=19){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("E_nu_QE (MeV)");
+        }else gratio_mc[obschannel-1]->GetXaxis()->SetTitle("No X axis label given");
+	*/
+	
+	/*	
+        if (obschannel<=4){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Neutrino Energy (MeV)");
+        }else if(obschannel<=6){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Shower Energy (MeV)");
+        }else if(obschannel<=8){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Shower Cos(theta)");
+        } else if(obschannel<=10){
+                hmc->GetYaxis()->SetRangeUser(0.001, 1e9);
+                pad1->SetLogy();
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("NC Delta Radiative BDT Score");
+
+                pad1->cd();
+                TLine *ll1 = new TLine(2.61, 0.001, 2.61, 1e9);
+                ll1->SetLineStyle(7);
+                ll1->Draw("same");
+
+                pad2->cd();
+                TLine *ll2 = new TLine(2.61, 0., 2.61, 3.);
+                ll2->SetLineStyle(7);
+                ll2->Draw("same");
+
+        }else gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Neutrino Energy (MeV)");
+	*/        
+
+
+	/*	
+	if (obschannel<=2){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Neutrino Energy (MeV)");
+        }else if(obschannel<=4){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Shower Energy (MeV)");
+        }else if(obschannel<=6){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Shower Cos(theta)");
+	} else if(obschannel<=8){
+                hmc->GetYaxis()->SetRangeUser(0.001, 1e9);
+                pad1->SetLogy();
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("NC Delta Radiative BDT Score");
+        	
+		pad1->cd();
+		TLine *ll1 = new TLine(2.61, 0.001, 2.61, 1e9);
+		ll1->SetLineStyle(7);
+		ll1->Draw("same");
+
+		pad2->cd();
+                TLine *ll2 = new TLine(2.61, 0., 2.61, 3.);
+                ll2->SetLineStyle(7);
+                ll2->Draw("same");
+		
+	}else gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Neutrino Energy (MeV)");
+	*/	
+
+	
+	/*	
+   	if (obschannel<=2){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Neutrino Vtx X (cm)");
+        }else if(obschannel<=4){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Neutrino Vtx Y (cm)");
+        }else if(obschannel<=6){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Neutrino Vtx Z (cm)");
+        }else gratio_mc[obschannel-1]->GetXaxis()->SetTitle("No X axis label given");	
+	*/
+
+
+	/*	
+	if (obschannel==1) gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Neutrino Energy (MeV)");
+        if (obschannel==2) gratio_mc[obschannel-1]->GetXaxis()->SetTitle("NC Pi0 Score");
+        if (obschannel==3) gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Neutrino Energy (MeV)");
+        if (obschannel==4) gratio_mc[obschannel-1]->GetXaxis()->SetTitle("NC Delta Score");
+        if (obschannel==5) gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Neutrino Energy (MeV)");
+        if (obschannel==6) gratio_mc[obschannel-1]->GetXaxis()->SetTitle("NC Delta Score");
+	*/
+
+	/*		
+	if (obschannel<=2){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reconstructed Neutrino Energy (MeV)");
+        }else if(obschannel<=4){
+                gratio_mc[obschannel-1]->GetXaxis()->SetTitle("E_nu_QE (MeV)");
+        }else gratio_mc[obschannel-1]->GetXaxis()->SetTitle("No X axis label given");	
+	*/
+
+        //if(obschannel>=5) //hard coded at this moment
+        //{
+        //    gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reco #pi^{0} energy [MeV]");
+        //}
+        //else gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reco neutrino energy [MeV]");
         //else gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reco neutrino vtx in X-axis [cm]");
         /* if(obschannel <=26) */ 
         /*     gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Reco neutrino energy [MeV]"); */
@@ -1597,14 +1933,31 @@ int main( int argc, char** argv )
         /* if(obschannel==8) gratio_mc[obschannel-1]->GetXaxis()->SetTitle("Neutrino energy [MeV]"); */
         
         //hack end
+	
+	// lhagaman 2022_03_21, changing 0.1 to 0.12
+	// lhagaman 2022_05_19, changing to 0.15
+        gratio_mc[obschannel-1]->GetXaxis()->SetTitleSize(0.15);
+        gratio_mc[obschannel-1]->GetXaxis()->SetLabelSize(0.15);
+        gratio_mc[obschannel-1]->GetYaxis()->SetTitleSize(0.15);
+        gratio_mc[obschannel-1]->GetYaxis()->SetTitleOffset(0.35); // 2022_05_26, changed from 0.35
+        gratio_mc[obschannel-1]->GetYaxis()->SetLabelSize(0.15);
+       
+	gr[obschannel-1]->GetXaxis()->SetTitleSize(0.15);
+        gr[obschannel-1]->GetXaxis()->SetLabelSize(0.15);
+        gr[obschannel-1]->GetYaxis()->SetTitleSize(0.15);
+        gr[obschannel-1]->GetYaxis()->SetLabelSize(0.15);
+	
+        hmc->GetYaxis()->SetTitleSize(0.06);
+        hmc->GetYaxis()->SetLabelSize(0.06);
 
-        gratio_mc[obschannel-1]->GetXaxis()->SetTitleSize(0.1);
-        gratio_mc[obschannel-1]->GetXaxis()->SetLabelSize(0.1);
-        gratio_mc[obschannel-1]->GetYaxis()->SetTitleSize(0.1);
-        gratio_mc[obschannel-1]->GetYaxis()->SetTitleOffset(0.35);
-        gratio_mc[obschannel-1]->GetYaxis()->SetLabelSize(0.1);
-        gratio_data[obschannel-1]->Draw("P same");
-        gratio_data[obschannel-1]->SetLineWidth(2);
+	//legend[obschannel-1]->SetTextSize(0.2);
+	//legend2[obschannel-1]->SetTextSize(0.2);
+
+	// lhagaman 2022_03_21
+        if (!nodata) {
+	    gratio_data[obschannel-1]->Draw("P same");
+        }
+	gratio_data[obschannel-1]->SetLineWidth(2);
         gratio_data[obschannel-1]->SetMarkerStyle(20);
         gratio_data[obschannel-1]->SetMarkerSize(1.5);
         gratio_data[obschannel-1]->SetLineColor(kBlack);
@@ -1636,7 +1989,7 @@ int main( int argc, char** argv )
         if(flag_err==3) legend2[obschannel-1]->AddEntry(gratio_mc2[obschannel-1],"Pred stat+xsec+flux uncertainty", "F");
         //legend2[obschannel-1]->AddEntry(gratio_data[obschannel-1],"Data with stat. uncertainty", "lp");
         //legend2[obschannel-1]->AddEntry(gratio_data2[obschannel-1],"Data with stat. uncertainty (normalized)", "lp");
-        legend2[obschannel-1]->SetTextSize(0.08);
+        legend2[obschannel-1]->SetTextSize(0.1); // lhagaman 2022_05_20 changed from 0.08
         legend2[obschannel-1]->SetFillStyle(0);
         legend2[obschannel-1]->Draw();
         pad2->Modified();

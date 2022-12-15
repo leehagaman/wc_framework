@@ -303,7 +303,7 @@ int main(int argc, char** argv)
  
   // start lhagaman added
   
-  int make_constrained_one_bin_plots = 1;
+  int make_constrained_one_bin_plots = 0;
 
   if (make_constrained_one_bin_plots) {
 
@@ -365,7 +365,7 @@ int main(int argc, char** argv)
   }
 
   
-  int make_constrained_nc_pi0_plots = 1;
+  int make_constrained_nc_pi0_plots = 0;
 
   if (make_constrained_nc_pi0_plots) {
     

@@ -225,7 +225,7 @@ void LEEana::CovMatrix::gen_xf_cov_matrix(int run, std::map<int, TH1F*>& map_cov
     int start_bin = map_covch_startbin[covch];
     for (int k=0;k!=hpred->GetNbinsX()+1;k++){
       (*vec_mean)(start_bin+k) = hpred->GetBinContent(k+1) ;
-      //	  std::cout << i << " " << x[start_bin+i] << std::endl;
+      	  //std::cout << i << " " << x[start_bin+i] << std::endl;
     }
   }
   
@@ -1344,3 +1344,5 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
   delete file;
   return std::make_pair(max_lengths, sup_lengths);
 }
+
+
