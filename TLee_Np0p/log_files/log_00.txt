@@ -46,7 +46,7 @@
   6 ch, bin-num 16, name numuCC_0p_6_kine_reco_Enu_all 
 
  Flux and Xs systematics
-lhagaman flags, 1, 109, 101
+lhagaman flags, 1, 97, 115
   1 ./data_inputs/hist_rootfiles/XsFlux/cov_1.root
   2 ./data_inputs/hist_rootfiles/XsFlux/cov_2.root
   3 ./data_inputs/hist_rootfiles/XsFlux/cov_3.root
@@ -220,6 +220,7 @@ i file: 0
  processing Np/0p:   8  14
  processing Np/0p:   8  15
  processing Np/0p:   8  16
+Info in <Minuit2>: Minuit2Minimizer::Minimize : Minimization did NOT converge, Edm is above max
  processing Np/0p:   9   1
  processing Np/0p:   9   2
  processing Np/0p:   9   3
@@ -228,6 +229,7 @@ i file: 0
  processing Np/0p:   9   6
  processing Np/0p:   9   7
  processing Np/0p:   9   8
+Info in <Minuit2>: Minuit2Minimizer::Minimize : Minimization did NOT converge, Edm is above max
  processing Np/0p:   9   9
  processing Np/0p:   9  10
  processing Np/0p:   9  11
@@ -244,6 +246,7 @@ i file: 0
  processing Np/0p:  10   6
  processing Np/0p:  10   7
  processing Np/0p:  10   8
+Info in <Minuit2>: Minuit2Minimizer::Minimize : Minimization did NOT converge, Edm is above max
  processing Np/0p:  10   9
  processing Np/0p:  10  10
  processing Np/0p:  10  11

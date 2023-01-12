@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # numu
 # root -l -b -q 'calculate_num.C(0.2, 0.54)' 
 # root -l -b -q 'calculate_num.C(0.54, 0.705)' 

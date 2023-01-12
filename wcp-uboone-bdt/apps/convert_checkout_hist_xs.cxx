@@ -341,9 +341,9 @@ int main( int argc, char** argv )
        	if (flag_pass) h1->Fill(val,  weight_val);
       }else{
        	if (signal_bin != -1){
-       	  if (flag_pass) h1->Fill(val, weight_val);
-       	  h2->Fill(signal_bin, weight_val);
-       	  if (flag_pass) h3->Fill(val, signal_bin, weight_val);
+       	  if (flag_pass) h1->Fill(val, weight_val); // measurement
+       	  h2->Fill(signal_bin, weight_val); // _signal, if it has a truth bin number, might need a modification here, maybe shouldn't fill here
+       	  if (flag_pass) h3->Fill(val, signal_bin, weight_val); // R matrix
        	}else{
        	  std::cout << "[convt-hist-xs] Something wrong: cut/channel mismatch !" << std::endl;
        	}

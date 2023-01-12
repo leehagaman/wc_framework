@@ -132,6 +132,7 @@ void cal_CL_Asimov_Wilks_simplified()
     for(int isize=0; isize<vec_size; isize++) {
       if( vec_min_status->at(isize)==0 && (vec_min_chi2->at(isize) < data_min_chi2) ) {
 	data_min_chi2 = vec_min_chi2->at(isize);
+	if (abs(data_min_chi2) < 1e-9) data_min_chi2 = 0.;  // added to fix a suspected numerical issue
 	data_min_fNp_val = vec_min_fNp_val->at(isize);
 	data_min_f0p_val = vec_min_f0p_val->at(isize);
 	data_min_fNp_err = vec_min_fNp_err->at(isize);

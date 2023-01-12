@@ -151,7 +151,8 @@ void cal_CL_Asimov()
 	data_min_fNp_val = vec_min_fNp_val->at(isize);
 	data_min_f0p_val = vec_min_f0p_val->at(isize);
 	data_min_fNp_err = vec_min_fNp_err->at(isize);
-	data_min_f0p_err = vec_min_f0p_err->at(isize);	
+	data_min_f0p_err = vec_min_f0p_err->at(isize);
+        if (data_min_chi2 < 0) cout << "negative even with good minimization, data_min_f__ vals: " << data_min_fNp_val << ", " << data_min_f0p_val << ", data_min_chi2 = " << data_min_chi2 << "\n";	
       }
 
       map_data_chi2_var[grid_Np][grid_0p] = vec_chi2_var->at(isize);
@@ -204,9 +205,11 @@ void cal_CL_Asimov()
 	double chi2_val = vec_chi2_var->at(isize);
 	double min_chi2 = vec_min_chi2->at(isize);
 	double dchi2 = chi2_val - min_chi2;
-	if( dchi2<0 ) {
-	  cout<<" Invalid dchi2 less than 0: "<<dchi2<<endl;
-	  continue;
+	double pos_dchi2 = fabs(dchi2);
+	if( dchi2 < 0 && pos_dchi2>1e-6 ) {
+	  cout<<" Invalid dchi2 very close to 0: "<<dchi2<<endl;
+	  cout << "min chi2: " << min_chi2 << "\n";
+          continue;
 	}
 
 	map_vec_toys_chi2_var[grid_Np][grid_0p].push_back( chi2_val );

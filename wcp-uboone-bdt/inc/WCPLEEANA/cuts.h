@@ -953,7 +953,11 @@ int LEEana::get_xs_signal_no(int cut_file, std::map<TString, int>& map_cut_xs_bi
       }else if (cut_name == "numuCC.inside.Enu.le.920.gt.805"){
 	if (pre_cut && eval.truth_nuEnergy<=920 && eval.truth_nuEnergy>805) return number;
       }else if (cut_name == "numuCC.inside.Enu.le.1050.gt.920"){
-	if (pre_cut && eval.truth_nuEnergy<=1050 && eval.truth_nuEnergy>920) return number;
+	//std::cout << "lhagaman debug, trying numuCC.inside.Enu.le.1050.gt.920\n";
+	if (pre_cut && eval.truth_nuEnergy<=1050 && eval.truth_nuEnergy>920){
+		//std::cout << "lhagaman debug, passed numuCC.inside.Enu.le.1050.gt.920\n";
+		return number;
+	}
       }else if (cut_name == "numuCC.inside.Enu.le.1200.gt.1050"){
 	if (pre_cut && eval.truth_nuEnergy<=1200 && eval.truth_nuEnergy>1050) return number;
       }else if (cut_name == "numuCC.inside.Enu.le.1375.gt.1200"){
@@ -1612,12 +1616,12 @@ int LEEana::get_xs_signal_no(int cut_file, std::map<TString, int>& map_cut_xs_bi
 
     //1D Enu truth binning using the same inclusive selection as the 3D binning
     else if (cut_file == 18){
-
+ 
       int Enu_bin      = get_Enu_bin(eval.truth_nuEnergy);
       int costheta_bin = get_costheta_bin(costh);
       int Pmuon_bin    = get_Pmuon_bin(Pmuon);
       bool pre_cut     = eval.truth_nuPdg==14 && eval.truth_isCC==1 && eval.truth_vtxInside==1 && (muonMomentum[3]>0) && Enu_bin>=0 && Enu_bin<=3 && costheta_bin>=0 && costheta_bin<=8 && Pmuon_bin>=0 && Pmuon_bin<=5;
-
+      
       if      (cut_name == "numuCC.inside.Enu.le.540.gt.200"){   if (pre_cut && eval.truth_nuEnergy<=540  && eval.truth_nuEnergy>200)   { return number; } }
       else if (cut_name == "numuCC.inside.Enu.le.705.gt.540"){   if (pre_cut && eval.truth_nuEnergy<=705  && eval.truth_nuEnergy>540)   { return number; } }
       else if (cut_name == "numuCC.inside.Enu.le.805.gt.705"){   if (pre_cut && eval.truth_nuEnergy<=805  && eval.truth_nuEnergy>705)   { return number; } }
@@ -1629,7 +1633,49 @@ int LEEana::get_xs_signal_no(int cut_file, std::map<TString, int>& map_cut_xs_bi
       else if (cut_name == "numuCC.inside.Enu.le.2050.gt.1570"){ if (pre_cut && eval.truth_nuEnergy<=2050 && eval.truth_nuEnergy>1570)  { return number; } }
       else if (cut_name == "numuCC.inside.Enu.le.4000.gt.2050"){ if (pre_cut && eval.truth_nuEnergy>2050  && eval.truth_nuEnergy<=4000) { return number; } }
       else{ std::cout << "get_xs_signal_no: no cut found!" << std::endl; }
-    }
+      //std::cout << "lhagaman debug, valid cut name, but invalid pre_cut or energy\n";
+      //std::cout << "pre_cut = " << pre_cut << ", Enu_bin = " << Enu_bin << ", costheta_bin = " << costheta_bin << ", Pmuon_bin = " << Pmuon_bin << ", cut_name = " << cut_name << ", eval.truth_nuEnergy = " << eval.truth_nuEnergy << "\n";
+      //std::cout << "    " << (eval.truth_nuPdg==14) << ", " << (eval.truth_isCC==1) << ", " << (eval.truth_vtxInside==1) << ", " << (muonMomentum[3]>0) << "\n";
+  }
+
+
+    // lhagaman 2023_01_08 1D numu nue Xs
+    else if (cut_file == 19){
+ 
+      int Enu_bin      = get_Enu_bin(eval.truth_nuEnergy);
+      int costheta_bin = get_costheta_bin(costh);
+      int Pmuon_bin    = get_Pmuon_bin(Pmuon);
+      bool pre_cut_numu = eval.truth_nuPdg==14 && eval.truth_isCC==1 && eval.truth_vtxInside==1 && (muonMomentum[3]>0) && Enu_bin>=0 && Enu_bin<=3 && costheta_bin>=0 && costheta_bin<=8 && Pmuon_bin>=0 && Pmuon_bin<=5;
+      bool pre_cut_nue = eval.truth_nuPdg==12 && eval.truth_isCC==1 && eval.truth_vtxInside==1 && Enu_bin>=0 && Enu_bin<=3;
+      
+      if      (cut_name == "numuCC.inside.Enu.le.540.gt.200"){   if (pre_cut_numu && eval.truth_nuEnergy<=540  && eval.truth_nuEnergy>200)   { return number; } }
+      else if (cut_name == "numuCC.inside.Enu.le.705.gt.540"){   if (pre_cut_numu && eval.truth_nuEnergy<=705  && eval.truth_nuEnergy>540)   { return number; } }
+      else if (cut_name == "numuCC.inside.Enu.le.805.gt.705"){   if (pre_cut_numu && eval.truth_nuEnergy<=805  && eval.truth_nuEnergy>705)   { return number; } }
+      else if (cut_name == "numuCC.inside.Enu.le.920.gt.805"){   if (pre_cut_numu && eval.truth_nuEnergy<=920  && eval.truth_nuEnergy>805)   { return number; } }
+      else if (cut_name == "numuCC.inside.Enu.le.1050.gt.920"){  if (pre_cut_numu && eval.truth_nuEnergy<=1050 && eval.truth_nuEnergy>920)   { return number; } }
+      else if (cut_name == "numuCC.inside.Enu.le.1200.gt.1050"){ if (pre_cut_numu && eval.truth_nuEnergy<=1200 && eval.truth_nuEnergy>1050)  { return number; } }
+      else if (cut_name == "numuCC.inside.Enu.le.1375.gt.1200"){ if (pre_cut_numu && eval.truth_nuEnergy<=1375 && eval.truth_nuEnergy>1200)  { return number; } }
+      else if (cut_name == "numuCC.inside.Enu.le.1570.gt.1375"){ if (pre_cut_numu && eval.truth_nuEnergy<=1570 && eval.truth_nuEnergy>1375)  { return number; } }
+      else if (cut_name == "numuCC.inside.Enu.le.2050.gt.1570"){ if (pre_cut_numu && eval.truth_nuEnergy<=2050 && eval.truth_nuEnergy>1570)  { return number; } }
+      else if (cut_name == "numuCC.inside.Enu.le.4000.gt.2050"){ if (pre_cut_numu && eval.truth_nuEnergy>2050  && eval.truth_nuEnergy<=4000) { return number; } }
+      else if (cut_name == "nueCC.inside.Enu.le.540.gt.200"){   if (pre_cut_nue && eval.truth_nuEnergy<=540  && eval.truth_nuEnergy>200)   { return number; } }
+      else if (cut_name == "nueCC.inside.Enu.le.705.gt.540"){   if (pre_cut_nue && eval.truth_nuEnergy<=705  && eval.truth_nuEnergy>540)   { return number; } }
+      else if (cut_name == "nueCC.inside.Enu.le.805.gt.705"){   if (pre_cut_nue && eval.truth_nuEnergy<=805  && eval.truth_nuEnergy>705)   { return number; } }
+      else if (cut_name == "nueCC.inside.Enu.le.920.gt.805"){   if (pre_cut_nue && eval.truth_nuEnergy<=920  && eval.truth_nuEnergy>805)   { return number; } }
+      else if (cut_name == "nueCC.inside.Enu.le.1050.gt.920"){  if (pre_cut_nue && eval.truth_nuEnergy<=1050 && eval.truth_nuEnergy>920)   { return number; } }
+      else if (cut_name == "nueCC.inside.Enu.le.1200.gt.1050"){ if (pre_cut_nue && eval.truth_nuEnergy<=1200 && eval.truth_nuEnergy>1050)  { return number; } }
+      else if (cut_name == "nueCC.inside.Enu.le.1375.gt.1200"){ if (pre_cut_nue && eval.truth_nuEnergy<=1375 && eval.truth_nuEnergy>1200)  { return number; } }
+      else if (cut_name == "nueCC.inside.Enu.le.1570.gt.1375"){ if (pre_cut_nue && eval.truth_nuEnergy<=1570 && eval.truth_nuEnergy>1375)  { return number; } }
+      else if (cut_name == "nueCC.inside.Enu.le.2050.gt.1570"){ if (pre_cut_nue && eval.truth_nuEnergy<=2050 && eval.truth_nuEnergy>1570)  { return number; } }
+      else if (cut_name == "nueCC.inside.Enu.le.4000.gt.2050"){ if (pre_cut_nue && eval.truth_nuEnergy>2050  && eval.truth_nuEnergy<=4000) { return number; } }
+      else{ std::cout << "get_xs_signal_no: no cut found!" << std::endl; }
+      //std::cout << "lhagaman debug, valid cut name, but invalid pre_cut or energy\n";
+      //std::cout << "pre_cut = " << pre_cut << ", Enu_bin = " << Enu_bin << ", costheta_bin = " << costheta_bin << ", Pmuon_bin = " << Pmuon_bin << ", cut_name = " << cut_name << ", eval.truth_nuEnergy = " << eval.truth_nuEnergy << "\n";
+      //std::cout << "    " << (eval.truth_nuPdg==14) << ", " << (eval.truth_isCC==1) << ", " << (eval.truth_vtxInside==1) << ", " << (muonMomentum[3]>0) << "\n";
+  }
+
+
+
   }
   
   return -1;
@@ -1700,6 +1746,8 @@ bool LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, Eval
   map_cuts_flag["Xs_Enu_numuCCinFV"] = eval.match_completeness_energy>0.1*eval.truth_energyInside && eval.truth_nuPdg==14 && eval.truth_isCC==1 && eval.truth_vtxInside==1 && truth_muonMomentum[3]>0 && eval.truth_nuEnergy<=4000 && eval.truth_nuEnergy > 200 && Pmuon > 0 && Pmuon <= 2500;
 
   map_cuts_flag["Xs_Enu_mu_numuCCinFV"] = eval.match_completeness_energy>0.1*eval.truth_energyInside && eval.truth_nuPdg==14 && eval.truth_isCC==1 && eval.truth_vtxInside==1 && truth_muonMomentum[3]>0 && eval.truth_nuEnergy<=4000 && eval.truth_nuEnergy > 200 && Pmuon > 0 && Pmuon <= 2500;
+  
+  map_cuts_flag["Xs_Enu_nueCCinFV"] = eval.match_completeness_energy>0.1*eval.truth_energyInside && eval.truth_nuPdg==12 && eval.truth_isCC==1 && eval.truth_vtxInside==1 && eval.truth_nuEnergy<=4000 && eval.truth_nuEnergy > 200;
 
   map_cuts_flag["Xs_Enu_Pmu_numuCCinFV"] = eval.match_completeness_energy>0.1*eval.truth_energyInside && eval.truth_nuPdg==14 && eval.truth_isCC==1 && eval.truth_vtxInside==1 && truth_muonMomentum[3]>0 && eval.truth_nuEnergy<=4000 && eval.truth_nuEnergy > 200 && Pmuon > 0 && Pmuon <= 2500;
 
@@ -1767,13 +1815,13 @@ bool LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, Eval
   else map_cuts_flag["NCotherinFV"] = false;
   // done with NC Delta breakdown categories
   // adding additional CC Pi0 cuts for file_ch.txt since I need to treat the runs differently, runs 1 and 3 only processed
-  if (eval.truth_vtxInside==1 && eval.truth_isCC==1 && abs(eval.truth_nuPdg)==14 && pfeval.truth_NprimPio==1){
-	 map_cuts_flag["trueNumuCC1Pi0"] = true;
-	 map_cuts_flag["notTrueNumuCC1Pi0"] = false;
-  }else {
-	 map_cuts_flag["trueNumuCC1Pi0"] = false;
-	 map_cuts_flag["notTrueNumuCC1Pi0"] = true;
-  }// done adding additional CC Pi0 cuts
+  //if (eval.truth_vtxInside==1 && eval.truth_isCC==1 && abs(eval.truth_nuPdg)==14 && pfeval.truth_NprimPio==1){
+  //	 map_cuts_flag["trueNumuCC1Pi0"] = true;
+  // 	 map_cuts_flag["notTrueNumuCC1Pi0"] = false;
+  //}else {
+  //	 map_cuts_flag["trueNumuCC1Pi0"] = false;
+  //	 map_cuts_flag["notTrueNumuCC1Pi0"] = true;
+  //}// done adding additional CC Pi0 cuts
   
   if(pfeval.truth_nuScatType==10 && eval.truth_isCC==1 && eval.match_completeness_energy>0.1*eval.truth_energyInside) map_cuts_flag["CCMEC"] = true;
   else map_cuts_flag["CCMEC"] = false;
@@ -1859,6 +1907,9 @@ bool LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, Eval
   int Pmu_bin      = get_Pmuon_bin(reco_pmuon);
   int Enu_bin      = get_Enu_bin(reco_Enu);
 
+  
+  //std::cout << "lhagaman debug, inside cuts.h, checking " << ch_name << "\n";
+  
   if (ch_name == "LEE_FC_nueoverlay"  || ch_name == "nueCC_FC_nueoverlay"){
     if (flag_nueCC && flag_FC && flag_truth_inside) return true;
     else return false;
@@ -2842,8 +2893,7 @@ bool LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, Eval
     else return false;
   }else if (ch_name == "BG_nueCC_extra_overlay"){
     if (flag_nueCC && !(eval.truth_isCC==1 && abs(eval.truth_nuPdg)==12 && flag_truth_inside)) return true;
-    else return false;
-    
+    else return false; 
   }else if (ch_name == "nueCC_extra_nueoverlay_fc"){
     if (flag_nueCC && flag_truth_inside && flag_FC) return true;
     else return false;
@@ -2884,7 +2934,7 @@ bool LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, Eval
     else return false;
 
  // generic selection nu PC+FC 1 obs channel   
-  }else if (ch_name == "generic_nu_overlay" || ch_name == "generic_nu_ext" || ch_name =="generic_nu_dirt" || ch_name == "generic_nu_bnb" || "generic_nc_delta_overlay" || "generic_nc_pi0_overlay" || "generic_cc_pi0_overlay"){
+  }else if (ch_name == "generic_nu_overlay" || ch_name == "generic_nu_ext" || ch_name =="generic_nu_dirt" || ch_name == "generic_nu_bnb" || ch_name == "generic_nc_delta_overlay" || ch_name == "generic_nc_pi0_overlay" || ch_name == "generic_cc_pi0_overlay"){
     // warning: filtered overlays added for testing, if you use these here it will include overlaps
     if (flag_generic) return true;
     else return false;
@@ -2997,14 +3047,59 @@ bool LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, Eval
     else return false;
   } else if (ch_name == "numuCC_signal_Enu_mu_FC_overlay"    || ch_name == "numuCC_signal_Enu_mu_PC_overlay"
          || ch_name == "numuCC_background_Enu_mu_FC_overlay" || ch_name == "numuCC_background_Enu_mu_PC_overlay" ){
+    //std::cout << "lhagaman debug, got to this part of cuts.h with Enu_mu cuts\n";
     bool pre_cut = flag_numuCC && (!flag_nueCC) && pfeval.reco_muonMomentum[3]>0 && Enu_bin>=0 && Enu_bin<=3 && costheta_bin>=0 && costheta_bin<=8;
     if      (ch_name == "numuCC_signal_Enu_mu_FC_overlay"     && pre_cut &&   flag_FC  &&   map_cuts_flag["Xs_Enu_mu_numuCCinFV"])  { return true; }
     else if (ch_name == "numuCC_signal_Enu_mu_PC_overlay"     && pre_cut && (!flag_FC) &&   map_cuts_flag["Xs_Enu_mu_numuCCinFV"])  { return true; }
     else if (ch_name == "numuCC_background_Enu_mu_FC_overlay" && pre_cut &&   flag_FC  && (!map_cuts_flag["Xs_Enu_mu_numuCCinFV"])) { return true; }
     else if (ch_name == "numuCC_background_Enu_mu_PC_overlay" && pre_cut && (!flag_FC) && (!map_cuts_flag["Xs_Enu_mu_numuCCinFV"])) { return true; }
-    return false;    
+    return false;
+  
+  // lhagaman 2023_01_08 for 1D numu and nue cross section
+  // first, numuCC:
+  }else if (ch_name == "numuCC_Enu_FC_data" || ch_name == "BG_numuCC_Enu_FC_ext" || ch_name == "BG_numuCC_Enu_FC_dirt"){ // data and dirt, include all events passing the selection
+    if (flag_numuCC &&   flag_FC  && (!flag_nueCC) && pfeval.reco_muonMomentum[3]>0 && Enu_bin>=0 && Enu_bin<=3 && costheta_bin>=0 && costheta_bin<=8) return true;
+    else return false;
+  }else if (ch_name == "numuCC_Enu_PC_data" || ch_name == "BG_numuCC_Enu_PC_ext" || ch_name == "BG_numuCC_Enu_PC_dirt"){
+    if (flag_numuCC && (!flag_FC) && (!flag_nueCC) && pfeval.reco_muonMomentum[3]>0 && Enu_bin>=0 && Enu_bin<=3 && costheta_bin>=0 && costheta_bin<=8) return true;
+    else return false;
+  } else if (ch_name == "numuCC_Enu_FC_signal_nu_overlay"    || ch_name == "numuCC_Enu_PC_signal_nu_overlay"
+         || ch_name == "BG_numuCC_Enu_FC_nu_overlay" || ch_name == "BG_numuCC_Enu_PC_nu_overlay"
+         || ch_name == "BG_numuCC_Enu_FC_nue_overlay" || ch_name == "BG_numuCC_Enu_PC_nue_overlay" ){
+    // precut means the event passes the selection (Enu_bin is just used to check the outer boundaries, we're actually using more than 4 bins in the end)
+    bool pre_cut = flag_numuCC && (!flag_nueCC) && pfeval.reco_muonMomentum[3]>0 && Enu_bin>=0 && Enu_bin<=3 && costheta_bin>=0 && costheta_bin<=8;
+    bool true_nueCC_inFV = abs(eval.truth_nuPdg)==12 && eval.truth_isCC==1 && eval.truth_vtxInside==1;
+    if      (ch_name == "numuCC_Enu_FC_signal_nu_overlay"     && pre_cut &&   flag_FC  &&   map_cuts_flag["Xs_Enu_mu_numuCCinFV"])  { return true; }
+    else if (ch_name == "numuCC_Enu_PC_signal_nu_overlay"     && pre_cut && (!flag_FC) &&   map_cuts_flag["Xs_Enu_mu_numuCCinFV"])  { return true; }
+    else if (ch_name == "BG_numuCC_Enu_FC_nu_overlay"         && pre_cut &&   flag_FC  && (!map_cuts_flag["Xs_Enu_mu_numuCCinFV"]) && (!true_nueCC_inFV)) { return true; }
+    else if (ch_name == "BG_numuCC_Enu_PC_nu_overlay"         && pre_cut && (!flag_FC) && (!map_cuts_flag["Xs_Enu_mu_numuCCinFV"]) && (!true_nueCC_inFV)) { return true; }
+    else if (ch_name == "BG_numuCC_Enu_FC_nue_overlay"        && pre_cut &&   flag_FC  && (!map_cuts_flag["Xs_Enu_mu_numuCCinFV"]) && true_nueCC_inFV) { return true; }
+    else if (ch_name == "BG_numuCC_Enu_PC_nue_overlay"        && pre_cut && (!flag_FC) && (!map_cuts_flag["Xs_Enu_mu_numuCCinFV"]) && true_nueCC_inFV) { return true; }
+    return false;
+  // next, nueCC:
+  }else if (ch_name == "nueCC_Enu_FC_data" || ch_name == "BG_nueCC_Enu_FC_ext" || ch_name == "BG_nueCC_Enu_FC_dirt"){ // data and dirt, include all events passing the selection
+    if (flag_FC  && flag_nueCC && Enu_bin>=0 && Enu_bin<=3) return true;
+    else return false;
+  }else if (ch_name == "nueCC_Enu_PC_data" || ch_name == "BG_nueCC_Enu_PC_ext" || ch_name == "BG_nueCC_Enu_PC_dirt"){
+    if (!(flag_FC)  && flag_nueCC && Enu_bin>=0 && Enu_bin<=3) return true;
+    else return false;
+  } else if (ch_name == "nueCC_Enu_FC_signal_nue_overlay"    || ch_name == "nueCC_Enu_PC_signal_nue_overlay"
+         || ch_name == "BG_nueCC_Enu_FC_nu_overlay" || ch_name == "BG_nueCC_Enu_PC_nu_overlay"
+         || ch_name == "BG_nueCC_Enu_FC_nue_overlay" || ch_name == "BG_nueCC_Enu_PC_nue_overlay" ){
+    bool pre_cut = flag_nueCC && Enu_bin>=0 && Enu_bin<=3;
+    bool true_nueCC_inFV = abs(eval.truth_nuPdg)==12 && eval.truth_isCC==1 && eval.truth_vtxInside==1;
+    if      (ch_name == "nueCC_Enu_FC_signal_nue_overlay"     && pre_cut &&   flag_FC  &&   map_cuts_flag["Xs_Enu_nueCCinFV"])  { return true; }
+    else if (ch_name == "nueCC_Enu_PC_signal_nue_overlay"     && pre_cut && (!flag_FC) &&   map_cuts_flag["Xs_Enu_nueCCinFV"])  { return true; }
+    else if (ch_name == "BG_numuCC_Enu_FC_nu_overlay"         && pre_cut &&   flag_FC  && (!map_cuts_flag["Xs_Enu_nueCCinFV"]) && (!true_nueCC_inFV)) { return true; }
+    else if (ch_name == "BG_numuCC_Enu_PC_nu_overlay"         && pre_cut && (!flag_FC) && (!map_cuts_flag["Xs_Enu_nueCCinFV"]) && (!true_nueCC_inFV)) { return true; }
+    else if (ch_name == "BG_numuCC_Enu_FC_nue_overlay"        && pre_cut &&   flag_FC  && (!map_cuts_flag["Xs_Enu_nueCCinFV"]) && true_nueCC_inFV) { return true; }
+    else if (ch_name == "BG_numuCC_Enu_PC_nue_overlay"        && pre_cut && (!flag_FC) && (!map_cuts_flag["Xs_Enu_nueCCinFV"]) && true_nueCC_inFV) { return true; }
+    return false;
+
+
   // ------
-  }else if (ch_name == "nueCC_signal_Enu_FC_overlay" || ch_name == "nueCC_signal_Enu_PC_overlay" || ch_name == "nueCC_background_Enu_FC_overlay" || ch_name == "nueCC_background_Enu_PC_overlay"
+  } else if (ch_name == "nueCC_signal_Enu_FC_overlay" || ch_name == "nueCC_signal_Enu_PC_overlay" || ch_name == "nueCC_background_Enu_FC_overlay" || ch_name == "nueCC_background_Enu_PC_overlay"
+  //}else if (ch_name == "nueCC_signal_Enu_FC_overlay" || ch_name == "nueCC_signal_Enu_PC_overlay" || ch_name == "nueCC_background_Enu_FC_overlay" || ch_name == "nueCC_background_Enu_PC_overlay"
        || ch_name == "nueCC_signal_Enu_overlay" || ch_name == "nueCC_background_Enu_overlay"
       ){
     if (ch_name == "nueCC_signal_Enu_FC_overlay"){
@@ -3118,7 +3213,8 @@ bool LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, Eval
 	  && (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && flag_truth_inside))) return true;
       //  if (flag_FC) return true;
     }
-    
+
+
     return false;
   // start cuts from Lee's cuts.h
   // NC delta (1g) channels:

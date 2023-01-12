@@ -24,7 +24,7 @@ using namespace LEEana;
 
 float leeweight(float Enu)
  {
-	 return 1; // hacked because we're using lee weight for nc delta scaling
+	 //return 1; // hacked because we're using lee weight for nc delta scaling
 
          if(Enu<200 || Enu>=800) return 0.0;
          else if(Enu>=200 && Enu<250) return 6.37441;
@@ -1065,12 +1065,14 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
 void LEEana::CovMatrix::fill_pred_R_signal(int run, TMatrixD* mat_R, TVectorD* vec_signal,  std::map<int, double>& map_data_period_pot, std::map<TString, std::tuple<TH1F*, TH2F*, double> >& map_name_xs_hists){
 
   // merge histograms according to POTs ...
+  // looping over channels from cov_input (for numu_nue, would run 4 times because of 4 signal channels
   for (auto it = map_pred_covch_histos.begin(); it!=map_pred_covch_histos.end();it++){
     int covch = it->first;
     TH1F *hsigma = 0;
     TH2F *hR = 0;
-    
-    for (auto it1 = it->second.begin(); it1 != it->second.end(); it1++){
+   
+    // looping over ?
+    for (auto it1 = it->second.begin(); it1 != it->second.end(); it1++){ 
       std::map<int, double> temp_map_mc_acc_pot;
       
       for (auto it2 = it1->begin(); it2 != it1->end(); it2++){
@@ -1122,7 +1124,7 @@ void LEEana::CovMatrix::fill_pred_R_signal(int run, TMatrixD* mat_R, TVectorD* v
 	//	std::cout << h1->GetSum() << " " << ratio << std::endl;
       	hsigma->Add(h1, ratio);
 	hR->Add(h2, ratio);
-      	//	std::cout << covch << " " << histoname << " " << ratio << " " << data_pot << std::endl;
+      	std::cout << input_filename << " " << h1->GetBinContent(2) << " " << h2->GetBinContent(4,4) << " " << covch << " " << histoname << " " << ratio << " " << data_pot << std::endl;
       }
       
       
@@ -1133,12 +1135,13 @@ void LEEana::CovMatrix::fill_pred_R_signal(int run, TMatrixD* mat_R, TVectorD* v
     for (int k=0;k!=hsigma->GetNbinsX();k++){
       int bin = std::round(hsigma->GetBinCenter(k+1));
       (*vec_signal)(k) = hsigma->GetBinContent(k+1)/map_xs_bin_constant[bin];
+      std::cout << k << " " << hsigma->GetBinContent(k+1) << " " << map_xs_bin_constant[bin] << " " << bin << "\n";
     }
     // mat_R
     // loop real signal bin ...
     for (int k=0;k!=hsigma->GetNbinsX();k++){
       int bin = std::round(hsigma->GetBinCenter(k+1));
-      for (int j=0; j!=hR->GetNbinsX()+1;j++){
+      for (int j=0; j!=hR->GetNbinsX()+1;j++){ // need to add protection for dividing by zero signal here (true numuCC from nue overlay)
 	(*mat_R)(start_bin+j,k) = hR->GetBinContent(j+1,k+1)/(hsigma->GetBinContent(k+1)/map_xs_bin_constant[bin]);
       }
     }
@@ -1223,7 +1226,7 @@ void LEEana::CovMatrix::fill_xs_histograms(int num, int tot_num, int acc_no, int
 	      if (flag_pass) h4->Fill(val, nsignal_bin, (1+rel_weight_diff) * weight);
 	    }
 	  }else{
-	    std::cout << "Something wrong: cut/channel mismatch !" << std::endl;
+	    std::cout << "Something wrong: cut/channel mismatch 1!" << std::endl;
 	  }
 	} // else	
       }
@@ -1299,7 +1302,7 @@ void LEEana::CovMatrix::fill_xs_histograms(std::map<TString, std::set<std::tuple
 	      if (flag_pass) h4->Fill(val, nsignal_bin, weight);
 	    }
 	  }else{
-	    std::cout << "Something wrong: cut/channel mismatch !" << std::endl;
+	    std::cout << "Something wrong: cut/channel mismatch 2!" << std::endl;
 	  }
 	} // else
 	

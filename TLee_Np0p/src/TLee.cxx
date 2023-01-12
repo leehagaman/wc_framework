@@ -324,6 +324,18 @@ double TLee::FCN_Np_0p(const double *par)
     matrix_cov_syst(ibin, ibin) += val_stat_cov;
   }
 
+  // calculate sum of all matrix elements
+  double sum = 0;
+  for (int i=0; i<matrix_cov_syst.GetNrows(); i++){
+    for (int j=0; j<matrix_cov_syst.GetNrows(); j++){
+      sum += matrix_cov_syst(i, j);
+      if (i==j) std::cout << "diagonal " << i << ", " << matrix_cov_syst(i, j) << "\n";
+    }
+  }
+
+  std::cout << "sum of all covariance matrix entries: " << sum << "\n";
+
+
   /////////
   TMatrixD matrix_cov_total = matrix_cov_syst;
   TMatrixD matrix_cov_total_inv = matrix_cov_total;
@@ -340,6 +352,22 @@ double TLee::FCN_Np_0p(const double *par)
 
   ///////// user's definition
 
+  for(int idx=0; idx<size_map_fake_data; idx++) {
+    for(int jdx=0; jdx<=idx; jdx++) {
+
+      double cv_i = matrix_pred(0, idx);
+      double cv_j = matrix_pred(0, jdx);
+
+      double data_i = matrix_meas(0, idx);
+      double data_j = matrix_meas(0, jdx);
+
+      double cov_ij = matrix_cov_total(idx, jdx);
+      double cov_ij_inv = matrix_cov_total_inv(idx, jdx);
+
+      //if(idx==jdx)
+      //cout<<" ---> Test "<<idx<<"\t"<<jdx<<"\t"<<cv_i<<"\t"<<cv_j<<"\t"<<cov_ij<<endl;
+    }
+  }
 
   /////////
 
@@ -2845,7 +2873,7 @@ void TLee::Set_Spectra_MatrixCov()
 	}
     }
 
-    int disable_cor_reweighting_uncertainty = 1;
+    int disable_cor_reweighting_uncertainty = 0;
     if (disable_cor_reweighting_uncertainty) {
         if (idx==19) {
           for (int ibin=0; ibin<bins_oldworld; ibin++) {
@@ -2856,7 +2884,7 @@ void TLee::Set_Spectra_MatrixCov()
         }
     }
 
-    int disable_uncor_reweighting_uncertainty = 1;
+    int disable_uncor_reweighting_uncertainty = 0;
     if (disable_uncor_reweighting_uncertainty) {
         if (idx==18) {
           for (int ibin=0; ibin<bins_oldworld; ibin++) {
@@ -2915,7 +2943,14 @@ void TLee::Set_Spectra_MatrixCov()
               //std::cout << "right before line, " << ibin << ", " << jbin << ", " << sigma_BR_row << ", " << sigma_BR_col << "\n";
               //if (ibin==jbin) cout << "lhagaman debug, " << ibin << ", " << jbin << ", " << sigma_BR_row << ", " << sigma_BR_col << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n"; 
               if (sigma_BR_row > 0 && sigma_BR_col > 0) { // this is either a diagonal bin that should have uncertainty reduced, or an off-diagonal bin that should have the correlation reduced
-	        (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.; // subtract off sigma_BR_row * sigma_BR_col from the covariance matrix (extracting one off the fractional covariance matrix)
+		      std::cout << "checking which bins are modified, " << ibin << ", " << jbin << "\n"; 
+		      
+	        if (false && ibin==jbin && (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) < 1.) {
+	          std::cout << "too small signal uncertainty on the diagonal, i, j, covariance: " << ibin << ", " << jbin << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n"; 
+	        } else {
+		  (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.; // subtract off sigma_BR_row * sigma_BR_col from the covariance matrix (extracting one off the fractional covariance matrix)
+		}
+		if (ibin==jbin && (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) < 0.) cout << "negative diagonal covariance!!! " << ibin << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
 	      }
 	      //std::cout << "right after line\n";
 
@@ -2986,7 +3021,8 @@ void TLee::Set_Spectra_MatrixCov()
   cout<<" Detector systematics"<<endl;
     
   map<int, TString>map_detectorfile_str;
-
+  
+  /* 
   map_detectorfile_str[1] = detector_directory+"cov_LYDown.root";
   map_detectorfile_str[2] = detector_directory+"cov_LYRayleigh.root";
   map_detectorfile_str[3] = detector_directory+"cov_Recomb2.root";
@@ -2997,6 +3033,7 @@ void TLee::Set_Spectra_MatrixCov()
   map_detectorfile_str[8] = detector_directory+"cov_WMX.root";
   map_detectorfile_str[9] = detector_directory+"cov_WMYZ.root";
   map_detectorfile_str[10]= detector_directory+"cov_LYatt.root";
+  */
 
   map<int, TFile*>map_file_detector_frac;
   map<int, TMatrixD*>map_matrix_detector_frac;
