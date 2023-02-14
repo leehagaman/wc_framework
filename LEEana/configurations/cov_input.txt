@@ -1,30 +1,32 @@
-numuCC_Enu_FC_data			kine_reco_Enu	25	0	2500	1	0		0	0		0		0		5	unity		0
-numuCC_Enu_FC_signal_nu_overlay		kine_reco_Enu	25	0	2500	1	1		1	0		0		1		2	cv_spline	0
-BG_numuCC_Enu_FC_nu_overlay		kine_reco_Enu	25	0	2500	1	1		1	0		0		2		2	cv_spline	0
-BG_numuCC_Enu_FC_nue_overlay		kine_reco_Enu	25	0	2500	1	1		1	0		0		2		1	cv_spline	0
-BG_numuCC_Enu_FC_dirt			kine_reco_Enu	25	0	2500	1	1		0	0.5		0		2		4	cv_spline	0
-BG_numuCC_Enu_FC_ext			kine_reco_Enu	25	0	2500	1	0		0	0		0		9		3	unity		0
+joint_numuCC_Enu_FC_data			kine_reco_Enu	25	0	2500	1	0		0	0		0		0		5	unity		0
+joint_numuCC_Enu_FC_signal_nu_overlay		kine_reco_Enu	25	0	2500	1	1		1	0		0		1		2	cv_spline	0
+joint_BG_numuCC_Enu_FC_nu_overlay		kine_reco_Enu	25	0	2500	1	1		1	0		0		2		2	cv_spline	0
+joint_BG_numuCC_Enu_FC_nue_overlay		kine_reco_Enu	25	0	2500	1	1		1	0		0		2		1	cv_spline	0
+joint_BG_numuCC_Enu_FC_dirt			kine_reco_Enu	25	0	2500	1	1		0	0.5		0		2		4	cv_spline	0
+joint_BG_numuCC_Enu_FC_ext			kine_reco_Enu	25	0	2500	1	0		0	0		0		9		3	unity		0
 
-numuCC_Enu_PC_data			kine_reco_Enu	25	0	2500	2	0		0	0		0		0		5	unity		0
-numuCC_Enu_PC_signal_nu_overlay		kine_reco_Enu	25	0	2500	2	1		1	0		0		3		2	cv_spline	0
-BG_numuCC_Enu_PC_nu_overlay		kine_reco_Enu	25	0	2500	2	1		1	0		0		4		2	cv_spline	0
-BG_numuCC_Enu_PC_nue_overlay		kine_reco_Enu	25	0	2500	2	1		1	0		0		4		1	cv_spline	0
-BG_numuCC_Enu_PC_dirt			kine_reco_Enu	25	0	2500	2	1		0	0.5		0		4		4	cv_spline	0
-BG_numuCC_Enu_PC_ext			kine_reco_Enu	25	0	2500	2	0		0	0		0		10		3	unity		0
+joint_numuCC_Enu_PC_data			kine_reco_Enu	25	0	2500	2	0		0	0		0		0		5	unity		0
+joint_numuCC_Enu_PC_signal_nu_overlay		kine_reco_Enu	25	0	2500	2	1		1	0		0		3		2	cv_spline	0
+joint_BG_numuCC_Enu_PC_nu_overlay		kine_reco_Enu	25	0	2500	2	1		1	0		0		4		2	cv_spline	0
+joint_BG_numuCC_Enu_PC_nue_overlay		kine_reco_Enu	25	0	2500	2	1		1	0		0		4		1	cv_spline	0
+joint_BG_numuCC_Enu_PC_dirt			kine_reco_Enu	25	0	2500	2	1		0	0.5		0		4		4	cv_spline	0
+joint_BG_numuCC_Enu_PC_ext			kine_reco_Enu	25	0	2500	2	0		0	0		0		10		3	unity		0
 
-nueCC_Enu_FC_data			kine_reco_Enu	25	0	2500	3	0		0	0		0		0		5	unity		0
-nueCC_Enu_FC_signal_nue_overlay		kine_reco_Enu	25	0	2500	3	1		1	0		0		5		1	cv_spline	0
-BG_nueCC_Enu_FC_nu_overlay		kine_reco_Enu	25	0	2500	3	1		1	0		0		6		2	cv_spline	0
-BG_nueCC_Enu_FC_nue_overlay		kine_reco_Enu	25	0	2500	3	1		1	0		0		6		1	cv_spline	0
-BG_nueCC_Enu_FC_dirt			kine_reco_Enu	25	0	2500	3	1		0	0.5		0		6		4	cv_spline	0
-BG_nueCC_Enu_FC_ext			kine_reco_Enu	25	0	2500	3	0		0	0		0		11		3	unity		0
+joint_nueCC_Enu_FC_data				kine_reco_Enu	25	0	2500	3	0		0	0		0		0		5	unity		0
+joint_nueCC_Enu_FC_signal_nue_overlay		kine_reco_Enu	25	0	2500	3	1		1	0		0		5		1	cv_spline	0
+joint_nueCC_Enu_FC_signal_nu_overlay		kine_reco_Enu	25	0	2500	3	1		1	0		0		5		2	cv_spline	0
+joint_BG_nueCC_Enu_FC_nu_overlay		kine_reco_Enu	25	0	2500	3	1		1	0		0		6		2	cv_spline	0
+joint_BG_nueCC_Enu_FC_nue_overlay		kine_reco_Enu	25	0	2500	3	1		1	0		0		6		1	cv_spline	0
+joint_BG_nueCC_Enu_FC_dirt			kine_reco_Enu	25	0	2500	3	1		0	0.5		0		6		4	cv_spline	0
+joint_BG_nueCC_Enu_FC_ext			kine_reco_Enu	25	0	2500	3	0		0	0		0		11		3	unity		0
 
-nueCC_Enu_PC_data			kine_reco_Enu	25	0	2500	4	0		0	0		0		0		5	unity		0
-nueCC_Enu_PC_signal_nue_overlay		kine_reco_Enu	25	0	2500	4	1		1	0		0		7		1	cv_spline	0
-BG_nueCC_Enu_PC_nu_overlay		kine_reco_Enu	25	0	2500	4	1		1	0		0		8		2	cv_spline	0
-BG_nueCC_Enu_PC_nue_overlay		kine_reco_Enu	25	0	2500	4	1		1	0		0		8		1	cv_spline	0
-BG_nueCC_Enu_PC_dirt			kine_reco_Enu	25	0	2500	4	1		0	0.5		0		8		4	cv_spline	0
-BG_nueCC_Enu_PC_ext			kine_reco_Enu	25	0	2500	4	0		0	0		0		12		3	unity		0
+joint_nueCC_Enu_PC_data				kine_reco_Enu	25	0	2500	4	0		0	0		0		0		5	unity		0
+joint_nueCC_Enu_PC_signal_nue_overlay		kine_reco_Enu	25	0	2500	4	1		1	0		0		7		1	cv_spline	0
+joint_nueCC_Enu_PC_signal_nu_overlay		kine_reco_Enu	25	0	2500	4	1		1	0		0		7		2	cv_spline	0
+joint_BG_nueCC_Enu_PC_nu_overlay		kine_reco_Enu	25	0	2500	4	1		1	0		0		8		2	cv_spline	0
+joint_BG_nueCC_Enu_PC_nue_overlay		kine_reco_Enu	25	0	2500	4	1		1	0		0		8		1	cv_spline	0
+joint_BG_nueCC_Enu_PC_dirt			kine_reco_Enu	25	0	2500	4	1		0	0.5		0		8		4	cv_spline	0
+joint_BG_nueCC_Enu_PC_ext			kine_reco_Enu	25	0	2500	4	0		0	0		0		12		3	unity		0
 
 End					End		-1	-1	-1	-1	-1		-1	-1		-1		-1		-1	end		-1
 Name:					#Var:		#bin	#start	#end	#obs	#xs_flux	#det	#add_sys	#same_mc	#cov_sec	#file	#weight		#lee_strength

@@ -34,7 +34,7 @@ namespace LEEana{
   double get_kine_var(KineInfo& kine, EvalInfo& eval, PFevalInfo& pfeval, TaggerInfo& tagger, bool flag_data, TString var_name="kine_reco_Enu");
   double get_truth_var(KineInfo& kine, EvalInfo& eval, PFevalInfo& pfeval, TaggerInfo& tagger, TString var_name); 
  
-  bool get_cut_pass(TString ch_name, TString add_cut, bool flag_data, EvalInfo& eval, PFevalInfo& pfeval, TaggerInfo& tagger, KineInfo& kine);
+  int get_cut_pass(TString ch_name, TString add_cut, bool flag_data, EvalInfo& eval, PFevalInfo& pfeval, TaggerInfo& tagger, KineInfo& kine);
   bool get_rw_cut_pass(TString cut, EvalInfo& eval, PFevalInfo& pfeval, TaggerInfo& tagger, KineInfo& kine);
   double get_weight(TString weight_name, EvalInfo& eval, PFevalInfo& pfeval, KineInfo& kine, TaggerInfo& tagger, std::tuple< bool, std::vector< std::tuple<bool, TString, TString, double, double, bool, bool, bool,  std::vector<double>, std::vector<double>  > > > rw_info, bool flag_data=false);
   int get_xs_signal_no(int cut_file, std::map<TString, int>& map_cut_xs_bin, EvalInfo& eval, PFevalInfo& pfeval, TaggerInfo& tagger, KineInfo& kine);
@@ -1645,8 +1645,12 @@ int LEEana::get_xs_signal_no(int cut_file, std::map<TString, int>& map_cut_xs_bi
       int Enu_bin      = get_Enu_bin(eval.truth_nuEnergy);
       int costheta_bin = get_costheta_bin(costh);
       int Pmuon_bin    = get_Pmuon_bin(Pmuon);
-      bool pre_cut_numu = eval.truth_nuPdg==14 && eval.truth_isCC==1 && eval.truth_vtxInside==1 && (muonMomentum[3]>0) && Enu_bin>=0 && Enu_bin<=3 && costheta_bin>=0 && costheta_bin<=8 && Pmuon_bin>=0 && Pmuon_bin<=5;
-      bool pre_cut_nue = eval.truth_nuPdg==12 && eval.truth_isCC==1 && eval.truth_vtxInside==1 && Enu_bin>=0 && Enu_bin<=3;
+      
+      //bool pre_cut_numu = eval.truth_nuPdg==14 && eval.truth_isCC==1 && eval.truth_vtxInside==1 && (muonMomentum[3]>0) && Enu_bin>=0 && Enu_bin<=3 && costheta_bin>=0 && costheta_bin<=8 && Pmuon_bin>=0 && Pmuon_bin<=5;
+      //bool pre_cut_nue = eval.truth_nuPdg==12 && eval.truth_isCC==1 && eval.truth_vtxInside==1 && Enu_bin>=0 && Enu_bin<=3;
+      
+      bool pre_cut_numu = eval.truth_nuPdg==14 && eval.truth_isCC==1 && eval.truth_vtxInside==1;
+      bool pre_cut_nue = eval.truth_nuPdg==12 && eval.truth_isCC==1 && eval.truth_vtxInside==1;
       
       if      (cut_name == "numuCC.inside.Enu.le.540.gt.200"){   if (pre_cut_numu && eval.truth_nuEnergy<=540  && eval.truth_nuEnergy>200)   { return number; } }
       else if (cut_name == "numuCC.inside.Enu.le.705.gt.540"){   if (pre_cut_numu && eval.truth_nuEnergy<=705  && eval.truth_nuEnergy>540)   { return number; } }
@@ -1681,7 +1685,11 @@ int LEEana::get_xs_signal_no(int cut_file, std::map<TString, int>& map_cut_xs_bi
   return -1;
 }
 
-bool LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, EvalInfo& eval, PFevalInfo& pfeval, TaggerInfo& tagger, KineInfo& kine){
+// a value of -1 means that it doesn't pass because of the truth cuts related to the signal definiton
+// (this means that it won't get added to the signal histogram in Xs analyses)
+// 0 means that it doesn't pass for any reason (some of these should eventually be recategorized as -1)
+// 1 means that it passes
+int LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, EvalInfo& eval, PFevalInfo& pfeval, TaggerInfo& tagger, KineInfo& kine){
 
   //std::cout << "lhagaman debug, inside get_cut_pass\n";
 
@@ -1776,7 +1784,14 @@ bool LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, Eval
   // finish Xs related cuts ...
   if(eval.match_completeness_energy>0.1*eval.truth_energyInside && eval.truth_nuPdg==12 && eval.truth_isCC==1 && eval.truth_vtxInside==1 && eval.truth_nuEnergy<=4000 && eval.truth_nuEnergy > 200) map_cuts_flag["Xs_Enu_nueCCinFV"] = true;
   else map_cuts_flag["Xs_Enu_nueCCinFV"] = false;
-  
+ 
+  // joint Xs cuts
+  // I deleted the match_completeness_energy cut here, I'm not sure if that's a problem
+  map_cuts_flag["joint_Xs_numuCCinFV"] = eval.truth_nuPdg==14 && eval.truth_isCC==1 && eval.truth_vtxInside==1 && eval.truth_nuEnergy<=4000 && eval.truth_nuEnergy > 200;
+  map_cuts_flag["joint_Xs_nueCCinFV"] = eval.truth_nuPdg==12 && eval.truth_isCC==1 && eval.truth_vtxInside==1 && eval.truth_nuEnergy<=4000 && eval.truth_nuEnergy > 200;
+  // end joint Xs cuts
+
+
   if(eval.match_completeness_energy>0.1*eval.truth_energyInside && abs(eval.truth_nuPdg)==12 && eval.truth_isCC==1 && eval.truth_vtxInside==1) map_cuts_flag["nueCCinFV"] = true;
   else map_cuts_flag["nueCCinFV"] = false;
 
@@ -3057,44 +3072,104 @@ bool LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, Eval
   
   // lhagaman 2023_01_08 for 1D numu and nue cross section
   // first, numuCC:
-  }else if (ch_name == "numuCC_Enu_FC_data" || ch_name == "BG_numuCC_Enu_FC_ext" || ch_name == "BG_numuCC_Enu_FC_dirt"){ // data and dirt, include all events passing the selection
-    if (flag_numuCC &&   flag_FC  && (!flag_nueCC) && pfeval.reco_muonMomentum[3]>0 && Enu_bin>=0 && Enu_bin<=3 && costheta_bin>=0 && costheta_bin<=8) return true;
+  }else if (ch_name == "joint_numuCC_Enu_FC_data" || ch_name == "joint_BG_numuCC_Enu_FC_ext" || ch_name == "joint_BG_numuCC_Enu_FC_dirt"){ // data and dirt, include all events passing the selection
+    if (flag_numuCC &&   flag_FC  && (!flag_nueCC)) return true;
     else return false;
-  }else if (ch_name == "numuCC_Enu_PC_data" || ch_name == "BG_numuCC_Enu_PC_ext" || ch_name == "BG_numuCC_Enu_PC_dirt"){
-    if (flag_numuCC && (!flag_FC) && (!flag_nueCC) && pfeval.reco_muonMomentum[3]>0 && Enu_bin>=0 && Enu_bin<=3 && costheta_bin>=0 && costheta_bin<=8) return true;
+  }else if (ch_name == "joint_numuCC_Enu_PC_data" || ch_name == "joint_BG_numuCC_Enu_PC_ext" || ch_name == "joint_BG_numuCC_Enu_PC_dirt"){
+    if (flag_numuCC && (!flag_FC) && (!flag_nueCC)) return true;
     else return false;
-  } else if (ch_name == "numuCC_Enu_FC_signal_nu_overlay"    || ch_name == "numuCC_Enu_PC_signal_nu_overlay"
-         || ch_name == "BG_numuCC_Enu_FC_nu_overlay" || ch_name == "BG_numuCC_Enu_PC_nu_overlay"
-         || ch_name == "BG_numuCC_Enu_FC_nue_overlay" || ch_name == "BG_numuCC_Enu_PC_nue_overlay" ){
-    // precut means the event passes the selection (Enu_bin is just used to check the outer boundaries, we're actually using more than 4 bins in the end)
-    bool pre_cut = flag_numuCC && (!flag_nueCC) && pfeval.reco_muonMomentum[3]>0 && Enu_bin>=0 && Enu_bin<=3 && costheta_bin>=0 && costheta_bin<=8;
+  } else if (ch_name == "joint_numuCC_Enu_FC_signal_nu_overlay"    || ch_name == "joint_numuCC_Enu_PC_signal_nu_overlay"
+         || ch_name == "joint_BG_numuCC_Enu_FC_nu_overlay" || ch_name == "joint_BG_numuCC_Enu_PC_nu_overlay"
+         || ch_name == "joint_BG_numuCC_Enu_FC_nue_overlay" || ch_name == "joint_BG_numuCC_Enu_PC_nue_overlay" ){
+    // precut means the event passes the selection
+    bool pre_cut = flag_numuCC && (!flag_nueCC);
     bool true_nueCC_inFV = abs(eval.truth_nuPdg)==12 && eval.truth_isCC==1 && eval.truth_vtxInside==1;
-    if      (ch_name == "numuCC_Enu_FC_signal_nu_overlay"     && pre_cut &&   flag_FC  &&   map_cuts_flag["Xs_Enu_mu_numuCCinFV"])  { return true; }
-    else if (ch_name == "numuCC_Enu_PC_signal_nu_overlay"     && pre_cut && (!flag_FC) &&   map_cuts_flag["Xs_Enu_mu_numuCCinFV"])  { return true; }
-    else if (ch_name == "BG_numuCC_Enu_FC_nu_overlay"         && pre_cut &&   flag_FC  && (!map_cuts_flag["Xs_Enu_mu_numuCCinFV"]) && (!true_nueCC_inFV)) { return true; }
-    else if (ch_name == "BG_numuCC_Enu_PC_nu_overlay"         && pre_cut && (!flag_FC) && (!map_cuts_flag["Xs_Enu_mu_numuCCinFV"]) && (!true_nueCC_inFV)) { return true; }
-    else if (ch_name == "BG_numuCC_Enu_FC_nue_overlay"        && pre_cut &&   flag_FC  && (!map_cuts_flag["Xs_Enu_mu_numuCCinFV"]) && true_nueCC_inFV) { return true; }
-    else if (ch_name == "BG_numuCC_Enu_PC_nue_overlay"        && pre_cut && (!flag_FC) && (!map_cuts_flag["Xs_Enu_mu_numuCCinFV"]) && true_nueCC_inFV) { return true; }
+    
+    bool true_nue_signal = map_cuts_flag["joint_Xs_nueCCinFV"];
+    bool true_numu_signal = map_cuts_flag["joint_Xs_numuCCinFV"];
+    bool true_signal = true_nue_signal || true_numu_signal;
+
+    // if the channel name is signal and it contains a background event, we return -1 to keep from counting that as a signal for the Xs extraction
+    // technically shouldn't need this because it's flagged as 0 in xs_ch.txt
+    if ((ch_name == "joint_numuCC_Enu_FC_signal_nu_overlay" || ch_name == "joint_numuCC_Enu_PC_signal_nu_overlay") && (!true_signal)) return -1; 
+    
+    // none of these are used to fill up the signal for the Xs extraction
+    if      (ch_name == "joint_numuCC_Enu_FC_signal_nu_overlay"     && pre_cut &&   flag_FC  && true_signal)  { return true; }  // fills up the reco numu_FC part of R
+    else if (ch_name == "joint_numuCC_Enu_PC_signal_nu_overlay"     && pre_cut && (!flag_FC) && true_signal)  { return true; }  // fills up the reco numu_PC part of R
+
+    else if (ch_name == "joint_BG_numuCC_Enu_FC_nu_overlay"         && pre_cut &&   flag_FC  && (!true_signal) && (!true_nueCC_inFV)) { return true; }
+    else if (ch_name == "joint_BG_numuCC_Enu_PC_nu_overlay"         && pre_cut && (!flag_FC) && (!true_signal) && (!true_nueCC_inFV)) { return true; }
+    else if (ch_name == "joint_BG_numuCC_Enu_FC_nue_overlay"        && pre_cut &&   flag_FC  && (!true_signal) && true_nueCC_inFV) { return true; }
+    else if (ch_name == "joint_BG_numuCC_Enu_PC_nue_overlay"        && pre_cut && (!flag_FC) && (!true_signal) && true_nueCC_inFV) { return true; }
     return false;
   // next, nueCC:
-  }else if (ch_name == "nueCC_Enu_FC_data" || ch_name == "BG_nueCC_Enu_FC_ext" || ch_name == "BG_nueCC_Enu_FC_dirt"){ // data and dirt, include all events passing the selection
-    if (flag_FC  && flag_nueCC && Enu_bin>=0 && Enu_bin<=3) return true;
+  }else if (ch_name == "joint_nueCC_Enu_FC_data" || ch_name == "joint_BG_nueCC_Enu_FC_ext" || ch_name == "joint_BG_nueCC_Enu_FC_dirt"){ // data and dirt, include all events passing the selection
+    if (flag_FC  && flag_nueCC) return true;
     else return false;
-  }else if (ch_name == "nueCC_Enu_PC_data" || ch_name == "BG_nueCC_Enu_PC_ext" || ch_name == "BG_nueCC_Enu_PC_dirt"){
-    if (!(flag_FC)  && flag_nueCC && Enu_bin>=0 && Enu_bin<=3) return true;
+  }else if (ch_name == "joint_nueCC_Enu_PC_data" || ch_name == "joint_BG_nueCC_Enu_PC_ext" || ch_name == "joint_BG_nueCC_Enu_PC_dirt"){
+    if (!(flag_FC)  && flag_nueCC) return true;
     else return false;
-  } else if (ch_name == "nueCC_Enu_FC_signal_nue_overlay"    || ch_name == "nueCC_Enu_PC_signal_nue_overlay"
-         || ch_name == "BG_nueCC_Enu_FC_nu_overlay" || ch_name == "BG_nueCC_Enu_PC_nu_overlay"
-         || ch_name == "BG_nueCC_Enu_FC_nue_overlay" || ch_name == "BG_nueCC_Enu_PC_nue_overlay" ){
-    bool pre_cut = flag_nueCC && Enu_bin>=0 && Enu_bin<=3;
+  } else if (ch_name == "joint_nueCC_Enu_FC_signal_nue_overlay"    || ch_name == "joint_nueCC_Enu_PC_signal_nue_overlay"
+         || ch_name == "joint_nueCC_Enu_FC_signal_nu_overlay" || ch_name == "joint_nueCC_Enu_PC_signal_nu_overlay"
+	 || ch_name == "joint_BG_nueCC_Enu_FC_nu_overlay" || ch_name == "joint_BG_nueCC_Enu_PC_nu_overlay"
+         || ch_name == "joint_BG_nueCC_Enu_FC_nue_overlay" || ch_name == "joint_BG_nueCC_Enu_PC_nue_overlay" ){
+    bool pre_cut = flag_nueCC;
     bool true_nueCC_inFV = abs(eval.truth_nuPdg)==12 && eval.truth_isCC==1 && eval.truth_vtxInside==1;
-    if      (ch_name == "nueCC_Enu_FC_signal_nue_overlay"     && pre_cut &&   flag_FC  &&   map_cuts_flag["Xs_Enu_nueCCinFV"])  { return true; }
-    else if (ch_name == "nueCC_Enu_PC_signal_nue_overlay"     && pre_cut && (!flag_FC) &&   map_cuts_flag["Xs_Enu_nueCCinFV"])  { return true; }
-    else if (ch_name == "BG_numuCC_Enu_FC_nu_overlay"         && pre_cut &&   flag_FC  && (!map_cuts_flag["Xs_Enu_nueCCinFV"]) && (!true_nueCC_inFV)) { return true; }
-    else if (ch_name == "BG_numuCC_Enu_PC_nu_overlay"         && pre_cut && (!flag_FC) && (!map_cuts_flag["Xs_Enu_nueCCinFV"]) && (!true_nueCC_inFV)) { return true; }
-    else if (ch_name == "BG_numuCC_Enu_FC_nue_overlay"        && pre_cut &&   flag_FC  && (!map_cuts_flag["Xs_Enu_nueCCinFV"]) && true_nueCC_inFV) { return true; }
-    else if (ch_name == "BG_numuCC_Enu_PC_nue_overlay"        && pre_cut && (!flag_FC) && (!map_cuts_flag["Xs_Enu_nueCCinFV"]) && true_nueCC_inFV) { return true; }
+    
+    bool true_nue_signal = map_cuts_flag["joint_Xs_nueCCinFV"];
+    bool true_numu_signal = map_cuts_flag["joint_Xs_numuCCinFV"];
+    bool true_signal = true_nue_signal || true_numu_signal;
+    
+    // if the channel name is signal and it contains a background event, we return -1 to keep from counting that as a signal for the Xs extraction
+    // two lines to keep from double counting here
+    if ((ch_name == "joint_nueCC_Enu_FC_signal_nue_overlay" || ch_name == "joint_nueCC_Enu_PC_signal_nue_overlay") && !true_nue_signal) return -1;  
+    if ((ch_name == "joint_nueCC_Enu_FC_signal_nu_overlay" || ch_name == "joint_nueCC_Enu_PC_signal_nu_overlay") && !true_numu_signal) return -1; 
+    
+    // these first two channels are the ones flagged as 1 in xs_ch.txt, they are used to fill up the signal for the Xs extraction
+    if      (ch_name == "joint_nueCC_Enu_FC_signal_nue_overlay"    && pre_cut &&   flag_FC  && true_nue_signal)  { return true; }  // fills up the true nue,  reco nue_FC part of R
+    else if (ch_name == "joint_nueCC_Enu_FC_signal_nu_overlay"     && pre_cut &&   flag_FC  && true_numu_signal)  { return true; } // fills up the true numu, reco nue_FC part of R
+
+    else if (ch_name == "joint_nueCC_Enu_PC_signal_nue_overlay"    && pre_cut && (!flag_FC) && true_nue_signal)  { return true; }  // fills up the true nue,  reco nue_PC part of R
+    else if (ch_name == "joint_nueCC_Enu_PC_signal_nu_overlay"     && pre_cut && (!flag_FC) && true_numu_signal)  { return true; } // fills up the true numu, reco nue_PC part of R
+
+    // remaining channels aren't used for the signal extraction or the response matrix
+    else if (ch_name == "joint_BG_nueCC_Enu_FC_nu_overlay"         && pre_cut &&   flag_FC  && (!true_signal) && (!true_nueCC_inFV)) { return true; }
+    else if (ch_name == "joint_BG_nueCC_Enu_PC_nu_overlay"         && pre_cut && (!flag_FC) && (!true_signal) && (!true_nueCC_inFV)) { return true; }
+    else if (ch_name == "joint_BG_nueCC_Enu_FC_nue_overlay"        && pre_cut &&   flag_FC  && (!true_signal) && true_nueCC_inFV) { return true; }
+    else if (ch_name == "joint_BG_nueCC_Enu_PC_nue_overlay"        && pre_cut && (!flag_FC) && (!true_signal) && true_nueCC_inFV) { return true; }
     return false;
+
+  }else if (ch_name == "joint2_nueCC_Enu_FC_data" || ch_name == "joint2_BG_nueCC_Enu_FC_ext" || ch_name == "joint2_BG_nueCC_Enu_FC_dirt"){ // data and dirt, include all events passing the selection
+    if (flag_FC  && flag_nueCC) return true;
+    else return false;
+  }else if (ch_name == "joint2_nueCC_Enu_PC_data" || ch_name == "joint2_BG_nueCC_Enu_PC_ext" || ch_name == "joint2_BG_nueCC_Enu_PC_dirt"){
+    if (!(flag_FC)  && flag_nueCC) return true;
+    else return false;
+  } else if (ch_name == "joint2_nueCC_Enu_FC_signal_nue_overlay"    || ch_name == "joint2_nueCC_Enu_PC_signal_nue_overlay"
+	 || ch_name == "joint2_BG_nueCC_Enu_FC_nu_overlay" || ch_name == "joint2_BG_nueCC_Enu_PC_nu_overlay"
+         || ch_name == "joint2_BG_nueCC_Enu_FC_nue_overlay" || ch_name == "joint2_BG_nueCC_Enu_PC_nue_overlay" ){
+    bool pre_cut = flag_nueCC;
+    bool true_nueCC_inFV = abs(eval.truth_nuPdg)==12 && eval.truth_isCC==1 && eval.truth_vtxInside==1;
+    
+    bool true_nue_signal = map_cuts_flag["joint_Xs_nueCCinFV"];
+    bool true_signal = true_nue_signal;
+    
+    // if the channel name is signal and it contains a background event, we return -1 to keep from counting that as a signal for the Xs extraction
+    // two lines to keep from double counting here
+    if ((ch_name == "joint2_nueCC_Enu_FC_signal_nue_overlay" || ch_name == "joint2_nueCC_Enu_PC_signal_nue_overlay") && !true_nue_signal) return -1;  
+    
+    // these first two channels are the ones flagged as 1 in xs_ch.txt, they are used to fill up the signal for the Xs extraction
+    if      (ch_name == "joint2_nueCC_Enu_FC_signal_nue_overlay"    && pre_cut &&   flag_FC  && true_nue_signal)  { return true; }  // fills up the true nue,  reco nue_FC part of R
+
+    else if (ch_name == "joint2_nueCC_Enu_PC_signal_nue_overlay"    && pre_cut && (!flag_FC) && true_nue_signal)  { return true; }  // fills up the true nue,  reco nue_PC part of R
+
+    // remaining channels aren't used for the signal extraction or the response matrix
+    else if (ch_name == "joint2_BG_nueCC_Enu_FC_nu_overlay"         && pre_cut &&   flag_FC  && (!true_signal) && (!true_nueCC_inFV)) { return true; }
+    else if (ch_name == "joint2_BG_nueCC_Enu_PC_nu_overlay"         && pre_cut && (!flag_FC) && (!true_signal) && (!true_nueCC_inFV)) { return true; }
+    else if (ch_name == "joint2_BG_nueCC_Enu_FC_nue_overlay"        && pre_cut &&   flag_FC  && (!true_signal) && true_nueCC_inFV) { return true; }
+    else if (ch_name == "joint2_BG_nueCC_Enu_PC_nue_overlay"        && pre_cut && (!flag_FC) && (!true_signal) && true_nueCC_inFV) { return true; }
+    return false;
+
 
 
   // ------

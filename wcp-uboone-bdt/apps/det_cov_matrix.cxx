@@ -49,6 +49,13 @@ int main( int argc, char** argv )
   cov.add_disabled_ch_name("nc_delta_Np_01_overlay");
   cov.add_disabled_ch_name("nc_delta_0p_01_overlay");
 
+  cov.add_disabled_ch_name("joint_BG_nueCC_Enu_FC_nu_overlay");
+  cov.add_disabled_ch_name("joint_BG_nueCC_Enu_PC_nu_overlay");
+
+  
+  cov.add_disabled_ch_name("joint2_BG_nueCC_Enu_FC_nu_overlay");
+  cov.add_disabled_ch_name("joint2_BG_nueCC_Enu_PC_nu_overlay");
+  
   
   //cov.add_disabled_ch_name("BG_nueCC_FC_overlay");
   //cov.add_disabled_ch_name("BG_nueCC_PC_overlay");

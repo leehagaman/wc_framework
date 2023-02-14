@@ -96,7 +96,7 @@ int main( int argc, char** argv )
     //    std::cout << std::get<0>( *it)  << " " << std::get<1>(*it) << " " << std::get<4>(*it) << " " << std::get<5>(*it) << " " << std::get<6>(*it) << " " << std::get<7>(*it) << std::endl;
     htemp = new TH1F(histoname, histoname, nbin, llimit, hlimit);
     num = 1;
-    
+   
     bool flag_spec = cov.is_xs_chname(ch_name) ;
     if (flag_spec){
       int nbins1 = cov.get_xs_nsignals();
@@ -268,6 +268,10 @@ int main( int argc, char** argv )
       T_PFeval->SetBranchStatus("muonvtx_diff",1);
       T_PFeval->SetBranchStatus("truth_nuIntType",1);
       T_PFeval->SetBranchStatus("truth_muonMomentum",1);
+      T_PFeval->SetBranchStatus("truth_pio_energy_1",1);
+      T_PFeval->SetBranchStatus("truth_pio_energy_2",1);
+      T_PFeval->SetBranchStatus("truth_pio_angle",1);
+      T_PFeval->SetBranchStatus("truth_NprimPio",1);
       if(T_PFeval->GetBranch("truth_mother")){//prevents throwing an error for the non _PF files
         T_PFeval->SetBranchStatus("truth_Ntrack",1);
         T_PFeval->SetBranchStatus("truth_pdg",1); 
@@ -319,7 +323,8 @@ int main( int argc, char** argv )
       // get kinematics variable ...
       double val = get_kine_var(kine, eval, pfeval, tagger, flag_data, var_name);
       // get pass or not
-      bool flag_pass = get_cut_pass(ch_name, add_cut, flag_data, eval, pfeval, tagger, kine);
+      int flag_passall = get_cut_pass(ch_name, add_cut, flag_data, eval, pfeval, tagger, kine);
+      bool flag_pass = flag_passall > 0;
       int signal_bin = -1;
       if (cov.is_xs_chname(ch_name))
 	signal_bin = get_xs_signal_no(cov.get_cut_file(), cov.get_map_cut_xs_bin(), eval, pfeval, tagger, kine);
@@ -338,12 +343,13 @@ int main( int argc, char** argv )
       TH2F *h3 = std::get<2>(tmp_hists);
       int num = std::get<3>(tmp_hists);
       if (num==1){
-       	if (flag_pass) h1->Fill(val,  weight_val);
+	//std::cout << "lhagaman debug, num == 1, flag_pass = " << flag_pass << "\n";
+	if (flag_pass) h1->Fill(val,  weight_val);
       }else{
        	if (signal_bin != -1){
-       	  if (flag_pass) h1->Fill(val, weight_val); // measurement
-       	  h2->Fill(signal_bin, weight_val); // _signal, if it has a truth bin number, might need a modification here, maybe shouldn't fill here
-       	  if (flag_pass) h3->Fill(val, signal_bin, weight_val); // R matrix
+       	  if (flag_pass) h1->Fill(val, weight_val);
+       	  if (flag_passall >= 0) h2->Fill(signal_bin, weight_val);
+       	  if (flag_pass) h3->Fill(val, signal_bin, weight_val);
        	}else{
        	  std::cout << "[convt-hist-xs] Something wrong: cut/channel mismatch !" << std::endl;
        	}

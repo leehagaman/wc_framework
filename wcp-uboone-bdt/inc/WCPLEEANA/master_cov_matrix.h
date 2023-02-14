@@ -22,12 +22,30 @@
 #include "WCPLEEANA/pfeval.h"
 
 namespace LEEana{
+  
+  class JointXsecHelper{
+    public: 
+
+      JointXsecHelper(TString xs_ch_filename = "");
+     
+      int chWgtbyHistName(TString histname) const;
+                                        
+      std::set<TString> getXsNames() { return fXsNames; }
+      std::map<TString, int> getXsInfo() { return fXsInfo; }
+
+    private:
+      std::map<TString, int> fXsInfo;
+      std::set<TString> fXsNames;
+  };
+
   class CovMatrix{
   public:
     CovMatrix(TString cov_filename = "./configurations/cov_input.txt", TString cv_filename = "./configurations/cv_input.txt", TString file_filename = "./configurations/file_ch.txt", TString rw_filename = "./configurations/rw_cv_input.txt");
+    //CovMatrix(TString cov_filename = "../configurations/test_7ch_xs/cov_input.txt", TString cv_filename = "../configurations/test_7ch_xs/cv_input.txt", TString file_filename = "../configurations/test_7ch_xs/file_ch.txt", TString rw_filename = "../configurations/test_7ch_xs/rw_cv_input.txt");
     ~CovMatrix();
 
     void add_xs_config(TString xs_ch_filename = "./configurations/xs_ch.txt", TString xs_real_bin_filename = "./configurations/xs_real_bin.txt");
+    //void add_xs_config(TString xs_ch_filename = "../configurations/test_7ch_xs/xs_ch.txt", TString xs_real_bin_filename = "../configurations/test_7ch_xs/xs_real_bin.txt");
     void add_osc_config(TString osc_ch_filename = "./configurations/osc_ch.txt", TString osc_pars_filename = "./configurations/osc_parameter.txt");
     
     void add_rw_config(int run=1);   
@@ -240,7 +258,11 @@ namespace LEEana{
     
     // Xs related
     int cut_file;
+    
+    JointXsecHelper xsechelper;
     std::set<TString> xs_signal_ch_names;
+    std::map<TString, int> xs_signal_ch_info;
+    
     std::map<int, TString> map_xs_bin_cut;
     std::map<TString, int> map_cut_xs_bin;
     std::map<int, double> map_xs_bin_constant;

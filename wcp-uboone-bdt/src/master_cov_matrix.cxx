@@ -17,15 +17,15 @@
 //#include "WCPLEEANA/kine.h"
 //#include "WCPLEEANA/tagger.h"
 
+
 #include <algorithm>
+
 
 using namespace LEEana;
 
 
 float leeweight(float Enu)
  {
-	 //return 1; // hacked because we're using lee weight for nc delta scaling
-
          if(Enu<200 || Enu>=800) return 0.0;
          else if(Enu>=200 && Enu<250) return 6.37441;
          else if(Enu>=250 && Enu<300) return 5.64554;
@@ -42,6 +42,42 @@ float leeweight(float Enu)
 #include "mcm_2.h"
 #include "mcm_data_stat.h"
 #include "mcm_pred_stat.h"
+
+LEEana::JointXsecHelper::JointXsecHelper(TString xs_ch_filename){
+  
+  std::ifstream infile(xs_ch_filename);
+  std::string line, item;
+  int row = 0;
+  TString xs_signal_ch_name;
+  int xs_chwgt;
+ 
+  // TODO : readable comments 
+  while(std::getline(infile, line)){
+    std::stringstream ss(line);
+    int ncols = 0;
+    while(ss >> item) ncols++;
+    std::stringstream ss2(line);
+    if(ncols == 1){ 
+      xs_chwgt = row > 0 ? 0 : 1;
+      ss2 >> xs_signal_ch_name;
+    }
+    else  
+      ss2 >> xs_signal_ch_name >> xs_chwgt;
+    row++;
+    if (xs_signal_ch_name == "End") break;
+    fXsInfo.insert(std::make_pair(xs_signal_ch_name, xs_chwgt));
+    fXsNames.insert(xs_signal_ch_name);
+  }
+}
+//-------------------------------------------------------------------------------
+int LEEana::JointXsecHelper::chWgtbyHistName(TString histname) const {
+  
+  auto element = std::find_if(fXsInfo.begin(), fXsInfo.end(), 
+                               [&](const std::pair<TString, int>& info){ return histname.Contains(info.first); }
+  );
+  return element->second;
+}
+//-------------------------------------------------------------------------------
 
 LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString file_filename, TString rw_filename){
   flag_osc = false;
@@ -132,7 +168,7 @@ LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString 
   
   while(!infile.eof()){
     infile >> name >> var_name >> bin_num >> low_limit >> high_limit >> obs_no >> flag_xs_flux >> flag_det >> flag_add >> flag_same_mc_stat >> cov_sec_no >> file_no >> weight >> lee_strength;
-    //    std::cout << name << " " << var_name << " " << low_limit << " " << bin_num << " " << file_no << std::endl;
+    // std::cout << name << " " << var_name << " " << low_limit << " " << bin_num << " " << file_no << std::endl;
     if (bin_num == -1) break;
     
     map_ch_hist[ch_no] = std::make_tuple(name, var_name, bin_num, low_limit, high_limit, weight, obs_no, lee_strength);
@@ -174,6 +210,7 @@ LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString 
   for (auto it = map_obsch_nbin.begin(); it!= map_obsch_nbin.end(); it++){
     map_obsch_startbin[it->first] = start_bin;
     start_bin += it->second;
+    //std::cout << "lhagaman temp, " << it->second << "\n";
     total_obs_bin += it->second;
     //std::cout << it->first << " " << it->second << std::endl;
   }
@@ -185,7 +222,8 @@ LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString 
     start_bin += it->second;
     total_cov_bin += it->second;
   }
-  
+ 
+  //std::cout << "cov matrix : " << total_cov_bin << ", " << total_obs_bin << std::endl;
   mat_collapse = new TMatrixD(total_cov_bin,total_obs_bin);
   mat_add_cov = new TMatrixD(total_cov_bin, total_cov_bin);
   
@@ -601,14 +639,22 @@ double LEEana::CovMatrix::get_osc_weight(EvalInfo& eval, PFevalInfo& pfeval){
 
 
 void LEEana::CovMatrix::add_xs_config(TString xs_ch_filename , TString xs_real_bin_filename ){
-  std::ifstream infile1(xs_ch_filename);
-  TString temp;
-  while(!infile1.eof()){
-    infile1 >> temp;
-    if (temp == "End") break;
-    xs_signal_ch_names.insert(temp);
-  }
+
+  xsechelper = JointXsecHelper(xs_ch_filename);
+  xs_signal_ch_names = xsechelper.getXsNames();
+  xs_signal_ch_info = xsechelper.getXsInfo();
+  // std::ifstream infile1(xs_ch_filename);
+  // TString temp;
+  // while(!infile1.eof()){
+  //   infile1 >> temp;
+  //   if (temp == "End") break;
+  //   xs_signal_ch_names.insert(temp);
+  // }
   //  std::cout << xs_signal_ch_names.size() << std::endl;
+
+
+
+  std::cout << "size of xs_signal_ch_names: " << xs_signal_ch_names.size() << std::endl;
 
   std::ifstream infile2(xs_real_bin_filename);
   int bin_no;
@@ -644,9 +690,13 @@ int LEEana::CovMatrix::get_xs_nmeas(){
 }
 
 bool LEEana::CovMatrix::is_xs_chname(TString name){
+  //std::cout << "lhagaman debug, looking for this name: " << name << "\n";
+	
   if (xs_signal_ch_names.find(name)==xs_signal_ch_names.end()){
+    //std::cout << "lhagaman debug, didn't find it\n";
     return false;
   }else{
+    //std::cout << "lhagaman debug, found it\n";
     return true;
   }
 }
@@ -719,7 +769,8 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
 
   double data_pot = 5e19;
   const int rows = cov_xs_mat->GetNcols();
-  float x[rows];
+  float x[rows], xsigma[rows], xsigmabar[rows], xpred[rows];
+  std::vector<std::vector<float>> xR(rows);
   (*cov_xs_mat).Zero();
 
   int acc_no = 0;
@@ -738,12 +789,15 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
       
       for (int k = 0; k!= rows;k++){ // k: index of kinematic variable bins
      	x[k] = 0;
+     	xsigma[k] = 0;
+     	xsigmabar[k] = 0;
       }
       // if (nsize==600) {
       //   std::cout << "[wg] knob: " << j << " universe: " << i << " with nsize=600" << std::endl;
       // }
       fill_xs_histograms(j, max_lengths.size(), acc_no, i, nsize,  map_passed_events, map_histoname_infos, map_no_histoname, map_histoname_hists);
 
+      bool is_sig = false;
       // merge histograms according to POTs ...
       for (auto it = map_pred_covch_histos.begin(); it!=map_pred_covch_histos.end();it++){
      	// std::cout << it->first << std::endl;
@@ -754,6 +808,7 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
 	TH1F *hsigmabar = std::get<2>(tmp_results);
 	TH2F *hR = std::get<3>(tmp_results);
 	int num = std::get<4>(tmp_results);
+        is_sig = (num != 1);
 	hpred->Reset();
 	if (num!=1){
 	  hsigma->Reset();
@@ -807,9 +862,10 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
 	    TH2F *hmc3 = std::get<3>(tmp_hists);
 	    
 	    htemp->Add(hmc, ratio);
+            double xs_chwgt = (double) xsechelper.chWgtbyHistName(histoname);
 	    if (num !=1){
-	      htemp1->Add(hmc1,ratio);
-	      htemp2->Add(hmc2,ratio);
+	      htemp1->Add(hmc1,xs_chwgt*ratio);
+	      htemp2->Add(hmc2,xs_chwgt*ratio);
 	      htemp3->Add(hmc3,ratio);
 	    }
 	    //	std::cout << covch << " " << histoname << " " << ratio << std::endl;
@@ -850,17 +906,23 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
 	  if (num == 1){
 	    x[start_bin+k] = hpred->GetBinContent(k+1) ;
 	  }else{
-	    x[start_bin+k] = - hpred->GetBinContent(k+1);
+	    // x[start_bin+k] = - hpred->GetBinContent(k+1);
+            xpred[start_bin+k] = hpred->GetBinContent(k+1);
 	  }
      	  //	  std::cout << i << " " << x[start_bin+i] << std::endl;
      	}
 	if (num!=1){
 
-	  for (int k=0;k!=hsigma->GetNbinsX();k++){
+          for (int j=0; j!=hpred->GetNbinsX()+1;j++){
 	    //	    int bin = std::round(hsigma->GetBinCenter(k+1));
-	    for (int j=0; j!=hpred->GetNbinsX()+1;j++){
-	      x[start_bin+j] += hR->GetBinContent(j+1,k+1)/hsigma->GetBinContent(k+1)*hsigmabar->GetBinContent(k+1); // hR(j,k)/hsigma(k): response in new universe
+            std::vector<float> xRrow;
+            for (int k=0;k!=hsigma->GetNbinsX();k++){
+              xRrow.push_back(hR->GetBinContent(j+1, k+1));
+	      // x[start_bin+j] += hR->GetBinContent(j+1,k+1); ///hsigma->GetBinContent(k+1)*hsigmabar->GetBinContent(k+1); // hR(j,k)/hsigma(k): response in new universe
+              xsigma[start_bin+j] += hsigma->GetBinContent(k+1);
+              xsigmabar[start_bin+j] += hsigmabar->GetBinContent(k+1);
 	    }
+            xR[start_bin+j] = xRrow;
 	  }
 	  
     //// hack: save CV for UBGenieAll
@@ -878,17 +940,25 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
     // hpred1->Write();
     // hsigma1->Write();
     // ofile->Close();
-	}
+	} // num != 1 
 	
+      } // merging loop
+      if (is_sig){
+        for (int j=0; j!=rows;j++){
+          x[j] = -xpred[j];
+          for(int k=0; k!=(int)xR[j].size(); k++){
+            x[j] += xR[j][k]*xsigmabar[k]/xsigma[k];
+          }
+        }
       }
-      
+
       // add covariance matrix ...
       for (size_t n = 0;n!=rows; n++){
      	for (size_t m =0; m!=rows;m++){
      	  temp_mat(n,m) += x[n] * x[m];
      	}
-      }  
-    } // i
+      } // cov matrix for each universe  
+    } // i -- close loop for universes
 
     
     if (nsize==2){  // second check
@@ -975,15 +1045,16 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
      	data_pot = std::get<5>(map_inputfile_info[input_filename]);
      	double ratio = data_pot/temp_map_mc_acc_pot[norm_period];
 	auto tmp_hists = map_histoname_hists[histoname];
-	TH1F *hmc = std::get<0>(tmp_hists);
-	TH1F *hmc1 = std::get<1>(tmp_hists);
-	TH1F *hmc2 = std::get<2>(tmp_hists);
-	TH2F *hmc3 = std::get<3>(tmp_hists);
+	TH1F *hmc = std::get<0>(tmp_hists);  // pred
+	TH1F *hmc1 = std::get<1>(tmp_hists); // sigma
+	TH1F *hmc2 = std::get<2>(tmp_hists); // sigmabar
+	TH2F *hmc3 = std::get<3>(tmp_hists); // R (unnormalized)
 
      	htemp->Add(hmc, ratio);
+        double xs_chwgt = (double) xsechelper.chWgtbyHistName(histoname);
 	if (num !=1){
-	  htemp1->Add(hmc1,ratio);
-	  htemp2->Add(hmc2,ratio);
+	  htemp1->Add(hmc1,xs_chwgt*ratio);
+	  htemp2->Add(hmc2,xs_chwgt*ratio);
 	  htemp3->Add(hmc3,ratio);
 	  //std::cout << hmc1->GetSum() << " " << ratio << std::endl;
 	}
@@ -1014,19 +1085,22 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
       // vec_signal, mat_R
       for (int k=0;k!=hsigma->GetNbinsX();k++){
 	int bin = std::round(hsigma->GetBinCenter(k+1));
-	(*vec_signal)(k) = hsigma->GetBinContent(k+1)/map_xs_bin_constant[bin];
+	(*vec_signal)(k) += hsigma->GetBinContent(k+1)/map_xs_bin_constant[bin];
       }
       // mat_R
       // loop real signal bin ...
       for (int k=0;k!=hsigma->GetNbinsX();k++){
 	int bin = std::round(hsigma->GetBinCenter(k+1));
 	for (int j=0; j!=hpred->GetNbinsX()+1;j++){
-	  (*mat_R)(start_bin+j,k) = hR->GetBinContent(j+1,k+1)/(hsigma->GetBinContent(k+1)/map_xs_bin_constant[bin]);
+	  // (*mat_R)(start_bin+j,k) = hR->GetBinContent(j+1,k+1)/(hsigma->GetBinContent(k+1)/map_xs_bin_constant[bin]);
+	  (*mat_R)(start_bin+j,k) = hR->GetBinContent(j+1,k+1);
 	}
       }
     }
-    
-  }
+  
+  } // files
+  mat_R->NormByRow(*vec_signal, "D");  
+
   {
     // add additional uncertainties ...
     // POT ...
@@ -1065,14 +1139,12 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
 void LEEana::CovMatrix::fill_pred_R_signal(int run, TMatrixD* mat_R, TVectorD* vec_signal,  std::map<int, double>& map_data_period_pot, std::map<TString, std::tuple<TH1F*, TH2F*, double> >& map_name_xs_hists){
 
   // merge histograms according to POTs ...
-  // looping over channels from cov_input (for numu_nue, would run 4 times because of 4 signal channels
   for (auto it = map_pred_covch_histos.begin(); it!=map_pred_covch_histos.end();it++){
     int covch = it->first;
     TH1F *hsigma = 0;
     TH2F *hR = 0;
-   
-    // looping over ?
-    for (auto it1 = it->second.begin(); it1 != it->second.end(); it1++){ 
+    
+    for (auto it1 = it->second.begin(); it1 != it->second.end(); it1++){
       std::map<int, double> temp_map_mc_acc_pot;
       
       for (auto it2 = it1->begin(); it2 != it1->end(); it2++){
@@ -1103,7 +1175,7 @@ void LEEana::CovMatrix::fill_pred_R_signal(int run, TMatrixD* mat_R, TVectorD* v
       	}else{
       	  temp_map_mc_acc_pot[period] += mc_pot;
 	}
-      	//std::cout << histoname << " " << input_filename << " " << mc_pot << " " << period << std::endl;
+        //std::cout << "lhagaman debug, " << covch << " " << histoname << " " << input_filename << " " << mc_pot << " " << period << std::endl;
       }
       if (hsigma ==0 ) continue;
       
@@ -1120,11 +1192,12 @@ void LEEana::CovMatrix::fill_pred_R_signal(int run, TMatrixD* mat_R, TVectorD* v
 	if (period != run && run != 0) continue; // skip ...
       	double data_pot = map_data_period_pot[period];
       	double ratio = data_pot/temp_map_mc_acc_pot[period];
+        double xs_chwgt = (double) xsechelper.chWgtbyHistName(histoname);
 
 	//	std::cout << h1->GetSum() << " " << ratio << std::endl;
-      	hsigma->Add(h1, ratio);
+      	hsigma->Add(h1, xs_chwgt*ratio);
 	hR->Add(h2, ratio);
-      	std::cout << input_filename << " " << h1->GetBinContent(2) << " " << h2->GetBinContent(4,4) << " " << covch << " " << histoname << " " << ratio << " " << data_pot << std::endl;
+      	//	std::cout << covch << " " << histoname << " " << ratio << " " << data_pot << std::endl;
       }
       
       
@@ -1134,23 +1207,30 @@ void LEEana::CovMatrix::fill_pred_R_signal(int run, TMatrixD* mat_R, TVectorD* v
     if (hsigma==0) continue;
     for (int k=0;k!=hsigma->GetNbinsX();k++){
       int bin = std::round(hsigma->GetBinCenter(k+1));
-      (*vec_signal)(k) = hsigma->GetBinContent(k+1)/map_xs_bin_constant[bin];
-      std::cout << k << " " << hsigma->GetBinContent(k+1) << " " << map_xs_bin_constant[bin] << " " << bin << "\n";
+      (*vec_signal)(k) += hsigma->GetBinContent(k+1)/map_xs_bin_constant[bin];
     }
+
+    std::cout << "lhagaman debug, covch: " << covch << ", vec_signal:\n";
+    for (int k=0;k!=hsigma->GetNbinsX();k++){
+      std::cout << "    " << k << "  " << (*vec_signal)(k) << "\n";
+    }
+
+
     // mat_R
     // loop real signal bin ...
     for (int k=0;k!=hsigma->GetNbinsX();k++){
       int bin = std::round(hsigma->GetBinCenter(k+1));
-      for (int j=0; j!=hR->GetNbinsX()+1;j++){ // need to add protection for dividing by zero signal here (true numuCC from nue overlay)
-	(*mat_R)(start_bin+j,k) = hR->GetBinContent(j+1,k+1)/(hsigma->GetBinContent(k+1)/map_xs_bin_constant[bin]);
+      for (int j=0; j!=hR->GetNbinsX()+1;j++){
+	// (*mat_R)(start_bin+j,k) = hR->GetBinContent(j+1,k+1)/(hsigma->GetBinContent(k+1)/map_xs_bin_constant[bin]);
+	(*mat_R)(start_bin+j,k) = hR->GetBinContent(j+1,k+1); //not normalized yet
       }
     }
     
     delete hsigma;
     delete hR;
   }
+  mat_R->NormByRow(*vec_signal, "D");
     
-
 }
 
 
@@ -1226,7 +1306,7 @@ void LEEana::CovMatrix::fill_xs_histograms(int num, int tot_num, int acc_no, int
 	      if (flag_pass) h4->Fill(val, nsignal_bin, (1+rel_weight_diff) * weight);
 	    }
 	  }else{
-	    std::cout << "Something wrong: cut/channel mismatch 1!" << std::endl;
+	    std::cout << "Something wrong: cut/channel mismatch !" << std::endl;
 	  }
 	} // else	
       }
@@ -1302,7 +1382,7 @@ void LEEana::CovMatrix::fill_xs_histograms(std::map<TString, std::set<std::tuple
 	      if (flag_pass) h4->Fill(val, nsignal_bin, weight);
 	    }
 	  }else{
-	    std::cout << "Something wrong: cut/channel mismatch 2!" << std::endl;
+	    std::cout << "Something wrong: cut/channel mismatch !" << std::endl;
 	  }
 	} // else
 	
@@ -1728,6 +1808,10 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
   T_PFeval->SetBranchStatus("showervtx_diff",1);
   T_PFeval->SetBranchStatus("muonvtx_diff",1);
   T_PFeval->SetBranchStatus("truth_muonMomentum",1);
+  T_PFeval->SetBranchStatus("truth_pio_energy_1",1);
+  T_PFeval->SetBranchStatus("truth_pio_energy_2",1);
+  T_PFeval->SetBranchStatus("truth_pio_angle",1);
+  T_PFeval->SetBranchStatus("truth_NprimPio",1);
   if (pfeval.flag_NCDelta){
     
     T_PFeval->SetBranchStatus("truth_NCDelta",1);
@@ -1872,7 +1956,8 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
       if (it3 != disabled_ch_names.end()) continue;
       
       float val = get_kine_var(kine, eval, pfeval, tagger, false, var_name);
-      bool flag_pass = get_cut_pass(ch_name, add_cut, false, eval, pfeval, tagger, kine);
+      int flag_passall = (get_cut_pass(ch_name, add_cut, false, eval, pfeval, tagger, kine));
+      bool flag_pass = flag_passall > 0;
       int signal_bin = -1;
       if (xs_signal_ch_names.find(ch_name) != xs_signal_ch_names.end()){
 	signal_bin = get_xs_signal_no(cut_file, map_cut_xs_bin, eval, pfeval, tagger, kine);
@@ -1880,7 +1965,8 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
 
       //  std::cout << flag_pass << " " << signal_bin << " " << no << std::endl;
       if (flag_pass || signal_bin !=-1) {
-	std::get<4>(event_info).insert(std::make_tuple(no, val, flag_pass, signal_bin));
+        if(flag_passall >= 0)
+          std::get<4>(event_info).insert(std::make_tuple(no, val, flag_pass, signal_bin));
 	//	if (no == 0) std::cout << "Xin: " << " " << flag_pass << " " << signal_bin << " " << eval.weight_cv * eval.weight_spline << " " <<eval.run << " " << eval.subrun << " " << eval.event << std::endl;
       }
       //if (flag_pass || (signal_bin !=-1 && is_preselection(eval))) std::get<4>(event_info).insert(std::make_tuple(no, val, flag_pass, signal_bin));

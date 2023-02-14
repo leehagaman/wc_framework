@@ -38,6 +38,8 @@ TMatrixD Matrix_C(Int_t n, Int_t type)
     if      (type==332) { return C3_3D(2);}
     else if (type==333) { return C3_3D(3);}
     else if (type==22 || type==32) { dim_edges = { 0,  3,  7, 11, 14, 18, 22, 26, 31, 36}; }  //2D edges between 1D dimension slices
+    else if (type==24) { dim_edges = {0, 10, n}; } // lhagaman 2023_02_06, for joint numu/nue cross-section
+    
 /*
     else if (type==23 || type==33) { dim_edges = { 0,  3,  6, 10, 13, 16, 19, 22, 25,
                                                   28, 31, 35, 39, 42, 45, 49, 53, 57,
@@ -71,7 +73,7 @@ std::cout << "n, type, dim_edges.count = " << n << ",   " << type << ",   " << d
                 }
             }
 
-            else if(type == 2 || type==23)
+            else if(type == 2 || type==23 || type==24)
             {
                 bool on_edge_offdiag = ( is_on_edge(dim_edges,i) && j==(i-1)) || ( is_on_edge(dim_edges,j) && i==(j-1));
                 //if (TMath::Abs(i-j) == 1 && on_edge_offdiag) { std::cout << "on_edge_offdiag.  i,j = " << i << ",  " << j << std::endl; }

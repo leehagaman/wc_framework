@@ -868,7 +868,7 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
 
       //std::cout << "\nlhagaman checking get_cut_pass function\n";
 
-      bool flag_pass = get_cut_pass(ch_name, add_cut, false, eval, pfeval, tagger, kine);
+      bool flag_pass = (get_cut_pass(ch_name, add_cut, false, eval, pfeval, tagger, kine) > 0);
 
       //std::cout << "lhagaman finished checking get_cut_pass function, flag_pass = " << flag_pass << "\n";
       

@@ -318,7 +318,8 @@ int main( int argc, char** argv )
       // get kinematics variable ...
       double val = get_kine_var(kine, eval, pfeval, tagger, flag_data, var_name);
       // get pass or not
-      bool flag_pass = get_cut_pass(ch_name, add_cut, flag_data, eval, pfeval, tagger, kine);
+      int flag_passall = get_cut_pass(ch_name, add_cut, flag_data, eval, pfeval, tagger, kine);
+      bool flag_pass = flag_passall > 0;
 
       double osc_weight = 1.0;
 
