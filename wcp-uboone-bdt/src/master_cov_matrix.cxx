@@ -66,6 +66,9 @@ LEEana::JointXsecHelper::JointXsecHelper(TString xs_ch_filename){
     row++;
     if (xs_signal_ch_name == "End") break;
     fXsInfo.insert(std::make_pair(xs_signal_ch_name, xs_chwgt));
+    
+    std::cout << "making JointXsecHelper, inserting " << xs_signal_ch_name << ", " << xs_chwgt << "\n";
+    
     fXsNames.insert(xs_signal_ch_name);
   }
 }
@@ -705,7 +708,9 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
   // prepare the maps ... name --> no,  covch, lee
   std::map<TString, std::tuple<int, int, int, TString>> map_histoname_infos ; 
   std::map<int, TString> map_no_histoname; 
-  
+ 
+  //std::cout << "lhagaman debug, inside src/master_cov_matrix.cxx, gen_xs_cov_matrix\n"; 
+
   int ncount = 0;
   for (auto it = map_inputfile_info.begin(); it != map_inputfile_info.end(); it++){
     TString input_filename = it->first;
@@ -733,12 +738,17 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
     }
   }
 
+
+  //std::cout << "lhagaman debug, inside src/master_cov_matrix.cxx, gen_xs_cov_matrix, after first loop\n"; 
+
+
   std::map<TString, std::set<std::tuple<float, float, std::vector<float>, std::vector<int>, std::set<std::tuple<int, float, bool, int> > > > > map_passed_events; // last one is variable name ...
   std::map<TString, double> map_filename_pot;
   std::vector<int> max_lengths;
   std::vector<int> max_sup_lengths;
   for (auto it = map_inputfile_info.begin(); it != map_inputfile_info.end(); it++){
     TString input_filename = it->first;
+    //std::cout << "lhagaman debug, inside src/master_cov_matrix.cxx, gen_xs_cov_matrix, inside second loop, filename: " << input_filename << "\n"; 
     //int filetype = std::get<0>(it->second);
     int period = std::get<1>(it->second);
     if (period != run) continue;
@@ -767,6 +777,9 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
 
   }
 
+  //std::cout << "lhagaman debug, inside src/master_cov_matrix.cxx, gen_xs_cov_matrix, after second loop\n"; 
+
+
   double data_pot = 5e19;
   const int rows = cov_xs_mat->GetNcols();
   float x[rows], xsigma[rows], xsigmabar[rows], xpred[rows];
@@ -777,6 +790,10 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
   // build covariance matrix ...
   
   for (size_t j = 0; j!=max_lengths.size(); j++){ // j: index of knobs
+
+    //std::cout << "lhagaman debug, inside src/master_cov_matrix.cxx, gen_xs_cov_matrix, inside third loop, j=" << j << "\n"; 
+
+
     int nsize = max_lengths.at(j);
     int sup_nsize = max_sup_lengths.at(j);
 
@@ -864,6 +881,7 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
 	    htemp->Add(hmc, ratio);
             double xs_chwgt = (double) xsechelper.chWgtbyHistName(histoname);
 	    if (num !=1){
+      	      //std::cout << "debug #1, histoname: " << histoname << ", hmc1 total: " << hmc1->GetSum() << "\n";
 	      htemp1->Add(hmc1,xs_chwgt*ratio);
 	      htemp2->Add(hmc2,xs_chwgt*ratio);
 	      htemp3->Add(hmc3,ratio);
@@ -977,6 +995,7 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
   }
   
   
+  //std::cout << "lhagaman debug, inside src/master_cov_matrix.cxx, gen_xs_cov_matrix, after third loop\n"; 
   
   
   // build CV ...
@@ -1053,6 +1072,7 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
      	htemp->Add(hmc, ratio);
         double xs_chwgt = (double) xsechelper.chWgtbyHistName(histoname);
 	if (num !=1){
+      	  //std::cout << "debug #2, histoname: " << histoname << ", hmc1 total: " << hmc1->GetSum() << ", xs_chwgt: " << xs_chwgt << ", ratio: " << ratio << "\n";
 	  htemp1->Add(hmc1,xs_chwgt*ratio);
 	  htemp2->Add(hmc2,xs_chwgt*ratio);
 	  htemp3->Add(hmc3,ratio);
@@ -1065,7 +1085,7 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
       hpred->Add(htemp);
       delete htemp;
       if (num != 1){
-	//	std::cout << num << " " << htemp1->GetSum() << std::endl;
+	std::cout << "adding htemp1 to hsigma, which becomes vec_signal, num=" << num << ", total= " << htemp1->GetSum() << "\n";
 	hsigma->Add(htemp1);
 	hsigmabar->Add(htemp2);
 	hR->Add(htemp3);
@@ -1085,39 +1105,53 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
       // vec_signal, mat_R
       for (int k=0;k!=hsigma->GetNbinsX();k++){
 	int bin = std::round(hsigma->GetBinCenter(k+1));
+	std::cout << "adding to vec_signal, covch=" << covch << ", k=" << k << ", bincontent=" << hsigma->GetBinContent(k+1) << ", constant=" << map_xs_bin_constant[bin] << "\n";
 	(*vec_signal)(k) += hsigma->GetBinContent(k+1)/map_xs_bin_constant[bin];
       }
       // mat_R
       // loop real signal bin ...
       for (int k=0;k!=hsigma->GetNbinsX();k++){
-	int bin = std::round(hsigma->GetBinCenter(k+1));
-	for (int j=0; j!=hpred->GetNbinsX()+1;j++){
-	  // (*mat_R)(start_bin+j,k) = hR->GetBinContent(j+1,k+1)/(hsigma->GetBinContent(k+1)/map_xs_bin_constant[bin]);
-	  (*mat_R)(start_bin+j,k) = hR->GetBinContent(j+1,k+1);
-	}
+	      int bin = std::round(hsigma->GetBinCenter(k+1));
+	      for (int j=0; j!=hpred->GetNbinsX()+1;j++){
+		      // (*mat_R)(start_bin+j,k) = hR->GetBinContent(j+1,k+1)/(hsigma->GetBinContent(k+1)/map_xs_bin_constant[bin]);
+		      (*mat_R)(start_bin+j,k) = hR->GetBinContent(j+1,k+1);
+	      }
       }
     }
-  
+
   } // files
-  mat_R->NormByRow(*vec_signal, "D");  
+
+
+  // protecting for 0/0 for empty vec_signal scaling of the response matrix
+  std::cout << "#1 Normalizing by row, element 5 = " << (*vec_signal)[5] << ", num elements: " << vec_signal->GetNoElements() << "\n";
+  TVectorD tmp_vec_signal(vec_signal->GetNoElements());
+  for (int tmp =0; tmp!= vec_signal->GetNoElements(); tmp++){
+	  if ((*vec_signal)[tmp]!=0)
+		  tmp_vec_signal[tmp] = (*vec_signal)[tmp];
+	  else
+		  tmp_vec_signal[tmp] = 1;
+  }
+  mat_R->NormByRow(tmp_vec_signal, "D");
+
+  // mat_R->NormByRow(*vec_signal, "D");  
 
   {
-    // add additional uncertainties ...
-    // POT ...
-    auto it = map_xs_bin_errs.begin();
-    double pot_err = (it->second).first;
-    double target_err = (it->second).second;
-    for (int i=0; i!= (*cov_xs_mat).GetNrows(); i++){
-      for (int j=0;j!=(*cov_xs_mat).GetNcols(); j++){
-    	(*cov_xs_mat)(i,j) += (*vec_mean)(i) * (*vec_mean)(j) *pot_err * pot_err; 
-      }
-    }
-    // Target Nucleons
-    std::vector<int> bins;
-    for (auto it = xs_signal_ch_names.begin(); it != xs_signal_ch_names.end(); it++){
-      TString ch_name = *it;
-      int ch = map_name_ch[ch_name];
-      int covch = map_ch_covch[ch];
+	  // add additional uncertainties ...
+	  // POT ...
+	  auto it = map_xs_bin_errs.begin();
+	  double pot_err = (it->second).first;
+	  double target_err = (it->second).second;
+	  for (int i=0; i!= (*cov_xs_mat).GetNrows(); i++){
+		  for (int j=0;j!=(*cov_xs_mat).GetNcols(); j++){
+			  (*cov_xs_mat)(i,j) += (*vec_mean)(i) * (*vec_mean)(j) *pot_err * pot_err; 
+		  }
+	  }
+	  // Target Nucleons
+	  std::vector<int> bins;
+	  for (auto it = xs_signal_ch_names.begin(); it != xs_signal_ch_names.end(); it++){
+		  TString ch_name = *it;
+		  int ch = map_name_ch[ch_name];
+		  int covch = map_ch_covch[ch];
       int nbin = map_covch_nbin[covch];
       int start_bin = map_covch_startbin[covch];
       for (int i=start_bin; i!= start_bin+nbin;i++){
@@ -1133,6 +1167,7 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
     
   }
   
+  //std::cout << "lhagaman debug, inside src/master_cov_matrix.cxx, gen_xs_cov_matrix, end of function\n"; 
   
 }
 
@@ -1195,6 +1230,7 @@ void LEEana::CovMatrix::fill_pred_R_signal(int run, TMatrixD* mat_R, TVectorD* v
         double xs_chwgt = (double) xsechelper.chWgtbyHistName(histoname);
 
 	//	std::cout << h1->GetSum() << " " << ratio << std::endl;
+      	//std::cout << "debug #3, histoname: " << histoname << ", h1 total: " << h1->GetSum() << ", xs_chwgt: " << xs_chwgt << ", ratio: " << ratio << "\n";
       	hsigma->Add(h1, xs_chwgt*ratio);
 	hR->Add(h2, ratio);
       	//	std::cout << covch << " " << histoname << " " << ratio << " " << data_pot << std::endl;
@@ -1210,10 +1246,11 @@ void LEEana::CovMatrix::fill_pred_R_signal(int run, TMatrixD* mat_R, TVectorD* v
       (*vec_signal)(k) += hsigma->GetBinContent(k+1)/map_xs_bin_constant[bin];
     }
 
-    std::cout << "lhagaman debug, covch: " << covch << ", vec_signal:\n";
-    for (int k=0;k!=hsigma->GetNbinsX();k++){
-      std::cout << "    " << k << "  " << (*vec_signal)(k) << "\n";
-    }
+    //std::cout << "lhagaman debug, covch: " << covch << ", vec_signal:\n";
+    //std::cout << "lhagaman debug, vec signal:\n";
+    //for (int k=0;k!=hsigma->GetNbinsX();k++){
+    //  std::cout << "    " << k << "  " << (*vec_signal)(k) << "\n";
+    //}
 
 
     // mat_R
@@ -1229,7 +1266,19 @@ void LEEana::CovMatrix::fill_pred_R_signal(int run, TMatrixD* mat_R, TVectorD* v
     delete hsigma;
     delete hR;
   }
-  mat_R->NormByRow(*vec_signal, "D");
+
+
+  // protecting for 0/0 for empty vec_signal scaling of the response matrix
+  //std::cout << "#2 Normalizing by row, element 5 = " << (*vec_signal)[5] << ", num elements: " << vec_signal->GetNoElements() << "\n";
+  TVectorD tmp_vec_signal(vec_signal->GetNoElements());
+  for (int tmp =0; tmp!= vec_signal->GetNoElements(); tmp++){
+	if ((*vec_signal)[tmp]!=0)
+     	  tmp_vec_signal[tmp] = (*vec_signal)[tmp];
+	else
+	  tmp_vec_signal[tmp] = 1;
+  }
+  mat_R->NormByRow(tmp_vec_signal, "D");
+  //mat_R->NormByRow(*vec_signal, "D");
     
 }
 
@@ -1252,7 +1301,7 @@ void LEEana::CovMatrix::fill_xs_histograms(int num, int tot_num, int acc_no, int
     }
   }
 
-  // std::cout << "acc_no: " << acc_no << " no: " << no << std::endl;
+  //std::cout << "acc_no: " << acc_no << " no: " << no << std::endl;
   for (auto it = map_passed_events.begin(); it != map_passed_events.end(); it++){
     TString filename = it->first;
     // loop over events ...
@@ -1926,7 +1975,9 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
 
   int temp_sum = 0;
   
+  
   for (size_t i=0;i!=T_eval->GetEntries();i++){
+    //for (size_t i=0;i!=100;i++){ // temporary for high speed
     T_BDTvars->GetEntry(i);
     T_eval->GetEntry(i);
     T_KINEvars->GetEntry(i);

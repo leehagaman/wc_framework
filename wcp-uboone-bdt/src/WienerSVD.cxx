@@ -39,6 +39,7 @@ TMatrixD Matrix_C(Int_t n, Int_t type)
     else if (type==333) { return C3_3D(3);}
     else if (type==22 || type==32) { dim_edges = { 0,  3,  7, 11, 14, 18, 22, 26, 31, 36}; }  //2D edges between 1D dimension slices
     else if (type==24) { dim_edges = {0, 10, n}; } // lhagaman 2023_02_06, for joint numu/nue cross-section
+    else if (type==25) { dim_edges = {0, 10, 20, 28, n}; } // lhagaman 2023_03_17, for 7ch cross-section
     
 /*
     else if (type==23 || type==33) { dim_edges = { 0,  3,  6, 10, 13, 16, 19, 22, 25,
@@ -51,7 +52,7 @@ TMatrixD Matrix_C(Int_t n, Int_t type)
                                                   63, 66, 70, 74, 77, 82, 88, 94,100,
                                                  105,108,112,115,118,122,126,129,133, 138 }; }	//3D edges between 1D dimension slices
 
-std::cout << "n, type, dim_edges.count = " << n << ",   " << type << ",   " << dim_edges.size() << std::endl;
+    std::cout << "n, type, dim_edges.count = " << n << ",   " << type << ",   " << dim_edges.size() << std::endl;
 
     TMatrixD C(n, n);
     for(Int_t i=0; i<n; i++)
@@ -73,7 +74,7 @@ std::cout << "n, type, dim_edges.count = " << n << ",   " << type << ",   " << d
                 }
             }
 
-            else if(type == 2 || type==23 || type==24)
+            else if(type == 2 || type==23 || type==24 || type==25)
             {
                 bool on_edge_offdiag = ( is_on_edge(dim_edges,i) && j==(i-1)) || ( is_on_edge(dim_edges,j) && i==(j-1));
                 //if (TMath::Abs(i-j) == 1 && on_edge_offdiag) { std::cout << "on_edge_offdiag.  i,j = " << i << ",  " << j << std::endl; }
@@ -166,7 +167,9 @@ TVectorD WienerSVD(TMatrixD Response, TVectorD Signal, TVectorD Measure, TMatrix
     TMatrixD C_inv = C0;
     Signal = C*Signal;
     R = R*C_inv;
-  
+    
+    std::cout << "about to do SVD decomposition\n";
+
     // SVD decomposition of R 
     TDecompSVD udv(R);
     TMatrixD U = udv.GetU();
@@ -187,6 +190,8 @@ TVectorD WienerSVD(TMatrixD Response, TVectorD Signal, TVectorD Measure, TMatrix
             }
         }
     }
+    
+    std::cout << "finished with SVD decomposition\n";
 
     //debugging wiener filter
     bool test_wiener = false;

@@ -1,0 +1,4 @@
+
+Processing calculate_num.C(2.05, 4.0, 1000, 6.36807e+20, 0, 0, "gh_averaged_bnb_5GeV_flux.root", "gh_averaged_nue_total")...
+
+Final constant        : 288.621

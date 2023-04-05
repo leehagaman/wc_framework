@@ -235,6 +235,7 @@ int main( int argc, char** argv )
 	
 	double cov = bayes.get_covariance();
 	//double cov1 = bayes.get_covariance_mc();
+	std::cout << "printing obsch and bin contents\n";
 	std::cout << obsch << " " << i << " "	  << h1->GetBinContent(i+1) << " " << cov  << " "  << h2->GetBinContent(i+1) << std::endl;
 	// std::cout << temp << " " << temp1 << " " << h1->GetBinContent(i+1) << " " << h2->GetBinContent(i+1) << std::endl;
         if(isnan(cov) || isinf(cov)) {

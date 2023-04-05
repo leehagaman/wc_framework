@@ -30,4 +30,6 @@ void calculate_num(double init_E = 0., double final_E = 5,
   std::cout << "Final constant        : " << final_constant * (final_difval - init_difval) << std::endl;
   else 
   std::cout << "Final constant        : " << final_constant << std::endl;
+    
 }
+

@@ -326,9 +326,11 @@ int main( int argc, char** argv )
       int flag_passall = get_cut_pass(ch_name, add_cut, flag_data, eval, pfeval, tagger, kine);
       bool flag_pass = flag_passall > 0;
       int signal_bin = -1;
-      if (cov.is_xs_chname(ch_name))
-	signal_bin = get_xs_signal_no(cov.get_cut_file(), cov.get_map_cut_xs_bin(), eval, pfeval, tagger, kine);
-
+      if (cov.is_xs_chname(ch_name)){
+	//std::cout << "lhagaman debug, updating signal_bin\n";
+        signal_bin = get_xs_signal_no(cov.get_cut_file(), cov.get_map_cut_xs_bin(), eval, pfeval, tagger, kine);
+      }
+      
       if (!((signal_bin != -1) || flag_pass)) continue;
       // get weight ...
       double weight_val = get_weight(weight, eval, pfeval, kine, tagger, cov.get_rw_info(), flag_data);
@@ -351,6 +353,7 @@ int main( int argc, char** argv )
        	  if (flag_passall >= 0) h2->Fill(signal_bin, weight_val);
        	  if (flag_pass) h3->Fill(val, signal_bin, weight_val);
        	}else{
+          std::cout << "lhagaman debug, histoname = " << histoname << ", num = " << num << ", signal_bin = " << signal_bin << ", flag_pass = " << flag_pass << ", flag_passall = " << flag_passall << "\n";
        	  std::cout << "[convt-hist-xs] Something wrong: cut/channel mismatch !" << std::endl;
        	}
       } // else

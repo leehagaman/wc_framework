@@ -1,25 +1,14 @@
-1	19		numuCC.inside.Enu.le.540.gt.200		148914		0.022		0.011	
-2	19		numuCC.inside.Enu.le.705.gt.540		81789.5		0.022		0.011
-3	19		numuCC.inside.Enu.le.805.gt.705		47646.1		0.022		0.011
-4	19		numuCC.inside.Enu.le.920.gt.805		50847.2		0.022		0.011
-5	19		numuCC.inside.Enu.le.1050.gt.920	50956.3		0.022		0.011
-6	19		numuCC.inside.Enu.le.1200.gt.1050	49189		0.022		0.011
-7	19		numuCC.inside.Enu.le.1375.gt.1200	43843.1		0.022		0.011
-8	19		numuCC.inside.Enu.le.1570.gt.1375	31936.6		0.022		0.011
-9	19		numuCC.inside.Enu.le.2050.gt.1570	28370.8		0.022		0.011
-10	19		numuCC.inside.Enu.le.4000.gt.2050	8761.26		0.022		0.011
+1  19     nueCC.inside.Enu.le.540.gt.200             775.475         0.022      0.011
+2  19     nueCC.inside.Enu.le.705.gt.540             333.113         0.022      0.011
+3  19     nueCC.inside.Enu.le.805.gt.705             175.581         0.022      0.011
+4  19     nueCC.inside.Enu.le.920.gt.805             176.165         0.022      0.011
+5  19     nueCC.inside.Enu.le.1050.gt.920            178.139         0.022      0.011
+6  19     nueCC.inside.Enu.le.1200.gt.1050           188.131         0.022      0.011
+7  19     nueCC.inside.Enu.le.1375.gt.1200           184.694         0.022      0.011
+8  19     nueCC.inside.Enu.le.1570.gt.1375           165.395         0.022      0.011
+9  19     nueCC.inside.Enu.le.2050.gt.1570           277.146         0.022      0.011
+10 19     nueCC.inside.Enu.le.4000.gt.2050           288.621         0.022      0.011
 
-11	19		nueCC.inside.Enu.le.540.gt.200		793.581		0.022		0.011	
-12	19		nueCC.inside.Enu.le.705.gt.540		340.89		0.022		0.011
-13	19		nueCC.inside.Enu.le.805.gt.705		179.68		0.022		0.011
-14	19		nueCC.inside.Enu.le.920.gt.805		180.278		0.022		0.011
-15	19		nueCC.inside.Enu.le.1050.gt.920		182.298		0.022		0.011
-16	19		nueCC.inside.Enu.le.1200.gt.1050	192.524		0.022		0.011
-17	19		nueCC.inside.Enu.le.1375.gt.1200	189.006		0.022		0.011
-18	19		nueCC.inside.Enu.le.1570.gt.1375	169.256		0.022		0.011
-19	19		nueCC.inside.Enu.le.2050.gt.1570	283.616		0.022		0.011
-20	19		nueCC.inside.Enu.le.4000.gt.2050	195.359		0.022		0.011
+-1   -1        End                                    -1              -1         -1
+#bin #cut_file #cut                                   #const          #pot_err   #target_err
 
-
--1	-1		End					-1		-1		-1
-#bin	#cut_file  	#cut					#const		#pot_err	#target_err

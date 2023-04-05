@@ -78,7 +78,9 @@ int main( int argc, char** argv )
   //std::map<TString, TH1F* > map_histoname_hist;
   std::map<int, std::tuple<TH1F*, TH1F*, TH1F*, TH2F*, int> > map_covch_hists;
   //std::map<int, TH1F* > map_covch_hist;
-  
+
+  //std::cout << "lhagaman debug, inside xs_cov_matrix 1\n";
+
   for (auto it = map_inputfile_info.begin(); it!=map_inputfile_info.end(); it++){
     TString input_filename = it->first;
     int filetype = std::get<0>(it->second);
@@ -86,7 +88,8 @@ int main( int argc, char** argv )
     TString out_filename = std::get<2>(it->second);
     int file_no = std::get<4>(it->second);
 
-    
+    //std::cout << "lhagaman debug, inside xs_cov_matrix, filename: " << input_filename << "\n";
+     
     if (period == run){
       outfile_name = out_filename;
       std::vector< std::tuple<TString,  int, float, float, TString, TString, TString, TString > > histo_infos = cov.get_histograms(input_filename, 0);
@@ -142,13 +145,16 @@ int main( int argc, char** argv )
       //  std::cout << input_filename << " " << filetype << " " << out_filename << std::endl; 
     }
   }
-  
+ 
+  //std::cout << "lhagaman debug, after filename loop\n";
+
   // hack ...
   outfile_name = "./hist_rootfiles/XsFlux/cov_xs.root";
   if(run==18) outfile_name = "./hist_rootfiles/XsFlux/cov_rw.root";
   if(run==19) outfile_name = "./hist_rootfiles/XsFlux/cov_rw_cor.root";
   std::cout << outfile_name << std::endl;
   TMatrixD* cov_add_mat = cov.get_add_cov_matrix();
+  //std::cout << "lhagaman debug, did get_add_cov_matrix\n";
   // create a covariance matrix for bootstrapping ...
   TMatrixD* cov_xs_mat = new TMatrixD(cov_add_mat->GetNrows(), cov_add_mat->GetNcols());
   TVectorD* vec_mean = new TVectorD(cov_add_mat->GetNrows());
@@ -156,6 +162,7 @@ int main( int argc, char** argv )
   //std::cout << cov.get_xs_nmeas() << " " << cov.get_xs_nsignals() << std::endl;
   // matrix and R ...
   TVectorD* vec_signal = new TVectorD(cov.get_xs_nsignals());
+  //std::cout << "lhagaman debug, did get_xs_nsignals\n";
 
   TMatrixD *mat_R = new TMatrixD(cov_add_mat->GetNrows(),cov.get_xs_nsignals());
 
@@ -163,7 +170,9 @@ int main( int argc, char** argv )
   cov.gen_xs_cov_matrix(run, map_covch_hists, map_histoname_hists, vec_mean, cov_xs_mat, vec_signal, mat_R);
 
   TMatrixD* frac_cov_xs_mat = new TMatrixD(cov_add_mat->GetNrows(), cov_add_mat->GetNcols());
-  
+ 
+  //std::cout << "lhagaman debug, did gen_xs_cov_matrix\n";
+
   for (size_t i=0; i!= frac_cov_xs_mat->GetNrows(); i++){
     double val_1 = (*vec_mean)(i);
     for (size_t j=0; j!=frac_cov_xs_mat->GetNrows();j++){

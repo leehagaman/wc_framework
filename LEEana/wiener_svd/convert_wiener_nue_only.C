@@ -31,12 +31,12 @@ void convert_wiener_nue_only(){
   TH1D *hmeas = new TH1D("hmeas","hmeas",nbin_meas,0.5, nbin_meas+0.5);
   TH1D *hpred = new TH1D("hpred","hpred",nbin_meas,0.5, nbin_meas+0.5);
   for (Int_t i=0;i!=hdata_obsch_1->GetNbinsX()+1;i++){
-    hmeas->SetBinContent(i+1,hdata_obsch_1->GetBinContent(i+1) - histo_2->GetBinContent(i+1) - histo_5->GetBinContent(i+1) );
+    hmeas->SetBinContent(i+1,                                   hdata_obsch_1->GetBinContent(i+1) - histo_2->GetBinContent(i+1) - histo_5->GetBinContent(i+1) );
     hmeas->SetBinContent(i+1 + hdata_obsch_1->GetNbinsX() + 1 , hdata_obsch_2->GetBinContent(i+1) - histo_4->GetBinContent(i+1) - histo_6->GetBinContent(i+1) );
 
     //std::cout << hmc_obsch_2->GetBinContent(i+1) -  histo_4->GetBinContent(i+1) - histo_6->GetBinContent(i+1) << " " << histo_2->GetBinContent(i+1) << std::endl;
 
-    hpred->SetBinContent(i+1, hmc_obsch_1->GetBinContent(i+1) );
+    hpred->SetBinContent(i+1,                                   hmc_obsch_1->GetBinContent(i+1) );
     hpred->SetBinContent(i+1 + hdata_obsch_1->GetNbinsX() + 1 , hmc_obsch_2->GetBinContent(i+1) );
   }
   // response matrix

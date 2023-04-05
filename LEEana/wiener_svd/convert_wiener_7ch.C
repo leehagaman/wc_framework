@@ -1,4 +1,4 @@
-void convert_wiener_numu_nue(){
+void convert_wiener_7ch(){
   gStyle->SetOptStat(0);
   
   TFile *file1 = new TFile("merge_xs.root");
@@ -7,26 +7,43 @@ void convert_wiener_numu_nue(){
   TVectorD *vec_signal = (TVectorD*)file1->Get("vec_signal"); // xs in pbar
   TMatrixD *mat_R = (TMatrixD*)file1->Get("mat_R"); // smearing matrix
 
-  TH1F *hdata_obsch_1 = (TH1F*)file1->Get("hdata_obsch_1"); // data numuCC FC
-  TH1F *hdata_obsch_2 = (TH1F*)file1->Get("hdata_obsch_2"); // data numuCC PC
-  TH1F *hdata_obsch_3 = (TH1F*)file1->Get("hdata_obsch_3"); // data nueCC FC
-  TH1F *hdata_obsch_4 = (TH1F*)file1->Get("hdata_obsch_4"); // data nueCC PC
-  TH1F *hmc_obsch_1 = (TH1F*)file1->Get("hmc_obsch_1");  // pred numuCC FC
-  TH1F *hmc_obsch_2 = (TH1F*)file1->Get("hmc_obsch_2");  // pred numuCC PC
-  TH1F *hmc_obsch_3 = (TH1F*)file1->Get("hmc_obsch_3");  // pred nueCC FC
-  TH1F *hmc_obsch_4 = (TH1F*)file1->Get("hmc_obsch_4");  // pred nueCC PC
-  TH1F *histo_1 = (TH1F*)file1->Get("histo_1");   // numuCC sig FC
-  TH1F *histo_2 = (TH1F*)file1->Get("histo_2");   // numuCC bg  FC
-  TH1F *histo_3 = (TH1F*)file1->Get("histo_3");   // numuCC sig PC
-  TH1F *histo_4 = (TH1F*)file1->Get("histo_4");   // numuCC bg  PC
-  TH1F *histo_5 = (TH1F*)file1->Get("histo_5");   // nueCC sig FC
-  TH1F *histo_6 = (TH1F*)file1->Get("histo_6");   // nueCC bg  FC
-  TH1F *histo_7 = (TH1F*)file1->Get("histo_7");   // nueCC sig PC
-  TH1F *histo_8 = (TH1F*)file1->Get("histo_8");   // nueCC bg  PC
-  TH1F *histo_9 = (TH1F*)file1->Get("histo_9");   // numuCC EXT FC
-  TH1F *histo_10 = (TH1F*)file1->Get("histo_10"); // numuCC EXT PC
-  TH1F *histo_11 = (TH1F*)file1->Get("histo_11"); // nueCC EXT FC
-  TH1F *histo_12 = (TH1F*)file1->Get("histo_12"); // nueCC EXT PC
+  TH1F *hdata_obsch_1 = (TH1F*)file1->Get("hdata_obsch_1"); // data nueCC FC
+  TH1F *hdata_obsch_2 = (TH1F*)file1->Get("hdata_obsch_2"); // data nueCC PC
+  TH1F *hdata_obsch_3 = (TH1F*)file1->Get("hdata_obsch_3"); // data numuCC FC
+  TH1F *hdata_obsch_4 = (TH1F*)file1->Get("hdata_obsch_4"); // data numuCC PC
+  TH1F *hdata_obsch_5 = (TH1F*)file1->Get("hdata_obsch_5"); // data numuCC Pi0 FC
+  TH1F *hdata_obsch_6 = (TH1F*)file1->Get("hdata_obsch_6"); // data numuCC Pi0 PC
+  TH1F *hdata_obsch_7 = (TH1F*)file1->Get("hdata_obsch_7"); // data NC Pi0
+  
+  TH1F *hmc_obsch_1 = (TH1F*)file1->Get("hmc_obsch_1");  // pred nueCC FC
+  TH1F *hmc_obsch_2 = (TH1F*)file1->Get("hmc_obsch_2");  // pred nueCC PC
+  TH1F *hmc_obsch_3 = (TH1F*)file1->Get("hmc_obsch_3");  // pred numuCC FC
+  TH1F *hmc_obsch_4 = (TH1F*)file1->Get("hmc_obsch_4");  // pred numuCC PC
+  TH1F *hmc_obsch_5 = (TH1F*)file1->Get("hmc_obsch_5");  // pred numuCC Pi0 FC
+  TH1F *hmc_obsch_6 = (TH1F*)file1->Get("hmc_obsch_6");  // pred numuCC Pi0 PC
+  TH1F *hmc_obsch_7 = (TH1F*)file1->Get("hmc_obsch_7");  // pred NC Pi0
+  
+  TH1F *histo_1 = (TH1F*)file1->Get("histo_1");   // nueCC sig FC
+  TH1F *histo_2 = (TH1F*)file1->Get("histo_2");   // nueCC bkg FC
+  TH1F *histo_3 = (TH1F*)file1->Get("histo_3");   // nueCC sig PC
+  TH1F *histo_4 = (TH1F*)file1->Get("histo_4");   // nueCC bkg PC
+  TH1F *histo_5 = (TH1F*)file1->Get("histo_5");   // numuCC sig FC
+  TH1F *histo_6 = (TH1F*)file1->Get("histo_6");   // numuCC bkg FC
+  TH1F *histo_7 = (TH1F*)file1->Get("histo_7");   // numuCC sig PC
+  TH1F *histo_8 = (TH1F*)file1->Get("histo_8");   // numuCC bkg PC
+  TH1F *histo_9 = (TH1F*)file1->Get("histo_9");   // numuCC Pi0 sig FC
+  TH1F *histo_10 = (TH1F*)file1->Get("histo_10"); // numuCC Pi0 bkg FC
+  TH1F *histo_11 = (TH1F*)file1->Get("histo_11"); // numuCC Pi0 sig PC
+  TH1F *histo_12 = (TH1F*)file1->Get("histo_12"); // numuCC Pi0 bkg PC
+  TH1F *histo_13 = (TH1F*)file1->Get("histo_13"); // NC Pi0 sig
+  TH1F *histo_14 = (TH1F*)file1->Get("histo_14"); // NC Pi0 bkg
+  TH1F *histo_15 = (TH1F*)file1->Get("histo_15"); // nueCC FC EXT
+  TH1F *histo_16 = (TH1F*)file1->Get("histo_16"); // nueCC PC EXT
+  TH1F *histo_17 = (TH1F*)file1->Get("histo_17"); // numuCC FC EXT
+  TH1F *histo_18 = (TH1F*)file1->Get("histo_18"); // numuCC PC EXT
+  TH1F *histo_19 = (TH1F*)file1->Get("histo_19"); // numuCC Pi0 FC EXT
+  TH1F *histo_20 = (TH1F*)file1->Get("histo_20"); // numuCC Pi0 PC EXT
+  TH1F *histo_21 = (TH1F*)file1->Get("histo_21"); // NC Pi0 EXT
   
   int nbin_true = vec_signal->GetNoElements();
 
@@ -35,35 +52,57 @@ void convert_wiener_numu_nue(){
   for(int i=0;i!=nbin_true;i++){
     htrue_signal->SetBinContent(i+1,(*vec_signal)(i));
   }
-  Int_t nbin_meas = hdata_obsch_1->GetNbinsX() + 1 + hdata_obsch_2->GetNbinsX() + 1;
+  Int_t nbin_meas = 4*26 + 3*11;
 
   // measurement ...
   TH1D *hmeas = new TH1D("hmeas","hmeas",nbin_meas,0.5, nbin_meas+0.5);
   TH1D *hpred = new TH1D("hpred","hpred",nbin_meas,0.5, nbin_meas+0.5);
   
-  // i goes from 0 to 26, each obs channel has 26 bins
-  for (Int_t i=0;i!=hdata_obsch_1->GetNbinsX()+1;i++){
-    // numuCC FC, data - bkg - ext
-    hmeas->SetBinContent(i+1, hdata_obsch_1->GetBinContent(i+1) - histo_2->GetBinContent(i+1) - histo_9->GetBinContent(i+1) );
-    // numuCC PC
-    hmeas->SetBinContent(i+1 + hdata_obsch_1->GetNbinsX() + 1, hdata_obsch_2->GetBinContent(i+1) - histo_4->GetBinContent(i+1) - histo_10->GetBinContent(i+1) );
-    // nueCC FC
-    hmeas->SetBinContent(i+1 + 2*(hdata_obsch_1->GetNbinsX() + 1), hdata_obsch_3->GetBinContent(i+1) - histo_6->GetBinContent(i+1) - histo_11->GetBinContent(i+1) );
+  // i goes from 0 to 25, each obs channel has 26 bins
+  for (Int_t i=0;i!=26;i++){
+    
+    // nueCC FC, data - bkg - ext
+    hmeas->SetBinContent(i+1, hdata_obsch_1->GetBinContent(i+1) - histo_2->GetBinContent(i+1) - histo_15->GetBinContent(i+1) );
     // nueCC PC
-    hmeas->SetBinContent(i+1 + 3*(hdata_obsch_1->GetNbinsX() + 1), hdata_obsch_4->GetBinContent(i+1) - histo_8->GetBinContent(i+1) - histo_12->GetBinContent(i+1) );
-
-    //std::cout << hmc_obsch_2->GetBinContent(i+1) -  histo_4->GetBinContent(i+1) - histo_6->GetBinContent(i+1) << " " << histo_2->GetBinContent(i+1) << std::endl;
-
-    // numuCC FC, pred
+    hmeas->SetBinContent(i+1 + 26, hdata_obsch_2->GetBinContent(i+1) - histo_4->GetBinContent(i+1) - histo_16->GetBinContent(i+1) );    
+    // numuCC FC
+    hmeas->SetBinContent(i+1 + 2*26, hdata_obsch_3->GetBinContent(i+1) - histo_6->GetBinContent(i+1) - histo_17->GetBinContent(i+1) );
+    // numuCC PC
+    hmeas->SetBinContent(i+1 + 3*26, hdata_obsch_4->GetBinContent(i+1) - histo_8->GetBinContent(i+1) - histo_18->GetBinContent(i+1) );
+    
+    // nueCC FC, pred
     hpred->SetBinContent(i+1, hmc_obsch_1->GetBinContent(i+1) );
-    // numuCC PC
-    hpred->SetBinContent(i+1 + hdata_obsch_1->GetNbinsX() + 1, hmc_obsch_2->GetBinContent(i+1) );
-    // nueCC FC
-    hpred->SetBinContent(i+1 + 2*(hdata_obsch_1->GetNbinsX() + 1), hmc_obsch_3->GetBinContent(i+1) );
     // nueCC PC
-    hpred->SetBinContent(i+1 + 3*(hdata_obsch_1->GetNbinsX() + 1), hmc_obsch_4->GetBinContent(i+1) );
+    hpred->SetBinContent(i+1 + 26, hmc_obsch_2->GetBinContent(i+1) );
+    // numuCC FC
+    hpred->SetBinContent(i+1 + 2*26, hmc_obsch_3->GetBinContent(i+1) );
+    // numuCC PC
+    hpred->SetBinContent(i+1 + 3*26, hmc_obsch_4->GetBinContent(i+1) );
     
   }
+
+  // for pi0 channels, 11 bins rather than 26 bins
+  for (Int_t i=0; i!=11; i++){
+    
+    // numuCC Pi0 FC
+    hmeas->SetBinContent(i+1 + 4*26, hdata_obsch_5->GetBinContent(i+1) - histo_10->GetBinContent(i+1) - histo_19->GetBinContent(i+1) );
+    // numuCC Pi0 PC
+    hmeas->SetBinContent(i+1 + 4*26 + 11, hdata_obsch_6->GetBinContent(i+1) - histo_12->GetBinContent(i+1) - histo_20->GetBinContent(i+1) );
+    // NC Pi0 PC
+    hmeas->SetBinContent(i+1 + 4*26 + 2*11, hdata_obsch_7->GetBinContent(i+1) - histo_14->GetBinContent(i+1) - histo_21->GetBinContent(i+1) );
+  
+    // numuCC Pi0 FC, pred
+    hpred->SetBinContent(i+1 + 4*26, hmc_obsch_5->GetBinContent(i+1) );
+    // numuCC Pi0 PC
+    hpred->SetBinContent(i+1 + 4*26 + 11, hmc_obsch_6->GetBinContent(i+1) );
+    // NC Pi0 PC
+    hpred->SetBinContent(i+1 + 4*26 + 2*11, hmc_obsch_7->GetBinContent(i+1) );
+
+
+  }
+
+
+
   // response matrix
   
   TMatrixD mat_collapse_T(mat_collapse->GetNcols(), mat_collapse->GetNrows()); 
@@ -95,7 +134,7 @@ void convert_wiener_numu_nue(){
 
   // statistical uncertainties
   TH2D *hcov_stat = new TH2D("hcov_stat","hcov_stat",nbin_meas,0.5,nbin_meas+0.5,nbin_meas,0.5,nbin_meas+0.5);
-  for (Int_t i=0;i!=hdata_obsch_1->GetNbinsX()+1;i++){
+  for (Int_t i=0;i!=26;i++){
     double meas = hdata_obsch_1->GetBinContent(i+1);
     double pred = hmc_obsch_1->GetBinContent(i+1);
     double content;
@@ -110,7 +149,7 @@ void convert_wiener_numu_nue(){
     }
     hcov_stat->SetBinContent(i+1,i+1,content);
   }
-  for (Int_t i=0;i!=hdata_obsch_2->GetNbinsX()+1;i++){
+  for (Int_t i=0;i!=26;i++){
     double meas = hdata_obsch_2->GetBinContent(i+1);
     double pred = hmc_obsch_2->GetBinContent(i+1);
     double content;
@@ -123,9 +162,9 @@ void convert_wiener_numu_nue(){
     }else{
       content = 0;
     }
-    hcov_stat->SetBinContent(hdata_obsch_1->GetNbinsX()+1+i+1,hdata_obsch_1->GetNbinsX()+1+i+1,content);
+    hcov_stat->SetBinContent(26+i+1,26+i+1,content);
   }
-  for (Int_t i=0;i!=hdata_obsch_3->GetNbinsX()+1;i++){
+  for (Int_t i=0;i!=26;i++){
     double meas = hdata_obsch_3->GetBinContent(i+1);
     double pred = hmc_obsch_3->GetBinContent(i+1);
     double content;
@@ -138,9 +177,9 @@ void convert_wiener_numu_nue(){
     }else{
       content = 0;
     }
-    hcov_stat->SetBinContent(2*(hdata_obsch_1->GetNbinsX()+1)+i+1,2*(hdata_obsch_1->GetNbinsX()+1)+i+1,content);
+    hcov_stat->SetBinContent(2*26+i+1,2*26+i+1,content);
   }
-  for (Int_t i=0;i!=hdata_obsch_4->GetNbinsX()+1;i++){
+  for (Int_t i=0;i!=26;i++){
     double meas = hdata_obsch_4->GetBinContent(i+1);
     double pred = hmc_obsch_4->GetBinContent(i+1);
     double content;
@@ -153,8 +192,58 @@ void convert_wiener_numu_nue(){
     }else{
       content = 0;
     }
-    hcov_stat->SetBinContent(3*(hdata_obsch_1->GetNbinsX()+1)+i+1,3*(hdata_obsch_1->GetNbinsX()+1)+i+1,content);
+    hcov_stat->SetBinContent(3*26+i+1,3*26+i+1,content);
   }
+  for (Int_t i=0;i!=11;i++){
+    double meas = hdata_obsch_5->GetBinContent(i+1);
+    double pred = hmc_obsch_5->GetBinContent(i+1);
+    double content;
+    if (pred !=0){
+      if (meas == 0){
+	content = pred/2.;
+      }else{
+	content = 3./(1./meas+2./pred);
+      }
+    }else{
+      content = 0;
+    }
+    hcov_stat->SetBinContent(4*26+i+1,4*26+i+1,content);
+  }
+  for (Int_t i=0;i!=11;i++){
+    double meas = hdata_obsch_6->GetBinContent(i+1);
+    double pred = hmc_obsch_6->GetBinContent(i+1);
+    double content;
+    if (pred !=0){
+      if (meas == 0){
+	content = pred/2.;
+      }else{
+	content = 3./(1./meas+2./pred);
+      }
+    }else{
+      content = 0;
+    }
+    hcov_stat->SetBinContent(4*26+11+i+1,4*26+11+i+1,content);
+  }
+  for (Int_t i=0;i!=11;i++){
+    double meas = hdata_obsch_7->GetBinContent(i+1);
+    double pred = hmc_obsch_7->GetBinContent(i+1);
+    double content;
+    if (pred !=0){
+      if (meas == 0){
+	content = pred/2.;
+      }else{
+	content = 3./(1./meas+2./pred);
+      }
+    }else{
+      content = 0;
+    }
+    hcov_stat->SetBinContent(4*26+2*11+i+1,4*26+2*11+i+1,content);
+  }
+  
+  
+  
+  
+  
   //hcov_stat->Draw("COLZ");
   
   // additional uncertainty
@@ -198,30 +287,68 @@ void convert_wiener_numu_nue(){
     vec_nominal(noffset + i) = histo_6->GetBinContent(i+1);
   }
   noffset += histo_6->GetNbinsX()+1;
-  for (Int_t i=0;i!=histo_1->GetNbinsX()+1;i++){
+  for (Int_t i=0;i!=histo_7->GetNbinsX()+1;i++){
     vec_nominal(noffset + i) = histo_7->GetBinContent(i+1);
   }
-  noffset += histo_1->GetNbinsX()+1;
-  for (Int_t i=0;i!=histo_2->GetNbinsX()+1;i++){
+  noffset += histo_7->GetNbinsX()+1;
+  for (Int_t i=0;i!=histo_8->GetNbinsX()+1;i++){
     vec_nominal(noffset + i) = histo_8->GetBinContent(i+1);
   }
-  noffset += histo_2->GetNbinsX()+1;
-  for (Int_t i=0;i!=histo_3->GetNbinsX()+1;i++){
+  noffset += histo_8->GetNbinsX()+1;
+  for (Int_t i=0;i!=histo_9->GetNbinsX()+1;i++){
     vec_nominal(noffset + i) = histo_9->GetBinContent(i+1);
   }
-  noffset += histo_3->GetNbinsX()+1;
-  for (Int_t i=0;i!=histo_4->GetNbinsX()+1;i++){
+  noffset += histo_9->GetNbinsX()+1;
+  for (Int_t i=0;i!=histo_10->GetNbinsX()+1;i++){
     vec_nominal(noffset + i) = histo_10->GetBinContent(i+1);
   }
-  noffset += histo_4->GetNbinsX()+1;
-  for (Int_t i=0;i!=histo_5->GetNbinsX()+1;i++){
+  noffset += histo_10->GetNbinsX()+1;
+  for (Int_t i=0;i!=histo_11->GetNbinsX()+1;i++){
     vec_nominal(noffset + i) = histo_11->GetBinContent(i+1);
   }
-  noffset += histo_5->GetNbinsX()+1;
-  for (Int_t i=0;i!=histo_6->GetNbinsX()+1;i++){
+  noffset += histo_11->GetNbinsX()+1;
+  for (Int_t i=0;i!=histo_12->GetNbinsX()+1;i++){
     vec_nominal(noffset + i) = histo_12->GetBinContent(i+1);
   }
-  noffset += histo_6->GetNbinsX()+1;
+  noffset += histo_12->GetNbinsX()+1;
+  for (Int_t i=0;i!=histo_13->GetNbinsX()+1;i++){
+    vec_nominal(noffset + i) = histo_13->GetBinContent(i+1);
+  }
+  noffset += histo_13->GetNbinsX()+1;
+  for (Int_t i=0;i!=histo_14->GetNbinsX()+1;i++){
+    vec_nominal(noffset + i) = histo_14->GetBinContent(i+1);
+  }
+  noffset += histo_14->GetNbinsX()+1;
+  for (Int_t i=0;i!=histo_15->GetNbinsX()+1;i++){
+    vec_nominal(noffset + i) = histo_15->GetBinContent(i+1);
+  }
+  noffset += histo_15->GetNbinsX()+1;
+  for (Int_t i=0;i!=histo_16->GetNbinsX()+1;i++){
+    vec_nominal(noffset + i) = histo_16->GetBinContent(i+1);
+  }
+  noffset += histo_16->GetNbinsX()+1;
+  for (Int_t i=0;i!=histo_17->GetNbinsX()+1;i++){
+    vec_nominal(noffset + i) = histo_17->GetBinContent(i+1);
+  }
+  noffset += histo_17->GetNbinsX()+1;
+  for (Int_t i=0;i!=histo_18->GetNbinsX()+1;i++){
+    vec_nominal(noffset + i) = histo_18->GetBinContent(i+1);
+  }
+  noffset += histo_18->GetNbinsX()+1;
+  for (Int_t i=0;i!=histo_19->GetNbinsX()+1;i++){
+    vec_nominal(noffset + i) = histo_19->GetBinContent(i+1);
+  }
+  noffset += histo_19->GetNbinsX()+1;
+  for (Int_t i=0;i!=histo_20->GetNbinsX()+1;i++){
+    vec_nominal(noffset + i) = histo_20->GetBinContent(i+1);
+  }
+  noffset += histo_20->GetNbinsX()+1;
+  for (Int_t i=0;i!=histo_21->GetNbinsX()+1;i++){
+    vec_nominal(noffset + i) = histo_21->GetBinContent(i+1);
+  }
+  noffset += histo_21->GetNbinsX()+1;
+
+
   //vec_nominal.Draw();
   std::map<int, TString> map_det_str;
   map_det_str[1] = "./DetVar/cov_LYDown.root";
