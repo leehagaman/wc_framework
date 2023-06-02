@@ -67,7 +67,7 @@ LEEana::JointXsecHelper::JointXsecHelper(TString xs_ch_filename){
     if (xs_signal_ch_name == "End") break;
     fXsInfo.insert(std::make_pair(xs_signal_ch_name, xs_chwgt));
     
-    std::cout << "making JointXsecHelper, inserting " << xs_signal_ch_name << ", " << xs_chwgt << "\n";
+    //std::cout << "making JointXsecHelper, inserting " << xs_signal_ch_name << ", " << xs_chwgt << "\n";
     
     fXsNames.insert(xs_signal_ch_name);
   }
@@ -83,6 +83,9 @@ int LEEana::JointXsecHelper::chWgtbyHistName(TString histname) const {
 //-------------------------------------------------------------------------------
 
 LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString file_filename, TString rw_filename){
+  
+  //std::cout << "lhagaman debug, making new CovMatrix\n";  
+
   flag_osc = false;
 
   rw_type = 0;
@@ -148,6 +151,7 @@ LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString 
   }
   rw_info = std::make_tuple(flag_reweight, rw_info_vec); 
   
+  //std::cout << "lhagaman debug, making new CovMatrix, finished rw_info\n";  
 
 
   std::ifstream infile(cov_filename);
@@ -208,6 +212,9 @@ LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString 
     ch_no ++;
   }
 
+  
+  //std::cout << "lhagaman debug, making new CovMatrix, here 2\n";  
+
   int total_obs_bin = 0;
   int start_bin = 0;
   for (auto it = map_obsch_nbin.begin(); it!= map_obsch_nbin.end(); it++){
@@ -217,6 +224,7 @@ LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString 
     total_obs_bin += it->second;
     //std::cout << it->first << " " << it->second << std::endl;
   }
+  //std::cout << "lhagaman debug, making new CovMatrix, here 2.1\n";  
 
   int total_cov_bin = 0;
   start_bin = 0;
@@ -225,6 +233,7 @@ LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString 
     start_bin += it->second;
     total_cov_bin += it->second;
   }
+  //std::cout << "lhagaman debug, making new CovMatrix, here 2.2\n";  
  
   //std::cout << "cov matrix : " << total_cov_bin << ", " << total_obs_bin << std::endl;
   mat_collapse = new TMatrixD(total_cov_bin,total_obs_bin);
@@ -242,6 +251,7 @@ LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString 
       //std::cout << start_bin_cov + i << " " << start_bin_obs + i << std::endl;
     }
   }
+  //std::cout << "lhagaman debug, making new CovMatrix, here 2.3\n";  
 
   int filetype;
   //  TString name;
@@ -252,11 +262,16 @@ LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString 
   double norm_pot;
   int norm_period;
   //std::cout << cv_filename << std::endl;
+  //std::cout << "lhagaman debug, cv_filename: " << cv_filename << "\n";
   std::ifstream infile1(cv_filename);
+  //int num_lines_printed = 0;
   while(!infile1.eof()){
     infile1 >> filetype >> name >> period >> input_filename >> out_filename >> ext_pot >> file_no >> norm_pot >> norm_period;
     //std::cout << filetype << " " << out_filename << " " << file_no << std::endl;
-    
+    //if (num_lines_printed < 50) {
+    //  num_lines_printed += 1;
+    //  std::cout << "lhagaman debug, info: " << filetype << ", " << name << ", " << period << ", " << input_filename << ", " << out_filename << ", " << ext_pot << ", "  << file_no << ", " << norm_pot << ", " << norm_period << "\n";
+    //}
     if (filetype == -1) break;
     
     map_filetype_name[filetype] = name;
@@ -265,6 +280,7 @@ LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString 
     map_inputfile_info[input_filename] = std::make_tuple(filetype, period, out_filename, ext_pot, file_no, norm_pot, norm_period);
     map_fileno_period[file_no] = period;
   }
+  //std::cout << "lhagaman debug, making new CovMatrix, here 2.4\n";  
 
   std::ifstream infile2(file_filename);
   TString cut_name;
@@ -283,6 +299,7 @@ LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString 
     }
   }
 
+  //std::cout << "lhagaman debug, making new CovMatrix, here 3\n";  
 
   // sort out the histograms ...
   for (auto it = map_inputfile_info.begin(); it!= map_inputfile_info.end(); it++){
@@ -324,7 +341,7 @@ LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString 
 
 	map_pred_subch_histos[std::make_pair(name,add_cut)].insert(std::make_pair(histo_name, period));
 	map_pred_histo_histo_err2_lee[histo_name] = std::make_pair(histo_name1,lee_strength);
-	//std::cout << histo_name << " " << " " << histo_name1 << " " << nbin << " " << llimit << " " << hlimit << " " << var_name << " " << name << " " << add_cut << std::endl;
+	//std::cout << "lhagaman debug checking map_inputfile_histograms, " << histo_name << " " << " " << histo_name1 << " " << nbin << " " << llimit << " " << hlimit << " " << var_name << " " << name << " " << add_cut << std::endl;
 	
 	//	std::cout << filename << " " << add_cut << std::endl;
       }
@@ -371,6 +388,7 @@ LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString 
     }
   }
 
+  //std::cout << "lhagaman debug, making new CovMatrix, here 4\n";  
 
   // now form the final prediction map ...
   for (auto it = map_pred_obsch_covch.begin(); it!= map_pred_obsch_covch.end(); it++){
@@ -454,6 +472,9 @@ LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString 
 
   flag_spec_weights = false;
   //init_spec_weights(2800,1000,0.15); // binning 25 neutrino energy, 7 cos theta, 20, muon energy ...
+
+  
+  //std::cout << "lhagaman debug, making new CovMatrix, here 5\n";  
 }
 
 
@@ -643,6 +664,9 @@ double LEEana::CovMatrix::get_osc_weight(EvalInfo& eval, PFevalInfo& pfeval){
 
 void LEEana::CovMatrix::add_xs_config(TString xs_ch_filename , TString xs_real_bin_filename ){
 
+
+  //std::cout << "lhagaman debug, at start of master_cov_matrix.cxx, add_xs_config\n";
+
   xsechelper = JointXsecHelper(xs_ch_filename);
   xs_signal_ch_names = xsechelper.getXsNames();
   xs_signal_ch_info = xsechelper.getXsInfo();
@@ -657,7 +681,7 @@ void LEEana::CovMatrix::add_xs_config(TString xs_ch_filename , TString xs_real_b
 
 
 
-  std::cout << "size of xs_signal_ch_names: " << xs_signal_ch_names.size() << std::endl;
+  //std::cout << "size of xs_signal_ch_names: " << xs_signal_ch_names.size() << std::endl;
 
   std::ifstream infile2(xs_real_bin_filename);
   int bin_no;
@@ -1085,7 +1109,7 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
       hpred->Add(htemp);
       delete htemp;
       if (num != 1){
-	std::cout << "adding htemp1 to hsigma, which becomes vec_signal, num=" << num << ", total= " << htemp1->GetSum() << "\n";
+	//std::cout << "adding htemp1 to hsigma, which becomes vec_signal, num=" << num << ", total= " << htemp1->GetSum() << "\n";
 	hsigma->Add(htemp1);
 	hsigmabar->Add(htemp2);
 	hR->Add(htemp3);
@@ -1105,7 +1129,7 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
       // vec_signal, mat_R
       for (int k=0;k!=hsigma->GetNbinsX();k++){
 	int bin = std::round(hsigma->GetBinCenter(k+1));
-	std::cout << "adding to vec_signal, covch=" << covch << ", k=" << k << ", bincontent=" << hsigma->GetBinContent(k+1) << ", constant=" << map_xs_bin_constant[bin] << "\n";
+	//std::cout << "adding to vec_signal, covch=" << covch << ", k=" << k << ", bincontent=" << hsigma->GetBinContent(k+1) << ", constant=" << map_xs_bin_constant[bin] << "\n";
 	(*vec_signal)(k) += hsigma->GetBinContent(k+1)/map_xs_bin_constant[bin];
       }
       // mat_R
@@ -1123,7 +1147,8 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
 
 
   // protecting for 0/0 for empty vec_signal scaling of the response matrix
-  std::cout << "#1 Normalizing by row, element 5 = " << (*vec_signal)[5] << ", num elements: " << vec_signal->GetNoElements() << "\n";
+  //std::cout << "#1 Normalizing by row, element 5 = " << (*vec_signal)[5] << ", num elements: " << vec_signal->GetNoElements() << "\n";
+  std::cout << "#1 Normalizing by row\n";
   TVectorD tmp_vec_signal(vec_signal->GetNoElements());
   for (int tmp =0; tmp!= vec_signal->GetNoElements(); tmp++){
 	  if ((*vec_signal)[tmp]!=0)
@@ -1132,6 +1157,7 @@ void LEEana::CovMatrix::gen_xs_cov_matrix(int run, std::map<int, std::tuple<TH1F
 		  tmp_vec_signal[tmp] = 1;
   }
   mat_R->NormByRow(tmp_vec_signal, "D");
+  std::cout << "Finished #1 Normalizing by row\n";
 
   // mat_R->NormByRow(*vec_signal, "D");  
 
@@ -1325,6 +1351,9 @@ void LEEana::CovMatrix::fill_xs_histograms(int num, int tot_num, int acc_no, int
 	TH2F *h4 = std::get<3>(tmp_hists);
 	int num = std::get<4>(tmp_hists);
 	int flag_lee = std::get<2>(map_histoname_infos[histoname]);
+
+	//std::cout << "lhagaman debug, val = " << val << "\n";
+
 
    	if (std::isnan(rel_weight_diff) || std::isinf(rel_weight_diff)) continue;
 	// seems to have extremely small cv weight

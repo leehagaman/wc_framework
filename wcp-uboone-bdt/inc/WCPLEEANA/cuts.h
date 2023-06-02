@@ -262,6 +262,7 @@ double LEEana::get_weight(TString weight_name, EvalInfo& eval, PFevalInfo& pfeva
     return eval.weight_lee * pow( eval.weight_spline,2);
   }else if (weight_name == "add_weight"){//for systematics
     return addtl_weight;
+  //}else if () //remember to add square
   }else{
     std::cout <<"Unknown weights: " << weight_name << std::endl;
   }
@@ -279,7 +280,8 @@ double LEEana::get_truth_var(KineInfo& kine, EvalInfo& eval, PFevalInfo& pfeval,
 
 
 double LEEana::get_kine_var(KineInfo& kine, EvalInfo& eval, PFevalInfo& pfeval, TaggerInfo& tagger, bool flag_data , TString var_name){
-  
+ 
+  /*	
   // from Giacomo's code
   if (var_name == "truth_pi0_momentum"){
     double truth_pi0_momentum = -1000.;
@@ -292,10 +294,11 @@ double LEEana::get_kine_var(KineInfo& kine, EvalInfo& eval, PFevalInfo& pfeval, 
         double py = pfeval.truth_startMomentum[jth][1]*1000.; // MeV
         double pz = pfeval.truth_startMomentum[jth][2]*1000.; // MeV
         truth_pi0_momentum = sqrt(px*px + py*py + pz*pz);
+        return truth_pi0_momentum; // I believe this line is only used for plotting truth histograms, shouldn't matter for cross-section extraction
       }
     }
   }
-
+  */
 	
   //  if (var_name == "kine_reco_Enu"){
   //  return kine.kine_reco_Enu;
@@ -836,38 +839,43 @@ int get_Enu_bin (float Enu) {
 }
 
 int LEEana::get_xs_signal_no(int cut_file, std::map<TString, int>& map_cut_xs_bin, EvalInfo& eval, PFevalInfo& pfeval, TaggerInfo& tagger, KineInfo& kine){
+  //std::cout << "get_xs_signal_no running on data!\n";
+	
   for (auto it = map_cut_xs_bin.begin(); it != map_cut_xs_bin.end(); it++){
     TString cut_name = it->first;
     int number = it->second;
-    
+   
+
     double truth_pi0_momentum = -1000.;
     double truth_pi0_costheta = -1000.;
     double truth_pi0_energy = -1000.;
     int N_th_proton_35 = 0;
     int N_th_proton_50 = 0;
     int N_th_pi0 = 0;
-    for(int jth=0; jth<1000; jth++){
-      int mother = pfeval.truth_mother[jth];
-      if(mother > 0) continue;
-      int pdgcode = pfeval.truth_pdg[jth];
-      if(mother == 0 && abs(pdgcode)==111){
-        N_th_pi0++;
-        double px = pfeval.truth_startMomentum[jth][0]*1000.; // MeV
-        double py = pfeval.truth_startMomentum[jth][1]*1000.; // MeV
-        double pz = pfeval.truth_startMomentum[jth][2]*1000.; // MeV
-        truth_pi0_momentum = sqrt(px*px + py*py + pz*pz);
-        truth_pi0_costheta = pz / truth_pi0_momentum;
-      }
-      if(mother == 0 && abs(pdgcode)==2212){
-        double px = pfeval.truth_startMomentum[jth][0]*1000.; // MeV
-        double py = pfeval.truth_startMomentum[jth][1]*1000.; // MeV
-        double pz = pfeval.truth_startMomentum[jth][2]*1000.; // MeV
-        double p_KE = sqrt(px*px + py*py + pz*pz + 938.27*938.27) - 938.27;
-        //double p_KE = pfeval.truth_startMomentum[jth][3]*1000. - 938.27; // MeV
-        if(p_KE > 35.) N_th_proton_35++;
-        if(p_KE > 50.) N_th_proton_50++;
-      }
-    }
+    //if (!(flag_data)) { // only fill these variables if it's not data, that doesn't have PF info so it could cause problems? 
+    	for(int jth=0; jth<1000; jth++){
+    	  int mother = pfeval.truth_mother[jth];
+    	  if(mother > 0) continue;
+    	  int pdgcode = pfeval.truth_pdg[jth];
+    	  if(mother == 0 && abs(pdgcode)==111){
+    	    N_th_pi0++;
+    	    double px = pfeval.truth_startMomentum[jth][0]*1000.; // MeV
+    	    double py = pfeval.truth_startMomentum[jth][1]*1000.; // MeV
+    	    double pz = pfeval.truth_startMomentum[jth][2]*1000.; // MeV
+   	    truth_pi0_momentum = sqrt(px*px + py*py + pz*pz);
+	    truth_pi0_costheta = pz / truth_pi0_momentum;
+      	  }
+      	  if(mother == 0 && abs(pdgcode)==2212){
+      	    double px = pfeval.truth_startMomentum[jth][0]*1000.; // MeV
+      	    double py = pfeval.truth_startMomentum[jth][1]*1000.; // MeV
+      	    double pz = pfeval.truth_startMomentum[jth][2]*1000.; // MeV
+      	    double p_KE = sqrt(px*px + py*py + pz*pz + 938.27*938.27) - 938.27;
+      	    //double p_KE = pfeval.truth_startMomentum[jth][3]*1000. - 938.27; // MeV
+      	    if(p_KE > 35.) N_th_proton_35++;
+      	    if(p_KE > 50.) N_th_proton_50++;
+      	  }
+    	}
+    //}
 
 
 
@@ -1801,13 +1809,16 @@ int LEEana::get_xs_signal_no(int cut_file, std::map<TString, int>& map_cut_xs_bi
 // 1 means that it passes
 int LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, EvalInfo& eval, PFevalInfo& pfeval, TaggerInfo& tagger, KineInfo& kine){
 
+	//std::cout << "lhagaman debug, get_cut_pass start data\n";
+
     	double truth_pi0_momentum = -1000.;
     	double truth_pi0_costheta = -1000.;
     	double truth_pi0_energy = -1000.;
     	int N_th_proton_35 = 0;
     	int N_th_proton_50 = 0;
     	int N_th_pi0 = 0;
-    	for(int jth=0; jth<1000; jth++){
+    	if (!(flag_data)){
+	  for(int jth=0; jth<1000; jth++){
       		int mother = pfeval.truth_mother[jth];
       		if(mother > 0) continue;
       		int pdgcode = pfeval.truth_pdg[jth];
@@ -1828,7 +1839,8 @@ int LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, EvalI
         		if(p_KE > 35.) N_th_proton_35++;
         		if(p_KE > 50.) N_th_proton_50++;
       		}
-    	}
+    	  }
+	} 
 
 
 	//std::cout << "lhagaman debug, inside get_cut_pass\n";

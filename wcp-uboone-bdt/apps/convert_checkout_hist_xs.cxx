@@ -25,9 +25,14 @@ int main( int argc, char** argv )
   
   bool flag_data = true;
 
+  //std::cout << "lhagaman debug, about to read file\n";
+
   TFile *file = new TFile(input_filename,"READ");
   
+  //std::cout << "lhagaman debug, finished read file\n";
+  
   CovMatrix cov;
+  //std::cout << "lhagaman debug, about to add_xs_config\n";
   cov.add_xs_config();
   
   std::cout << "Xs mode: " << std::endl;
@@ -93,7 +98,7 @@ int main( int argc, char** argv )
     TString add_cut = std::get<6>(*it);
     TString weight = std::get<7>(*it);
     
-    //    std::cout << std::get<0>( *it)  << " " << std::get<1>(*it) << " " << std::get<4>(*it) << " " << std::get<5>(*it) << " " << std::get<6>(*it) << " " << std::get<7>(*it) << std::endl;
+    //std::cout << "lhagaman debug: " << std::get<0>( *it)  << " " << std::get<1>(*it) << " " << std::get<4>(*it) << " " << std::get<5>(*it) << " " << std::get<6>(*it) << " " << std::get<7>(*it) << std::endl;
     htemp = new TH1F(histoname, histoname, nbin, llimit, hlimit);
     num = 1;
    
@@ -302,12 +307,14 @@ int main( int argc, char** argv )
   std::cout << "Total entries: " << T_eval->GetEntries() << std::endl;
 
 
+  //std::cout << "lhagaman debug, printing size of nonzero all_histo_infos:\n"; 
   for (Int_t i=0;i!=T_eval->GetEntries();i++){
     T_BDTvars->GetEntry(i);
     T_eval->GetEntry(i);
     T_KINEvars->GetEntry(i);
     T_PFeval->GetEntry(i);
-    
+   
+    //if (all_histo_infos.size() > 0) std::cout << "size of all_histo_infos: " << all_histo_infos.size() << "\n"; 
     //    if (!is_preselection(eval)) continue;
 
     for (auto it = all_histo_infos.begin(); it != all_histo_infos.end(); it++){
@@ -324,6 +331,9 @@ int main( int argc, char** argv )
       double val = get_kine_var(kine, eval, pfeval, tagger, flag_data, var_name);
       // get pass or not
       int flag_passall = get_cut_pass(ch_name, add_cut, flag_data, eval, pfeval, tagger, kine);
+      
+      //std::cout << "lhagaman debug, val, flag_passall: " << val << ", " << flag_passall << "\n";
+      
       bool flag_pass = flag_passall > 0;
       int signal_bin = -1;
       if (cov.is_xs_chname(ch_name)){

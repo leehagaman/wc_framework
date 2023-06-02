@@ -806,8 +806,11 @@ std::pair<double, double> LEEana::CovMatrix::get_bayes_errors(double num){
 
 
 std::vector< std::tuple<TString, int, float, float, TString, TString, TString, TString > > LEEana::CovMatrix::get_histograms(TString filename, int flag){
+
+  //std::cout << "lhagaman debug, in get_histograms, filename flag: " << filename << ", " << flag << "\n";
   if (flag == 0){
     auto it = map_inputfile_histograms.find(filename);
+    //std::cout << "lhagaman debug, number of elements in iterator vector: " << (it->second).size()  << "\n";
     if (it != map_inputfile_histograms.end()){
       return it->second;
     }else{
