@@ -1,20 +1,114 @@
-/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_dirt_overlay_run1_PF.root			all
-/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_dirt_overlay_run2_PF.root			all
-/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_dirt_overlay_run3_PF.root			all
-/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_intrinsic_nue_overlay_run1_PF.root		all
-/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_intrinsic_nue_overlay_run2_PF.root		all
-/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_intrinsic_nue_overlay_run3_PF.root		all
-/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run1_PF.root			all
-/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run2_PF.root			all
-/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run3_PF.root			all
-/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_data_extbnb_run1_PF.root					all
-/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_data_extbnb_run2_PF.root					all
-/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_data_extbnb_run3_PF.root					all
-/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_data_bnb_run1_PF.root					all
-/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_data_bnb_run2_PF.root					all
-/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_data_bnb_run3_PF.root					all
-/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_fakedata_nuwro_run1.root					all
-/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_fakedata_nuwro_run2.root					all
-/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_fakedata_nuwro_run3.root					all
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_dirt_overlay_run1_PF.root		all
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_dirt_overlay_run2_PF.root		all
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_dirt_overlay_run3_PF.root		all
+
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_data_extbnb_run1_PF.root				all
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_data_extbnb_run2_PF.root				all
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_data_extbnb_run3_PF.root				all
+
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_data_bnb_run1_PF.root				all
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_data_bnb_run2_PF.root                            all
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_data_bnb_run3_PF.root                            all
+
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run1_PF.root				notTrueNumuCC1Pi0_outFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run1_PF.root				notTrueNumuCC1Pi0_NCDeltainFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run1_PF.root				notTrueNumuCC1Pi0_nueCCinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run1_PF.root				notTrueNumuCC1Pi0_NC1Pi0inFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run1_PF.root				notTrueNumuCC1Pi0_numuCC1Pi0inFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run1_PF.root				notTrueNumuCC1Pi0_numuCCotherinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run1_PF.root				notTrueNumuCC1Pi0_NCotherinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run1_PF.root				notTrueNumuCC1Pi0_badmatch
+
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run2_PF.root				outFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run2_PF.root				NCDeltainFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run2_PF.root				nueCCinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run2_PF.root				NC1Pi0inFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run2_PF.root				numuCC1Pi0inFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run2_PF.root				numuCCotherinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run2_PF.root				NCotherinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run2_PF.root				badmatch
+
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run3_PF.root				notTrueNumuCC1Pi0_outFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run3_PF.root				notTrueNumuCC1Pi0_NCDeltainFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run3_PF.root				notTrueNumuCC1Pi0_nueCCinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run3_PF.root				notTrueNumuCC1Pi0_NC1Pi0inFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run3_PF.root				notTrueNumuCC1Pi0_numuCC1Pi0inFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run3_PF.root				notTrueNumuCC1Pi0_numuCCotherinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run3_PF.root				notTrueNumuCC1Pi0_NCotherinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run3_PF.root				notTrueNumuCC1Pi0_badmatch
+
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nc_delta_overlay_run1_PF.root                            outFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nc_delta_overlay_run1_PF.root                            NCDeltainFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nc_delta_overlay_run1_PF.root                            nueCCinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nc_delta_overlay_run1_PF.root                            NC1Pi0inFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nc_delta_overlay_run1_PF.root                            numuCC1Pi0inFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nc_delta_overlay_run1_PF.root                            numuCCotherinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nc_delta_overlay_run1_PF.root                            NCotherinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nc_delta_overlay_run1_PF.root                            badmatch
+
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nc_delta_overlay_run2_PF.root                            outFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nc_delta_overlay_run2_PF.root                            NCDeltainFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nc_delta_overlay_run2_PF.root                            nueCCinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nc_delta_overlay_run2_PF.root                            NC1Pi0inFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nc_delta_overlay_run2_PF.root                            numuCC1Pi0inFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nc_delta_overlay_run2_PF.root                            numuCCotherinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nc_delta_overlay_run2_PF.root                            NCotherinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nc_delta_overlay_run2_PF.root                            badmatch
+
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nc_delta_overlay_run3_PF.root                            outFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nc_delta_overlay_run3_PF.root                            NCDeltainFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nc_delta_overlay_run3_PF.root                            nueCCinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nc_delta_overlay_run3_PF.root                            NC1Pi0inFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nc_delta_overlay_run3_PF.root                            numuCC1Pi0inFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nc_delta_overlay_run3_PF.root                            numuCCotherinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nc_delta_overlay_run3_PF.root                            NCotherinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_bnb_nc_delta_overlay_run3_PF.root                            badmatch
+
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_nc_pi0_overlay_run1_PF.root                            outFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_nc_pi0_overlay_run1_PF.root                            NCDeltainFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_nc_pi0_overlay_run1_PF.root                            nueCCinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_nc_pi0_overlay_run1_PF.root                            NC1Pi0inFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_nc_pi0_overlay_run1_PF.root                            numuCC1Pi0inFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_nc_pi0_overlay_run1_PF.root                            numuCCotherinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_nc_pi0_overlay_run1_PF.root                            NCotherinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_nc_pi0_overlay_run1_PF.root                            badmatch
+
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_nc_pi0_overlay_run2_PF.root                            outFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_nc_pi0_overlay_run2_PF.root                            NCDeltainFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_nc_pi0_overlay_run2_PF.root                            nueCCinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_nc_pi0_overlay_run2_PF.root                            NC1Pi0inFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_nc_pi0_overlay_run2_PF.root                            numuCC1Pi0inFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_nc_pi0_overlay_run2_PF.root                            numuCCotherinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_nc_pi0_overlay_run2_PF.root                            NCotherinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_nc_pi0_overlay_run2_PF.root                            badmatch
+
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_nc_pi0_overlay_run3_PF.root                            outFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_nc_pi0_overlay_run3_PF.root                            NCDeltainFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_nc_pi0_overlay_run3_PF.root                            nueCCinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_nc_pi0_overlay_run3_PF.root                            NC1Pi0inFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_nc_pi0_overlay_run3_PF.root                            numuCC1Pi0inFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_nc_pi0_overlay_run3_PF.root                            numuCCotherinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_nc_pi0_overlay_run3_PF.root                            NCotherinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_nc_pi0_overlay_run3_PF.root                            badmatch
+
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_cc_pi0_overlay_run1_PF.root                            trueNumuCC1Pi0_outFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_cc_pi0_overlay_run1_PF.root                            trueNumuCC1Pi0_NCDeltainFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_cc_pi0_overlay_run1_PF.root                            trueNumuCC1Pi0_nueCCinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_cc_pi0_overlay_run1_PF.root                            trueNumuCC1Pi0_NC1Pi0inFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_cc_pi0_overlay_run1_PF.root                            trueNumuCC1Pi0_numuCC1Pi0inFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_cc_pi0_overlay_run1_PF.root                            trueNumuCC1Pi0_numuCCotherinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_cc_pi0_overlay_run1_PF.root                            trueNumuCC1Pi0_NCotherinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_cc_pi0_overlay_run1_PF.root                            trueNumuCC1Pi0_badmatch
+
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_cc_pi0_overlay_run3_PF.root                            trueNumuCC1Pi0_outFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_cc_pi0_overlay_run3_PF.root                            trueNumuCC1Pi0_NCDeltainFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_cc_pi0_overlay_run3_PF.root                            trueNumuCC1Pi0_nueCCinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_cc_pi0_overlay_run3_PF.root                            trueNumuCC1Pi0_NC1Pi0inFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_cc_pi0_overlay_run3_PF.root                            trueNumuCC1Pi0_numuCC1Pi0inFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_cc_pi0_overlay_run3_PF.root                            trueNumuCC1Pi0_numuCCotherinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_cc_pi0_overlay_run3_PF.root                            trueNumuCC1Pi0_NCotherinFV
+/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_cc_pi0_overlay_run3_PF.root                            trueNumuCC1Pi0_badmatch
+
 end												end
 #file												#cut
+

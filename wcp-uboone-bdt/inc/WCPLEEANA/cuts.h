@@ -242,6 +242,10 @@ double LEEana::get_weight(TString weight_name, EvalInfo& eval, PFevalInfo& pfeva
     return addtl_weight*eval.weight_cv * eval.weight_spline;
   }else if (weight_name == "cv_spline_cv_spline"){
     return pow(addtl_weight*eval.weight_cv * eval.weight_spline,2);
+  }else if (weight_name == "cv_spline_ovlp"){
+    return addtl_weight*eval.weight_cv * eval.weight_spline * TODO ADD OVERLAP WEIGHT HERE;
+  }else if (weight_name == "cv_spline_ovlp_cv_spline_ovlp"){
+    return pow(addtl_weight*eval.weight_cv * eval.weight_spline * TODO ADD OVERLAP WEIGHT HERE,2);
   }else if (weight_name == "unity" || weight_name == "unity_unity"){
     return 1;
   }else if (weight_name == "lee_cv_spline"){
