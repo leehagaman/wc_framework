@@ -175,7 +175,7 @@ LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString 
   
   while(!infile.eof()){
     infile >> name >> var_name >> bin_num >> low_limit >> high_limit >> obs_no >> flag_xs_flux >> flag_det >> flag_add >> flag_same_mc_stat >> cov_sec_no >> file_no >> weight >> lee_strength;
-    // std::cout << name << " " << var_name << " " << low_limit << " " << bin_num << " " << file_no << std::endl;
+    //std::cout << "lhagaman debug printing !infile.eof stuff: " << name << " " << var_name << " " << low_limit << " " << bin_num << " " << file_no << std::endl;
     if (bin_num == -1) break;
     
     map_ch_hist[ch_no] = std::make_tuple(name, var_name, bin_num, low_limit, high_limit, weight, obs_no, lee_strength);
@@ -261,8 +261,7 @@ LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString 
   float ext_pot;
   double norm_pot;
   int norm_period;
-  //std::cout << cv_filename << std::endl;
-  //std::cout << "lhagaman debug, cv_filename: " << cv_filename << "\n";
+  //std::cout << "lhagaman debug, cv_input.txt filepath: " << cv_filename << "\n";
   std::ifstream infile1(cv_filename);
   //int num_lines_printed = 0;
   while(!infile1.eof()){
@@ -270,7 +269,7 @@ LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString 
     //std::cout << filetype << " " << out_filename << " " << file_no << std::endl;
     //if (num_lines_printed < 50) {
     //  num_lines_printed += 1;
-    //  std::cout << "lhagaman debug, info: " << filetype << ", " << name << ", " << period << ", " << input_filename << ", " << out_filename << ", " << ext_pot << ", "  << file_no << ", " << norm_pot << ", " << norm_period << "\n";
+    //std::cout << "lhagaman debug, cv_input.txt lines: " << filetype << ", " << name << ", " << period << ", " << input_filename << ", " << out_filename << ", " << ext_pot << ", "  << file_no << ", " << norm_pot << ", " << norm_period << "\n";
     //}
     if (filetype == -1) break;
     
@@ -281,6 +280,8 @@ LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString 
     map_fileno_period[file_no] = period;
   }
   //std::cout << "lhagaman debug, making new CovMatrix, here 2.4\n";  
+  
+  //std::cout << "lhagaman debug, file_ch.txt filepath: " << file_filename << "\n";
 
   std::ifstream infile2(file_filename);
   TString cut_name;
@@ -289,7 +290,7 @@ LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString 
     if (input_filename == "end") break;
     map_inputfile_cuts[input_filename].push_back(cut_name);
 
-    //    std::cout << input_filename << " " << cut_name << std::endl;
+    //std::cout << "lhagaman debug, file_ch.txt lines: " << input_filename << " " << cut_name << std::endl;
     
     // cut_name, input_filename --> filetype --> chs ...
     int filetype = map_inputfile_filetype[input_filename];
@@ -301,16 +302,23 @@ LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString 
 
   //std::cout << "lhagaman debug, making new CovMatrix, here 3\n";  
 
+
+
+
   // sort out the histograms ...
   for (auto it = map_inputfile_info.begin(); it!= map_inputfile_info.end(); it++){
     TString filename = it->first;
     int filetype = std::get<0>(it->second);
     int period = std::get<1>(it->second);
     int file_no = std::get<4>(it->second);
+    
+    
+    //std::cout << "lhagaman debug, info2: " << filename << ", " << filetype << ", " << period << ", " << file_no << "\n";
+    
     for (auto it1 = map_inputfile_cuts[filename].begin(); it1 != map_inputfile_cuts[filename].end(); it1++){
       TString add_cut = *it1;
 
-      //      std::cout << filename << " " << add_cut << std::endl;
+      //std::cout << "lhagaman debug, info3:         " << filename << " " << add_cut << std::endl;
       
       for (auto it2 = map_filetype_chs[filetype].begin(); it2 != map_filetype_chs[filetype].end(); it2++){
 	int ch = *it2;
@@ -1841,7 +1849,24 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
   T_eval->SetBranchStatus("truth_vtxY",1);
   T_eval->SetBranchStatus("truth_vtxZ",1);
   T_eval->SetBranchStatus("match_completeness_energy",1);
- 
+
+  bool flag_glee_merge = true;
+  if (flag_glee_merge) {
+      T_eval->SetBranchStatus("gl_sel_type",1);
+      T_eval->SetBranchStatus("gl_sel_type",1);
+      T_eval->SetBranchStatus("gl_true_Enu",1);
+      T_eval->SetBranchStatus("gl_true_Elep",1);
+      T_eval->SetBranchStatus("gl_reco_Eshower",1);
+      T_eval->SetBranchStatus("gl_simple_pot_weight",1);
+      T_eval->SetBranchStatus("gl_rem_orig_wc_pot_weight",1);
+      T_eval->SetBranchStatus("gl_new_pot_weight",1);
+      T_eval->SetBranchStatus("gl_overlap_weight",1);
+      T_eval->SetBranchStatus("gl_wc_total_overlapped_weight",1);
+  }
+  T_eval->SetBranchStatus("run",1);
+  T_eval->SetBranchStatus("subrun",1);
+  T_eval->SetBranchStatus("event",1);
+
   
   T_KINEvars->SetBranchStatus("*",0);
   T_KINEvars->SetBranchStatus("kine_reco_Enu",1);

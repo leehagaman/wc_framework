@@ -24,7 +24,7 @@ void LEEana::CovMatrix::gen_det_cov_matrix(int run, std::map<int, TH1F*>& map_co
     TString out_filename = std::get<2>(it->second);
     int file_no = std::get<4>(it->second);
     std::vector< std::tuple<TString,  int, float, float, TString, TString, TString, TString > > histo_infos = get_histograms(input_filename,0);
-    
+
     for (auto it1 = histo_infos.begin(); it1 != histo_infos.end(); it1++){
       int ch = map_name_ch[std::get<5>(*it1)];
       int obsch = get_obsch_name(std::get<5>(*it1));
@@ -509,7 +509,24 @@ void LEEana::CovMatrix::fill_det_histograms(std::map<TString, TH1D*> map_filenam
   // Xs related
   T_eval_cv->SetBranchStatus("match_completeness_energy",1);
   T_eval_cv->SetBranchStatus("truth_energyInside",1);
-  
+ 
+  bool flag_glee_merge = true;
+  if (flag_glee_merge) {
+      T_eval_cv->SetBranchStatus("gl_sel_type",1);
+      T_eval_cv->SetBranchStatus("gl_sel_type",1);
+      T_eval_cv->SetBranchStatus("gl_true_Enu",1);
+      T_eval_cv->SetBranchStatus("gl_true_Elep",1);
+      T_eval_cv->SetBranchStatus("gl_reco_Eshower",1);
+      T_eval_cv->SetBranchStatus("gl_simple_pot_weight",1);
+      T_eval_cv->SetBranchStatus("gl_rem_orig_wc_pot_weight",1);
+      T_eval_cv->SetBranchStatus("gl_new_pot_weight",1);
+      T_eval_cv->SetBranchStatus("gl_overlap_weight",1);
+      T_eval_cv->SetBranchStatus("gl_wc_total_overlapped_weight",1);
+  }
+  //T_eval_cv->SetBranchStatus("run",1); // already set above
+  //T_eval_cv->SetBranchStatus("subrun",1);
+  //T_eval_cv->SetBranchStatus("event",1); 
+
   
   T_KINEvars_cv->SetBranchStatus("*",0);
   T_KINEvars_cv->SetBranchStatus("kine_reco_Enu",1);
@@ -656,7 +673,24 @@ void LEEana::CovMatrix::fill_det_histograms(std::map<TString, TH1D*> map_filenam
    // Xs related
   T_eval_det->SetBranchStatus("match_completeness_energy",1);
   T_eval_det->SetBranchStatus("truth_energyInside",1);
-  
+ 
+  if (flag_glee_merge) {
+      T_eval_det->SetBranchStatus("gl_sel_type",1);
+      T_eval_det->SetBranchStatus("gl_sel_type",1);
+      T_eval_det->SetBranchStatus("gl_true_Enu",1);
+      T_eval_det->SetBranchStatus("gl_true_Elep",1);
+      T_eval_det->SetBranchStatus("gl_reco_Eshower",1);
+      T_eval_det->SetBranchStatus("gl_simple_pot_weight",1);
+      T_eval_det->SetBranchStatus("gl_rem_orig_wc_pot_weight",1);
+      T_eval_det->SetBranchStatus("gl_new_pot_weight",1);
+      T_eval_det->SetBranchStatus("gl_overlap_weight",1);
+      T_eval_det->SetBranchStatus("gl_wc_total_overlapped_weight",1);
+  }
+  //T_eval_det->SetBranchStatus("run",1);
+  //T_eval_det->SetBranchStatus("subrun",1);
+  //T_eval_det->SetBranchStatus("event",1); 
+
+
   T_KINEvars_det->SetBranchStatus("*",0);
   T_KINEvars_det->SetBranchStatus("kine_reco_Enu",1);
   T_KINEvars_det->SetBranchStatus("kine_energy_particle",1);
@@ -808,11 +842,28 @@ std::pair<double, double> LEEana::CovMatrix::get_bayes_errors(double num){
 std::vector< std::tuple<TString, int, float, float, TString, TString, TString, TString > > LEEana::CovMatrix::get_histograms(TString filename, int flag){
 
   //std::cout << "lhagaman debug, in get_histograms, filename flag: " << filename << ", " << flag << "\n";
+    
   if (flag == 0){
     auto it = map_inputfile_histograms.find(filename);
     //std::cout << "lhagaman debug, number of elements in iterator vector: " << (it->second).size()  << "\n";
-    if (it != map_inputfile_histograms.end()){
+    
+      /*std::cout << "printing it-second:\n";    
+      for (const auto& tuple : it->second) {
+        std::cout << std::get<0>(tuple) << ", ";   // Access the first element (TString)
+        std::cout << std::get<1>(tuple) << ", ";   // Access the second element (int)
+        std::cout << std::get<2>(tuple) << ", ";   // Access the third element (float)
+        std::cout << std::get<3>(tuple) << ", ";   // Access the fourth element (float)
+        std::cout << std::get<4>(tuple) << ", ";   // Access the fifth element (TString)
+        std::cout << std::get<5>(tuple) << ", ";   // Access the sixth element (TString)
+        std::cout << std::get<6>(tuple) << ", ";   // Access the seventh element (TString)
+        std::cout << std::get<7>(tuple) << "\n";   // Access the eighth element (TString)
+      }
+      std::cout << "end printing it-second\n";*/
+    
+    
+    if (it != map_inputfile_histograms.end()){  
       return it->second;
+    
     }else{
       std::vector< std::tuple<TString, int, float, float, TString, TString, TString, TString > > temp;
       return temp;

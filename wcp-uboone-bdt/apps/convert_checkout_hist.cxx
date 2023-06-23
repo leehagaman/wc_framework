@@ -86,8 +86,24 @@ int main( int argc, char** argv )
   std::vector< std::tuple<TString,  int, float, float, TString, TString, TString, TString > > all_histo_infos;
   
   std::vector< std::tuple<TString,  int, float, float, TString, TString, TString, TString > > histo_infos = cov.get_histograms(input_filename,0);
+  
+  /*std::cout << "return value of get_histograms:\n";
+    for (const auto& tuple : histo_infos) {
+        std::cout << std::get<0>(tuple) << ", ";   // Access the first element (TString)
+        std::cout << std::get<1>(tuple) << ", ";   // Access the second element (int)
+        std::cout << std::get<2>(tuple) << ", ";   // Access the third element (float)
+        std::cout << std::get<3>(tuple) << ", ";   // Access the fourth element (float)
+        std::cout << std::get<4>(tuple) << ", ";   // Access the fifth element (TString)
+        std::cout << std::get<5>(tuple) << ", ";   // Access the sixth element (TString)
+        std::cout << std::get<6>(tuple) << ", ";   // Access the seventh element (TString)
+        std::cout << std::get<7>(tuple) << "\n";   // Access the eighth element (TString)
+    }
+    std::cout << "end return value of get_histograms\n";
+  */
+  
+  
   std::copy(histo_infos.begin(), histo_infos.end(), std::back_inserter(all_histo_infos));
-  //  std::cout << "CV:" << std::endl;
+  //std::cout << "CV:" << std::endl;
   for (auto it = histo_infos.begin(); it != histo_infos.end(); it++){
     TString histoname = std::get<0>(*it);
     Int_t nbin = std::get<1>(*it);
@@ -98,7 +114,7 @@ int main( int argc, char** argv )
     TString add_cut = std::get<6>(*it);
     TString weight = std::get<7>(*it);
     
-    //    std::cout << std::get<0>( *it)  << " " << std::get<1>(*it) << " " << std::get<4>(*it) << " " << std::get<5>(*it) << " " << std::get<6>(*it) << " " << std::get<7>(*it) << std::endl;
+    //std::cout << std::get<0>( *it)  << " " << std::get<1>(*it) << " " << std::get<4>(*it) << " " << std::get<5>(*it) << " " << std::get<6>(*it) << " " << std::get<7>(*it) << std::endl;
     htemp = new TH1F(histoname, histoname, nbin, llimit, hlimit);
     map_histoname_hist[histoname] = htemp;
   }
@@ -210,6 +226,24 @@ int main( int argc, char** argv )
     T_eval->SetBranchStatus("match_completeness_energy",1);
   }
 
+
+  bool flag_glee_merge = true;
+  if (flag_glee_merge) {
+      T_eval->SetBranchStatus("gl_sel_type",1);
+      T_eval->SetBranchStatus("gl_sel_type",1);
+      T_eval->SetBranchStatus("gl_true_Enu",1);
+      T_eval->SetBranchStatus("gl_true_Elep",1);
+      T_eval->SetBranchStatus("gl_reco_Eshower",1);
+      T_eval->SetBranchStatus("gl_simple_pot_weight",1);
+      T_eval->SetBranchStatus("gl_rem_orig_wc_pot_weight",1);
+      T_eval->SetBranchStatus("gl_new_pot_weight",1);
+      T_eval->SetBranchStatus("gl_overlap_weight",1);
+      T_eval->SetBranchStatus("gl_wc_total_overlapped_weight",1);
+  }
+  T_eval->SetBranchStatus("run",1);
+  T_eval->SetBranchStatus("subrun",1);
+  T_eval->SetBranchStatus("event",1);
+
   
   T_KINEvars->SetBranchStatus("*",0);
   T_KINEvars->SetBranchStatus("kine_reco_Enu",1);
@@ -295,17 +329,18 @@ int main( int argc, char** argv )
 
   std::cout << "Total entries: " << T_eval->GetEntries() << std::endl;
 
-
   for (Int_t i=0;i!=T_eval->GetEntries();i++){
     T_BDTvars->GetEntry(i);
     T_eval->GetEntry(i);
     T_KINEvars->GetEntry(i);
     T_PFeval->GetEntry(i);
     
-    if (!is_preselection(eval)) continue;
+    // changing this, we need non-preselected events for gLEE selections
+    if (!(is_preselection(eval) || eval.gl_sel_type==1 || eval.gl_sel_type==2)) continue;
 
     for (auto it = all_histo_infos.begin(); it != all_histo_infos.end(); it++){
       TString histoname = std::get<0>(*it);
+      //std::cout << "histoname: " << histoname << "\n";
       Int_t nbin = std::get<1>(*it);
       float llimit = std::get<2>(*it);
       float hlimit = std::get<3>(*it);
@@ -318,7 +353,11 @@ int main( int argc, char** argv )
       // get kinematics variable ...
       double val = get_kine_var(kine, eval, pfeval, tagger, flag_data, var_name);
       // get pass or not
+      
+      //std::cout << "about to call get_cut_pass inside convert_checkout_hist\n";
+
       int flag_passall = get_cut_pass(ch_name, add_cut, flag_data, eval, pfeval, tagger, kine);
+      //std::cout << "done with call to get_cut_pass inside convert_checkout_hist\n";
       bool flag_pass = flag_passall > 0;
 
       double osc_weight = 1.0;

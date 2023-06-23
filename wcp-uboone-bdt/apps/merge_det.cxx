@@ -705,6 +705,24 @@ int main( int argc, char** argv )
   T_eval_cv->SetBranchStatus("match_completeness_energy",1);
   T_eval_cv->SetBranchStatus("truth_energyInside",1);
   
+  bool flag_glee_merge = true;
+  if (flag_glee_merge) {
+      T_eval_cv->SetBranchStatus("gl_sel_type",1);
+      T_eval_cv->SetBranchStatus("gl_sel_type",1);
+      T_eval_cv->SetBranchStatus("gl_true_Enu",1);
+      T_eval_cv->SetBranchStatus("gl_true_Elep",1);
+      T_eval_cv->SetBranchStatus("gl_reco_Eshower",1);
+      T_eval_cv->SetBranchStatus("gl_simple_pot_weight",1);
+      T_eval_cv->SetBranchStatus("gl_rem_orig_wc_pot_weight",1);
+      T_eval_cv->SetBranchStatus("gl_new_pot_weight",1);
+      T_eval_cv->SetBranchStatus("gl_overlap_weight",1);
+      T_eval_cv->SetBranchStatus("gl_wc_total_overlapped_weight",1);
+  }
+  T_eval_cv->SetBranchStatus("run",1);
+  T_eval_cv->SetBranchStatus("subrun",1);
+  T_eval_cv->SetBranchStatus("event",1); 
+
+
   
   T_KINEvars_cv->SetBranchStatus("*",0);
   T_KINEvars_cv->SetBranchStatus("kine_reco_Enu",1);
@@ -842,7 +860,25 @@ int main( int argc, char** argv )
   // Xs related
   T_eval_det->SetBranchStatus("match_completeness_energy",1);
   T_eval_det->SetBranchStatus("truth_energyInside",1);
-  
+
+  if (flag_glee_merge) {
+      T_eval_det->SetBranchStatus("gl_sel_type",1);
+      T_eval_det->SetBranchStatus("gl_sel_type",1);
+      T_eval_det->SetBranchStatus("gl_true_Enu",1);
+      T_eval_det->SetBranchStatus("gl_true_Elep",1);
+      T_eval_det->SetBranchStatus("gl_reco_Eshower",1);
+      T_eval_det->SetBranchStatus("gl_simple_pot_weight",1);
+      T_eval_det->SetBranchStatus("gl_rem_orig_wc_pot_weight",1);
+      T_eval_det->SetBranchStatus("gl_new_pot_weight",1);
+      T_eval_det->SetBranchStatus("gl_overlap_weight",1);
+      T_eval_det->SetBranchStatus("gl_wc_total_overlapped_weight",1);
+  }
+  T_eval_det->SetBranchStatus("run",1);
+  T_eval_det->SetBranchStatus("subrun",1);
+  T_eval_det->SetBranchStatus("event",1); 
+
+
+
   T_KINEvars_det->SetBranchStatus("*",0);
   T_KINEvars_det->SetBranchStatus("kine_reco_Enu",1);
   T_KINEvars_det->SetBranchStatus("kine_energy_particle",1);

@@ -539,7 +539,24 @@ void LEEana::CovMatrix::get_data_events_info(TString input_filename, std::map<TS
   T_eval->SetBranchStatus("stm_STM",1);
   T_eval->SetBranchStatus("stm_FullDead",1);
   T_eval->SetBranchStatus("stm_clusterlength",1);
-  
+ 
+  bool flag_glee_merge = true;
+  if (flag_glee_merge) {
+      T_eval->SetBranchStatus("gl_sel_type",1);
+      T_eval->SetBranchStatus("gl_sel_type",1);
+      T_eval->SetBranchStatus("gl_true_Enu",1);
+      T_eval->SetBranchStatus("gl_true_Elep",1);
+      T_eval->SetBranchStatus("gl_reco_Eshower",1);
+      T_eval->SetBranchStatus("gl_simple_pot_weight",1);
+      T_eval->SetBranchStatus("gl_rem_orig_wc_pot_weight",1);
+      T_eval->SetBranchStatus("gl_new_pot_weight",1);
+      T_eval->SetBranchStatus("gl_overlap_weight",1);
+      T_eval->SetBranchStatus("gl_wc_total_overlapped_weight",1);
+  }
+  T_eval->SetBranchStatus("run",1);
+  T_eval->SetBranchStatus("subrun",1);
+  T_eval->SetBranchStatus("event",1);
+
   
   //  T_eval->SetBranchStatus("weight_spline",1);
   // T_eval->SetBranchStatus("weight",1);

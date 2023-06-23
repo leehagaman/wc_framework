@@ -2349,7 +2349,7 @@ void TLee::Set_Collapse()
   }
   
   ////////////////////////////////////////
-/*
+
   for( auto it_sub=matrix_sub_flux_geant4_Xs_oldworld.begin(); it_sub!=matrix_sub_flux_geant4_Xs_oldworld.end(); it_sub++ ) {
     int index = it_sub->first;
     int rows = matrix_sub_flux_geant4_Xs_oldworld[index].GetNrows();
@@ -2366,7 +2366,7 @@ void TLee::Set_Collapse()
     matrix_sub_flux_geant4_Xs_newworld[index].ResizeTo(bins_newworld, bins_newworld);
     matrix_sub_flux_geant4_Xs_newworld[index] = matrix_transform_Lee_T * matrix_sub_flux_geant4_Xs_oldworld[index] * matrix_transform_Lee;
   }
-*/
+
   
   ////////////////////////////////////////
 

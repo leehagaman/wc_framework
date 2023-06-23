@@ -508,7 +508,25 @@ int main( int argc, char** argv )
    // Xs related
   T_eval->SetBranchStatus("match_completeness_energy",1);
   T_eval->SetBranchStatus("truth_energyInside",1);
-  
+ 
+  bool flag_glee_merge = true;
+  if (flag_glee_merge) {
+      T_eval->SetBranchStatus("gl_sel_type",1);
+      T_eval->SetBranchStatus("gl_sel_type",1);
+      T_eval->SetBranchStatus("gl_true_Enu",1);
+      T_eval->SetBranchStatus("gl_true_Elep",1);
+      T_eval->SetBranchStatus("gl_reco_Eshower",1);
+      T_eval->SetBranchStatus("gl_simple_pot_weight",1);
+      T_eval->SetBranchStatus("gl_rem_orig_wc_pot_weight",1);
+      T_eval->SetBranchStatus("gl_new_pot_weight",1);
+      T_eval->SetBranchStatus("gl_overlap_weight",1);
+      T_eval->SetBranchStatus("gl_wc_total_overlapped_weight",1);
+  }
+  T_eval->SetBranchStatus("run",1);
+  T_eval->SetBranchStatus("subrun",1);
+  T_eval->SetBranchStatus("event",1);
+
+
   T_KINEvars->SetBranchStatus("*",0);
   T_KINEvars->SetBranchStatus("kine_reco_Enu",1);
   T_KINEvars->SetBranchStatus("kine_energy_particle",1);
