@@ -2,7 +2,9 @@ void LEEana::CovMatrix::gen_pred_stat_cov_matrix(int run, std::map<int, TH1F*>& 
   // prepare the maps ... name --> no,  covch, lee
   std::map<TString, std::tuple<int, int, int, TString>> map_histoname_infos ; 
   std::map<int, TString> map_no_histoname;
-  
+
+  //std::cout << "lhagaman got here 0\n";
+
   
   int ncount = 0;
   for (auto it = map_inputfile_info.begin(); it != map_inputfile_info.end(); it++){
@@ -36,6 +38,8 @@ void LEEana::CovMatrix::gen_pred_stat_cov_matrix(int run, std::map<int, TH1F*>& 
   }
 
 
+  //std::cout << "lhagaman got here 0.1\n";
+
   // results ... filename --> re --> variable, weight, lee weight, 
   std::map<TString, std::vector<std::tuple<int, int, double, double, std::set<std::tuple<int, double, bool> > > > > map_all_events;
   std::map<TString, double> map_filename_pot;
@@ -47,6 +51,8 @@ void LEEana::CovMatrix::gen_pred_stat_cov_matrix(int run, std::map<int, TH1F*>& 
     TString input_filename = it->first;
     int filetype = std::get<0>(it->second);
     int period = std::get<1>(it->second);
+
+    //std::cout << "lhagaman debug " << input_filename << "\n";
     
     if (filetype == 5 || filetype == 15) {
       map_data_period_pot[period] = get_ext_pot(input_filename);
@@ -58,6 +64,7 @@ void LEEana::CovMatrix::gen_pred_stat_cov_matrix(int run, std::map<int, TH1F*>& 
     get_pred_events_info(input_filename, map_all_events, map_filename_pot, map_histoname_infos);      
   }
 
+  //std::cout << "lhagaman debug got here 1\n"; 
  
   fill_pred_stat_histograms(map_all_events, map_histoname_infos, map_no_histoname, map_histoname_hist);
   
@@ -131,9 +138,13 @@ void LEEana::CovMatrix::gen_pred_stat_cov_matrix(int run, std::map<int, TH1F*>& 
       htemp->SetBinContent(i+1, std::get<2>(it->second.at(i)) );
     }
     map_filename_histo[filename] = htemp;
-  } 
+  }
 
-  int nround = 5000;
+  std::cout << "about to start bootstrapping steps...\n"; 
+
+  //int nround = 5000;
+  int nround = 500; // lhagaman changed, 5000 seemed to take a long time
+  //int nround = 10; // lhagaman temp
   for (int qx = 0; qx != nround; qx++){
     if (qx % 500 ==0) std::cout << qx << std::endl;
     
@@ -362,6 +373,8 @@ void LEEana::CovMatrix::fill_pred_stat_histograms(std::map<TString, std::vector<
 
 void LEEana::CovMatrix::get_pred_events_info(TString input_filename, std::map<TString, std::vector< std::tuple<int, int, double, double, std::set<std::tuple<int, double, bool> > > > >&map_all_events, std::map<TString, double>& map_filename_pot, std::map<TString, std::tuple<int, int, int, TString>>& map_histoname_infos){
   TFile *file = new TFile(input_filename);
+  
+  //std::cout << "lhagaman debug, inside get_pred_events_info, 0\n";
 
   TTree *T_BDTvars = (TTree*)file->Get("wcpselection/T_BDTvars");
   TTree *T_eval = (TTree*)file->Get("wcpselection/T_eval");
@@ -633,6 +646,8 @@ void LEEana::CovMatrix::get_pred_events_info(TString input_filename, std::map<TS
   tagger.numu_cc_2_n_daughter_tracks = new std::vector<float>;
   tagger.numu_cc_2_n_daughter_all = new std::vector<float>;
 
+  //std::cout << "lhagaman debug, inside get_pred_events_info, 0.1\n";
+
   bool flag_data = true;
   if (T_eval->GetBranch("weight_cv")) flag_data = false;
   
@@ -661,6 +676,7 @@ void LEEana::CovMatrix::get_pred_events_info(TString input_filename, std::map<TS
   map_filename_pot[input_filename] = total_pot;
   //std::cout << input_filename << " " << total_pot << " " << std::endl;
 
+  //std::cout << "lhagaman debug, inside get_pred_events_info, 0.2\n";
 
   // fill histogram ...
   T_BDTvars->SetBranchStatus("*",0);
@@ -831,13 +847,20 @@ void LEEana::CovMatrix::get_pred_events_info(TString input_filename, std::map<TS
      T_PFeval->SetBranchStatus("truth_startMomentum",1); 
   }
 
+  //std::cout << "lhagaman debug, inside get_pred_events_info, 0.3\n";
+
   std::vector<std::tuple<int, int, double, double, std::set<std::tuple<int, double, bool> > > > vec_events;
 
   std::vector< std::tuple<TString,  int, float, float, TString, TString, TString, TString > > histo_infos = get_histograms(input_filename,0);
 
   vec_events.resize(T_eval->GetEntries());
+  
+  //std::cout << "lhagaman debug, inside get_pred_events_info, 0.3a, T_eval->GetEntries() = " << T_eval->GetEntries() << "\n";
 
   for (Int_t i=0;i!=T_eval->GetEntries();i++){
+    
+    //if (i%10000==0) std::cout << "lhagaman debug, i = " << i << "\n";
+    
     T_BDTvars->GetEntry(i);
     T_eval->GetEntry(i);
     T_KINEvars->GetEntry(i);
@@ -884,6 +907,7 @@ void LEEana::CovMatrix::get_pred_events_info(TString input_filename, std::map<TS
     }  
 }
 
+  //std::cout << "lhagaman debug, inside get_pred_events_info, 0.4\n";
   map_all_events[input_filename] = vec_events;
 
   delete file;

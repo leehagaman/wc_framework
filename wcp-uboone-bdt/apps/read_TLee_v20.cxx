@@ -303,6 +303,104 @@ int main(int argc, char** argv)
  
   // start lhagaman added
   
+  // start joint plots
+
+  int make_joint_constrained_plots = 1;
+
+  if (make_joint_constrained_plots) { // four signal channel bins constrained by four constraining channels
+
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+
+    // all four signal channels, no overflow bins
+    vector<int>vc_target_chs;
+    vc_target_chs.push_back(0);
+    vc_target_chs.push_back(2);
+    vc_target_chs.push_back(4);
+    vc_target_chs.push_back(6);
+    vector<int>vc_support_chs;
+    for (int i=8; i < 8 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 111001 );
+  }
+
+  int make_backwards_constraint = 0;
+
+  if (make_backwards_constraint) { // four constraining channels constrained by four signal bins
+    // just a hack to print the unconstrained constraining bins with errors
+
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+
+    // all four signal channels, no overflow bins
+    vector<int>vc_support_chs;
+    vc_support_chs.push_back(0);
+    vc_support_chs.push_back(2);
+    vc_support_chs.push_back(4);
+    vc_support_chs.push_back(6);
+    vector<int>vc_target_chs;
+    for (int i=8; i < 8 + 16 * 4; i++){
+      vc_target_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 111090 );
+  }
+
+  int make_nc_pi0_constrained_plots = 0;
+
+  if (make_nc_pi0_constrained_plots) { // to demonstrate the NC Pi0 reweighting uncertainty
+
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+
+    vector<int>vc_target_chs;
+    for (int i=8; i < 8 + 16 * 2; i++){
+      vc_target_chs.push_back(i);
+    }
+    vector<int>vc_support_chs;
+    for (int i=8 + 16 * 2; i < 8 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 111050 );
+  }
+
+  if (make_nc_pi0_constrained_plots) { // to demonstrate the NC Pi0 reweighting uncertainty
+
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+
+    vector<int>vc_target_chs;
+    for (int i=8; i < 8 + 16 * 1; i++){
+      vc_target_chs.push_back(i);
+    }
+    vector<int>vc_support_chs;
+    for (int i=8 + 16 * 2; i < 8 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 111051 );
+  }
+
+  if (make_nc_pi0_constrained_plots) { // to demonstrate the NC Pi0 reweighting uncertainty
+
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+
+    vector<int>vc_target_chs;
+    for (int i=8 + 16 * 1; i < 8 + 16 * 2; i++){
+      vc_target_chs.push_back(i);
+    }
+    vector<int>vc_support_chs;
+    for (int i=8 + 16 * 2; i < 8 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 111052 );
+  }
+
+
+
+
+  // end joint plots
+  
   int make_constrained_one_bin_plots = 0;
 
   if (make_constrained_one_bin_plots) {
@@ -728,8 +826,10 @@ int main(int argc, char** argv)
   
   
   //////////////////////////////////////////////////////////////////////////////////////// LEE strength fitting
+  
+  if( 0 ) {
 
-  if( config_Lee::flag_Lee_strength_data ) {
+    cout << "LEE strength fitting (saving delta chi2 vs LEE strength)\n";    
 
     Lee_test->Set_measured_data();// use the measured data as the input data for the fitting
 
@@ -757,7 +857,7 @@ int main(int argc, char** argv)
     double gmin = Lee_test->minimization_chi2;
     TGraph *gh_scan = new TGraph();
     double slow = 0;
-    double shgh = 3;
+    double shgh = 1500;
     int nscan = 100;
     double val_max_dchi2 = 0;
     double step = (shgh-slow)/nscan;
@@ -787,21 +887,65 @@ int main(int argc, char** argv)
     gh_scan->GetXaxis()->SetTitleOffset(1.2);
     gh_scan->GetYaxis()->SetRangeUser(0, val_max_dchi2*1.1);
    
-    TLine *lineA_dchi2at1 = new TLine(1, 0, 1, val_dchi2at1);    
-    lineA_dchi2at1->Draw("same");
-    lineA_dchi2at1->SetLineWidth(2);
-    lineA_dchi2at1->SetLineColor(kBlue);
-    lineA_dchi2at1->SetLineStyle(7);
-    TLine *lineB_dchi2at1 = new TLine(0, val_dchi2at1, 1, val_dchi2at1);    
-    lineB_dchi2at1->Draw("same");
-    lineB_dchi2at1->SetLineWidth(2);
-    lineB_dchi2at1->SetLineColor(kBlue);
-    lineB_dchi2at1->SetLineStyle(7);
-    auto *tt_text_data = new TLatex( 0.2, val_dchi2at1*1.1, Form("#Delta#chi^{2} = %4.3f", val_dchi2at1) );
-    tt_text_data->SetTextAlign(11); tt_text_data->SetTextSize(0.05); tt_text_data->SetTextAngle(0);
-    tt_text_data->SetTextFont(42);  tt_text_data->Draw(); tt_text_data->SetTextColor(kBlue);
+    canv_gh_scan->SaveAs("canv_gh_scan_delta_chi2.png");
+    
+  }
 
-    canv_gh_scan->SaveAs("canv_gh_scan.png");
+  if( 0 ) {
+
+    cout << "LEE strength fitting (saving chi2 vs LEE strength)\n";    
+
+    Lee_test->Set_measured_data();// use the measured data as the input data for the fitting
+
+    Lee_test->Minimization_Lee_strength_FullCov(2, 0);// (initial value, fix or not)
+
+    // cout<<endl<<TString::Format(" ---> Best fit of Lee strength: chi2 %6.3f, %5.3f +/- %5.3f",
+    //                             Lee_test->minimization_chi2,
+    //                             Lee_test->minimization_Lee_strength_val,
+    //                             Lee_test->minimization_Lee_strength_err
+    //                             )<<endl<<endl;
+
+    cout<<endl<<TString::Format(" ---> Best fit of Lee strength: %6.4f,  chi2 %6.3f",                          
+                                Lee_test->minimization_Lee_strength_val,
+				Lee_test->minimization_chi2
+                                )<<endl<<endl;    
+
+    cout<<endl<<TString::Format(" ---> Best fit of Lee strength: %6.4f +/- %6.4f,  chi2 %6.3f",                          
+                                Lee_test->minimization_Lee_strength_val,
+				Lee_test->minimization_Lee_strength_err,
+				Lee_test->minimization_chi2
+                                )<<endl<<endl;    
+
+    /////////////////////////////////////////
+    
+    double gmin = Lee_test->minimization_chi2;
+    TGraph *gh_scan = new TGraph();
+    double slow = 0;
+    double shgh = 1500;
+    int nscan = 100;
+    double val_max_chi2 = 0;
+    double step = (shgh-slow)/nscan;
+    for(int idx=1; idx<=nscan; idx++) {
+      if( idx%(max(1, nscan/10))==0 ) cout<<Form(" ---> scan %4.2f, %3d", idx*1./nscan, idx)<<endl;
+      double val_s = slow + (idx-1)*step;
+      Lee_test->Minimization_Lee_strength_FullCov(val_s, 1);// (initial value, fix or not)
+      double val_chi2 = Lee_test->minimization_chi2;
+      gh_scan->SetPoint( gh_scan->GetN(), val_s, val_chi2);
+      if( val_max_chi2<val_chi2) val_max_chi2 = val_chi2;
+    }
+    
+    TCanvas *canv_gh_scan = new TCanvas("canv_gh_scan", "canv_gh_scan", 900, 650);
+    canv_gh_scan->SetLeftMargin(0.15); canv_gh_scan->SetRightMargin(0.1);
+    canv_gh_scan->SetTopMargin(0.1); canv_gh_scan->SetBottomMargin(0.15);    
+    gh_scan->Draw("al");
+    gh_scan->GetXaxis()->SetTitle("LEE strength"); gh_scan->GetYaxis()->SetTitle("#chi^{2}");    
+    gh_scan->GetXaxis()->SetLabelSize(0.05); gh_scan->GetXaxis()->SetTitleSize(0.05);
+    gh_scan->GetYaxis()->SetLabelSize(0.05); gh_scan->GetYaxis()->SetTitleSize(0.05);
+    gh_scan->GetXaxis()->CenterTitle(); gh_scan->GetYaxis()->CenterTitle();
+    gh_scan->GetXaxis()->SetTitleOffset(1.2);
+    gh_scan->GetYaxis()->SetRangeUser(0, val_max_chi2*1.1);
+   
+    canv_gh_scan->SaveAs("canv_gh_scan_chi2.png");
     
   }
   
@@ -875,6 +1019,7 @@ int main(int argc, char** argv)
   /////////////////////////////////////////////////////// example: do fitting on Asimov sample
 
   if( 0 ) {
+    cout << "example: do fitting on Asimov sample\n";
     Lee_test->scaleF_Lee = 1;
     Lee_test->Set_Collapse();
   
@@ -892,35 +1037,47 @@ int main(int argc, char** argv)
   ////////////////////////////////////////////////////// example: do fitting on variation sample
 
   if( 0 ) {
+    cout << "example: do fitting on variation sample\n";
     Lee_test->scaleF_Lee = 1;
     Lee_test->Set_Collapse();
 
-    Lee_test->Set_Variations( 10 );// generate 10 variation samples
-    Lee_test->Set_toy_Variation( 4 );// use the 4th sample as the input data for the fitting
-    
-    Lee_test->Minimization_Lee_strength_FullCov(2, 0);// (initial value, fix or not)
+    cout << "matrix_pred_newworld(0,0): " << Lee_test->matrix_pred_newworld(0,0) << "\n";
 
-    cout<<endl<<TString::Format(" ---> Best fit of Lee strength: chi2 %6.2f, %5.2f +/- %5.2f",
-				Lee_test->minimization_chi2,
+    Lee_test->scaleF_Lee = 3.18;
+    Lee_test->Set_Collapse();
+
+    cout << "matrix_pred_newworld(0,0): " << Lee_test->matrix_pred_newworld(0,0) << "\n";
+    
+    
+    //Lee_test->Set_Variations( 10 );// generate 10 variation samples
+    //Lee_test->Set_toy_Variation( 4 );// use the 4th sample as the input data for the fitting
+    
+    //Lee_test->Minimization_Lee_strength_FullCov(2, 0);// (initial value, fix or not)
+
+    /*cout<<endl<<TString::Format(" ---> Best fit of Lee strength: chi2 %6.2f, %5.2f +/- %5.2f",
+    				Lee_test->minimization_chi2,
 				Lee_test->minimization_Lee_strength_val,
 				Lee_test->minimization_Lee_strength_err
-				)<<endl<<endl;
+				)<<endl<<endl;*/
   }
   
   //////////////////////////////////////////////////////////////////////////////////////// example: simple versus simple likelihood ratio test
 
   if( 0 ) {    
+    cout << "\nexample: simple versus simple likelihood ratio test\n";
     Lee_test->Set_measured_data();// use the measured data as the input data for the fitting
 
-    Lee_test->Minimization_Lee_strength_FullCov(1, 1);// (initial value, fix or not)
+    cout << "\ngetting LEE=3.18 chi^2:\n";
+    Lee_test->Minimization_Lee_strength_FullCov(3.18, 1);// (initial value, fix or not)
     double val_chi2_Lee = Lee_test->minimization_chi2;
 
-    Lee_test->Minimization_Lee_strength_FullCov(0, 1);// (initial value, fix or not)
+    cout << "\ngetting LEE=1.00 chi^2:\n";
+    Lee_test->Minimization_Lee_strength_FullCov(1, 1);// (initial value, fix or not)
     double val_chi2_sm = Lee_test->minimization_chi2;
 
     double val_dchi2 = val_chi2_Lee - val_chi2_sm;
     
-    cout<<endl<<TString::Format(" ---> dchi2 = Lee - sm: %7.4f, LEE %7.4f, sm %7.4f", val_dchi2, val_chi2_Lee, val_chi2_sm)<<endl<<endl;
+    cout<<endl<<TString::Format("\n ---> dchi2 = Lee - sm: %7.4f, LEE %7.4f, sm %7.4f", val_dchi2, val_chi2_Lee, val_chi2_sm)<<endl<<endl;
   }
 
   ////////////////////////////////////////////////////////// sensitivity calcualtion by FC
@@ -993,24 +1150,26 @@ int main(int argc, char** argv)
 
   if( 0 ) {
 
+    cout << "Asimov sensitivity, SM and LEE rejection:\n";
+
     ///////////////////////// reject SM
     
-    Lee_test->scaleF_Lee = 1;
+    Lee_test->scaleF_Lee = 3.18;
     Lee_test->Set_Collapse();
     
     Lee_test->Set_toy_Asimov();// use the Asimov sample as the input data for the fitting
-    Lee_test->Minimization_Lee_strength_FullCov(0, 1);// (initial value, fix or not)
+    Lee_test->Minimization_Lee_strength_FullCov(1, 1);// (initial value, fix or not)
 
     double sigma_SM = sqrt( Lee_test->minimization_chi2 );
     cout<<TString::Format(" ---> Excluding  SM: %5.2f sigma", sigma_SM)<<endl;
     
     ///////////////////////// reject 1*LEE
     
-    Lee_test->scaleF_Lee = 0;
+    Lee_test->scaleF_Lee = 1;
     Lee_test->Set_Collapse();
     
     Lee_test->Set_toy_Asimov();// use the Asimov sample as the input data for the fitting
-    Lee_test->Minimization_Lee_strength_FullCov(1, 1);// (initial value, fix or not)
+    Lee_test->Minimization_Lee_strength_FullCov(3.18, 1);// (initial value, fix or not)
 
     double sigma_Lee = sqrt( Lee_test->minimization_chi2 );
     cout<<TString::Format(" ---> Excluding LEE: %5.2f sigma", sigma_Lee)<<endl<<endl;;
@@ -1020,30 +1179,80 @@ int main(int argc, char** argv)
   ////////////////////////////////////////////////  Feldman-Cousins approach --> heavy computation cost
 
   if( 0 ) {
+
+    cout << "making chi2 distribution for FC fitting:\n";
+
     
     /////////////// range: [low, hgh] with step
     
     double Lee_true_low = 0;
-    double Lee_true_hgh = 3;
-    double Lee_step     = 0.02;
+    double Lee_true_hgh = 15;
+    double Lee_step     = 0.15;
     
     /////////////// dchi2 distribution 
     
-    // int num_toy = 2;    
-    // Lee_test->Exe_Feldman_Cousins(Lee_true_low, Lee_true_hgh, Lee_step, num_toy, ifile);
+    // used 100 * 10 for joint, ~10 hours
+    // using 10*10 for wc_only, hopefully ~1 hour
+    int num_toy = 10;    
+    Lee_test->Exe_Feldman_Cousins(Lee_true_low, Lee_true_hgh, Lee_step, num_toy, ifile);
 
-    /////////////// dchi2 of Asimov sample
+  }
+
+  if( 0 ) { // Asimov in data-like format
+      
+      cout << "Asimov in data-like format\n";
+      
+      double Lee_true_low = 0;
+      double Lee_true_hgh = 15;
+      double Lee_step     = 0.15;
+
+      Lee_test->scaleF_Lee = 1;
+      Lee_test->Set_Collapse();
+
+      Lee_test->Set_toy_Asimov();// use the Asimov sample as the input data for the fitting
+
+
+      TMatrixD matrix_data_input_fc = Lee_test->matrix_pred_newworld;
+      Lee_test->Exe_Fiedman_Cousins_Data( matrix_data_input_fc, Lee_true_low, Lee_true_hgh, Lee_step );
+  }
+
+  if( 0 ) {
+
+    cout << "getting Asimov chi2 for FC result:\n";
+
     
+    /////////////// range: [low, hgh] with step
+    
+    double Lee_true_low = 0;
+    double Lee_true_hgh = 15;
+    double Lee_step     = 0.15;
+    
+  
     Lee_test->Exe_Fledman_Cousins_Asimov(Lee_true_low, Lee_true_hgh, Lee_step);
+  
+  }
 
+  if( 0 ) {
+
+    cout << "getting data chi2 for FC result:\n";
+
+    
+    /////////////// range: [low, hgh] with step
+    
+    double Lee_true_low = 0;
+    double Lee_true_hgh = 15;
+    double Lee_step     = 0.15;
+    
+  
     /////////////// dchi2 of measured data
-    /*
+    
     Lee_test->Set_measured_data();    
     TMatrixD matrix_data_input_fc = Lee_test->matrix_data_newworld;    
     Lee_test->Exe_Fiedman_Cousins_Data( matrix_data_input_fc, Lee_true_low, Lee_true_hgh, Lee_step );
-    */
+    
   }
-  
+
+
   ////////////////////////////////////////////////////////////////////////////////////////
 
   cout<<endl;

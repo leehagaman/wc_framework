@@ -789,6 +789,13 @@ int main( int argc, char** argv )
     T_PFeval_cv->SetBranchStatus("mcflux_ndecay",1);
   }
 
+  if (T_PFeval_cv->GetBranch("truth_pdg")){
+      T_PFeval_cv->SetBranchStatus("truth_Ntrack",1);
+      T_PFeval_cv->SetBranchStatus("truth_pdg",1);
+      T_PFeval_cv->SetBranchStatus("truth_mother",1);
+      T_PFeval_cv->SetBranchStatus("truth_startMomentum",1);
+  }
+
 
   T_BDTvars_det->SetBranchStatus("*",0);
   T_BDTvars_det->SetBranchStatus("numu_cc_flag",1);
@@ -934,6 +941,12 @@ int main( int argc, char** argv )
     T_PFeval_det->SetBranchStatus("mcflux_ndecay",1);
   }
 
+  if (T_PFeval_det->GetBranch("truth_pdg")){
+      T_PFeval_det->SetBranchStatus("truth_Ntrack",1);
+      T_PFeval_det->SetBranchStatus("truth_pdg",1);
+      T_PFeval_det->SetBranchStatus("truth_mother",1);
+      T_PFeval_det->SetBranchStatus("truth_startMomentum",1);
+  }
   
   
 

@@ -113,7 +113,7 @@ namespace config_Lee
   
   ////////// goodness of fit
   
-  double Lee_strength_for_GoF         = 1;
+  double Lee_strength_for_GoF         = 15;
 
   bool flag_GoF_output2file_default_0 = 1;
 
@@ -130,7 +130,7 @@ namespace config_Lee
 
   ////////// Lee strength fitting -- data
 
-  bool flag_Lee_strength_data = 0;
+  bool flag_Lee_strength_data = 1;
 
   ////////// MicroBooNE suggested
 

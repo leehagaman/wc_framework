@@ -115,6 +115,13 @@ public:
   TMatrixD matrix_input_cov_reweight;
   TMatrixD matrix_input_cov_reweight_cor;
 
+  // lhagaman 2023_07_02, added for stat correlations
+  TMatrixD matrix_data_MCstat_correlation; //added
+  TMatrixD matrix_pred_MCstat_correlation; //added
+  TMatrixD matrix_absolute_data_stat_cov;//added
+  TMatrixD matrix_absolute_pred_stat_cov;//added 
+  
+  
   TMatrixD matrix_input_cov_flux;
   TMatrixD matrix_input_cov_Xs;
   map<int, TMatrixD>matrix_input_cov_detector_sub;

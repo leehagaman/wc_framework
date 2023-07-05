@@ -250,6 +250,10 @@ double LEEana::get_weight(TString weight_name, EvalInfo& eval, PFevalInfo& pfeva
     return pow(addtl_weight*eval.weight_cv * eval.weight_spline * eval.gl_overlap_weight,2);
   }else if (weight_name == "unity" || weight_name == "unity_unity"){
     return 1;
+  }else if (weight_name == "unity_ovlp"){
+    return 1 * eval.gl_overlap_weight;
+  }else if (weight_name == "unity_ovlp_unity_ovlp"){
+    return pow(1 * eval.gl_overlap_weight,2);
   }else if (weight_name == "lee_cv_spline"){
     return (eval.weight_lee * addtl_weight*eval.weight_cv * eval.weight_spline);
   }else if (weight_name == "lee_cv_spline_lee_cv_spline"){
@@ -1984,11 +1988,13 @@ int LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, EvalI
 
 	if (eval.match_completeness_energy>0.1*eval.truth_energyInside && eval.truth_vtxInside==1 && eval.truth_isCC==0 && pfeval.truth_NprimPio==1 && pfeval.truth_NCDelta==0) map_cuts_flag["NC1Pi0inFV"] = true;
 	else map_cuts_flag["NC1Pi0inFV"] = false;
-
-	if (eval.match_completeness_energy>0.1*eval.truth_energyInside && eval.truth_vtxInside==1 && eval.truth_isCC==1 && abs(eval.truth_nuPdg)==14 && pfeval.truth_NprimPio==1 && pfeval.truth_NCDelta==0) map_cuts_flag["numuCC1Pi0inFV"] = true;
+        
+	// lhagaman 2023_06_26, deleted truth_NCDelta cut here, somehow there are CC truth_NCDelta events, variable must be meaningless in this case
+	// cutting it out would result in missing background
+	if (eval.match_completeness_energy>0.1*eval.truth_energyInside && eval.truth_vtxInside==1 && eval.truth_isCC==1 && abs(eval.truth_nuPdg)==14 && pfeval.truth_NprimPio==1) map_cuts_flag["numuCC1Pi0inFV"] = true;
 	else map_cuts_flag["numuCC1Pi0inFV"] = false;
 
-	if (eval.match_completeness_energy>0.1*eval.truth_energyInside && eval.truth_vtxInside==1 && eval.truth_isCC==1 && abs(eval.truth_nuPdg)==14 && pfeval.truth_NprimPio!=1 && pfeval.truth_NCDelta==0) map_cuts_flag["numuCCotherinFV"] = true;
+	if (eval.match_completeness_energy>0.1*eval.truth_energyInside && eval.truth_vtxInside==1 && eval.truth_isCC==1 && abs(eval.truth_nuPdg)==14 && pfeval.truth_NprimPio!=1) map_cuts_flag["numuCCotherinFV"] = true;
 	else map_cuts_flag["numuCCotherinFV"] = false;
 
 	if (eval.match_completeness_energy>0.1*eval.truth_energyInside && eval.truth_vtxInside==1 && eval.truth_isCC==0 && pfeval.truth_NprimPio!=1 && pfeval.truth_NCDelta==0) map_cuts_flag["NCotherinFV"] = true;
@@ -4650,12 +4656,12 @@ bool LEEana::is_NCdelta_sel(TaggerInfo& tagger_info, PFevalInfo& pfeval){ // inc
   if (tagger_info.nc_delta_score > 2.61 && tagger_info.numu_cc_flag >=0 && pfeval.reco_showerKE > 0 && pfeval.reco_showerKE <= 1500) flag = true;
   return flag;
 }
-bool LEEana::is_glee_1g1p_sel(EvalInfo& eval){ // includes all cuts except FC
+bool LEEana::is_glee_1g1p_sel(EvalInfo& eval){
   bool flag = false;
   if (eval.gl_sel_type == 1 && eval.gl_reco_Eshower > 0 && eval.gl_reco_Eshower <= 600) flag = true;
   return flag;
 }
-bool LEEana::is_glee_1g0p_sel(EvalInfo& eval){ // includes all cuts except FC
+bool LEEana::is_glee_1g0p_sel(EvalInfo& eval){
   bool flag = false;
   if (eval.gl_sel_type == 2 && eval.gl_reco_Eshower > 100 && eval.gl_reco_Eshower <= 700) flag = true;
   return flag;

@@ -315,8 +315,8 @@ int main(int argc, char** argv)
 	//////////////////////////////////////////////////////////////////////////////////////// Asimov/Data fitting
 
 	if( 0 ) {
-		Lee_test->scaleF_Lee_Np = 1;
-		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->scaleF_Lee_Np = 15;
+		Lee_test->scaleF_Lee_0p = 15;
 		Lee_test->Set_Collapse();
 
 		///////// Four options:
@@ -328,8 +328,8 @@ int main(int argc, char** argv)
 
 		Lee_test->Set_toy_Asimov();
 		
-		Lee_test->scaleF_Lee_Np = 0;
-                Lee_test->scaleF_Lee_0p = 14;
+		Lee_test->scaleF_Lee_Np = 1;
+                Lee_test->scaleF_Lee_0p = 1;
                 Lee_test->Set_Collapse();
 
 		Lee_test->Minimization_Lee_Np_0p_strength_FullCov(4, 4, "");
@@ -387,7 +387,7 @@ int main(int argc, char** argv)
 		Lee_test->Set_toy_Asimov();
 
 		// set the prediction to correspond to a grid value
-		double pars_2d[2] = {4.0803701, 8946089.3};
+		double pars_2d[2] = {15, 15};
 		//double pars_2d[2] = {0.4964186, 85.360665};
 		double chi2_var = Lee_test->FCN_Np_0p( pars_2d );// calcualte the chi2 value at the point
 		cout<<" ---> chi2_var "<<chi2_var<<endl;
@@ -445,9 +445,11 @@ int main(int argc, char** argv)
 
     
     ///////
-    int Ntoys = 100; // number of toy-MC used to generate the distribution_dchi2
+    int Ntoys = 10; // number of toy-MC used to generate the distribution_dchi2
     // changed this from 100 to 1 since it shouldn't matter for Asimov
-    
+    // changed this from 100 to 10 to speed it up, same number of toys as for 1D initially
+
+
     if (ifile==0 or ifile==-1) { // run it with data or Asimov
       Ntoys = 1;
     }

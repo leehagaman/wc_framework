@@ -303,7 +303,7 @@ double TLee::FCN_Np_0p(const double *par)
 
   TMatrixD matrix_cov_syst = matrix_absolute_cov_newworld;
 
-  TMatrixD matrix_cov_syst_temp = matrix_cov_syst;
+
 
   for(int ibin=0; ibin<matrix_cov_syst.GetNrows(); ibin++) {
     double val_stat_cov = 0;
@@ -324,6 +324,7 @@ double TLee::FCN_Np_0p(const double *par)
     matrix_cov_syst(ibin, ibin) += val_stat_cov;
   }
 
+  /*
   // calculate sum of all matrix elements
   double sum = 0;
   for (int i=0; i<matrix_cov_syst.GetNrows(); i++){
@@ -334,6 +335,10 @@ double TLee::FCN_Np_0p(const double *par)
   }
 
   std::cout << "sum of all covariance matrix entries: " << sum << "\n";
+  */
+
+  // to be used for custom chi2 calculation below, already has stat uncertainties
+  TMatrixD matrix_cov_syst_temp = matrix_cov_syst;
 
 
   /////////
@@ -368,6 +373,104 @@ double TLee::FCN_Np_0p(const double *par)
       //cout<<" ---> Test "<<idx<<"\t"<<jdx<<"\t"<<cv_i<<"\t"<<cv_j<<"\t"<<cov_ij<<endl;
     }
   }
+
+  // start lhagaman custom chi2 calculation
+  
+  bool use_custom_chi2 = true;
+
+      if (use_custom_chi2) {
+
+              bool two_bin_test = false;
+
+              bool all_channels = true;
+              bool just_wc = false;
+              bool just_glee = false;
+
+              TMatrixD matrix_cov_total_user = matrix_cov_syst_temp;
+
+              // these are labeled as target and constraining, but actually we're doing a joint chi2 and not a constraint in this code
+              int ind_tar_start = 0;
+              int ind_tar_end = 0; // up to but not including
+              int ind_constr_start = 0;
+              int ind_constr_end = 0;
+
+              if (two_bin_test) { // wc 1gNp and wc 1gNp overflow (empty)
+                      ind_tar_start = 0;
+                      ind_tar_end = 0 + 1; // two bins, four channels
+                      ind_constr_start = 1;
+                      ind_constr_end = 2;
+              }
+
+              if (all_channels) {
+                      ind_tar_start = 0;
+                      ind_tar_end = 0 + 2*4; // two bins, four channels
+                      ind_constr_start = 2*4;
+                      ind_constr_end = 2*4 + 4*16;
+              }
+
+              if (just_wc) {
+                      ind_tar_start = 0;
+                      ind_tar_end = 0 + 2*2;
+                      ind_constr_start = 2*4;
+                      ind_constr_end = 2*4 + 4*16;
+              }
+
+              if (just_glee) {
+                      ind_tar_start = 2*2;
+                      ind_tar_end = 2*2 + 2*2;
+                      ind_constr_start = 2*4;
+                      ind_constr_end = 2*4 + 4*16;
+              }
+
+              TMatrixD user_matrix_pred;
+              TMatrixD user_matrix_data;
+
+              int tar_bins = ind_tar_end - ind_tar_start;
+              int constr_bins = ind_constr_end - ind_constr_start;
+
+              user_matrix_pred.Clear();
+              user_matrix_pred.ResizeTo(1, tar_bins + constr_bins);
+              TMatrixDSub(user_matrix_pred, 0, 0, 0, tar_bins - 1) = matrix_pred.GetSub(0, 0, ind_tar_start, ind_tar_end - 1);
+              TMatrixDSub(user_matrix_pred, 0, 0, tar_bins, tar_bins + constr_bins - 1) = matrix_pred.GetSub(0, 0, ind_constr_start, ind_constr_end - 1);
+
+              user_matrix_data.Clear();
+              user_matrix_data.ResizeTo(1, tar_bins + constr_bins);
+              TMatrixDSub(user_matrix_data, 0, 0, 0, tar_bins - 1) = matrix_meas.GetSub(0, 0, ind_tar_start, ind_tar_end - 1);
+              TMatrixDSub(user_matrix_data, 0, 0, tar_bins, tar_bins + constr_bins - 1) = matrix_meas.GetSub(0, 0, ind_constr_start, ind_constr_end - 1);
+
+
+              TMatrixD user_matrix_cov(tar_bins + constr_bins, tar_bins + constr_bins);
+              TMatrixDSub(user_matrix_cov, 0, tar_bins - 1, 0, tar_bins - 1) = matrix_cov_total_user.GetSub(ind_tar_start, ind_tar_end - 1, ind_tar_start, ind_tar_end - 1);
+              TMatrixDSub(user_matrix_cov, 0, tar_bins - 1, tar_bins, tar_bins + constr_bins - 1) = matrix_cov_total_user.GetSub(ind_tar_start, ind_tar_end - 1, ind_constr_start, ind_constr_end - 1);
+              TMatrixDSub(user_matrix_cov, tar_bins, tar_bins + constr_bins - 1, 0, tar_bins - 1) = matrix_cov_total_user.GetSub(ind_constr_start, ind_constr_end - 1, ind_tar_start, ind_tar_end - 1);
+              TMatrixDSub(user_matrix_cov, tar_bins, tar_bins + constr_bins - 1, tar_bins, tar_bins + constr_bins - 1) = matrix_cov_total_user.GetSub(ind_constr_start, ind_constr_end - 1, ind_constr_start, ind_constr_end - 1);
+
+              TMatrixD user_matrix_cov_inv = user_matrix_cov;
+              user_matrix_cov_inv.Invert();
+
+              TMatrixD matrix_delta_user = user_matrix_pred - user_matrix_data;
+              TMatrixD matrix_delta_user_t = matrix_delta_user;
+              matrix_delta_user_t.T();
+
+              //cout << "user_matrix_data: " << user_matrix_data(0, 0) << " " << user_matrix_data(0, 1) << "\n";
+              //cout << "user_matrix_pred: " << user_matrix_pred(0, 0) << " " << user_matrix_pred(0, 1) << "\n";
+              //cout << "matrix_delta_user: " << matrix_delta_user(0, 0) << " " << matrix_delta_user(0, 1) << "\n";
+              //cout << "user_matrix_cov: " << user_matrix_cov(0, 0) << " " << user_matrix_cov(0, 1) << " " << user_matrix_cov_inv(1, 0) << " " << user_matrix_cov(1, 1) << "\n";
+              //cout << "user_matrix_cov_inv: " << user_matrix_cov_inv(0, 0) << " " << user_matrix_cov_inv(0, 1) << " " << user_matrix_cov_inv(1, 0) << " " << user_matrix_cov_inv(1, 1) << "\n";
+
+              //cout << "shapes being multiplied: (" << matrix_delta_user_t.GetNrows() << "," << matrix_delta_user_t.GetNcols() << ") (" << user_matrix_cov_inv.GetNrows() << "," << user_matrix_cov_inv.GetNcols() << ") (" << matrix_delta_user.GetNrows() << "," << matrix_delta_user.GetNcols() << ")\n";
+
+              double chi2_user = (matrix_delta_user * user_matrix_cov_inv * matrix_delta_user_t)(0,0);
+
+              //cout << "chi2_user: " << chi2_user << "\n";
+
+              chi2 = chi2_user;
+
+
+       }
+
+  
+  // end custom chi2 calculation
 
   /////////
 
@@ -2862,140 +2965,55 @@ void TLee::Set_Spectra_MatrixCov()
     map_matrix_flux_Xs_frac[idx] = (TMatrixD*)map_file_flux_Xs_frac[idx]->Get(TString::Format("frac_cov_xf_mat_%d", idx));
     cout<<TString::Format(" %2d %s", idx, roostr.Data())<<endl;
    
-    int disable_reweighting_uncertainties = 0;
-    if (disable_reweighting_uncertainties) {
-    	if (idx==18 || idx==19) {
-	  for (int ibin=0; ibin<bins_oldworld; ibin++) {
-            for (int jbin=0; jbin<bins_oldworld; jbin++) {
-              (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0.;
-            }
-          }
-	}
-    }
-
-    int disable_cor_reweighting_uncertainty = 0;
-    if (disable_cor_reweighting_uncertainty) {
-        if (idx==19) {
-          for (int ibin=0; ibin<bins_oldworld; ibin++) {
-            for (int jbin=0; jbin<bins_oldworld; jbin++) {
-              (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0.;
-            }
-          }
-        }
-    }
-
-    int disable_uncor_reweighting_uncertainty = 0;
-    if (disable_uncor_reweighting_uncertainty) {
-        if (idx==18) {
-          for (int ibin=0; ibin<bins_oldworld; ibin++) {
-            for (int jbin=0; jbin<bins_oldworld; jbin++) {
-              (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0.;
-            }
-          }
-        }
-    }
 
 
-
-      int disable_BR_uncertainty_2d = 1;
-      if (disable_BR_uncertainty_2d) {
-        // See python_tools/BR_uncertainty_tool.ipynb for calculation using merge.root
-        float num_true_signal_uncollapsed[6*2+16*12+2*2+4*16] = {
-        0.0, 0.0, 2.644611, 0.000343, 0.673658, 0.0, // 1gNp and overflow, background, then Np sig, then 0p sig
-        0.0, 0.0, 1.682415, 0.0, 7.545532, 0.0, // 1g0p
-        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, // NC Pi0 Np with overflow, background
-        0.0, 0.007581, 0.301092, 0.915457, 1.216862, 0.943092, 0.705134, 0.442833, 0.27205, 0.16602, 0.109717, 0.05772, 0.043725, 0.031384, 0.01067, 0.025455, // NC Pi0 Np with overflow, Np sig
-        0.0, 0.004736, 0.126005, 0.225691, 0.232783, 0.175976, 0.118599, 0.079376, 0.055884, 0.020959, 0.018903, 0.008332, 0.007212, 0.007277, 0.001588, 0.003381, // NC Pi0 Np with overflow, 0p sig
-        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, // NC Pi0 0p with overflow, background
-        0.0, 0.085884, 0.754236, 0.821747, 0.6168, 0.429712, 0.249044, 0.138809, 0.073667, 0.032466, 0.015823, 0.012726, 0.00759, 0.003995, 0.002124, 0.001004, // NC Pi0 0p with overflow, Np sig
-        0.0, 0.315534, 1.423453, 1.225524, 0.859233, 0.449364, 0.228664, 0.119037, 0.05052, 0.024253, 0.014229, 0.01067, 0.003947, 0.001939, 0.000935, 0.000536, // NC Pi0 0p with overflow, 0p sig
-        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, // numuCC Np with overflow, background
-        0.0, 0.0, 0.000935, 0.02213, 0.057373, 0.09009, 0.101077, 0.095272, 0.090972, 0.076396, 0.052182, 0.043912, 0.041074, 0.020143, 0.012091, 0.023455, // numuCC Np with overflow, Np sig
-        0.0, 0.0, 0.000536, 0.006925, 0.017063, 0.021858, 0.026183, 0.01784, 0.016127, 0.011606, 0.009666, 0.007745, 0.003342, 0.003801, 0.000468, 0.005037, // numuCC Np with overflow, 0p sig
-        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, // numuCC 0p with overflow, background
-        0.0, 0.0, 0.003265, 0.027962, 0.059328, 0.067674, 0.060308, 0.052051, 0.036982, 0.036833, 0.021614, 0.009714, 0.011606, 0.007795, 0.002523, 0.008174, // numuCC 0p with overflow, Np sig
-        0.0, 0.000468, 0.02352, 0.04728, 0.066435, 0.067755, 0.065967, 0.049516, 0.029441, 0.017715, 0.013262, 0.009452, 0.005088, 0.002592, 0.000935, 0.001939, // numuCC 0p with overflow, 0p sig
-        0.0, 0.0, 0.0, 0.0, // 1g EXT
-	0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, // NC Pi0 Np EXT
-	0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, // NC Pi0 0p EXT
-	0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, // numuCC Np EXT
-	0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; // numuCC 0p EXT
-
-        //std::cout << "l hagaman made nums array\n";
-
-        if (idx == 17) {
-          //std::cout << "l hagaman modifying Xs now\n";
-          for (int ibin=0; ibin<bins_oldworld; ibin++) {
-            for (int jbin=0; jbin<bins_oldworld; jbin++) {
-
-            // Here, we assume that true Np NC Delta events are fully correlated with 
-            // true Np NC Delta events in other selection channels. Even if this isn't fully accurate,
-            // the non-1g signal channels should basically not matter at all (the gLEE data release didn't
-            // include this information because of a similar approximation).
-
-            // So, the covariance matrix associated with the NC Delta BR uncertainty is fully correlated,
-            // so we just need the sigma associated with the row and column to calculate it and subtract it off.
-            // See 2022_06_01 slack between Mark and Lee for more information about this approximation.
-
-              float sigma_BR_row = num_true_signal_uncollapsed[ibin];
-              float sigma_BR_col = num_true_signal_uncollapsed[jbin];
-
-              //std::cout << "right before line, " << ibin << ", " << jbin << ", " << sigma_BR_row << ", " << sigma_BR_col << "\n";
-              //if (ibin==jbin) cout << "lhagaman debug, " << ibin << ", " << jbin << ", " << sigma_BR_row << ", " << sigma_BR_col << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n"; 
-              if (sigma_BR_row > 0 && sigma_BR_col > 0) { // this is either a diagonal bin that should have uncertainty reduced, or an off-diagonal bin that should have the correlation reduced
-		      std::cout << "checking which bins are modified, " << ibin << ", " << jbin << "\n"; 
-		      
-	        if (false && ibin==jbin && (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) < 1.) {
-	          std::cout << "too small signal uncertainty on the diagonal, i, j, covariance: " << ibin << ", " << jbin << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n"; 
-	        } else {
-		  (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.; // subtract off sigma_BR_row * sigma_BR_col from the covariance matrix (extracting one off the fractional covariance matrix)
-		}
-		if (ibin==jbin && (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) < 0.) cout << "negative diagonal covariance!!! " << ibin << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-	      }
-	      //std::cout << "right after line\n";
-
-            }
-          }
-          //std::cout << "l hagaman finished modifying Xs now\n";
-        }
-      }
-
-    int disable_nc_delta_Xs_uncertainty_2d = 0;
-    if (disable_nc_delta_Xs_uncertainty_2d) {
+    int disable_BR_uncertainty_2d = 1; 
+    if (disable_BR_uncertainty_2d) {
+      float num_true_signal_uncollapsed[2*3*4+16*3*4 + 2*4+16*4] = { // two bins, bkg and Np sig and 0p sig, four channels, then 16 bins, bkg and Np sig and 0p sig, four channels
+        0, 0, 3.5805990866563366, 0, 0.9140275069286945, 0, 0, 0, 1.7527819219337124, 0, 7.9040791176465195, 0, // wc 1gNp and 1g0p bkg and Np sig and 0p sig
+        0, 0, 4.6651511765163125, 0, 0, 0, 6.127095575401842, 0, // gLEE 1g1p and 1g0p bkg and sig
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 Np bkg
+        0.0, 0.007580748339334285, 0.29915273747269794, 0.9005965233444302, 1.2047980916451504, 0.9348587874820815, 0.6980418758797149, 0.43816531449704765, 0.2700421450030017, 0.16471577441236462, 0.10971743407671042, 0.0577198602342186, 0.043724647524303606, 0.03084785292278447, 0.010670240603663395, 0.025454584589269302, // NC Pi0 Np Np sig
+        0.0, 0.00473618501871967, 0.12446511024522608, 0.22569077918524388, 0.22965506499279026, 0.1749721945058793, 0.11666017309328591, 0.07872327164611637, 0.05588424911972911, 0.02095869185759458, 0.018903259812670825, 0.008331638644912154, 0.007211647383488895, 0.007276838294402843, 0.001587711653173507, 0.0033807139153738675, // NC Pi0 Np 0p sig
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 0p bkg
+        0.0, 0.08126392492179649, 0.7338407363344367, 0.8025132937487207, 0.6052717488222443, 0.42374017780254913, 0.24584738259877525, 0.13733709240162728, 0.07366724889648335, 0.03246575380885375, 0.01582321665013353, 0.01272567264858715, 0.007590197441126101, 0.003994743814933699, 0.0021238622479327063, 0.0010038709865094475, // NC Pi0 0p Np sig
+        0.0, 0.3128742293705761, 1.3991916874807617, 1.2090691115370802, 0.8405862887723607, 0.4409635851103322, 0.22548845909382642, 0.11796471483263193, 0.04951563289353267, 0.02425347473095041, 0.014229295187263347, 0.010202520211913146, 0.003947053743028839, 0.0019393117700099438, 0.0009354407835004963, 0.0005361505947591994, // NC Pi0 0p 0p sig
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC Np bkg
+        0.0, 0.0, 0.0009354407835004026, 0.022129612483016824, 0.057373341336996425, 0.08908636291274993, 0.10107724873019405, 0.09433682980504332, 0.09097177480115726, 0.07639596071667581, 0.05171440392866433, 0.04391243729432137, 0.04107408378340338, 0.020142610641102898, 0.012090902617923227, 0.023454894353467814, // numuCC Np Np sig
+        0.0, 0.0, 0.0, 0.006457517785815997, 0.016526416883805767, 0.02085386261199286, 0.025715617007417667, 0.017840407724943233, 0.01612712669506465, 0.011605681387163377, 0.009198649225403338, 0.007744558686152786, 0.003342472945260383, 0.003800744235219311, 0.00046772039175019264, 0.005036855771556242, // numuCC Np 0p sig
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC 0p bkg
+        0.0, 0.0, 0.0032645936404600527, 0.02796180933996033, 0.05879216142373471, 0.0671383303900547, 0.060308472356297854, 0.051399202854417764, 0.03651466627988015, 0.03636511747997584, 0.021614202019361484, 0.009714059689058141, 0.011605681387163114, 0.007795488050152566, 0.002523152436673781, 0.00817403810778955, // numuCC 0p Np sig
+        0.0, 0.0004677203917502013, 0.02305236487263078, 0.04627659182929781, 0.06477898830019951, 0.06609918895103262, 0.06442738818336255, 0.048979482298771304, 0.028506011671937226, 0.017714838348237727, 0.013261823243345516, 0.009451629906334968, 0.005087785135555967, 0.002591582639682788, 0.0009354407835003853, 0.0019393117700097773, // numuCC 0p 0p sig
+        0, 0, 0, 0, 0, 0, 0, 0, // EXT, 1g channels
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // EXT, NC Pi0 channels
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // EXT, numuCC channels
+      };   
+     
       if (idx == 17) {
-        //*map_matrix_flux_Xs_frac[idx]
-        for (int ibin=0; ibin<bins_oldworld; ibin++) {
-          for (int jbin=0; jbin<bins_oldworld; jbin++) {
-            bool flag_user = 0;
-            if (ibin >= 2*1 && ibin < 2*1+2*2) flag_user=1; // uncollapsed channels 2 and 3
-            if (ibin >= 2*4 && ibin < 2*4+2*2) flag_user=1; // channels 5 and 6
-            if (ibin >= 2*6+16*1 && ibin < 2*6+16*1+16*2) flag_user=1; // channels 8 and 9
-            if (ibin >= 2*6+16*4 && ibin < 2*6+16*4+16*2) flag_user=1; // channels 11 and 12
-            if (ibin >= 2*6+16*7 && ibin < 2*6+16*7+16*2) flag_user=1; // channels 14 and 15
-            if (ibin >= 2*6+16*10 && ibin < 2*6+16*10+16*2) flag_user=1; // channels 17 and 18
+                for (int ibin=0; ibin<bins_oldworld; ibin++) {
+                        for (int jbin=0; jbin<bins_oldworld; jbin++) {
 
-            if (flag_user==1) {
-              (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0;
-              (*map_matrix_flux_Xs_frac[idx])(jbin, ibin) = 0;
-            }
-          }
-        }
-      }
-    }
+                                // Here, we assume that true Np NC Delta events are fully correlated with 
+                                // true Np NC Delta events in other selection channels. Even if this isn't fully accurate,
+                                // the non-1g signal channels should basically not matter at all (the gLEE data release didn't
+                                // include this information because of a similar approximation).
 
-    int disable_all_Xs_uncertainty = 0;
-    //cout << "lhagaman set variable to one\n";
-    if (disable_all_Xs_uncertainty) {
-      if (idx == 17 || idx == 18 || idx == 19) {
-        //*map_matrix_flux_Xs_frac[idx]
-        for (int ibin=0; ibin<bins_oldworld; ibin++) {
-          for (int jbin=0; jbin<bins_oldworld; jbin++) {
-            if (ibin==jbin) cout << "lhagaman before zeroing, " << ibin << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-	    (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0.;
-          }
-        }
-      }
-    }
+                                // So, the covariance matrix associated with the NC Delta BR uncertainty is fully correlated,
+                                // so we just need the sigma associated with the row and column to calculate it and subtract it off.
+                                // See 2022_06_01 slack between Mark and Lee for more information about this approximation.
+
+                                float sigma_BR_row = num_true_signal_uncollapsed[ibin];
+                                float sigma_BR_col = num_true_signal_uncollapsed[jbin];
+
+                                (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= sigma_BR_row * sigma_BR_col;
+
+                        }    
+                }    
+        }    
+    }    
+
+
+
 
 
     //matrix_sub_flux_geant4_Xs_oldworld[idx].Clear();

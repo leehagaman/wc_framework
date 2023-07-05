@@ -257,7 +257,7 @@ void TLee::Minimization_Lee_strength_FullCov(double Lee_initial_value, bool flag
 
       /////////
       TMatrixD matrix_cov_syst = matrix_absolute_cov_newworld;
-      
+
       for(int ibin=0; ibin<matrix_cov_syst.GetNrows(); ibin++) {
         double val_stat_cov = 0;        
         double val_meas = matrix_meas(0, ibin);
@@ -277,6 +277,10 @@ void TLee::Minimization_Lee_strength_FullCov(double Lee_initial_value, bool flag
         matrix_cov_syst(ibin, ibin) += val_stat_cov;
       }
 
+      // lhagaman added, copying for later code, has data stat uncertainty yet
+      TMatrixD matrix_cov_syst_temp = matrix_cov_syst;
+
+
       /////////
       TMatrixD matrix_cov_total = matrix_cov_syst;
       TMatrixD matrix_cov_total_inv = matrix_cov_total;
@@ -290,6 +294,128 @@ void TLee::Minimization_Lee_strength_FullCov(double Lee_initial_value, bool flag
       minimization_NDF = matrix_delta.GetNcols();
       TMatrixD matrix_chi2 = matrix_delta * matrix_cov_total_inv *matrix_delta_T;
       chi2 = matrix_chi2(0,0);
+
+	/*for (int i = 0; i<10; i++) {
+		cout << "    " << matrix_pred(0, i) << "\n";
+	}
+              cout << "matrix_cov_syst_temp:\n";
+	      for (int i = 0; i<8; i++) {
+	          for (int j = 0; j<8; j++) {
+	      		cout <<  matrix_cov_syst_temp(i, j) << " ";
+		  }
+		  cout << "\n";
+	      }
+              cout << "matrix_cov_total:\n";
+	      for (int i = 0; i<8; i++) {
+	          for (int j = 0; j<8; j++) {
+	      		cout <<  matrix_cov_total(i, j) << " ";
+		  }
+		  cout << "\n";
+	      }
+      */
+      
+      //cout << "chi2 before: " << chi2 << "\n";
+
+      // start lhagaman custom chi2 calculation
+      
+      bool use_custom_chi2 = true;
+
+      if (use_custom_chi2) {
+
+	      bool two_bin_test = false; 
+
+	      bool all_channels = true;
+	      bool just_wc = false;
+	      bool just_glee = false;
+
+	      TMatrixD matrix_cov_total_user = matrix_cov_syst_temp;
+
+	      // these are labeled as target and constraining, but actually we're doing a joint chi2 and not a constraint in this code
+	      int ind_tar_start = 0;
+	      int ind_tar_end = 0; // up to but not including
+	      int ind_constr_start = 0;
+	      int ind_constr_end = 0;
+	      
+	      if (two_bin_test) { // wc 1gNp and wc 1gNp overflow (empty)
+		      ind_tar_start = 0;
+		      ind_tar_end = 0 + 1; // two bins, four channels
+		      ind_constr_start = 1;
+		      ind_constr_end = 2;	
+	      }
+
+	      if (all_channels) {
+		      ind_tar_start = 0;
+		      ind_tar_end = 0 + 2*4; // two bins, four channels
+		      ind_constr_start = 2*4;
+		      ind_constr_end = 2*4 + 4*16;	
+	      }
+
+	      if (just_wc) {
+		      ind_tar_start = 0;
+		      ind_tar_end = 0 + 2*2;
+		      ind_constr_start = 2*4;
+		      ind_constr_end = 2*4 + 4*16;	
+	      }
+
+	      if (just_glee) {
+		      ind_tar_start = 2*2;
+		      ind_tar_end = 2*2 + 2*2;
+		      ind_constr_start = 2*4;
+		      ind_constr_end = 2*4 + 4*16;	
+	      }
+
+	      TMatrixD user_matrix_pred;
+	      TMatrixD user_matrix_data;
+
+	      int tar_bins = ind_tar_end - ind_tar_start;
+	      int constr_bins = ind_constr_end - ind_constr_start;
+
+	      user_matrix_pred.Clear();
+	      user_matrix_pred.ResizeTo(1, tar_bins + constr_bins);
+	      TMatrixDSub(user_matrix_pred, 0, 0, 0, tar_bins - 1) = matrix_pred.GetSub(0, 0, ind_tar_start, ind_tar_end - 1);
+	      TMatrixDSub(user_matrix_pred, 0, 0, tar_bins, tar_bins + constr_bins - 1) = matrix_pred.GetSub(0, 0, ind_constr_start, ind_constr_end - 1);
+
+	      user_matrix_data.Clear();
+	      user_matrix_data.ResizeTo(1, tar_bins + constr_bins);
+	      TMatrixDSub(user_matrix_data, 0, 0, 0, tar_bins - 1) = matrix_meas.GetSub(0, 0, ind_tar_start, ind_tar_end - 1);
+	      TMatrixDSub(user_matrix_data, 0, 0, tar_bins, tar_bins + constr_bins - 1) = matrix_meas.GetSub(0, 0, ind_constr_start, ind_constr_end - 1);
+
+
+	      TMatrixD user_matrix_cov(tar_bins + constr_bins, tar_bins + constr_bins);
+	      TMatrixDSub(user_matrix_cov, 0, tar_bins - 1, 0, tar_bins - 1) = matrix_cov_total_user.GetSub(ind_tar_start, ind_tar_end - 1, ind_tar_start, ind_tar_end - 1);
+	      TMatrixDSub(user_matrix_cov, 0, tar_bins - 1, tar_bins, tar_bins + constr_bins - 1) = matrix_cov_total_user.GetSub(ind_tar_start, ind_tar_end - 1, ind_constr_start, ind_constr_end - 1);
+	      TMatrixDSub(user_matrix_cov, tar_bins, tar_bins + constr_bins - 1, 0, tar_bins - 1) = matrix_cov_total_user.GetSub(ind_constr_start, ind_constr_end - 1, ind_tar_start, ind_tar_end - 1);
+	      TMatrixDSub(user_matrix_cov, tar_bins, tar_bins + constr_bins - 1, tar_bins, tar_bins + constr_bins - 1) = matrix_cov_total_user.GetSub(ind_constr_start, ind_constr_end - 1, ind_constr_start, ind_constr_end - 1);
+
+	      TMatrixD user_matrix_cov_inv = user_matrix_cov;
+	      user_matrix_cov_inv.Invert();
+
+	      TMatrixD matrix_delta_user = user_matrix_pred - user_matrix_data;
+	      TMatrixD matrix_delta_user_t = matrix_delta_user;
+	      matrix_delta_user_t.T();
+
+	      //cout << "user_matrix_data: " << user_matrix_data(0, 0) << " " << user_matrix_data(0, 1) << "\n"; 
+	      //cout << "user_matrix_pred: " << user_matrix_pred(0, 0) << " " << user_matrix_pred(0, 1) << "\n"; 
+	      //cout << "matrix_delta_user: " << matrix_delta_user(0, 0) << " " << matrix_delta_user(0, 1) << "\n"; 
+	      //cout << "user_matrix_cov: " << user_matrix_cov(0, 0) << " " << user_matrix_cov(0, 1) << " " << user_matrix_cov_inv(1, 0) << " " << user_matrix_cov(1, 1) << "\n";
+	      //cout << "user_matrix_cov_inv: " << user_matrix_cov_inv(0, 0) << " " << user_matrix_cov_inv(0, 1) << " " << user_matrix_cov_inv(1, 0) << " " << user_matrix_cov_inv(1, 1) << "\n";
+
+	      //cout << "shapes being multiplied: (" << matrix_delta_user_t.GetNrows() << "," << matrix_delta_user_t.GetNcols() << ") (" << user_matrix_cov_inv.GetNrows() << "," << user_matrix_cov_inv.GetNcols() << ") (" << matrix_delta_user.GetNrows() << "," << matrix_delta_user.GetNcols() << ")\n";
+
+	      double chi2_user = (matrix_delta_user * user_matrix_cov_inv * matrix_delta_user_t)(0,0);
+	      
+	      //cout << "chi2_user: " << chi2_user << "\n";
+
+	      chi2 = chi2_user;
+
+
+       }
+      
+       //cout << "chi2 after: " << chi2 << "\n";
+
+       // end lhagaman custom chi2 calculation
+
+
 
       if( 0 ) {
 	// TMatrixD matrix_gof_trans( bins_newworld, 20*2+26*2+11*3 );// oldworld, newworld
@@ -1818,6 +1944,10 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
     double val_wi2no = val_wiConstraint/val_noConstraint;
     if( val_noConstraint==0 ) val_wi2no = 0;
     h1_spectra_wi2no->SetBinContent(ibin, val_wi2no);
+
+    cout << "bin " << ibin << " value no constraint: " << val_noConstraint << "\n"; 
+    cout << "bin " << ibin << " value wi constraint: " << val_wiConstraint << "\n"; 
+    
   }
   
   roostr = TString::Format("canv_spectra_wi2no_%02d", index);
@@ -1982,7 +2112,9 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
     double val_noConstraint = h1_pred_Y_noConstraint_rel_error->GetBinError(ibin);
     double val_wiConstraint = h1_pred_Y_wiConstraint_rel_error->GetBinError(ibin);
     h1_spectra_relerr->SetBinContent(ibin, val_noConstraint);
-    h1_spectra_relerr_wi->SetBinContent(ibin, val_wiConstraint);    
+    h1_spectra_relerr_wi->SetBinContent(ibin, val_wiConstraint);   
+    cout << "bin " << ibin << " error no constraint: " << val_noConstraint << "\n"; 
+    cout << "bin " << ibin << " error wi constraint: " << val_wiConstraint << "\n"; 
   }
   
   roostr = TString::Format("canv_spectra_relerr_%02d", index);
@@ -2134,7 +2266,20 @@ void TLee::Plotting_systematics()
           h1_additional_relerr->SetBinContent( ibin, sqrt( cov_additional )/val_cv );
           h1_reweight_relerr->SetBinContent( ibin, sqrt( cov_reweight )/val_cv );
           h1_reweight_cor_relerr->SetBinContent( ibin, sqrt( cov_reweight_cor )/val_cv );
-        }
+          
+
+	  if (ibin < 8) {
+	  	cout << "bin " << ibin << " total err: " << sqrt( cov_total )/val_cv << "\n";
+	  	cout << "bin " << ibin << " flux err: " << sqrt( cov_flux )/val_cv << "\n";
+	  	cout << "bin " << ibin << " Xs err: " << sqrt( cov_Xs )/val_cv << "\n";
+	  	cout << "bin " << ibin << " detector err: " << sqrt( cov_detector )/val_cv << "\n";
+	  	cout << "bin " << ibin << " mc_stat err: " << sqrt( cov_mc_stat )/val_cv << "\n";
+	  	cout << "bin " << ibin << " add_dirt err: " << sqrt( cov_additional )/val_cv << "\n";
+	  	cout << "bin " << ibin << " RW_uncorr err: " << sqrt( cov_reweight )/val_cv << "\n";
+	  	cout << "bin " << ibin << " RW_corr err: " << sqrt( cov_reweight_cor )/val_cv << "\n";
+	  	cout << "bin " << ibin << " RW_both err: " << sqrt( cov_reweight + cov_reweight_cor )/val_cv << "\n";
+	  }
+	}
 
         if( cov_total!=0 ) {
           h1_flux_fraction->SetBinContent(ibin, cov_flux*100./cov_total );
@@ -2319,7 +2464,8 @@ void TLee::Set_Collapse()
 
   matrix_pred_newworld.Clear();
   matrix_pred_newworld.ResizeTo(1, bins_newworld);
-  matrix_pred_newworld = matrix_pred_oldworld * matrix_transform_Lee;
+  matrix_pred_newworld = matrix_pred_oldworld * matrix_transform_Lee; // getting collapsed prediction with LEE weighting
+  
   if( bins_newworld!=matrix_pred_newworld.GetNcols() ) { cerr<<"bins_newworld!=matrix_pred_newworld.GetNcols()"<<endl; exit(1); }
   for(int ibin=0; ibin<bins_newworld; ibin++) map_pred_spectrum_newworld_bin[ibin] = matrix_pred_newworld(0, ibin);
   
@@ -2327,6 +2473,41 @@ void TLee::Set_Collapse()
   
   matrix_absolute_cov_oldworld.Clear();
   matrix_absolute_cov_oldworld.ResizeTo( bins_oldworld, bins_oldworld );
+  
+  /*
+  // start additions for statistical correlations, lhagaman 2023_07_02
+
+  // THESE SAME VARIABLES ARE DEFINED LATER AND MUST BE KEPT CONSISTENT
+  bool flag_syst_mc_stat_cor = false;
+  //bool flag_syst_mc_stat = false; // this was a mistake, defined already
+
+  if (flag_syst_mc_stat_cor) { 
+    TMatrixD matrix_absolute_data_stat_cov(bins_newworld, bins_newworld);//new
+    TMatrixD matrix_absolute_pred_stat_cov(bins_newworld, bins_newworld);//new
+
+    for(int idx=0; idx<bins_newworld; idx++) {
+      for(int jdx=0; jdx<bins_newworld; jdx++) {
+
+        /// Data_stat
+        double data_sigma_i = sqrt( matrix_pred_newworld(0, idx) );
+        double data_sigma_j = sqrt( matrix_pred_newworld(0, jdx) );
+        double data_correlation = matrix_data_MCstat_correlation(idx, jdx);
+        double data_stat_cov = data_correlation * data_sigma_i * data_sigma_j;
+
+        /// MC_stat
+        double pred_sigma_i = sqrt( gh_mc_stat_bin[idx]->Eval( scaleF_Lee ) );
+        double pred_sigma_j = sqrt( gh_mc_stat_bin[jdx]->Eval( scaleF_Lee ) );
+        double pred_correlation = matrix_pred_MCstat_correlation(idx, jdx);
+        double pred_stat_cov = pred_correlation * pred_sigma_i * pred_sigma_j;
+
+        matrix_absolute_data_stat_cov(idx, jdx) = data_stat_cov;
+        matrix_absolute_pred_stat_cov(idx, jdx) = pred_stat_cov;
+      }
+    }
+  }
+
+  // end additions for statistical correlations
+  */
 
   if( flag_syst_flux_Xs || flag_syst_reweight || flag_syst_reweight_cor) matrix_absolute_cov_oldworld += matrix_input_cov_flux_Xs;
   if( flag_syst_detector ) matrix_absolute_cov_oldworld += matrix_input_cov_detector;
@@ -2339,6 +2520,15 @@ void TLee::Set_Collapse()
   matrix_absolute_cov_newworld.ResizeTo(bins_newworld, bins_newworld);
   matrix_absolute_cov_newworld = matrix_transform_Lee_T * matrix_absolute_cov_oldworld * matrix_transform_Lee;
 
+
+  /*
+  // another addition for stat cor here 
+  
+  if(flag_syst_mc_stat_cor){
+    matrix_absolute_cov_newworld += matrix_absolute_data_stat_cov;
+    matrix_absolute_cov_newworld += matrix_absolute_pred_stat_cov;
+  }
+  else */
   if( flag_syst_mc_stat ) {
     for(int ibin=0; ibin<bins_newworld; ibin++) {
       double val_mc_stat_cov = gh_mc_stat_bin[ibin]->Eval( scaleF_Lee );
@@ -2575,6 +2765,19 @@ void TLee::Set_Spectra_MatrixCov()
   
   ////////////////////
   ////////////////////
+ 
+  // added lhagaman 2023_07_01, must be disabled for systematic plots, must be enabled for 1d LEE fitting
+  // 2d LEE fitting is handled in a different set of files
+  /* 
+  map_Lee_ch[2] = 1;
+  map_Lee_ch[4] = 1;
+  map_Lee_ch[6] = 1;
+  map_Lee_ch[8] = 1;
+  map_Lee_ch[10] = 1;
+  map_Lee_ch[12] = 1;
+  map_Lee_ch[14] = 1;
+  map_Lee_ch[16] = 1;
+  */
 
   bins_oldworld = 0;
   for(auto it_ch=map_input_spectrum_ch_bin.begin(); it_ch!=map_input_spectrum_ch_bin.end(); it_ch++) {
@@ -2629,50 +2832,6 @@ void TLee::Set_Spectra_MatrixCov()
   
   for(int idx=syst_cov_flux_Xs_begin; idx<=syst_cov_flux_Xs_end; idx++) {
 
-    int disable_BR_uncertainty_2d = 0;
-    if (disable_BR_uncertainty_2d) {
-      // See python_tools/BR_uncertainty_tool.ipynb for calculation using merge.root
-      float num_true_signal_uncollapsed[6*2+16*12] = {
-        0.0, 0.0, 2.644611, 0.000343, 0.673658, 0.0, // 1gNp and overflow, background, then Np sig, then 0p sig
-        0.0, 0.0, 1.682415, 0.0, 7.545532, 0.0, // 1g0p
-        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, // NC Pi0 Np with overflow, background
-        0.0, 0.007581, 0.301092, 0.915457, 1.216862, 0.943092, 0.705134, 0.442833, 0.27205, 0.16602, 0.109717, 0.05772, 0.043725, 0.031384, 0.01067, 0.025455, // NC Pi0 Np with overflow, Np sig
-        0.0, 0.004736, 0.126005, 0.225691, 0.232783, 0.175976, 0.118599, 0.079376, 0.055884, 0.020959, 0.018903, 0.008332, 0.007212, 0.007277, 0.001588, 0.003381, // NC Pi0 Np with overflow, 0p sig
-        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, // NC Pi0 0p with overflow, background
-        0.0, 0.085884, 0.754236, 0.821747, 0.6168, 0.429712, 0.249044, 0.138809, 0.073667, 0.032466, 0.015823, 0.012726, 0.00759, 0.003995, 0.002124, 0.001004, // NC Pi0 0p with overflow, Np sig
-        0.0, 0.315534, 1.423453, 1.225524, 0.859233, 0.449364, 0.228664, 0.119037, 0.05052, 0.024253, 0.014229, 0.01067, 0.003947, 0.001939, 0.000935, 0.000536, // NC Pi0 0p with overflow, 0p sig
-        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, // numuCC Np with overflow, background
-        0.0, 0.0, 0.000935, 0.02213, 0.057373, 0.09009, 0.101077, 0.095272, 0.090972, 0.076396, 0.052182, 0.043912, 0.041074, 0.020143, 0.012091, 0.023455, // numuCC Np with overflow, Np sig
-        0.0, 0.0, 0.000536, 0.006925, 0.017063, 0.021858, 0.026183, 0.01784, 0.016127, 0.011606, 0.009666, 0.007745, 0.003342, 0.003801, 0.000468, 0.005037, // numuCC Np with overflow, 0p sig
-        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, // numuCC 0p with overflow, background
-        0.0, 0.0, 0.003265, 0.027962, 0.059328, 0.067674, 0.060308, 0.052051, 0.036982, 0.036833, 0.021614, 0.009714, 0.011606, 0.007795, 0.002523, 0.008174, // numuCC 0p with overflow, Np sig
-        0.0, 0.000468, 0.02352, 0.04728, 0.066435, 0.067755, 0.065967, 0.049516, 0.029441, 0.017715, 0.013262, 0.009452, 0.005088, 0.002592, 0.000935, 0.001939, // numuCC 0p with overflow, 0p sig
-      };
-
-      if (idx == 17) {
-        for (int ibin=0; ibin<bins_oldworld; ibin++) {
-          for (int jbin=0; jbin<bins_oldworld; jbin++) {
-
-            // Here, we assume that true Np NC Delta events are fully correlated with 
-            // true Np NC Delta events in other selection channels. Even if this isn't fully accurate,
-            // the non-1g signal channels should basically not matter at all (the gLEE data release didn't
-            // include this information because of a similar approximation).
-
-            // So, the covariance matrix associated with the NC Delta BR uncertainty is fully correlated,
-            // so we just need the sigma associated with the row and column to calculate it and subtract it off.
-            // See 2022_06_01 slack between Mark and Lee for more information about this approximation.
-
-            float sigma_BR_row = num_true_signal_uncollapsed[ibin];
-            float sigma_BR_col = num_true_signal_uncollapsed[jbin];
-
-            (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= sigma_BR_row * sigma_BR_col;
-
-          }
-        }
-      }
-    }
-
-
 
 
     if( !(flag_syst_flux_Xs) && idx<18 ){
@@ -2698,7 +2857,122 @@ void TLee::Set_Spectra_MatrixCov()
     matrix_sub_flux_geant4_Xs_oldworld[idx].Clear();
     matrix_sub_flux_geant4_Xs_oldworld[idx].ResizeTo(bins_oldworld, bins_oldworld);
     matrix_sub_flux_geant4_Xs_oldworld[idx] += (*map_matrix_flux_Xs_frac[idx]); 
-    
+
+
+    // these numbers gotten from histogram_plotter_v3.ipynb, 2023_06_29
+
+    int disable_BR_uncertainty_1d = 0;
+    if (disable_BR_uncertainty_1d) {
+        float num_true_signal_uncollapsed[2*2*4+16*2*4 + 2*4+16*4] = { // two bins, bkg and sig, four channels, then 16 bins, bkg and sig, four channels
+		0, 0, 4.494626593585051, 0, 0, 0, 9.656861039580827, 0, // wc 1gNp and 1g0p bkg and sig
+		0, 0, 4.6651511765163125, 0, 0, 0, 6.127095575401842, 0, // gLEE 1g1p and 1g0p bkg and sig
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 Np bkg
+		0.0, 0.012316933358053955, 0.42361784771792205, 1.1262873025296876, 1.4344531566379466, 1.1098309819879613, 0.8147020489730012, 0.516888586143164, 0.32592639412273083, 0.1856744662699592, 0.12862069388938124, 0.06605149887913075, 0.0509362949077925, 0.03812469121718731, 0.012257952256836901, 0.02883529850464317, // NC Pi0 Np sig
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 0p bkg
+		0.0, 0.39413815429237126, 2.1330324238152154, 2.011582405285801, 1.445858037594605, 0.8647037629128809, 0.4713358416926017, 0.2553018072342592, 0.12318288179001602, 0.056719228539804156, 0.030052511837396878, 0.022928192860500296, 0.01153725118415494, 0.005934055584943643, 0.0030593030314332026, 0.0015400215812686469, // NC Pi0 0p sig
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC Np bkg
+		0.0, 0.0, 0.0009354407835004026, 0.028587130268832823, 0.07389975822080228, 0.10994022552474278, 0.12679286573761098, 0.1121772375299862, 0.1070989014962242, 0.08800164210384143, 0.06091305315406803, 0.05165699598047446, 0.04441655672866407, 0.023943354876322154, 0.012558623009673475, 0.02849175012502414, // numuCC Np sig
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC 0p bkg
+		0.0, 0.0004677203917502013, 0.026316958513090842, 0.07423840116925833, 0.1235711497239338, 0.13323751934108596, 0.12473586053965896, 0.10037868515319315, 0.06502067795182054, 0.05407995582821634, 0.03487602526270894, 0.01916568959539422, 0.01669346652272008, 0.010387070689835909, 0.0034585932201744995, 0.010113349877800104, // numuCC 0p sig
+		0, 0, 0, 0, 0, 0, 0, 0, // EXT, 1g channels
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // EXT, NC Pi0 channels
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // EXT, numuCC channels
+	};
+
+	//cout << "len of my array is " << 2*2*4+16*2*4 + 2*4+16*4 << ", bins_oldworld=" << bins_oldworld << "\n";
+      	if (idx == 17) {
+        	for (int ibin=0; ibin<bins_oldworld; ibin++) {
+          		for (int jbin=0; jbin<bins_oldworld; jbin++) {
+
+            			// Here, we assume that true Np NC Delta events are fully correlated with 
+            			// true Np NC Delta events in other selection channels. Even if this isn't fully accurate,
+            			// the non-1g signal channels should basically not matter at all (the gLEE data release didn't
+            			// include this information because of a similar approximation).
+
+            			// So, the covariance matrix associated with the NC Delta BR uncertainty is fully correlated,
+            			// so we just need the sigma associated with the row and column to calculate it and subtract it off.
+            			// See 2022_06_01 slack between Mark and Lee for more information about this approximation.
+
+				//cout << "ibin, jbin = " << ibin << ", " << jbin << "\n";
+
+            			float sigma_BR_row = num_true_signal_uncollapsed[ibin];
+            			float sigma_BR_col = num_true_signal_uncollapsed[jbin];
+				
+				//cout << "sigma_BR_row, sigma_BR_col = " << sigma_BR_row << ", " << sigma_BR_col << "\n";
+				
+				if (ibin < 8) cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin);
+
+            			//(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= sigma_BR_row * sigma_BR_col;
+            			if (sigma_BR_row > 0 and sigma_BR_col > 0) (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
+
+				if (ibin < 8) cout << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
+
+				
+				//cout << "done with " << ibin << ", " << jbin << "\n";
+
+          		}
+        	}
+      	}
+    }
+
+
+    int disable_BR_uncertainty_2d = 1;
+    if (disable_BR_uncertainty_2d) {
+      float num_true_signal_uncollapsed[2*3*4+16*3*4 + 2*4+16*4] = { // two bins, bkg and Np sig and 0p sig, four channels, then 16 bins, bkg and Np sig and 0p sig, four channels
+	0, 0, 3.5805990866563366, 0, 0.9140275069286945, 0, 0, 0, 1.7527819219337124, 0, 7.9040791176465195, 0, // wc 1gNp and 1g0p bkg and Np sig and 0p sig
+	0, 0, 4.6651511765163125, 0, 0, 0, 6.127095575401842, 0, // gLEE 1g1p and 1g0p bkg and sig
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 Np bkg
+	0.0, 0.007580748339334285, 0.29915273747269794, 0.9005965233444302, 1.2047980916451504, 0.9348587874820815, 0.6980418758797149, 0.43816531449704765, 0.2700421450030017, 0.16471577441236462, 0.10971743407671042, 0.0577198602342186, 0.043724647524303606, 0.03084785292278447, 0.010670240603663395, 0.025454584589269302, // NC Pi0 Np Np sig
+	0.0, 0.00473618501871967, 0.12446511024522608, 0.22569077918524388, 0.22965506499279026, 0.1749721945058793, 0.11666017309328591, 0.07872327164611637, 0.05588424911972911, 0.02095869185759458, 0.018903259812670825, 0.008331638644912154, 0.007211647383488895, 0.007276838294402843, 0.001587711653173507, 0.0033807139153738675, // NC Pi0 Np 0p sig
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 0p bkg
+	0.0, 0.08126392492179649, 0.7338407363344367, 0.8025132937487207, 0.6052717488222443, 0.42374017780254913, 0.24584738259877525, 0.13733709240162728, 0.07366724889648335, 0.03246575380885375, 0.01582321665013353, 0.01272567264858715, 0.007590197441126101, 0.003994743814933699, 0.0021238622479327063, 0.0010038709865094475, // NC Pi0 0p Np sig
+	0.0, 0.3128742293705761, 1.3991916874807617, 1.2090691115370802, 0.8405862887723607, 0.4409635851103322, 0.22548845909382642, 0.11796471483263193, 0.04951563289353267, 0.02425347473095041, 0.014229295187263347, 0.010202520211913146, 0.003947053743028839, 0.0019393117700099438, 0.0009354407835004963, 0.0005361505947591994, // NC Pi0 0p 0p sig
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC Np bkg
+	0.0, 0.0, 0.0009354407835004026, 0.022129612483016824, 0.057373341336996425, 0.08908636291274993, 0.10107724873019405, 0.09433682980504332, 0.09097177480115726, 0.07639596071667581, 0.05171440392866433, 0.04391243729432137, 0.04107408378340338, 0.020142610641102898, 0.012090902617923227, 0.023454894353467814, // numuCC Np Np sig
+	0.0, 0.0, 0.0, 0.006457517785815997, 0.016526416883805767, 0.02085386261199286, 0.025715617007417667, 0.017840407724943233, 0.01612712669506465, 0.011605681387163377, 0.009198649225403338, 0.007744558686152786, 0.003342472945260383, 0.003800744235219311, 0.00046772039175019264, 0.005036855771556242, // numuCC Np 0p sig
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC 0p bkg
+	0.0, 0.0, 0.0032645936404600527, 0.02796180933996033, 0.05879216142373471, 0.0671383303900547, 0.060308472356297854, 0.051399202854417764, 0.03651466627988015, 0.03636511747997584, 0.021614202019361484, 0.009714059689058141, 0.011605681387163114, 0.007795488050152566, 0.002523152436673781, 0.00817403810778955, // numuCC 0p Np sig
+	0.0, 0.0004677203917502013, 0.02305236487263078, 0.04627659182929781, 0.06477898830019951, 0.06609918895103262, 0.06442738818336255, 0.048979482298771304, 0.028506011671937226, 0.017714838348237727, 0.013261823243345516, 0.009451629906334968, 0.005087785135555967, 0.002591582639682788, 0.0009354407835003853, 0.0019393117700097773, // numuCC 0p 0p sig
+	0, 0, 0, 0, 0, 0, 0, 0, // EXT, 1g channels
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // EXT, NC Pi0 channels
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // EXT, numuCC channels
+      };
+      	
+      if (idx == 17) {
+        	for (int ibin=0; ibin<bins_oldworld; ibin++) {
+          		for (int jbin=0; jbin<bins_oldworld; jbin++) {
+
+            			// Here, we assume that true Np NC Delta events are fully correlated with 
+            			// true Np NC Delta events in other selection channels. Even if this isn't fully accurate,
+            			// the non-1g signal channels should basically not matter at all (the gLEE data release didn't
+            			// include this information because of a similar approximation).
+
+            			// So, the covariance matrix associated with the NC Delta BR uncertainty is fully correlated,
+            			// so we just need the sigma associated with the row and column to calculate it and subtract it off.
+            			// See 2022_06_01 slack between Mark and Lee for more information about this approximation.
+
+            			float sigma_BR_row = num_true_signal_uncollapsed[ibin];
+            			float sigma_BR_col = num_true_signal_uncollapsed[jbin];
+
+            			(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= sigma_BR_row * sigma_BR_col;
+
+          		}
+        	}
+      	}   
+    }
+
+    //cout << "finished modifying uncollapsed covariance matrix to remove BR uncertainty\n";
+
+
+
+
+
+
+
+
+
+
+
     matrix_flux_Xs_frac += (*map_matrix_flux_Xs_frac[idx]);    
 
     if( idx<=16 ) {// flux
@@ -2709,7 +2983,7 @@ void TLee::Set_Spectra_MatrixCov()
       matrix_reweight_frac += (*map_matrix_flux_Xs_frac[idx]);
     }else if( idx==19 ) {//reweight cor
       //cout << "lhagaman debug, matrix_reweight_cor_frac = " << (*map_matrix_flux_Xs_frac[idx]) << "\n";
-      cout << "lhagaman debug, adding to reweight_cor_frac\n";
+      //cout << "lhagaman debug, adding to reweight_cor_frac\n";
       matrix_reweight_cor_frac += (*map_matrix_flux_Xs_frac[idx]);
     }    
   }
@@ -2730,7 +3004,8 @@ void TLee::Set_Spectra_MatrixCov()
   map_detectorfile_str[7] = detector_directory+"cov_WMThetaYZ.root";
   map_detectorfile_str[8] = detector_directory+"cov_WMX.root";
   map_detectorfile_str[9] = detector_directory+"cov_WMYZ.root";
-  map_detectorfile_str[10]= detector_directory+"cov_LYatt.root";
+  // TEMPORARY LHAGAMAN DEBUG, removing LYAtt because stage 1 files from Mark seem to have it super large for NC Pi0 overlay
+  //map_detectorfile_str[10]= detector_directory+"cov_LYatt.root";
 
   map<int, TFile*>map_file_detector_frac;
   map<int, TMatrixD*>map_matrix_detector_frac;
@@ -2915,7 +3190,7 @@ void TLee::Set_Spectra_MatrixCov()
       }
     }
   }
-  
+
   /// gh_mc_stat_bin
   for(int ibin=0; ibin<gbins_mc_stat; ibin++) {
     gh_mc_stat_bin[ibin] = new TGraph(); gh_mc_stat_bin[ibin]->SetName(TString::Format("gh_mc_stat_bin_%03d", ibin));
@@ -2930,7 +3205,43 @@ void TLee::Set_Spectra_MatrixCov()
     double x,y;
     gh_mc_stat_bin[ibin]->GetPoint( gh_mc_stat_bin[ibin]->GetN()-1, x, y);
     gh_mc_stat_bin[ibin]->SetPoint( gh_mc_stat_bin[ibin]->GetN(), x+1, y);
-  }  
+  }
+
+  /*
+  // more stat cor additions lhagaman 2023_07_02
+
+  // THESE SAME VARIABLES ARE DEFINED EARLIER AND MUST BE KEPT CONSISTENT
+  bool flag_syst_mc_stat_cor = false;
+  //bool flag_syst_mc_stat = false; // this is a mistake, defined already
+  
+
+  if(flag_syst_mc_stat_cor){
+  matrix_data_MCstat_correlation.Clear();
+  matrix_data_MCstat_correlation.ResizeTo(bins_newworld, bins_newworld);
+
+  matrix_pred_MCstat_correlation.Clear();
+  matrix_pred_MCstat_correlation.ResizeTo(bins_newworld, bins_newworld);
+
+
+  //TFile *roofile_data = new TFile(mc_directory+"run_pred_stat.root", "read");
+  TFile *roofile_data = new TFile("./hist_rootfiles/run_pred_stat.root", "read"); // lhagaman changed 2023_07_02
+  TMatrixD *matrix_datastat = (TMatrixD*)roofile_data->Get("cov_mat_0");
+  //cout<<endl<<" check matrix_datastat "<<matrix_datastat->GetNrows()<<endl<<endl;
+
+  for(int idx=0; idx<matrix_datastat->GetNrows(); idx++ ) {
+    for(int jdx=0; jdx<matrix_datastat->GetNrows(); jdx++ ) {
+      double val_cov = (*matrix_datastat)(idx, jdx);
+      double ii = sqrt((*matrix_datastat)(idx,idx));
+      double jj = sqrt((*matrix_datastat)(jdx,jdx));
+      if( ii!=0 && jj!=0 ) matrix_data_MCstat_correlation(idx, jdx) = val_cov/ii/jj;
+      if( idx==jdx) matrix_data_MCstat_correlation(idx, jdx) = 1;
+    }
+  }
+  matrix_pred_MCstat_correlation = matrix_data_MCstat_correlation;
+  }
+
+  // end more stat cor additions
+  */
 
   cout<<endl;
   cout<<" ---> Complete the initialization"<<endl;

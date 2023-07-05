@@ -12,38 +12,48 @@
  ---> Set_Spectra_MatrixCov
 
  Predictions
-  1 ch, bin-num  2, name: nc_delta_Np_01_6_kine_reco_Enu_all
-  2 ch, bin-num  2, name: nc_delta_Np_01_6_kine_reco_Enu_all
-  3 ch, bin-num  2, name: nc_delta_Np_01_6_kine_reco_Enu_all
-  4 ch, bin-num  2, name: nc_delta_0p_01_6_kine_reco_Enu_all
-  5 ch, bin-num  2, name: nc_delta_0p_01_6_kine_reco_Enu_all
-  6 ch, bin-num  2, name: nc_delta_0p_01_6_kine_reco_Enu_all
-  7 ch, bin-num 16, name: nc_pi0_Np_6_kine_reco_Enu_all 
-  8 ch, bin-num 16, name: nc_pi0_Np_6_kine_reco_Enu_all 
-  9 ch, bin-num 16, name: nc_pi0_Np_6_kine_reco_Enu_all 
- 10 ch, bin-num 16, name: nc_pi0_0p_6_kine_reco_Enu_all 
- 11 ch, bin-num 16, name: nc_pi0_0p_6_kine_reco_Enu_all 
- 12 ch, bin-num 16, name: nc_pi0_0p_6_kine_reco_Enu_all 
- 13 ch, bin-num 16, name: numuCC_Np_6_kine_reco_Enu_all 
- 14 ch, bin-num 16, name: numuCC_Np_6_kine_reco_Enu_all 
- 15 ch, bin-num 16, name: numuCC_Np_6_kine_reco_Enu_all 
- 16 ch, bin-num 16, name: numuCC_0p_6_kine_reco_Enu_all 
- 17 ch, bin-num 16, name: numuCC_0p_6_kine_reco_Enu_all 
- 18 ch, bin-num 16, name: numuCC_0p_6_kine_reco_Enu_all 
- 19 ch, bin-num  2, name: nc_delta_Np_01_6_kine_reco_Enu_all
- 20 ch, bin-num  2, name: nc_delta_0p_01_6_kine_reco_Enu_all
- 21 ch, bin-num 16, name: nc_pi0_Np_6_kine_reco_Enu_all 
- 22 ch, bin-num 16, name: nc_pi0_0p_6_kine_reco_Enu_all 
- 23 ch, bin-num 16, name: numuCC_Np_6_kine_reco_Enu_all 
- 24 ch, bin-num 16, name: numuCC_0p_6_kine_reco_Enu_all 
+  1 ch, bin-num  2, name: wc_1gNp_9_reco_showerKE_all   
+  2 ch, bin-num  2, name: wc_1gNp_9_reco_showerKE_all   
+  3 ch, bin-num  2, name: wc_1gNp_9_reco_showerKE_all   
+  4 ch, bin-num  2, name: wc_1g0p_9_reco_showerKE_all   
+  5 ch, bin-num  2, name: wc_1g0p_9_reco_showerKE_all   
+  6 ch, bin-num  2, name: wc_1g0p_9_reco_showerKE_all   
+  7 ch, bin-num  2, name: glee_1g1p_9_gl_reco_Eshower_all
+  8 ch, bin-num  2, name: glee_1g1p_9_gl_reco_Eshower_all
+  9 ch, bin-num  2, name: glee_1g1p_9_gl_reco_Eshower_all
+ 10 ch, bin-num  2, name: glee_1g0p_9_gl_reco_Eshower_all
+ 11 ch, bin-num  2, name: glee_1g0p_9_gl_reco_Eshower_all
+ 12 ch, bin-num  2, name: glee_1g0p_9_gl_reco_Eshower_all
+ 13 ch, bin-num 16, name: constr_nc_pi0_Np_9_kine_reco_Enu_all
+ 14 ch, bin-num 16, name: constr_nc_pi0_Np_9_kine_reco_Enu_all
+ 15 ch, bin-num 16, name: constr_nc_pi0_Np_9_kine_reco_Enu_all
+ 16 ch, bin-num 16, name: constr_nc_pi0_0p_9_kine_reco_Enu_all
+ 17 ch, bin-num 16, name: constr_nc_pi0_0p_9_kine_reco_Enu_all
+ 18 ch, bin-num 16, name: constr_nc_pi0_0p_9_kine_reco_Enu_all
+ 19 ch, bin-num 16, name: constr_numuCC_Np_9_kine_reco_Enu_all
+ 20 ch, bin-num 16, name: constr_numuCC_Np_9_kine_reco_Enu_all
+ 21 ch, bin-num 16, name: constr_numuCC_Np_9_kine_reco_Enu_all
+ 22 ch, bin-num 16, name: constr_numuCC_0p_9_kine_reco_Enu_all
+ 23 ch, bin-num 16, name: constr_numuCC_0p_9_kine_reco_Enu_all
+ 24 ch, bin-num 16, name: constr_numuCC_0p_9_kine_reco_Enu_all
+ 25 ch, bin-num  2, name: wc_1gNp_9_reco_showerKE_all   
+ 26 ch, bin-num  2, name: wc_1g0p_9_reco_showerKE_all   
+ 27 ch, bin-num  2, name: glee_1g1p_9_gl_reco_Eshower_all
+ 28 ch, bin-num  2, name: glee_1g0p_9_gl_reco_Eshower_all
+ 29 ch, bin-num 16, name: constr_nc_pi0_Np_9_kine_reco_Enu_all
+ 30 ch, bin-num 16, name: constr_nc_pi0_0p_9_kine_reco_Enu_all
+ 31 ch, bin-num 16, name: constr_numuCC_Np_9_kine_reco_Enu_all
+ 32 ch, bin-num 16, name: constr_numuCC_0p_9_kine_reco_Enu_all
 
  Observations
-  1 ch, bin-num  2, name nc_delta_Np_01_6_kine_reco_Enu_all
-  2 ch, bin-num  2, name nc_delta_0p_01_6_kine_reco_Enu_all
-  3 ch, bin-num 16, name nc_pi0_Np_6_kine_reco_Enu_all 
-  4 ch, bin-num 16, name nc_pi0_0p_6_kine_reco_Enu_all 
-  5 ch, bin-num 16, name numuCC_Np_6_kine_reco_Enu_all 
-  6 ch, bin-num 16, name numuCC_0p_6_kine_reco_Enu_all 
+  1 ch, bin-num  2, name wc_1gNp_9_reco_showerKE_all   
+  2 ch, bin-num  2, name wc_1g0p_9_reco_showerKE_all   
+  3 ch, bin-num  2, name glee_1g1p_9_gl_reco_Eshower_all
+  4 ch, bin-num  2, name glee_1g0p_9_gl_reco_Eshower_all
+  5 ch, bin-num 16, name constr_nc_pi0_Np_9_kine_reco_Enu_all
+  6 ch, bin-num 16, name constr_nc_pi0_0p_9_kine_reco_Enu_all
+  7 ch, bin-num 16, name constr_numuCC_Np_9_kine_reco_Enu_all
+  8 ch, bin-num 16, name constr_numuCC_0p_9_kine_reco_Enu_all
 
  Flux and Xs systematics
 lhagaman flags, 1, 97, 115
@@ -68,15 +78,6 @@ lhagaman flags, 1, 97, 115
  19 ./data_inputs/hist_rootfiles/XsFlux/cov_19.root
 
  Detector systematics
-  1 ./data_inputs/hist_rootfiles/DetVar/cov_LYDown.root
-  2 ./data_inputs/hist_rootfiles/DetVar/cov_LYRayleigh.root
-  3 ./data_inputs/hist_rootfiles/DetVar/cov_Recomb2.root
-  4 ./data_inputs/hist_rootfiles/DetVar/cov_SCE.root
-  6 ./data_inputs/hist_rootfiles/DetVar/cov_WMThetaXZ.root
-  7 ./data_inputs/hist_rootfiles/DetVar/cov_WMThetaYZ.root
-  8 ./data_inputs/hist_rootfiles/DetVar/cov_WMX.root
-  9 ./data_inputs/hist_rootfiles/DetVar/cov_WMYZ.root
- 10 ./data_inputs/hist_rootfiles/DetVar/cov_LYatt.root
 
  MC statistics. Files:  0.log - 0.log
 
@@ -189,6 +190,7 @@ i file: 0
  processing Np/0p:   6  15
  processing Np/0p:   6  16
  processing Np/0p:   7   1
+Info in <Minuit2>: MnGlobalCorrelationCoeff: inversion of matrix fails.
  processing Np/0p:   7   2
  processing Np/0p:   7   3
  processing Np/0p:   7   4
@@ -205,6 +207,7 @@ i file: 0
  processing Np/0p:   7  15
  processing Np/0p:   7  16
  processing Np/0p:   8   1
+Info in <Minuit2>: MnGlobalCorrelationCoeff: inversion of matrix fails.
  processing Np/0p:   8   2
  processing Np/0p:   8   3
  processing Np/0p:   8   4
@@ -220,7 +223,6 @@ i file: 0
  processing Np/0p:   8  14
  processing Np/0p:   8  15
  processing Np/0p:   8  16
-Info in <Minuit2>: Minuit2Minimizer::Minimize : Minimization did NOT converge, Edm is above max
  processing Np/0p:   9   1
  processing Np/0p:   9   2
  processing Np/0p:   9   3
@@ -229,7 +231,6 @@ Info in <Minuit2>: Minuit2Minimizer::Minimize : Minimization did NOT converge, E
  processing Np/0p:   9   6
  processing Np/0p:   9   7
  processing Np/0p:   9   8
-Info in <Minuit2>: Minuit2Minimizer::Minimize : Minimization did NOT converge, Edm is above max
  processing Np/0p:   9   9
  processing Np/0p:   9  10
  processing Np/0p:   9  11
@@ -246,7 +247,6 @@ Info in <Minuit2>: Minuit2Minimizer::Minimize : Minimization did NOT converge, E
  processing Np/0p:  10   6
  processing Np/0p:  10   7
  processing Np/0p:  10   8
-Info in <Minuit2>: Minuit2Minimizer::Minimize : Minimization did NOT converge, Edm is above max
  processing Np/0p:  10   9
  processing Np/0p:  10  10
  processing Np/0p:  10  11
@@ -363,21 +363,25 @@ Info in <Minuit2>: Minuit2Minimizer::Minimize : Minimization did NOT converge, E
 
  ---> LEE channel size (set by array_LEE_ch in config): 0
 
- ---> LEE_Np channel size (set by array_LEE_Np_ch in config): 6
+ ---> LEE_Np channel size (set by array_LEE_Np_ch in config): 8
  ---> LEE_Np channel: 2
  ---> LEE_Np channel: 5
  ---> LEE_Np channel: 8
  ---> LEE_Np channel: 11
  ---> LEE_Np channel: 14
  ---> LEE_Np channel: 17
+ ---> LEE_Np channel: 20
+ ---> LEE_Np channel: 23
 
- ---> LEE_0p channel size (set by array_LEE_0p_ch in config): 6
+ ---> LEE_0p channel size (set by array_LEE_0p_ch in config): 8
  ---> LEE_0p channel: 3
  ---> LEE_0p channel: 6
  ---> LEE_0p channel: 9
  ---> LEE_0p channel: 12
  ---> LEE_0p channel: 15
  ---> LEE_0p channel: 18
+ ---> LEE_0p channel: 21
+ ---> LEE_0p channel: 24
 
  ---> MC stat file: 0.log - 0.log
 

@@ -31,9 +31,12 @@ namespace config_Lee
   
   /////////////////////////////// separated Np and 0p strengthes: 2d strengthes
 
-  int array_LEE_Np_ch[6] = {2, 5, 8, 11, 14, 17};// element value "0" will not be set to the LEE_ch
-  int array_LEE_0p_ch[6] = {3, 6, 9, 12, 15, 18};// element value "0" will not be set to the LEE_ch
+  //int array_LEE_Np_ch[6] = {2, 5, 8, 11, 14, 17};// element value "0" will not be set to the LEE_ch
+  //int array_LEE_0p_ch[6] = {3, 6, 9, 12, 15, 18};// element value "0" will not be set to the LEE_ch
 
+  int array_LEE_Np_ch[8] = {2, 5, 8, 11, 14, 17, 20, 23};// element value "0" will not be set to the LEE_ch
+  int array_LEE_0p_ch[8] = {3, 6, 9, 12, 15, 18, 21, 24};// element value "0" will not be set to the LEE_ch
+  
   //int array_LEE_Np_ch[1] = {0};
   //int array_LEE_0p_ch[1] = {0};
   
