@@ -60,7 +60,60 @@ int main( int argc, char** argv )
   //cov.add_disabled_ch_name("constr_nc_pi0_0p_nc_delta_overlay");
   //cov.add_disabled_ch_name("constr_nc_pi0_Np_cc_pi0_overlay");
   //cov.add_disabled_ch_name("constr_nc_pi0_0p_cc_pi0_overlay");
-  
+
+  /*cov.add_disabled_ch_name("constr_nc_pi0_Np_overlay");
+  cov.add_disabled_ch_name("constr_nc_pi0_Np_cc_pi0_overlay");
+  cov.add_disabled_ch_name("constr_nc_pi0_Np_nue_overlay");
+  cov.add_disabled_ch_name("constr_nc_pi0_Np_nc_delta_overlay");
+  cov.add_disabled_ch_name("constr_nc_pi0_0p_overlay");
+  cov.add_disabled_ch_name("constr_nc_pi0_0p_cc_pi0_overlay");
+  cov.add_disabled_ch_name("constr_nc_pi0_0p_nue_overlay");
+  cov.add_disabled_ch_name("constr_nc_pi0_0p_nc_delta_overlay");
+  cov.add_disabled_ch_name("constr_nc_pi0_Xp_overlay");
+  cov.add_disabled_ch_name("constr_nc_pi0_Xp_cc_pi0_overlay");
+  cov.add_disabled_ch_name("constr_nc_pi0_Xp_nue_overlay");
+  cov.add_disabled_ch_name("constr_nc_pi0_Xp_nc_delta_overlay");
+
+  cov.add_disabled_ch_name("constr_numuCC_Np_overlay");
+  cov.add_disabled_ch_name("constr_numuCC_Np_cc_pi0_overlay");
+  cov.add_disabled_ch_name("constr_numuCC_Np_nue_overlay");
+  cov.add_disabled_ch_name("constr_numuCC_Np_nc_delta_overlay");
+  cov.add_disabled_ch_name("constr_numuCC_0p_overlay");
+  cov.add_disabled_ch_name("constr_numuCC_0p_cc_pi0_overlay");
+  cov.add_disabled_ch_name("constr_numuCC_0p_nue_overlay");
+  cov.add_disabled_ch_name("constr_numuCC_0p_nc_delta_overlay");
+  cov.add_disabled_ch_name("constr_numuCC_Xp_overlay");
+  cov.add_disabled_ch_name("constr_numuCC_Xp_cc_pi0_overlay");
+  cov.add_disabled_ch_name("constr_numuCC_Xp_nue_overlay");
+  cov.add_disabled_ch_name("constr_numuCC_Xp_nc_delta_overlay");
+
+  cov.add_disabled_ch_name("constr_nc_pi0_Np_lim_overlay");
+  cov.add_disabled_ch_name("constr_nc_pi0_Np_lim_cc_pi0_overlay");
+  cov.add_disabled_ch_name("constr_nc_pi0_Np_lim_nue_overlay");
+  cov.add_disabled_ch_name("constr_nc_pi0_Np_lim_nc_delta_overlay");
+  cov.add_disabled_ch_name("constr_nc_pi0_0p_lim_overlay");
+  cov.add_disabled_ch_name("constr_nc_pi0_0p_lim_cc_pi0_overlay");
+  cov.add_disabled_ch_name("constr_nc_pi0_0p_lim_nue_overlay");
+  cov.add_disabled_ch_name("constr_nc_pi0_0p_lim_nc_delta_overlay");
+  cov.add_disabled_ch_name("constr_nc_pi0_Xp_lim_overlay");
+  cov.add_disabled_ch_name("constr_nc_pi0_Xp_lim_cc_pi0_overlay");
+  cov.add_disabled_ch_name("constr_nc_pi0_Xp_lim_nue_overlay");
+  cov.add_disabled_ch_name("constr_nc_pi0_Xp_lim_nc_delta_overlay");
+
+  cov.add_disabled_ch_name("constr_numuCC_Np_lim_overlay");
+  cov.add_disabled_ch_name("constr_numuCC_Np_lim_cc_pi0_overlay");
+  cov.add_disabled_ch_name("constr_numuCC_Np_lim_nue_overlay");
+  cov.add_disabled_ch_name("constr_numuCC_Np_lim_nc_delta_overlay");
+  cov.add_disabled_ch_name("constr_numuCC_0p_lim_overlay");
+  cov.add_disabled_ch_name("constr_numuCC_0p_lim_cc_pi0_overlay");
+  cov.add_disabled_ch_name("constr_numuCC_0p_lim_nue_overlay");
+  cov.add_disabled_ch_name("constr_numuCC_0p_lim_nc_delta_overlay");
+  cov.add_disabled_ch_name("constr_numuCC_Xp_lim_overlay");
+  cov.add_disabled_ch_name("constr_numuCC_Xp_lim_cc_pi0_overlay");
+  cov.add_disabled_ch_name("constr_numuCC_Xp_lim_nue_overlay");
+  cov.add_disabled_ch_name("constr_numuCC_Xp_lim_nc_delta_overlay");
+  */
+
 
   //cov.add_disabled_ch_name("wc_1gNp_cc_pi0_overlay");
   //cov.add_disabled_ch_name("wc_1g0p_cc_pi0_overlay");

@@ -79,6 +79,7 @@ public:
   bool flag_syst_detector;
   bool flag_syst_additional;
   bool flag_syst_mc_stat;
+  bool flag_syst_mc_data_stat_cor;
   bool flag_syst_reweight;
   bool flag_syst_reweight_cor;
 

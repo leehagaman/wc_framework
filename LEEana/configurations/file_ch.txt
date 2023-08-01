@@ -5,6 +5,7 @@
 /data1/hagaman/xin_files/glee_added_rootfiles/checkout_data_extbnb_run1_PF.root				all
 /data1/hagaman/xin_files/glee_added_rootfiles/checkout_data_extbnb_run2_PF.root				all
 /data1/hagaman/xin_files/glee_added_rootfiles/checkout_data_extbnb_run3_PF.root				all
+/data1/hagaman/xin_files/glee_added_rootfiles/extra_non_overlapping_gLEE_data_events.root		all
 
 /data1/hagaman/xin_files/glee_added_rootfiles/checkout_data_bnb_run1_PF.root				all
 /data1/hagaman/xin_files/glee_added_rootfiles/checkout_data_bnb_run2_PF.root                            all

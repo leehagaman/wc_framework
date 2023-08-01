@@ -325,7 +325,7 @@ int main(int argc, char** argv)
     Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 111001 );
   }
 
-  int make_backwards_constraint = 0;
+  int make_backwards_constraint = 1;
 
   if (make_backwards_constraint) { // four constraining channels constrained by four signal bins
     // just a hack to print the unconstrained constraining bins with errors
@@ -395,6 +395,65 @@ int main(int argc, char** argv)
     }
     Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 111052 );
   }
+
+  int make_model_validation_plots = 0;
+
+  if (make_model_validation_plots) { // Np 0p constrained by Np 0p, full overlays
+    Lee_test->scaleF_Lee = 1; // shouldn't matter, no LEE channels in this cov.txt
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    for (int i=0; i < 16*2; i++){
+      vc_target_chs.push_back(i);
+    }
+    vector<int>vc_support_chs;
+    for (int i=16*3; i < 16*5; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 777001 );
+  }
+
+  if (make_model_validation_plots) { // Xp constrained by Xp, full overlays
+    Lee_test->scaleF_Lee = 1; // shouldn't matter, no LEE channels in this cov.txt
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    for (int i=16*2; i < 16*3; i++){
+      vc_target_chs.push_back(i);
+    }
+    vector<int>vc_support_chs;
+    for (int i=16*5; i < 16*6; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 777002 );
+  }
+
+  if (make_model_validation_plots) { // Np 0p constrained by Np 0p, lim overlays
+    Lee_test->scaleF_Lee = 1; // shouldn't matter, no LEE channels in this cov.txt
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    for (int i=16*6; i < 16*6+16*2; i++){
+      vc_target_chs.push_back(i);
+    }
+    vector<int>vc_support_chs;
+    for (int i=16*6+16*3; i < 16*6+16*5; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 777011 );
+  }
+
+  if (make_model_validation_plots) { // Xp constrained by Xp, full overlays
+    Lee_test->scaleF_Lee = 1; // shouldn't matter, no LEE channels in this cov.txt
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    for (int i=16*6+16*2; i < 16*6+16*3; i++){
+      vc_target_chs.push_back(i);
+    }
+    vector<int>vc_support_chs;
+    for (int i=16*6+16*5; i < 16*6+16*6; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 777012 );
+  }
+
 
 
 

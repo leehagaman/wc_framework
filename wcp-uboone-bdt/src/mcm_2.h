@@ -161,6 +161,8 @@ void LEEana::CovMatrix::gen_xf_cov_matrix(int run, std::map<int, TH1F*>& map_cov
     //std::cout << j << " " << temp_mat(26+26+5,26+26+26) << std::endl;
     
     (*cov_xf_mat) +=  temp_mat;
+
+    std::cout << "lhagaman debug, j, temp_mat(0,0), temp_mat(2,2), temp_mat(4,4), temp_mat(6,6): " << j << ", " << temp_mat(0,0) << ", " << temp_mat(2,2) << ", " << temp_mat(4,4) << ", " << temp_mat(6,6) << "\n";
     
     
     acc_no += nsize;

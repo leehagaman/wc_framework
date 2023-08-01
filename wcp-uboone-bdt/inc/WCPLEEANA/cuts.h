@@ -245,15 +245,19 @@ double LEEana::get_weight(TString weight_name, EvalInfo& eval, PFevalInfo& pfeva
   }else if (weight_name == "cv_spline_cv_spline"){
     return pow(addtl_weight*eval.weight_cv * eval.weight_spline,2);
   }else if (weight_name == "cv_spline_ovlp"){
-    return addtl_weight*eval.weight_cv * eval.weight_spline * eval.gl_overlap_weight;
+    // adding 1/0.943086 factor since overlap weights were calculated assuming overlapping data POT,
+    // but now we're using the full gLEE pot with the extra data file
+    // calculated from gLEE_CV_builder.ipynb, data overlap_ratio_123
+    // if we redo the overlap weights in the future, can remove this
+    return addtl_weight*eval.weight_cv * eval.weight_spline * eval.gl_overlap_weight * 1/0.943086;
   }else if (weight_name == "cv_spline_ovlp_cv_spline_ovlp"){
-    return pow(addtl_weight*eval.weight_cv * eval.weight_spline * eval.gl_overlap_weight,2);
+    return pow(addtl_weight*eval.weight_cv * eval.weight_spline * eval.gl_overlap_weight * 1/0.943086,2);
   }else if (weight_name == "unity" || weight_name == "unity_unity"){
     return 1;
   }else if (weight_name == "unity_ovlp"){
-    return 1 * eval.gl_overlap_weight;
+    return 1 * eval.gl_overlap_weight * 1/0.943086;
   }else if (weight_name == "unity_ovlp_unity_ovlp"){
-    return pow(1 * eval.gl_overlap_weight,2);
+    return pow(1 * eval.gl_overlap_weight * 1/0.943086,2);
   }else if (weight_name == "lee_cv_spline"){
     return (eval.weight_lee * addtl_weight*eval.weight_cv * eval.weight_spline);
   }else if (weight_name == "lee_cv_spline_lee_cv_spline"){
@@ -3747,6 +3751,9 @@ int LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, EvalI
   }else if (ch_name == "constr_nc_pi0_0p" || ch_name == "constr_nc_pi0_0p_ext" || ch_name == "constr_nc_pi0_0p_dirt"){
     if (flag_FC && flag_ncpio_sel && (!flag_ncdelta_sel) && flag_0p) return true;
     return false;
+  }else if (ch_name == "constr_nc_pi0_Xp" || ch_name == "constr_nc_pi0_Xp_ext" || ch_name == "constr_nc_pi0_Xp_dirt"){
+    if (flag_FC && flag_ncpio_sel && (!flag_ncdelta_sel)) return true;
+    return false;
   }else if (ch_name == "constr_nc_pi0_Np_nc_delta_overlay"){
             if (flag_FC && flag_ncpio_sel && !(flag_ncdelta_sel) && (!flag_0p)
 			    && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)){
@@ -3755,6 +3762,12 @@ int LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, EvalI
 	    return false;
   }else if (ch_name == "constr_nc_pi0_0p_nc_delta_overlay"){
             if (flag_FC && flag_ncpio_sel && !(flag_ncdelta_sel) && flag_0p
+			    && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)){
+                  return true;
+	    }
+	    return false;
+  }else if (ch_name == "constr_nc_pi0_Xp_nc_delta_overlay"){
+            if (flag_FC && flag_ncpio_sel && !(flag_ncdelta_sel)
 			    && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)){
                   return true;
 	    }
@@ -3797,6 +3810,11 @@ int LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, EvalI
 			    && (eval.truth_isCC==0 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1
                             && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1))) return true;
                   return false;
+  }else if (ch_name == "constr_nc_pi0_Xp_nc_pi0_overlay"){
+            if (flag_FC && flag_ncpio_sel && !(flag_ncdelta_sel)
+			    && (eval.truth_isCC==0 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1
+                            && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1))) return true;
+                  return false;
   }else if (ch_name == "constr_nc_pi0_Np_cc_pi0_overlay"){
             if (flag_FC && flag_ncpio_sel && !(flag_ncdelta_sel) && (!flag_0p)
 			    && (eval.truth_isCC==1 && eval.truth_nuPdg==14 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1)
@@ -3807,12 +3825,21 @@ int LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, EvalI
 			    && (eval.truth_isCC==1 && eval.truth_nuPdg==14 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1)
 				    ) return true;
                   return false; 
+  }else if (ch_name == "constr_nc_pi0_Xp_cc_pi0_overlay"){
+            if (flag_FC && flag_ncpio_sel && !(flag_ncdelta_sel)
+			    && (eval.truth_isCC==1 && eval.truth_nuPdg==14 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1)
+				    ) return true;
+                  return false; 
   }else if (ch_name == "constr_nc_pi0_Np_nue_overlay"){
             if (flag_FC && flag_ncpio_sel && !(flag_ncdelta_sel) && (!flag_0p)
 			    && (eval.truth_isCC==1 && fabs(eval.truth_nuPdg)==12 && eval.truth_vtxInside==1)) return true;
                   return false; 
   }else if (ch_name == "constr_nc_pi0_0p_nue_overlay"){
             if (flag_FC && flag_ncpio_sel && !(flag_ncdelta_sel) && flag_0p
+			    && (eval.truth_isCC==1 && fabs(eval.truth_nuPdg)==12 && eval.truth_vtxInside==1)) return true;
+                  return false;
+  }else if (ch_name == "constr_nc_pi0_Xp_nue_overlay"){
+            if (flag_FC && flag_ncpio_sel && !(flag_ncdelta_sel)
 			    && (eval.truth_isCC==1 && fabs(eval.truth_nuPdg)==12 && eval.truth_vtxInside==1)) return true;
                   return false;
   }else if (ch_name == "constr_nc_pi0_Np_overlay"){
@@ -3837,12 +3864,23 @@ int LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, EvalI
 			    // cutting out run 1 and run 3 CCPi0 only, run 2 CCPi0 should still be included from nu overlay
 			    && !(eval.truth_isCC==1 && fabs(eval.truth_nuPdg)==12 && eval.truth_vtxInside==1)) return true;
 	   return false; 
+  }else if (ch_name == "constr_nc_pi0_Xp_overlay"){
+            if (flag_FC && flag_ncpio_sel && !(flag_ncdelta_sel)
+			    && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)
+			    && !(eval.truth_isCC==0 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1)
+			    && !((eval.run < 8317 || eval.run >= 13697) && eval.truth_isCC==1 && eval.truth_nuPdg==14 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1)
+			    // cutting out run 1 and run 3 CCPi0 only, run 2 CCPi0 should still be included from nu overlay
+			    && !(eval.truth_isCC==1 && fabs(eval.truth_nuPdg)==12 && eval.truth_vtxInside==1)) return true;
+	   return false; 
 
   }else if (ch_name == "constr_numuCC_Np" || ch_name == "constr_numuCC_Np_ext" || ch_name == "constr_numuCC_Np_dirt"){
     if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_0p)) return true;
     return false;
   }else if (ch_name == "constr_numuCC_0p" || ch_name == "constr_numuCC_0p_ext" || ch_name == "constr_numuCC_0p_dirt"){
     if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && flag_0p) return true;
+    return false;
+  }else if (ch_name == "constr_numuCC_Xp" || ch_name == "constr_numuCC_Xp_ext" || ch_name == "constr_numuCC_Xp_dirt"){
+    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel)) return true;
     return false;
   }else if (ch_name == "constr_numuCC_Np_nc_delta_overlay"){
     	    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_0p)
@@ -3852,6 +3890,12 @@ int LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, EvalI
 	    return false;
   }else if (ch_name == "constr_numuCC_0p_nc_delta_overlay"){
     	    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && flag_0p
+			    && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)){
+                  return true;
+	    }
+	    return false;
+  }else if (ch_name == "constr_numuCC_Xp_nc_delta_overlay"){
+    	    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel)
 			    && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)){
                   return true;
 	    }
@@ -3894,6 +3938,11 @@ int LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, EvalI
 			    && (eval.truth_isCC==0 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1
                             && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1))) return true;
                   return false;
+  }else if (ch_name == "constr_numuCC_Xp_nc_pi0_overlay"){
+    	    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel)
+			    && (eval.truth_isCC==0 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1
+                            && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1))) return true;
+                  return false;
   }else if (ch_name == "constr_numuCC_Np_cc_pi0_overlay"){
     	    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_0p)
 			    && (eval.truth_isCC==1 && eval.truth_nuPdg==14 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1)
@@ -3904,12 +3953,21 @@ int LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, EvalI
 			    && (eval.truth_isCC==1 && eval.truth_nuPdg==14 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1)
 				    ) return true;
                   return false; 
+  }else if (ch_name == "constr_numuCC_Xp_cc_pi0_overlay"){
+    	    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel)
+			    && (eval.truth_isCC==1 && eval.truth_nuPdg==14 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1)
+				    ) return true;
+                  return false; 
   }else if (ch_name == "constr_numuCC_Np_nue_overlay"){
     	    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_0p)
 			    && (eval.truth_isCC==1 && fabs(eval.truth_nuPdg)==12 && eval.truth_vtxInside==1)) return true;
                   return false; 
   }else if (ch_name == "constr_numuCC_0p_nue_overlay"){
     	    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && flag_0p
+			    && (eval.truth_isCC==1 && fabs(eval.truth_nuPdg)==12 && eval.truth_vtxInside==1)) return true;
+                  return false;
+  }else if (ch_name == "constr_numuCC_Xp_nue_overlay"){
+    	    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel)
 			    && (eval.truth_isCC==1 && fabs(eval.truth_nuPdg)==12 && eval.truth_vtxInside==1)) return true;
                   return false;
   }else if (ch_name == "constr_numuCC_Np_overlay"){
@@ -3928,7 +3986,223 @@ int LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, EvalI
 			    // cutting out run 1 and run 3 CCPi0 only, run 2 CCPi0 should still be included from nu overlay
 			    && !(eval.truth_isCC==1 && fabs(eval.truth_nuPdg)==12 && eval.truth_vtxInside==1)) return true;
 	   return false; 
+  }else if (ch_name == "constr_numuCC_Xp_overlay"){
+    	    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel)
+			    && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)
+			    && !(eval.truth_isCC==0 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1)
+			    && !((eval.run < 8317 || eval.run >= 13697) && eval.truth_isCC==1 && eval.truth_nuPdg==14 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1)
+			    // cutting out run 1 and run 3 CCPi0 only, run 2 CCPi0 should still be included from nu overlay
+			    && !(eval.truth_isCC==1 && fabs(eval.truth_nuPdg)==12 && eval.truth_vtxInside==1)) return true;
+	   return false; 
 
+
+  // start limited overlay channels
+  
+  }else if (ch_name == "constr_nc_pi0_Np_lim" || ch_name == "constr_nc_pi0_Np_lim_ext" || ch_name == "constr_nc_pi0_Np_lim_dirt"){
+    if (flag_FC && flag_ncpio_sel && (!flag_ncdelta_sel) && (!flag_0p)) return true;
+    return false;
+  }else if (ch_name == "constr_nc_pi0_0p_lim" || ch_name == "constr_nc_pi0_0p_lim_ext" || ch_name == "constr_nc_pi0_0p_lim_dirt"){
+    if (flag_FC && flag_ncpio_sel && (!flag_ncdelta_sel) && flag_0p) return true;
+    return false;
+  }else if (ch_name == "constr_nc_pi0_Xp_lim" || ch_name == "constr_nc_pi0_Xp_lim_ext" || ch_name == "constr_nc_pi0_Xp_lim_dirt"){
+    if (flag_FC && flag_ncpio_sel && (!flag_ncdelta_sel)) return true;
+    return false;
+  }else if (ch_name == "constr_nc_pi0_Np_lim_nc_delta_overlay"){
+            if (flag_FC && flag_ncpio_sel && !(flag_ncdelta_sel) && (!flag_0p)
+			    && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)){
+                  return true;
+	    }
+	    return false;
+  }else if (ch_name == "constr_nc_pi0_0p_lim_nc_delta_overlay"){
+            if (flag_FC && flag_ncpio_sel && !(flag_ncdelta_sel) && flag_0p
+			    && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)){
+                  return true;
+	    }
+	    return false;
+  }else if (ch_name == "constr_nc_pi0_Xp_lim_nc_delta_overlay"){
+            if (flag_FC && flag_ncpio_sel && !(flag_ncdelta_sel)
+			    && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)){
+                  return true;
+	    }
+	    return false;
+  }else if (ch_name == "constr_nc_pi0_Np_lim_true_Np_lim_nc_delta_overlay"){
+            if (flag_FC && flag_ncpio_sel && !(flag_ncdelta_sel) && (!flag_0p)
+			    && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)
+			    && is_true_0p(pfeval)==0){
+                  return true;
+	    }
+	    return false;
+  }else if (ch_name == "constr_nc_pi0_0p_lim_true_Np_lim_nc_delta_overlay"){
+            if (flag_FC && flag_ncpio_sel && !(flag_ncdelta_sel) && flag_0p
+			    && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)
+			    && is_true_0p(pfeval)==0){
+                  return true;
+	    }
+	    return false;
+  }else if (ch_name == "constr_nc_pi0_Np_lim_true_0p_lim_nc_delta_overlay"){
+            if (flag_FC && flag_ncpio_sel && !(flag_ncdelta_sel) && flag_0p
+			    && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)
+			    && is_true_0p(pfeval)==1){
+                  return true;
+	    }
+	    return false;
+  }else if (ch_name == "constr_nc_pi0_0p_lim_true_0p_lim_nc_delta_overlay"){
+            if (flag_FC && flag_ncpio_sel && !(flag_ncdelta_sel) && (!flag_0p)
+			    && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)
+			    && is_true_0p(pfeval)==1){
+                  return true;
+	    }
+	    return false;
+  }else if (ch_name == "constr_nc_pi0_Np_lim_nc_pi0_overlay"){
+            if (flag_FC && flag_ncpio_sel && !(flag_ncdelta_sel) && (!flag_0p)
+			    && (eval.truth_isCC==0 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1
+                            && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1))) return true;
+                  return false;
+  }else if (ch_name == "constr_nc_pi0_0p_lim_nc_pi0_overlay"){
+            if (flag_FC && flag_ncpio_sel && !(flag_ncdelta_sel) && flag_0p
+			    && (eval.truth_isCC==0 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1
+                            && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1))) return true;
+                  return false;
+  }else if (ch_name == "constr_nc_pi0_Xp_lim_nc_pi0_overlay"){
+            if (flag_FC && flag_ncpio_sel && !(flag_ncdelta_sel)
+			    && (eval.truth_isCC==0 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1
+                            && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1))) return true;
+                  return false;
+  }else if (ch_name == "constr_nc_pi0_Np_lim_overlay"){
+	    /*if (flag_FC && flag_ncpio_sel && !(flag_ncdelta_sel) && (!flag_0p)){
+	    	if (eval.truth_isCC==1 && eval.truth_nuPdg==14 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1){
+			std::cout << "true CCPi0 in nu overlay, NC Pi0 Np_lim selection\n";
+			std::cout << "eval.run = " << eval.run << "\n";
+		}
+	    }*/
+            if (flag_FC && flag_ncpio_sel && !(flag_ncdelta_sel) && (!flag_0p)
+			    && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)
+			    && !(eval.truth_isCC==0 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1)
+			    //&& !((eval.run < 8317 || eval.run >= 13697) && eval.truth_isCC==1 && eval.truth_nuPdg==14 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1)
+			    // cutting out run 1 and run 3 CCPi0 only, run 2 CCPi0 should still be included from nu overlay
+			    //&& !(eval.truth_isCC==1 && fabs(eval.truth_nuPdg)==12 && eval.truth_vtxInside==1)
+			    ) return true;
+	   return false; 
+  }else if (ch_name == "constr_nc_pi0_0p_lim_overlay"){
+            if (flag_FC && flag_ncpio_sel && !(flag_ncdelta_sel) && flag_0p
+			    && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)
+			    && !(eval.truth_isCC==0 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1)
+			    //&& !((eval.run < 8317 || eval.run >= 13697) && eval.truth_isCC==1 && eval.truth_nuPdg==14 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1)
+			    // cutting out run 1 and run 3 CCPi0 only, run 2 CCPi0 should still be included from nu overlay
+			    //&& !(eval.truth_isCC==1 && fabs(eval.truth_nuPdg)==12 && eval.truth_vtxInside==1)
+			    ) return true;
+	   return false; 
+  }else if (ch_name == "constr_nc_pi0_Xp_lim_overlay"){
+            if (flag_FC && flag_ncpio_sel && !(flag_ncdelta_sel)
+			    && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)
+			    && !(eval.truth_isCC==0 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1)
+			    //&& !((eval.run < 8317 || eval.run >= 13697) && eval.truth_isCC==1 && eval.truth_nuPdg==14 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1)
+			    // cutting out run 1 and run 3 CCPi0 only, run 2 CCPi0 should still be included from nu overlay
+			    //&& !(eval.truth_isCC==1 && fabs(eval.truth_nuPdg)==12 && eval.truth_vtxInside==1)
+			    ) return true;
+	   return false; 
+
+  }else if (ch_name == "constr_numuCC_Np_lim" || ch_name == "constr_numuCC_Np_lim_ext" || ch_name == "constr_numuCC_Np_lim_dirt"){
+    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_0p)) return true;
+    return false;
+  }else if (ch_name == "constr_numuCC_0p_lim" || ch_name == "constr_numuCC_0p_lim_ext" || ch_name == "constr_numuCC_0p_lim_dirt"){
+    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && flag_0p) return true;
+    return false;
+  }else if (ch_name == "constr_numuCC_Xp_lim" || ch_name == "constr_numuCC_Xp_lim_ext" || ch_name == "constr_numuCC_Xp_lim_dirt"){
+    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel)) return true;
+    return false;
+  }else if (ch_name == "constr_numuCC_Np_lim_nc_delta_overlay"){
+    	    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_0p)
+			    && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)){
+                  return true;
+	    }
+	    return false;
+  }else if (ch_name == "constr_numuCC_0p_lim_nc_delta_overlay"){
+    	    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && flag_0p
+			    && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)){
+                  return true;
+	    }
+	    return false;
+  }else if (ch_name == "constr_numuCC_Xp_lim_nc_delta_overlay"){
+    	    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel)
+			    && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)){
+                  return true;
+	    }
+	    return false;
+  }else if (ch_name == "constr_numuCC_Np_lim_true_Np_lim_nc_delta_overlay"){
+    	    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_0p)
+			    && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)
+			    && is_true_0p(pfeval)==0){
+                  return true;
+	    }
+	    return false;
+  }else if (ch_name == "constr_numuCC_0p_lim_true_Np_lim_nc_delta_overlay"){
+    	    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && flag_0p
+			    && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)
+			    && is_true_0p(pfeval)==0){
+                  return true;
+	    }
+	    return false;
+  }else if (ch_name == "constr_numuCC_Np_lim_true_0p_lim_nc_delta_overlay"){
+    	    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_0p)
+			    && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)
+			    && is_true_0p(pfeval)==1){
+                  return true;
+	    }
+	    return false;
+  }else if (ch_name == "constr_numuCC_0p_lim_true_0p_lim_nc_delta_overlay"){
+    	    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && flag_0p
+			    && (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)
+			    && is_true_0p(pfeval)==1){
+                  return true;
+	    }
+	    return false;
+  }else if (ch_name == "constr_numuCC_Np_lim_nc_pi0_overlay"){
+    	    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_0p)
+			    && (eval.truth_isCC==0 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1
+                            && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1))) return true;
+                  return false;
+  }else if (ch_name == "constr_numuCC_0p_lim_nc_pi0_overlay"){
+    	    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && flag_0p
+			    && (eval.truth_isCC==0 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1
+                            && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1))) return true;
+                  return false;
+  }else if (ch_name == "constr_numuCC_Xp_lim_nc_pi0_overlay"){
+    	    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel)
+			    && (eval.truth_isCC==0 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1
+                            && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1))) return true;
+                  return false;
+  }else if (ch_name == "constr_numuCC_Np_lim_overlay"){
+    	    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && (!flag_0p)
+			    && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)
+			    && !(eval.truth_isCC==0 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1)
+			    //&& !((eval.run < 8317 || eval.run >= 13697) && eval.truth_isCC==1 && eval.truth_nuPdg==14 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1)
+			    // cutting out run 1 and run 3 CCPi0 only, run 2 CCPi0 should still be included from nu overlay
+			    //&& !(eval.truth_isCC==1 && fabs(eval.truth_nuPdg)==12 && eval.truth_vtxInside==1)
+			    ) return true;
+	   return false; 
+  }else if (ch_name == "constr_numuCC_0p_lim_overlay"){
+    	    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel) && flag_0p
+			    && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)
+			    && !(eval.truth_isCC==0 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1)
+			    //&& !((eval.run < 8317 || eval.run >= 13697) && eval.truth_isCC==1 && eval.truth_nuPdg==14 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1)
+			    // cutting out run 1 and run 3 CCPi0 only, run 2 CCPi0 should still be included from nu overlay
+			    //&& !(eval.truth_isCC==1 && fabs(eval.truth_nuPdg)==12 && eval.truth_vtxInside==1)
+			    ) return true;
+	   return false; 
+  }else if (ch_name == "constr_numuCC_Xp_lim_overlay"){
+    	    if (flag_FC && flag_numuCC && (!flag_ncpio_sel) && (!flag_ncdelta_sel)
+			    && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)
+			    && !(eval.truth_isCC==0 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1)
+			    //&& !((eval.run < 8317 || eval.run >= 13697) && eval.truth_isCC==1 && eval.truth_nuPdg==14 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1)
+			    // cutting out run 1 and run 3 CCPi0 only, run 2 CCPi0 should still be included from nu overlay
+			    //&& !(eval.truth_isCC==1 && fabs(eval.truth_nuPdg)==12 && eval.truth_vtxInside==1)
+			    ) return true;
+	   return false; 
+
+  
+
+  // end limited overlay channels
 
 
 

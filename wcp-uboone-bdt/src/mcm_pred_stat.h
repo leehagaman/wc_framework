@@ -140,13 +140,13 @@ void LEEana::CovMatrix::gen_pred_stat_cov_matrix(int run, std::map<int, TH1F*>& 
     map_filename_histo[filename] = htemp;
   }
 
-  std::cout << "about to start bootstrapping steps...\n"; 
+  //std::cout << "about to start bootstrapping steps...\n"; 
 
   //int nround = 5000;
   int nround = 500; // lhagaman changed, 5000 seemed to take a long time
   //int nround = 10; // lhagaman temp
   for (int qx = 0; qx != nround; qx++){
-    if (qx % 500 ==0) std::cout << qx << std::endl;
+    if (qx % 100 ==0) std::cout << qx << std::endl;
     
     for (int i=0;i!=rows;i++){
       x[i] = 0;

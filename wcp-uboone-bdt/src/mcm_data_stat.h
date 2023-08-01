@@ -66,8 +66,9 @@ void LEEana::CovMatrix::gen_data_stat_cov_matrix(int run, std::map<int, TH1F*>& 
   } 
 
   // working on the boostrapping
-  for (int qx = 0; qx != 5000; qx++){
-    if (qx % 500 ==0) std::cout << qx << std::endl;
+  // lhagaman 2023_07_18, lowered 5000 to 500
+  for (int qx = 0; qx != 500; qx++){
+    if (qx % 100 ==0) std::cout << qx << std::endl;
 
     for (int i=0;i!=rows;i++){
       x[i] = 0;

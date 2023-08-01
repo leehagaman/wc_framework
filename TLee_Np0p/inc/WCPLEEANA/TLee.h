@@ -69,7 +69,12 @@ public:
     flag_syst_detector   = false;
     flag_syst_additional = false;
     flag_syst_mc_stat    = false;
-    
+   
+    flag_syst_reweight_cor = false;
+    flag_syst_reweight = false;
+
+    flag_syst_mc_data_stat_cor = false;
+
     flag_lookelsewhere = false;
   }
 
@@ -87,6 +92,8 @@ public:
   bool flag_syst_detector;
   bool flag_syst_additional;
   bool flag_syst_mc_stat;
+  bool flag_syst_mc_data_stat_cor;
+
   bool flag_syst_reweight;
   bool flag_syst_reweight_cor;
 
@@ -128,6 +135,13 @@ public:
   TMatrixD matrix_input_cov_additional;
   TMatrixD matrix_input_cov_reweight;
   TMatrixD matrix_input_cov_reweight_cor;
+
+  // added for stat correlations, lhagaman 2023_07_20
+  TMatrixD matrix_data_MCstat_correlation; //added
+  TMatrixD matrix_pred_MCstat_correlation; //added
+  TMatrixD matrix_absolute_data_stat_cov;//added
+  TMatrixD matrix_absolute_pred_stat_cov;//added 
+
 
   TMatrixD matrix_input_cov_flux;
   TMatrixD matrix_input_cov_Xs;

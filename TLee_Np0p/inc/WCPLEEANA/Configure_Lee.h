@@ -12,9 +12,9 @@ namespace config_Lee
   int syst_cov_flux_Xs_begin = 1;// files in flux_Xs_directory above
   int syst_cov_flux_Xs_end   = 19;
  
-  int syst_cov_mc_stat_begin = 0;// files in mc_directory above
+  int syst_cov_mc_stat_begin = 7;// files in mc_directory above
   //int syst_cov_mc_stat_end   = 99;
-  int syst_cov_mc_stat_end   = 0; // this version should be for no LEE
+  int syst_cov_mc_stat_end   = 7; // this version should be for no LEE
 
   
   int channels_observation = 0;// data channels (=hdata_obsch_# in spectra_file above)
@@ -58,8 +58,10 @@ namespace config_Lee
   bool flag_syst_detector   = 1;
   bool flag_syst_additional = 1;
   bool flag_syst_mc_stat    = 1;
-  bool flag_syst_reweight        = 1;
-  bool flag_syst_reweight_cor    = 1;
+  bool flag_syst_mc_data_stat_cor = 1; // adds off-diagonal elements to the data and pred stat cor matrices
+
+  bool flag_syst_reweight        = 0;
+  bool flag_syst_reweight_cor    = 0;
 
   //double Lee_strength_for_outputfile_covariance_matrix = 1;
   double Lee_strength_for_outputfile_covariance_matrix = 0;

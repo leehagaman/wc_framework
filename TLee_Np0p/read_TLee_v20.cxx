@@ -379,7 +379,104 @@ int main(int argc, char** argv)
 
 	//////////////////////////////// Scripts:
 
-	if ( 1 ) {
+	bool chi2_grid_checks = false;
+	if (chi2_grid_checks) cout << "checking for negative chi2 values...\n";
+	if (chi2_grid_checks) {
+		for (float i = 0; i <= 20; i += 1){
+			for (float j = 0; j <= 20; j += 1) {
+				Lee_test->scaleF_Lee_Np = 1;
+		                Lee_test->scaleF_Lee_0p = 1;
+		                Lee_test->Set_Collapse();// apply the values
+                		Lee_test->Set_toy_Asimov();
+                		double pars_2d[2] = {i, j};
+                		double chi2_var = Lee_test->FCN_Np_0p( pars_2d );// calcualte the chi2 value at the point
+				if (chi2_var < 0) cout << "\ntesting chi2 value for asimov data at " << i << ", " << j << "\n";
+                		if (chi2_var < 0) cout<<"   negative chi2! "<<chi2_var<<endl;
+			}
+		}
+	}	
+	if (chi2_grid_checks) {
+		for (float i = 0; i <= 20; i += 1){
+			for (float j = 0; j <= 20; j += 1) {
+				Lee_test->scaleF_Lee_Np = 1;
+		                Lee_test->scaleF_Lee_0p = 1;
+		                Lee_test->Set_Collapse();// apply the values
+                		Lee_test->Set_measured_data();
+				double pars_2d[2] = {i, j};
+                		double chi2_var = Lee_test->FCN_Np_0p( pars_2d );// calcualte the chi2 value at the point
+				if (chi2_var < 0) cout << "\ntesting chi2 value for real data at " << i << ", " << j << "\n";
+                		if (chi2_var < 0) cout<<"   negative chi2! "<<chi2_var<<endl;
+			}
+		}
+	}	
+	if (chi2_grid_checks) cout << "done checking for negative chi2 values\n";
+
+
+	bool various_chi2_checks = false;
+
+	if ( various_chi2_checks ) {
+
+		cout << "\ntesting chi2 value for asimov data at 0, 0:\n";
+		// set the data to correspond to 1,1
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse();// apply the values
+		Lee_test->Set_toy_Asimov();
+
+		// set the prediction to correspond to a grid value
+		double pars_2d[2] = {0, 0};
+		//double pars_2d[2] = {0.4964186, 85.360665};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d );// calcualte the chi2 value at the point
+		cout<<" ---> chi2_var "<<chi2_var<<endl;
+
+		//Lee_test->Minimization_Lee_Np_0p_strength_FullCov(2., 2., "");
+		//double chi2_min = Lee_test->minimization_chi2;
+		//cout<<" ---> chi2_min "<<chi2_min<<endl;  
+	}
+
+	if ( various_chi2_checks ) {
+
+		cout << "\ntesting chi2 value for asimov data at 1, 1:\n";
+		// set the data to correspond to 1,1
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse();// apply the values
+		Lee_test->Set_toy_Asimov();
+
+		// set the prediction to correspond to a grid value
+		double pars_2d[2] = {1, 1};
+		//double pars_2d[2] = {0.4964186, 85.360665};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d );// calcualte the chi2 value at the point
+		cout<<" ---> chi2_var "<<chi2_var<<endl;
+
+		//Lee_test->Minimization_Lee_Np_0p_strength_FullCov(2., 2., "");
+		//double chi2_min = Lee_test->minimization_chi2;
+		//cout<<" ---> chi2_min "<<chi2_min<<endl;  
+	}
+	
+	if ( various_chi2_checks ) {
+
+		cout << "\ntesting chi2 value for asimov data at 5, 5:\n";
+		// set the data to correspond to 1,1
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse();// apply the values
+		Lee_test->Set_toy_Asimov();
+
+		// set the prediction to correspond to a grid value
+		double pars_2d[2] = {5, 5};
+		//double pars_2d[2] = {0.4964186, 85.360665};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d );// calcualte the chi2 value at the point
+		cout<<" ---> chi2_var "<<chi2_var<<endl;
+
+		//Lee_test->Minimization_Lee_Np_0p_strength_FullCov(2., 2., "");
+		//double chi2_min = Lee_test->minimization_chi2;
+		//cout<<" ---> chi2_min "<<chi2_min<<endl;  
+	}
+
+	if ( various_chi2_checks ) {
+
+		cout << "\ntesting chi2 value for asimov data at 15, 15:\n";
 		// set the data to correspond to 1,1
 		Lee_test->scaleF_Lee_Np = 1;
 		Lee_test->scaleF_Lee_0p = 1;
@@ -397,9 +494,89 @@ int main(int argc, char** argv)
 		//cout<<" ---> chi2_min "<<chi2_min<<endl;  
 	}
 
+	if ( various_chi2_checks ) {
+
+		cout << "\ntesting chi2 value for data at 0, 0:\n";
+		// set the data to correspond to 1,1
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse();// apply the values
+		//Lee_test->Set_toy_Asimov();
+		Lee_test->Set_measured_data();
+
+		// set the prediction to correspond to a grid value
+		double pars_2d[2] = {0, 0};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d );// calcualte the chi2 value at the point
+		cout<<" ---> chi2_var "<<chi2_var<<endl;
+
+		//Lee_test->Minimization_Lee_Np_0p_strength_FullCov(2., 2., "");
+		//double chi2_min = Lee_test->minimization_chi2;
+		//cout<<" ---> chi2_min "<<chi2_min<<endl;  
+	}
+	
+	if ( various_chi2_checks ) {
+
+		cout << "\ntesting chi2 value for data at 1, 1:\n";
+		// set the data to correspond to 1,1
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse();// apply the values
+		//Lee_test->Set_toy_Asimov();
+		Lee_test->Set_measured_data();
+
+		// set the prediction to correspond to a grid value
+		double pars_2d[2] = {1, 1};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d );// calcualte the chi2 value at the point
+		cout<<" ---> chi2_var "<<chi2_var<<endl;
+
+		//Lee_test->Minimization_Lee_Np_0p_strength_FullCov(2., 2., "");
+		//double chi2_min = Lee_test->minimization_chi2;
+		//cout<<" ---> chi2_min "<<chi2_min<<endl;  
+	}
+	
+	if ( various_chi2_checks ) {
+
+		cout << "\ntesting chi2 value for data at 5, 5:\n";
+		// set the data to correspond to 1,1
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse();// apply the values
+		//Lee_test->Set_toy_Asimov();
+		Lee_test->Set_measured_data();
+
+		// set the prediction to correspond to a grid value
+		double pars_2d[2] = {5, 5};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d );// calcualte the chi2 value at the point
+		cout<<" ---> chi2_var "<<chi2_var<<endl;
+
+		//Lee_test->Minimization_Lee_Np_0p_strength_FullCov(2., 2., "");
+		//double chi2_min = Lee_test->minimization_chi2;
+		//cout<<" ---> chi2_min "<<chi2_min<<endl;  
+	}
+
+	if ( various_chi2_checks ) {
+
+		cout << "\ntesting chi2 value for data at 15, 15:\n";
+		// set the data to correspond to 1,1
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse();// apply the values
+		//Lee_test->Set_toy_Asimov();
+		Lee_test->Set_measured_data();
+
+		// set the prediction to correspond to a grid value
+		double pars_2d[2] = {15, 15};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d );// calcualte the chi2 value at the point
+		cout<<" ---> chi2_var "<<chi2_var<<endl;
+
+		//Lee_test->Minimization_Lee_Np_0p_strength_FullCov(2., 2., "");
+		//double chi2_min = Lee_test->minimization_chi2;
+		//cout<<" ---> chi2_min "<<chi2_min<<endl;  
+	}
+	
 
 
-    if( 0 ) {
+    if( 1 ) {
 
     ///////
     
