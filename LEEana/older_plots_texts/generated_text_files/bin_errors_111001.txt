@@ -1,0 +1,8 @@
+bin 1 error no constraint: 0.320004
+bin 1 error wi constraint: 0.197377
+bin 2 error no constraint: 0.400447
+bin 2 error wi constraint: 0.199966
+bin 3 error no constraint: 0.362877
+bin 3 error wi constraint: 0.246425
+bin 4 error no constraint: 0.232487
+bin 4 error wi constraint: 0.134191

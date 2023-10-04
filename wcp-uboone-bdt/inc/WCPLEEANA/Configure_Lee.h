@@ -132,7 +132,7 @@ namespace config_Lee
 
   ////////// Lee strength fitting -- data
 
-  bool flag_Lee_strength_data = 1;
+  bool flag_Lee_strength_data = 1; 
 
   ////////// MicroBooNE suggested
 

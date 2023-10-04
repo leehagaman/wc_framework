@@ -705,7 +705,7 @@ int main( int argc, char** argv )
   T_eval_cv->SetBranchStatus("match_completeness_energy",1);
   T_eval_cv->SetBranchStatus("truth_energyInside",1);
   
-  bool flag_glee_merge = true;
+  bool flag_glee_merge = false;
   if (flag_glee_merge) {
       T_eval_cv->SetBranchStatus("gl_sel_type",1);
       T_eval_cv->SetBranchStatus("gl_sel_type",1);

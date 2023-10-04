@@ -510,7 +510,7 @@ void LEEana::CovMatrix::fill_det_histograms(std::map<TString, TH1D*> map_filenam
   T_eval_cv->SetBranchStatus("match_completeness_energy",1);
   T_eval_cv->SetBranchStatus("truth_energyInside",1);
  
-  bool flag_glee_merge = true;
+  bool flag_glee_merge = false;
   if (flag_glee_merge) {
       T_eval_cv->SetBranchStatus("gl_sel_type",1);
       T_eval_cv->SetBranchStatus("gl_sel_type",1);
@@ -790,10 +790,44 @@ void LEEana::CovMatrix::fill_det_histograms(std::map<TString, TH1D*> map_filenam
       TString var_name = std::get<4>(*it);
       TString ch_name = std::get<5>(*it);
       TString add_cut = std::get<6>(*it);
+      /*
+      std::cout << "Printing get_events_info disabled_ch_names:\n";
+      for (const auto& entry : disabled_ch_names) {
+          std::cout << entry << "\n";
+      }
+      std::cout << "Printing Done\n\n";
+      */
       //      TString weight = std::get<7>(*it);
-
+      //std::cout << "\n\n\nNEW SET OF NAMES\n";
       auto it3 = disabled_ch_names.find(ch_name);
-      if (it3 != disabled_ch_names.end()) continue;
+      //for (TString const& disabled_ch_name : disabled_ch_names){
+      //  std::cout << "disabled_ch_name: " << disabled_ch_name << "\n";
+      //}
+
+      /*static std::unordered_map<std::string, bool> before_printed_map;
+      if (before_printed_map.find(std::string(ch_name.Data())) == before_printed_map.end()) { // not printed yet
+        std::cout << "Before, first time encountering channel: " << ch_name << "\n";
+        before_printed_map[std::string(ch_name.Data())] = true;
+      }*/
+
+      if (it3 != disabled_ch_names.end()){
+        /*if ((ch_name != "wc_1gNp_cc_pi0_overlay")
+         && (ch_name != "wc_1g0p_cc_pi0_overlay")
+         && (ch_name != "glee_1g1p_cc_pi0_overlay")
+         && (ch_name != "glee_1g0p_cc_pi0_overlay")
+         && (ch_name != "wc_1gNp_nue_overlay")
+         && (ch_name != "wc_1g0p_nue_overlay")
+         && (ch_name != "glee_1g1p_nue_overlay")
+         && (ch_name != "glee_1g0p_nue_overlay")
+         ) std::cout << "skipping get_events_info disabled channel: " << ch_name << "\n";*/
+        continue;
+      }
+      
+      /*static std::unordered_map<std::string, bool> after_printed_map;
+      if (after_printed_map.find(std::string(ch_name.Data())) == after_printed_map.end()) { // not printed yet
+        std::cout << "    didn't skip this channel: " << ch_name << "\n";
+        after_printed_map[std::string(ch_name.Data())] = true;
+      }*/
       
       double val = get_kine_var(kine_cv, eval_cv, pfeval_cv, tagger_cv, false, var_name);
       bool flag_pass = (get_cut_pass(ch_name, add_cut, false, eval_cv, pfeval_cv, tagger_cv, kine_cv) > 0);
@@ -801,12 +835,12 @@ void LEEana::CovMatrix::fill_det_histograms(std::map<TString, TH1D*> map_filenam
       double val1 = get_kine_var(kine_det, eval_det, pfeval_det, tagger_det, false, var_name);
       bool flag_pass1 = (get_cut_pass(ch_name, add_cut, false, eval_det, pfeval_det, tagger_det, kine_det) > 0);
       if (flag_pass || flag_pass1) {
-	std::get<4>(vec_events.at(i) ).insert(std::make_tuple(no, val, flag_pass, val1, flag_pass1));
+	      std::get<4>(vec_events.at(i) ).insert(std::make_tuple(no, val, flag_pass, val1, flag_pass1));
       }
 
       if (flag_osc && is_osc_channel(ch_name) && (!flag_updated)){
-	osc_weight = get_osc_weight(eval_cv, pfeval_cv);
-	flag_updated = true;
+        osc_weight = get_osc_weight(eval_cv, pfeval_cv);
+        flag_updated = true;
       }
       
     }
@@ -841,13 +875,13 @@ std::pair<double, double> LEEana::CovMatrix::get_bayes_errors(double num){
 
 std::vector< std::tuple<TString, int, float, float, TString, TString, TString, TString > > LEEana::CovMatrix::get_histograms(TString filename, int flag){
 
-  //std::cout << "lhagaman debug, in get_histograms, filename flag: " << filename << ", " << flag << "\n";
+  //std::cout << "\nlhagaman debug, in get_histograms, filename flag: " << filename << ", " << flag << "\n";
     
   if (flag == 0){
     auto it = map_inputfile_histograms.find(filename);
-    //std::cout << "lhagaman debug, number of elements in iterator vector: " << (it->second).size()  << "\n";
+    /*std::cout << "number of elements in iterator vector: " << (it->second).size()  << "\n";
     
-      /*std::cout << "printing it-second:\n";    
+      std::cout << "printing it-second:\n";    
       for (const auto& tuple : it->second) {
         std::cout << std::get<0>(tuple) << ", ";   // Access the first element (TString)
         std::cout << std::get<1>(tuple) << ", ";   // Access the second element (int)

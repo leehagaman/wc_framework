@@ -1,0 +1,8 @@
+bin 1 value no constraint: 42.3178
+bin 1 value wi constraint: 42.5275
+bin 2 value no constraint: 119.081
+bin 2 value wi constraint: 160.628
+bin 3 value no constraint: 26.9206
+bin 3 value wi constraint: 21.5191
+bin 4 value no constraint: 152.827
+bin 4 value wi constraint: 119.881

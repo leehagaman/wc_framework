@@ -2057,15 +2057,25 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
       TString ch_name = std::get<5>(*it);
       TString add_cut = std::get<6>(*it);
 
+      // print disabled channel names
+      std::cout << "Printing weights xs disabled_ch_names:\n";
+      for (const auto& entry : disabled_ch_names) {
+          std::cout << entry << "\n";
+      }
+      std::cout << "Printing Done\n\n";
+
       auto it3 = disabled_ch_names.find(ch_name);
-      if (it3 != disabled_ch_names.end()) continue;
+      if (it3 != disabled_ch_names.end()) {
+        std::cout << "skipping XS disabled channel: " << ch_name << "\n"; 
+        continue;
+      }
       
       float val = get_kine_var(kine, eval, pfeval, tagger, false, var_name);
       int flag_passall = (get_cut_pass(ch_name, add_cut, false, eval, pfeval, tagger, kine));
       bool flag_pass = flag_passall > 0;
       int signal_bin = -1;
       if (xs_signal_ch_names.find(ch_name) != xs_signal_ch_names.end()){
-	signal_bin = get_xs_signal_no(cut_file, map_cut_xs_bin, eval, pfeval, tagger, kine);
+	      signal_bin = get_xs_signal_no(cut_file, map_cut_xs_bin, eval, pfeval, tagger, kine);
       }
 
       //  std::cout << flag_pass << " " << signal_bin << " " << no << std::endl;

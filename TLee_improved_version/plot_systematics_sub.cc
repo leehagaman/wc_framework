@@ -133,6 +133,7 @@ void plot_systematics_sub()
   
   const int num_ch = 8;
   int bins_ch[num_ch] = {2, 2, 2, 2, 16, 16, 16, 16};  
+  
   //int bins_ch[num_ch] = {26, 26, 26, 26, 11, 11, 11};  
   int rows = matrix_absolute_additional_cov_newworld->GetNrows();
 

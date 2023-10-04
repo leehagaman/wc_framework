@@ -1934,6 +1934,8 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 	////////////////
 
 	roostr = TString::Format("h1_spectra_wi2no_%02d", index);
+	ofstream bin_contents_file(TString::Format("./generated_text_files/bin_contents_%02d.txt", index));
+	cout << "saving bin contents to file " << TString::Format("./generated_text_files/bin_contents_%02d.txt", index) << "...";
 	TString roostr_wi2no = roostr;
 	//TH1D *h1_spectra_wi2no = (TH1D*)h1_pred_Y_noConstraint->Clone(roostr);
 	TH1D *h1_spectra_wi2no = new TH1D(roostr, "", num_Y, 0, num_Y);
@@ -1944,11 +1946,13 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 		double val_wi2no = val_wiConstraint/val_noConstraint;
 		if( val_noConstraint==0 ) val_wi2no = 0;
 		h1_spectra_wi2no->SetBinContent(ibin, val_wi2no);
-
-		cout << "bin " << ibin << " value no constraint: " << val_noConstraint << "\n"; 
-		cout << "bin " << ibin << " value wi constraint: " << val_wiConstraint << "\n"; 
-
+		
+		bin_contents_file << "bin " << ibin << " value no constraint: " << val_noConstraint << "\n"; 
+		bin_contents_file << "bin " << ibin << " value wi constraint: " << val_wiConstraint << "\n"; 
 	}
+	bin_contents_file.close();
+	cout << "done\n";
+
 
 	roostr = TString::Format("canv_spectra_wi2no_%02d", index);
 	TCanvas *canv_spectra_wi2no = new TCanvas(roostr, roostr, 900, 650);
@@ -2107,15 +2111,18 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 
 	roostr = TString::Format("h1_spectra_relerr_wi_%02d", index);
 	TH1D *h1_spectra_relerr_wi = new TH1D(roostr, "", num_Y, 0, num_Y);
-
+	ofstream bin_errors_file(TString::Format("./generated_text_files/bin_errors_%02d.txt", index));
+	cout << "saving bin errors to file " << TString::Format("./generated_text_files/bin_errors_%02d.txt", index) << "...";
 	for(int ibin=1; ibin<=num_Y; ibin++) {    
 		double val_noConstraint = h1_pred_Y_noConstraint_rel_error->GetBinError(ibin);
 		double val_wiConstraint = h1_pred_Y_wiConstraint_rel_error->GetBinError(ibin);
 		h1_spectra_relerr->SetBinContent(ibin, val_noConstraint);
 		h1_spectra_relerr_wi->SetBinContent(ibin, val_wiConstraint);   
-		cout << "bin " << ibin << " error no constraint: " << val_noConstraint << "\n"; 
-		cout << "bin " << ibin << " error wi constraint: " << val_wiConstraint << "\n"; 
+		bin_errors_file << "bin " << ibin << " error no constraint: " << val_noConstraint << "\n"; 
+		bin_errors_file << "bin " << ibin << " error wi constraint: " << val_wiConstraint << "\n"; 
 	}
+	bin_errors_file.close();
+	cout << "done\n";
 
 	roostr = TString::Format("canv_spectra_relerr_%02d", index);
 	TCanvas *canv_spectra_relerr = new TCanvas(roostr, roostr, 900, 650);
@@ -2231,6 +2238,9 @@ void TLee::Plotting_systematics()
 	TH1D *h1_pred_totalsyst = new TH1D("h1_pred_totalsyst", "", rows, 0, rows);
 	TH1D *h1_meas = new TH1D("h1_meas", "", rows, 0, rows);
 
+	ofstream error_breakdown_file("./generated_text_files/error_breakdown.txt");
+	cout << "saving error breakdown to file ./generated_text_files/error_breakdown.txt" << "...";
+
 	for(int ibin=1; ibin<=rows; ibin++) {
 		for(int jbin=1; jbin<=rows; jbin++) {
 			double cov_ij = matrix_absolute_cov_newworld(ibin-1,jbin-1);      
@@ -2268,17 +2278,17 @@ void TLee::Plotting_systematics()
 					h1_reweight_cor_relerr->SetBinContent( ibin, sqrt( cov_reweight_cor )/val_cv );
 
 
-					if (ibin < 8) {
-						cout << "bin " << ibin << " total err: " << sqrt( cov_total )/val_cv << "\n";
-						cout << "bin " << ibin << " flux err: " << sqrt( cov_flux )/val_cv << "\n";
-						cout << "bin " << ibin << " Xs err: " << sqrt( cov_Xs )/val_cv << "\n";
-						cout << "bin " << ibin << " detector err: " << sqrt( cov_detector )/val_cv << "\n";
-						cout << "bin " << ibin << " mc_stat err: " << sqrt( cov_mc_stat )/val_cv << "\n";
-						cout << "bin " << ibin << " add_dirt err: " << sqrt( cov_additional )/val_cv << "\n";
-						cout << "bin " << ibin << " RW_uncorr err: " << sqrt( cov_reweight )/val_cv << "\n";
-						cout << "bin " << ibin << " RW_corr err: " << sqrt( cov_reweight_cor )/val_cv << "\n";
-						cout << "bin " << ibin << " RW_both err: " << sqrt( cov_reweight + cov_reweight_cor )/val_cv << "\n";
-					}
+					
+					error_breakdown_file << "bin " << ibin << " total err: " << sqrt( cov_total )/val_cv << "\n";
+					error_breakdown_file << "bin " << ibin << " flux err: " << sqrt( cov_flux )/val_cv << "\n";
+					error_breakdown_file << "bin " << ibin << " Xs err: " << sqrt( cov_Xs )/val_cv << "\n";
+					error_breakdown_file << "bin " << ibin << " detector err: " << sqrt( cov_detector )/val_cv << "\n";
+					error_breakdown_file << "bin " << ibin << " mc_stat err: " << sqrt( cov_mc_stat )/val_cv << "\n";
+					error_breakdown_file << "bin " << ibin << " add_dirt err: " << sqrt( cov_additional )/val_cv << "\n";
+					error_breakdown_file << "bin " << ibin << " RW_uncorr err: " << sqrt( cov_reweight )/val_cv << "\n";
+					error_breakdown_file << "bin " << ibin << " RW_corr err: " << sqrt( cov_reweight_cor )/val_cv << "\n";
+					error_breakdown_file << "bin " << ibin << " RW_both err: " << sqrt( cov_reweight + cov_reweight_cor )/val_cv << "\n";
+					
 				}
 
 				if( cov_total!=0 ) {
@@ -2297,6 +2307,8 @@ void TLee::Plotting_systematics()
 			}// ibin==jbin      
 		}// jbin
 	}// ibin
+	error_breakdown_file.close();
+	cout << "done\n";
 
 	///////////////////////
 
@@ -2734,6 +2746,8 @@ void TLee::Set_Spectra_MatrixCov()
 		if( h1_spectrum == NULL ) break;
 		map_input_spectrum_ch_str[ich] = h1_spectrum->GetTitle();
 		delete h1_spectrum;
+		//cout << "lhagaman debug, " << h1_spectrum->GetTitle() << "\n";
+		//cout << "lhagaman debug, roostr = " << roostr << "\n";
 	}
 
 	for(int ich=1; ich<=(int)map_input_spectrum_ch_str.size(); ich++) {
@@ -3017,8 +3031,9 @@ void TLee::Set_Spectra_MatrixCov()
   map_detectorfile_str[7] = detector_directory+"cov_WMThetaYZ.root";
   map_detectorfile_str[8] = detector_directory+"cov_WMX.root";
   map_detectorfile_str[9] = detector_directory+"cov_WMYZ.root";
-  // TEMPORARY LHAGAMAN DEBUG, removing LYAtt because stage 1 files from Mark seem to have it super large for NC Pi0 overlay
-  //map_detectorfile_str[10]= detector_directory+"cov_LYatt.root";
+  map_detectorfile_str[10]= detector_directory+"cov_LYatt.root";
+  // in the past, disabled LYAtt here
+
 
   map<int, TFile*>map_file_detector_frac;
   map<int, TMatrixD*>map_matrix_detector_frac;

@@ -1865,6 +1865,13 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
       TString ch_name = std::get<5>(*it);
       TString add_cut = std::get<6>(*it);
 
+      // print disabled channel names
+      std::cout << "Printing weights xs 2 disabled_ch_names:\n";
+      for (const auto& entry : disabled_ch_names) {
+          std::cout << entry << "\n";
+      }
+      std::cout << "Printing Done\n\n";
+
       auto it3 = disabled_ch_names.find(ch_name);
       if (it3 != disabled_ch_names.end()) continue;
       

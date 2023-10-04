@@ -21,11 +21,12 @@
 
 namespace LEEana{
   // this is for the real data, for fake data this should be 1 ...
-  double em_charge_scale = 0.95;
-  //double em_charge_scale = 1.0;
+  //double em_charge_scale = 0.95;
+  double em_charge_scale = 1.0;
 
   // correct reco neutrino energy and reco shower energy
   double get_reco_Enu_corr(KineInfo& kine, bool flag_data);
+  double get_reco_Enu_corr_Ep_90(KineInfo& kine, bool flag_data);
   double get_reco_showerKE_corr(PFevalInfo& pfeval, bool flag_data);
   
   double get_reco_Eproton(KineInfo& kine);
@@ -125,6 +126,24 @@ double LEEana::get_reco_Enu_corr(KineInfo& kine, bool flag_data){
   }
   return kine.kine_reco_Enu;
 }
+
+double LEEana::get_reco_Enu_corr_Ep_90(KineInfo& kine, bool flag_data){
+  double reco_Enu_corr = kine.kine_reco_add_energy;
+  if (kine.kine_reco_Enu > 0){
+    for ( size_t j=0;j!= kine.kine_energy_particle->size();j++){
+  	  if (kine.kine_energy_info->at(j) == 2 && kine.kine_particle_type->at(j) == 11){
+  	    reco_Enu_corr +=  kine.kine_energy_particle->at(j) * em_charge_scale;
+      }else if (kine.kine_particle_type->at(j) == 2212) {
+        reco_Enu_corr +=  kine.kine_energy_particle->at(j) * 0.90;
+      }else{
+  	    reco_Enu_corr +=  kine.kine_energy_particle->at(j);
+  	  }
+    }
+    return reco_Enu_corr;
+  }
+  return kine.kine_reco_Enu;
+}
+
 
 double LEEana::get_reco_showerKE_corr(PFevalInfo& pfeval, bool flag_data){
     if (flag_data){
@@ -319,6 +338,8 @@ double LEEana::get_kine_var(KineInfo& kine, EvalInfo& eval, PFevalInfo& pfeval, 
   //  }else
   if (var_name == "kine_reco_Enu"){
     return get_reco_Enu_corr(kine, flag_data);
+  }else if (var_name == "kine_reco_Enu_E_p_90"){
+    return get_reco_Enu_corr_Ep_90(kine, flag_data);
   }else if (var_name == "reco_showerKE"){
     return get_reco_showerKE_corr(pfeval, flag_data) * 1000.;
   }else if (var_name == "gl_reco_Eshower"){
@@ -3191,6 +3212,11 @@ int LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, EvalI
 		 ){
 		if (flag_numuCC && flag_FC) return true;
 		else return false;
+  // added lhagaman 2023_09_19 for cross checking Ben's E_p scaling fake data tests
+  } else if (ch_name == "numuCC_FC_bnb_sig_only_fake_ep_scaling") {
+    if (flag_numuCC && flag_FC && map_cuts_flag["XsnumuCCinFV"]) return true;
+  } else if (ch_name == "numuCC_PC_bnb_sig_only_fake_ep_scaling") {
+    if (flag_numuCC && (!flag_FC) && map_cuts_flag["XsnumuCCinFV"]) return true;
 	}else if (ch_name == "numuCC_PC_bnb" || ch_name == "BG_numuCC_PC_ext" || ch_name == "BG_numuCC_PC_dirt"
 			|| ch_name == "numuCC1_PC_bnb" || ch_name == "BG_numuCC1_PC_ext" || ch_name == "BG_numuCC1_PC_dirt"
 			|| ch_name == "numuCC2_PC_bnb" || ch_name == "BG_numuCC2_PC_ext" || ch_name == "BG_numuCC2_PC_dirt"

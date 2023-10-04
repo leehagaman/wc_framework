@@ -465,6 +465,7 @@ void plot_stat_FC()
     ////////////////////////
     ////////////////////////
     
+
     for(int iscan=max_Lee100; iscan>(int)(Lee_bestFit_data*100+0.5); iscan--) {
       double val_at_low = gh_CL_data->Eval( (iscan-1)*1./100 );
       double val_at_hgh = gh_CL_data->Eval( iscan*1./100 );
@@ -474,6 +475,24 @@ void plot_stat_FC()
         user_68_hgh = (iscan)*1./100;
       }
     }
+
+    // the above loop only runs for values greater than the best fit to set lower bounds, to loop over everything, use this one
+    double val_at_SM = -1; // these added, lhagaman 2023_09_01 for two-hypothesis tests. Haven't tested this code yet, will wait for 
+    double val_at_LEE = -1;
+    for(int iscan=max_Lee100; iscan>=0; iscan--) {
+      if (iscan % 10 == 0) cout << "test, iscan = " << iscan << "\n";
+      if (iscan == 100) { // I think I use a 100 offset here
+        val_at_SM = gh_CL_data->Eval( (iscan-1)*1./100 );
+        cout << "iscan = " << iscan << ", p_value at SM: " << val_at_SM << "\n";
+      }
+      if (iscan == 318) {
+        val_at_LEE = gh_CL_data->Eval( (iscan-1)*1./100 );
+        cout << "iscan = " << iscan << ", p_value at LEE: " << val_at_LEE << "\n";
+      }
+    }
+    cout << "1-(1-p_LEE)/(1-p_SM): " << 1-(100-val_at_LEE)/(100-val_at_SM) << "\n";
+    cout << "1-(p_LEE)/(p_SM): " << 1-val_at_LEE/val_at_SM << "\n";
+
     //// case A
     for(int idx=0; idx<=10000; idx++) {
       double val_xx = user_68_low + idx*0.0001;
