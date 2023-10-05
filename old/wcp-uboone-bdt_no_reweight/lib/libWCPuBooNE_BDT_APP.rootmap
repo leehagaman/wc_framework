@@ -1,7 +1,0 @@
-{ decls }
-namespace std {  }
-
-[ libWCPuBooNE_BDT_APP.so ]
-# List of selected classes
-class vector<std::vector<Int_t> >
-class vector<vector<int> >

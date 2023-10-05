@@ -5,6 +5,7 @@
 #pragma link C++ nestedclasses;
 
 #pragma link C++ class std::vector<std::vector<Int_t>>+;
+#pragma link C++ class std::vector<std::vector<int>>+;
 
 //#pragma link C++ namespace WCPuBooNE_BDT_APP;
 

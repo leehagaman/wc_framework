@@ -510,7 +510,7 @@ void LEEana::CovMatrix::fill_det_histograms(std::map<TString, TH1D*> map_filenam
   T_eval_cv->SetBranchStatus("match_completeness_energy",1);
   T_eval_cv->SetBranchStatus("truth_energyInside",1);
  
-  bool flag_glee_merge = false;
+  bool flag_glee_merge = true;
   if (flag_glee_merge) {
       T_eval_cv->SetBranchStatus("gl_sel_type",1);
       T_eval_cv->SetBranchStatus("gl_sel_type",1);

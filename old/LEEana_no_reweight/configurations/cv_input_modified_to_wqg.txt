@@ -1,4 +1,0 @@
-2	nu_overlay		1		/pnfs/uboone/persistent/users/xji/processed_checkout_rootfiles/checkout_prodgenie_bnb_nu_overlay_run1.root			./hist_rootfiles/checkout_prodgenie_bnb_nu_overlay_run1.root			0		3	0	1
-5       BNB                     1               /pnfs/uboone/persistent/users/xji/processed_checkout_rootfiles/checkout_fakedata_set8_run1.root                                 ./hist_rootfiles/checkout_fakedata_set8_run1.root                               1.75661e+20     13       0       1
--1	end			-1		end																end										-1		-1	-1	-1
-#file	#type			#period		#filename															#outfile_name									#ext_pot	#file_no #norm	#norm_period

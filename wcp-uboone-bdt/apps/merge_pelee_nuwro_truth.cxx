@@ -39,10 +39,12 @@ int main( int argc, char** argv )
 {
   if (argc < 3) {
     std::cout << "merge_pelee_nuwro_truth #input_file #input_pl_file #outfile" << std::endl;
-    // actual usage: ./bin/merge_pelee_nuwro_truth /home/lee/nuwro_files/checkout_prodnuwro_overlay_run2_PF.root /home/lee/hd1/pelee_files/pelee_nuWro_truth.csv /home/lee/nuwro_files/checkout_prodnuwro_overlay_run2_PF_extra_truth.root &
+    // actual usage: ./bin/merge_pelee_nuwro_truth /home/lee/hd1/nuwro_files/checkout_prodnuwro_overlay_run2_PF.root /home/lee/hd1/pelee_files/pelee_nuWro_truth.csv /home/lee/hd1/nuwro_files/checkout_prodnuwro_overlay_run2_PF_extra_truth.root &
     
     return -1;
   }
+
+  std::cout << "starting merging script...\n";
 
   TString input_file = argv[1];
   TString input_pl_file = argv[2];
@@ -51,28 +53,72 @@ int main( int argc, char** argv )
   Int_t pl_run, pl_sub, pl_evt, pl_interaction_type;  
   Float_t pl_true_nu_energy, pl_true_lep_energy;
 
+  //int pl_run, pl_sub, pl_evt, pl_interaction_type;  
+  //double pl_true_nu_energy, pl_true_lep_energy;
   
   std::map<std::pair<int, int>, std::tuple<Float_t, Float_t, Int_t>> map_pl_info;
   std::set<std::pair<int, int> > set_pl_rs;
-  
-  // read in PeLEE Np
-  if (input_pl_file != "nan")
-  {
-    ifstream infile(input_pl_file);
-    
-    while(!infile.eof()){
-      
-      infile >> pl_run >> pl_sub >> pl_evt >> pl_true_nu_energy >> pl_true_lep_energy >> pl_interaction_type;
 
-      // std::cout << gl_run << " " << gl_true_Elep << std::endl;
-      
-      map_pl_info[std::make_pair(pl_run, pl_evt)] = std::make_tuple(pl_true_nu_energy, pl_true_lep_energy, pl_interaction_type);
-      set_pl_rs.insert(std::make_pair(pl_run, pl_sub));
-    }
-    
+  std::cout << "reading csv file...\n";
+  int num_lines_read = 0;
+  
+  ifstream infile(input_pl_file);
+
+  if (!infile.is_open()) {
+      std::cerr << "Error opening file: " << input_pl_file << std::endl;
+      return 1;
   }
 
+  std::string header;
+  getline(infile, header);
+  std::cout << "Header: " << header << std::endl;
 
+  std::string line;
+  while (getline(infile, line)) {
+
+      std::istringstream iss(line);
+      std::string value;
+
+      // Read and parse each value based on comma separation
+      if (getline(iss, value, ','))
+          pl_run = std::stoi(value);
+      else
+          break;
+
+      if (getline(iss, value, ','))
+          pl_sub = std::stoi(value);
+      else
+          break;
+
+      if (getline(iss, value, ','))
+          pl_evt = std::stoi(value);
+      else
+          break;
+
+      if (getline(iss, value, ','))
+          pl_true_nu_energy = std::stod(value);
+      else
+          break;
+
+      if (getline(iss, value, ','))
+          pl_true_lep_energy = std::stod(value);
+      else
+          break;
+
+      if (getline(iss, value))
+          pl_interaction_type = std::stoi(value);
+      else
+          break;  
+
+
+      if (num_lines_read % 100000 == 0) std::cout << num_lines_read << "/? lines, read data: " << pl_run << ", " << pl_sub << ", " << pl_evt << ", " << pl_true_nu_energy << ", " << pl_true_lep_energy << ", " << pl_interaction_type << std::endl;
+
+      map_pl_info[std::make_pair(pl_run, pl_evt)] = std::make_tuple(pl_true_nu_energy, pl_true_lep_energy, pl_interaction_type);
+      set_pl_rs.insert(std::make_pair(pl_run, pl_sub));
+      num_lines_read++;
+  }
+
+  std::cout << "printing map sizes:\n";
   std::cout << map_pl_info.size()  << " " << set_pl_rs.size() << std::endl;
 
   
@@ -364,6 +410,9 @@ int main( int argc, char** argv )
   tagger.numu_cc_2_n_daughter_tracks = new std::vector<float>;
   tagger.numu_cc_2_n_daughter_all = new std::vector<float>;
 
+  // added by lee
+  //pfeval.truth_daughters = new std::vector<std::vector<Int_t> >;
+
   set_tree_address(T_BDTvars, tagger,2 );
   put_tree_address(t4, tagger,2);
 
@@ -399,7 +448,10 @@ int main( int argc, char** argv )
   t1->Branch("pl_true_lep_energy",&pl_true_lep_energy,"pl_true_lep_energy/F");
   t1->Branch("pl_interaction_type",&pl_interaction_type,"pl_interaction_type/I");
 
+  std::cout << "starting loop over entries...\n";
+
   for (int i=0;i!=T_BDTvars->GetEntries();i++){
+    if (i%10000==0) std::cout << i << "/" << T_BDTvars->GetEntries() << "...\n";
     T_BDTvars->GetEntry(i);
     T_eval->GetEntry(i); tagger.match_isFC = eval.match_isFC;
     T_KINEvars->GetEntry(i); tagger.kine_reco_Enu = kine.kine_reco_Enu;
@@ -443,6 +495,8 @@ int main( int argc, char** argv )
   
   file2->Write();
   file2->Close();
+
+  std::cout << "wrote and closed new file\n";
 
 
   return 0;
