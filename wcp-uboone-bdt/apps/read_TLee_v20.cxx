@@ -226,7 +226,7 @@ int main(int argc, char** argv)
   tree_config->Branch("vc_val_GOF_NDF", &vc_val_GOF_NDF);
   file_collapsed_covariance_matrix->cd();
 
-  Lee_test->matrix_absolute_cov_newworld.Write("matrix_absolute_cov_newworld");// (bins, bins)
+  Lee_test->matrix_absolute_cov_newworld.Write("matrix_absolute_cov_newworld"); // (bins, bins)
   Lee_test->matrix_absolute_flux_cov_newworld.Write("matrix_absolute_flux_cov_newworld");
   Lee_test->matrix_absolute_Xs_cov_newworld.Write("matrix_absolute_Xs_cov_newworld");
   Lee_test->matrix_absolute_detector_cov_newworld.Write("matrix_absolute_detector_cov_newworld");
@@ -305,7 +305,7 @@ int main(int argc, char** argv)
   
   // start joint plots
 
-  int make_joint_constrained_plots = 1;
+  int make_joint_constrained_plots = 0;
 
   if (make_joint_constrained_plots) { // four signal channel bins constrained by four constraining channels
 
@@ -314,10 +314,10 @@ int main(int argc, char** argv)
 
     // all four signal channels, no overflow bins
     vector<int>vc_target_chs;
-    vc_target_chs.push_back(0);
-    vc_target_chs.push_back(2);
-    vc_target_chs.push_back(4);
-    vc_target_chs.push_back(6);
+    //vc_target_chs.push_back(0);
+    //vc_target_chs.push_back(2);
+    //vc_target_chs.push_back(4);
+    //vc_target_chs.push_back(6);
     vector<int>vc_support_chs;
     for (int i=8; i < 8 + 16 * 4; i++){
       vc_support_chs.push_back(i);
@@ -325,7 +325,7 @@ int main(int argc, char** argv)
     Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 111001 );
   }
 
-  int make_backwards_constraint = 1;
+  int make_backwards_constraint = 0;
 
   if (make_backwards_constraint) { // four constraining channels constrained by four signal bins
     // just a hack to print the unconstrained constraining bins with errors

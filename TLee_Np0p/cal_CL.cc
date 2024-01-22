@@ -146,12 +146,18 @@ void cal_CL()
 
     int vec_size = vec_min_status->size();
     for(int isize=0; isize<vec_size; isize++) {
-      if( vec_min_status->at(isize)==0 && (vec_min_chi2->at(isize) < data_min_chi2) ) {
-	data_min_chi2 = vec_min_chi2->at(isize);
-	data_min_fNp_val = vec_min_fNp_val->at(isize);
-	data_min_f0p_val = vec_min_f0p_val->at(isize);
-	data_min_fNp_err = vec_min_fNp_err->at(isize);
-	data_min_f0p_err = vec_min_f0p_err->at(isize);	
+      if( vec_min_status->at(isize)==0 && (vec_min_chi2->at(isize) < data_min_chi2) ) { // this loops over all grid points, and just needs one of them to have a valid minimization for data
+
+        // lhagaman added, got really high data_min_fNp values occasionally 
+        if (vec_min_fNp_val->at(isize) < 100 && vec_min_f0p_val->at(isize) < 100) { // reasonable best-fit Np and 0p values, valid choice for a new best fit
+          // if it was unreasonable, continue to look for a better best fit point
+          data_min_chi2 = vec_min_chi2->at(isize);
+          data_min_fNp_val = vec_min_fNp_val->at(isize);
+          data_min_f0p_val = vec_min_f0p_val->at(isize);
+          data_min_fNp_err = vec_min_fNp_err->at(isize);
+          data_min_f0p_err = vec_min_f0p_err->at(isize);	
+        }
+        
       }
 
       map_data_chi2_var[grid_Np][grid_0p] = vec_chi2_var->at(isize);
@@ -169,6 +175,15 @@ void cal_CL()
       grid_0p = it_0p->first;
 
       map_data_dchi2[grid_Np][grid_0p] = map_data_chi2_var[grid_Np][grid_0p] - data_min_chi2;
+      
+      if (grid_Np == 16 && grid_0p == 6) {
+        cout << "lhagaman debug, (15,5) data, chi2, chi2min, dchi2: " << map_data_chi2_var[grid_Np][grid_0p] << ", " << data_min_chi2 << ", " << map_data_chi2_var[grid_Np][grid_0p] - data_min_chi2 <<"\n";
+      }
+      /*
+      if (grid_Np == 6 && grid_0p == 16) {
+        cout << "lhagaman debug, (5,15) data, chi2, chi2min, dchi2: " << map_data_chi2_var[grid_Np][grid_0p] << ", " << data_min_chi2 << ", " << map_data_chi2_var[grid_Np][grid_0p] - data_min_chi2 <<"\n";
+      }
+      */
     }
   }
 
@@ -201,17 +216,20 @@ void cal_CL()
     int vec_size = vec_min_status->size();
     for(int isize=0; isize<vec_size; isize++) {
       if( vec_min_status->at(isize)==0 ) {
-	double chi2_val = vec_chi2_var->at(isize);
-	double min_chi2 = vec_min_chi2->at(isize);
-	double dchi2 = chi2_val - min_chi2;
-	if( dchi2<0 ) {
-	  cout<<" Invalid dchi2 less than 0: "<<dchi2<<endl;
-	  continue;
-	}
+        double chi2_val = vec_chi2_var->at(isize);
+        double min_chi2 = vec_min_chi2->at(isize);
 
-	map_vec_toys_chi2_var[grid_Np][grid_0p].push_back( chi2_val );
-	map_vec_toys_min_chi2[grid_Np][grid_0p].push_back( min_chi2 );
-	map_vec_toys_dchi2[grid_Np][grid_0p].push_back( dchi2 );
+        double dchi2 = chi2_val - min_chi2;
+        double pos_dchi2 = fabs(dchi2);
+        if( dchi2 < 0 && pos_dchi2>1e-6 ) {
+          cout<<" Invalid dchi2, not super close to 0: "<<dchi2<<endl;
+          cout << "min chi2: " << min_chi2 << "\n";
+          continue;
+        }
+
+        map_vec_toys_chi2_var[grid_Np][grid_0p].push_back( chi2_val );
+        map_vec_toys_min_chi2[grid_Np][grid_0p].push_back( min_chi2 );
+        map_vec_toys_dchi2[grid_Np][grid_0p].push_back( dchi2 );
       }
     }// for(int isize=0; isize<vec_size; isize++)
     
@@ -233,11 +251,20 @@ void cal_CL()
       
       int line_CL = 0;
       for(int isize=0; isize<vec_size; isize++) {
-	double dchi2_toy = map_vec_toys_dchi2[grid_Np][grid_0p].at(isize);
-	if( dchi2_toy<map_data_dchi2[grid_Np][grid_0p] ) line_CL++;
+        double dchi2_toy = map_vec_toys_dchi2[grid_Np][grid_0p].at(isize);
+        if( dchi2_toy<map_data_dchi2[grid_Np][grid_0p] ) line_CL++;
       }// for(int isize=0; isize<vec_size; isize++)
 
+      //cout << "\nvec_size: " << vec_size << "\n";
+      //cout << "data dchi2: " << map_data_dchi2[grid_Np][grid_0p] << "\n";
+      //cout << "number of universes with toy_dchi2 < data_dchi2 (line_CL): " << line_CL << "\n";
+      //cout << "CL value: " << line_CL*1./vec_size << "\n";
+
       double value_CL = line_CL*1./vec_size;
+
+      if (grid_Np == 16 && grid_0p == 6) {
+        cout << "lhagaman debug, (15,5), num_below, num_total, CL:" << line_CL << ", " << vec_size << ", " << value_CL << "\n";
+      }
       
       h2d_space->SetBinContent(grid_Np, grid_0p, value_CL);
       

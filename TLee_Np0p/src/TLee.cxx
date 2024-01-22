@@ -102,6 +102,9 @@ void TLee::Exe_Fiedman_Cousins_Data(TMatrixD matrix_fakedata, double Lee_true_lo
 	file_data->Close();      
 }
 
+
+// commented these out, use 1D LEE strength
+/*
 void TLee::Exe_Fledman_Cousins_Asimov(double Lee_true_low, double Lee_true_hgh, double step)
 {
 	cout<<endl;
@@ -157,6 +160,7 @@ void TLee::Exe_Fledman_Cousins_Asimov(double Lee_true_low, double Lee_true_hgh, 
 	file_Asimov->Close();
 
 }
+
 
 void TLee::Exe_Feldman_Cousins(double Lee_true_low, double Lee_true_hgh, double step, int num_toy, int ifile)
 {
@@ -223,6 +227,7 @@ void TLee::Exe_Feldman_Cousins(double Lee_true_low, double Lee_true_hgh, double 
 	file_FC->Close();
 
 }
+*/
 
 /// start additional Np0p from Xiangpan
 
@@ -383,17 +388,25 @@ double TLee::FCN_Np_0p(const double *par)
 
 	// start lhagaman custom chi2 calculation
 
-	bool use_custom_chi2 = true;
+	bool use_custom_joint_chi2 = true; // here, joint refers to sig+bkg channels
+	bool use_custom_constrained_chi2 = false;
+	bool all_channels = false;
+	bool just_wc = true;
+	bool just_glee = false;
+	bool exclude_1g_overflow_bins = false; // currently works for joint chi2 but not constrained chi2
+	bool exclude_1g_overflow_bins_method_2 = true; // zeros the data bins instead of rebuilding the covariance matrix
 
-	if (use_custom_chi2) {
+	if (use_custom_joint_chi2) {
+
+		std::cout << "printing data spectrum:\n";
+		for (int i=0; i<matrix_meas.GetNcols(); i++){
+			std::cout << matrix_meas(0, i) << ", ";
+		}
+		std::cout << "done printing data spectrum\n";
 
 		bool two_bin_test = false;
 		bool four_bin_test = false;
 		bool eight_bin_test = false;
-
-		bool all_channels = false;
-		bool just_wc = false;
-		bool just_glee = true;
 
 		TMatrixD matrix_cov_total_user = matrix_cov_syst_temp;
 
@@ -468,6 +481,24 @@ double TLee::FCN_Np_0p(const double *par)
 		TMatrixDSub(user_matrix_cov, tar_bins, tar_bins + constr_bins - 1, 0, tar_bins - 1) = matrix_cov_total_user.GetSub(ind_constr_start, ind_constr_end - 1, ind_tar_start, ind_tar_end - 1);
 		TMatrixDSub(user_matrix_cov, tar_bins, tar_bins + constr_bins - 1, tar_bins, tar_bins + constr_bins - 1) = matrix_cov_total_user.GetSub(ind_constr_start, ind_constr_end - 1, ind_constr_start, ind_constr_end - 1);
 
+		// print user_matrix_cov
+		/*std::cout << "printing covariance matrix:\n";
+		for (int i=0; i<user_matrix_cov.GetNrows(); i++){
+			for (int j=0; j<user_matrix_cov.GetNrows(); j++){
+				std::cout << user_matrix_cov(i, j) << ", ";
+			}
+			std::cout << "\n";
+		}
+		std::cout << "done printing covariance matrix\n";
+		*/
+
+		// print prediction
+		std::cout << "printing prediction:\n";
+		for (int i=0; i<user_matrix_pred.GetNcols(); i++){
+			std::cout << user_matrix_pred(0, i) << ", ";
+		}
+		std::cout << "\ndone printing prediction\n";
+
 		TMatrixD user_matrix_cov_inv = user_matrix_cov;
 		user_matrix_cov_inv.Invert();
 
@@ -492,7 +523,7 @@ double TLee::FCN_Np_0p(const double *par)
 			cout << "user_matrix_data signals: " << user_matrix_data(0,0) << " " << user_matrix_data(0,2) << " " << user_matrix_data(0,4) << " " << user_matrix_data(0,6)  << "\n";
 			cout << "user_matrix_pred signals: " << user_matrix_pred(0,0) << " " << user_matrix_pred(0,2) << " " << user_matrix_pred(0,4) << " " << user_matrix_pred(0,6)  << "\n";
 			cout << "matrix_delta_user signals: " << matrix_delta_user(0,0) << " " << matrix_delta_user(0,2) << " " << matrix_delta_user(0,4) << " " << matrix_delta_user(0,6)  << "\n";
-			cout << "user_matrix_cov signals: " << user_matrix_cov(0,0) << " " << user_matrix_cov(0,2) << " " << user_matrix_cov(0,4) << " " << user_matrix_cov(0,6)  << "\n";
+			/*cout << "user_matrix_cov signals: " << user_matrix_cov(0,0) << " " << user_matrix_cov(0,2) << " " << user_matrix_cov(0,4) << " " << user_matrix_cov(0,6)  << "\n";
 			cout << "                       : " << user_matrix_cov(2,0) << " " << user_matrix_cov(2,2) << " " << user_matrix_cov(2,4) << " " << user_matrix_cov(2,6)  << "\n";
 			cout << "                       : " << user_matrix_cov(4,0) << " " << user_matrix_cov(4,2) << " " << user_matrix_cov(4,4) << " " << user_matrix_cov(4,6)  << "\n";
 			cout << "                       : " << user_matrix_cov(6,0) << " " << user_matrix_cov(6,2) << " " << user_matrix_cov(6,4) << " " << user_matrix_cov(6,6)  << "\n";
@@ -508,7 +539,7 @@ double TLee::FCN_Np_0p(const double *par)
 			cout << "                            : " << user_matrix_cov(2,0)/(user_matrix_pred(0,2)*user_matrix_pred(0,0)) << " " << user_matrix_cov(2,2)/(user_matrix_pred(0,2)*user_matrix_pred(0,2)) << " " << user_matrix_cov(2,4)/(user_matrix_pred(0,2)*user_matrix_pred(0,4)) << " " << user_matrix_cov(2,6)/(user_matrix_pred(0,2)*user_matrix_pred(0,6))  << "\n";
 			cout << "                            : " << user_matrix_cov(4,0)/(user_matrix_pred(0,4)*user_matrix_pred(0,0)) << " " << user_matrix_cov(4,2)/(user_matrix_pred(0,4)*user_matrix_pred(0,2)) << " " << user_matrix_cov(4,4)/(user_matrix_pred(0,4)*user_matrix_pred(0,4)) << " " << user_matrix_cov(4,6)/(user_matrix_pred(0,4)*user_matrix_pred(0,6))  << "\n";
 			cout << "                            : " << user_matrix_cov(6,0)/(user_matrix_pred(0,6)*user_matrix_pred(0,0)) << " " << user_matrix_cov(6,2)/(user_matrix_pred(0,6)*user_matrix_pred(0,2)) << " " << user_matrix_cov(6,4)/(user_matrix_pred(0,6)*user_matrix_pred(0,4)) << " " << user_matrix_cov(6,6)/(user_matrix_pred(0,6)*user_matrix_pred(0,6))  << "\n";
-
+			*/
 		}
 
 		bool print_eight_bins = false;
@@ -534,23 +565,156 @@ double TLee::FCN_Np_0p(const double *par)
 			cout << "                            : " << user_matrix_cov(12,0)/(user_matrix_pred(0,12)*user_matrix_pred(0,0)) << " " << user_matrix_cov(12,2)/(user_matrix_pred(0,12)*user_matrix_pred(0,2)) << " " << user_matrix_cov(12,4)/(user_matrix_pred(0,12)*user_matrix_pred(0,4)) << " " << user_matrix_cov(12,6)/(user_matrix_pred(0,12)*user_matrix_pred(0,6))  << " " << user_matrix_cov(12,8)/(user_matrix_pred(0,12)*user_matrix_pred(0,8))  << " " << user_matrix_cov(12,10)/(user_matrix_pred(0,12)*user_matrix_pred(0,10))  << " " << user_matrix_cov(12,12)/(user_matrix_pred(0,12)*user_matrix_pred(0,12))  << " " << user_matrix_cov(12,14)/(user_matrix_pred(0,12)*user_matrix_pred(0,14)) << "\n";
 			cout << "                            : " << user_matrix_cov(14,0)/(user_matrix_pred(0,14)*user_matrix_pred(0,0)) << " " << user_matrix_cov(14,2)/(user_matrix_pred(0,14)*user_matrix_pred(0,2)) << " " << user_matrix_cov(14,4)/(user_matrix_pred(0,14)*user_matrix_pred(0,4)) << " " << user_matrix_cov(14,6)/(user_matrix_pred(0,14)*user_matrix_pred(0,6))  << " " << user_matrix_cov(14,8)/(user_matrix_pred(0,14)*user_matrix_pred(0,8))  << " " << user_matrix_cov(14,10)/(user_matrix_pred(0,14)*user_matrix_pred(0,10))  << " " << user_matrix_cov(14,12)/(user_matrix_pred(0,14)*user_matrix_pred(0,12))  << " " << user_matrix_cov(14,14)/(user_matrix_pred(0,14)*user_matrix_pred(0,14)) << "\n";
 
+		}
 
+		double chi2_user;
 
+		//std::cout << "data, pred counts:\n";
+		//for (int j_=0; j_ < 8; j_++){
+		//	std::cout << "   " << j_ << ", " << user_matrix_data(0, j_) << ", " << user_matrix_pred(0, j_) << "\n";
+		//}
 
+		if (exclude_1g_overflow_bins) { 
+			// cutting out 1g channel overflow bins, which are explicitly made empty for data and prediction, 
+			// but can have pseudo-experiments generated with statistical fluctuations from zero
+
+			//std::cout << "original chi2 value: " << (matrix_delta_user * user_matrix_cov_inv * matrix_delta_user_t)(0,0) << "\n";
+			TMatrixD new_chi2_vals = ElementMult(matrix_delta_user_t, user_matrix_cov_inv * matrix_delta_user_t);
+			double new_sum_total = 0;
+			double new_sum = 0;
+			for (int i_=0; i_ < new_chi2_vals.GetNrows(); i_++){
+				new_sum_total += new_chi2_vals(i_, 0);
+				if ((all_channels && (i_!=1 && i_!=3 && i_!=5 && i_!=7))
+				|| (just_wc && (i_!=1 && i_!=3))
+				|| (just_glee && (i_!=1 && i_!=3))) {
+					new_sum += new_chi2_vals(i_, 0);
+				} else {
+					//std::cout << "  overflow bin val: " << i_ << ", " << user_matrix_pred(0, i_) << ", " << user_matrix_data(0, i_) << "\n";
+				}
+			}
+			std::cout << "recalculated original chi2 value: " << new_sum_total << "\n";
+			std::cout << "new chi2 value: " << new_sum << "\n";
+			chi2_user = new_sum;
+		} else if (exclude_1g_overflow_bins_method_2) {
+
+			TMatrixD new_matrix_data = user_matrix_data;
+			new_matrix_data(0, 1) = 0;
+			new_matrix_data(0, 3) = 0;
+			new_matrix_data(0, 5) = 0;
+			new_matrix_data(0, 7) = 0;
+			TMatrixD new_matrix_pred = user_matrix_pred;
+			new_matrix_pred(0, 1) = 0;
+			new_matrix_pred(0, 3) = 0;
+			new_matrix_pred(0, 5) = 0;
+			new_matrix_pred(0, 7) = 0;
+
+			TMatrixD new_matrix_delta_user = new_matrix_pred - new_matrix_data;
+			TMatrixD new_matrix_delta_user_t = new_matrix_delta_user;
+			new_matrix_delta_user_t.T();
+			chi2_user = (new_matrix_delta_user * user_matrix_cov_inv * new_matrix_delta_user_t)(0,0);
+			std::cout << "recalculated original chi2 value: 9999999\n";
+			std::cout << "new chi2 value: " << chi2_user << "\n";
+		} else {
+			chi2_user = (matrix_delta_user * user_matrix_cov_inv * matrix_delta_user_t)(0,0);
 		}
 
 
-
-
-
-		double chi2_user = (matrix_delta_user * user_matrix_cov_inv * matrix_delta_user_t)(0,0);
 
 		if (print_1_bin || print_signal_bins) cout << "chi2_user: " << chi2_user << "\n";
 
 		chi2 = chi2_user;
 
+	}
+
+	if (use_custom_constrained_chi2) {
+
+		TMatrixD matrix_cov_total_user = matrix_cov_syst_temp;
+
+		// these are labeled as target and constraining, but actually we're doing a joint chi2 and not a constraint in this code
+		int ind_tar_start = 0;
+		int ind_tar_end = 0; // up to but not including
+		int ind_constr_start = 0;
+		int ind_constr_end = 0;
+
+		if (all_channels) {
+			ind_tar_start = 0;
+			ind_tar_end = 0 + 2*4; // two bins, four channels
+			ind_constr_start = 2*4;
+			ind_constr_end = 2*4 + 4*16;
+		}
+
+		if (just_wc) {
+			ind_tar_start = 0;
+			ind_tar_end = 0 + 2*2;
+			ind_constr_start = 2*4;
+			ind_constr_end = 2*4 + 4*16;
+		}
+
+		if (just_glee) {
+			ind_tar_start = 2*2;
+			ind_tar_end = 2*2 + 2*2;
+			ind_constr_start = 2*4;
+			ind_constr_end = 2*4 + 4*16;
+		}
+
+
+		TMatrixD matrix_pred_X;
+		TMatrixD matrix_data_X;
+		TMatrixD matrix_pred_Y;
+		TMatrixD matrix_data_Y;
+		TMatrixD matrix_Y_under_X;
+		TMatrixD matrix_YY_under_XX;
+
+		matrix_pred_X.Clear();
+		matrix_pred_X.ResizeTo(1, ind_constr_end - ind_constr_start);
+		matrix_pred_X = matrix_pred.GetSub(0, 0, ind_constr_start, ind_constr_end - 1);
+		matrix_data_X.Clear();
+		matrix_data_X.ResizeTo(1, ind_constr_end - ind_constr_start);
+		matrix_data_X = matrix_meas.GetSub(0, 0, ind_constr_start, ind_constr_end - 1);
+
+		matrix_pred_Y.Clear();
+		matrix_pred_Y.ResizeTo(1, ind_tar_end - ind_tar_start);
+		matrix_pred_Y = matrix_pred.GetSub(0, 0, ind_tar_start, ind_tar_end - 1);
+		matrix_data_Y.Clear();
+		matrix_data_Y.ResizeTo(1, ind_tar_end - ind_tar_start);
+		matrix_data_Y = matrix_meas.GetSub(0, 0, ind_tar_start, ind_tar_end - 1);
+
+		TMatrixD matrix_XX = matrix_cov_total_user.GetSub(ind_constr_start, ind_constr_end - 1, ind_constr_start, ind_constr_end - 1);
+		TMatrixD matrix_XX_inv = matrix_XX;
+		matrix_XX_inv.Invert();
+
+		TMatrixD matrix_YY = matrix_cov_total_user.GetSub(ind_tar_start, ind_tar_end - 1, ind_tar_start, ind_tar_end - 1);
+
+		TMatrixD matrix_YX = matrix_cov_total_user.GetSub(ind_tar_start, ind_tar_end - 1, ind_constr_start, ind_constr_end - 1);
+		TMatrixD matrix_XY(ind_constr_end - ind_constr_start, ind_tar_end - ind_tar_start);
+		matrix_XY.Transpose(matrix_YX);
+		matrix_pred_X.T();
+		matrix_data_X.T();
+		matrix_pred_Y.T();
+		matrix_data_Y.T();
+
+
+		matrix_Y_under_X.Clear();
+		matrix_Y_under_X.ResizeTo(ind_tar_end - ind_tar_start, 1);	
+		matrix_Y_under_X = matrix_pred_Y + matrix_YX * matrix_XX_inv *(matrix_data_X - matrix_pred_X);
+		matrix_YY_under_XX.Clear();
+		matrix_YY_under_XX.ResizeTo(ind_tar_end - ind_tar_start, ind_tar_end - ind_tar_start);
+		matrix_YY_under_XX = matrix_YY - matrix_YX * matrix_XX_inv * matrix_XY;
+		
+
+		TMatrixD matrix_delta_user = matrix_Y_under_X - matrix_data_Y; 
+		TMatrixD matrix_delta_user_t = matrix_delta_user;
+		matrix_delta_user_t.T();
+		TMatrixD matrix_YY_under_XX_inv = matrix_YY_under_XX;
+		matrix_YY_under_XX_inv.Invert();
+
+		double chi2_user = (matrix_delta_user_t * matrix_YY_under_XX_inv * matrix_delta_user)(0,0);
+
+		chi2 = chi2_user;
 
 	}
+
+	//cout << "lhagaman, set custom chi2 in FCN_Np_0p: " << chi2 << "\n";
 
 
 	// end custom chi2 calculation
@@ -566,6 +730,10 @@ double TLee::FCN_Np_0p(const double *par)
 
 
 ///////////////////////////////////////////////////////// ccc
+
+
+// commenting this out, I think it's not used, and it uses 1D LEE strength
+
 
 void TLee::Minimization_Lee_strength_FullCov(double Lee_initial_value, bool flag_fixed)
 {
@@ -635,6 +803,92 @@ void TLee::Minimization_Lee_strength_FullCov(double Lee_initial_value, bool flag
 			TMatrixD matrix_chi2 = matrix_delta * matrix_cov_total_inv *matrix_delta_T;
 			chi2 = matrix_chi2(0,0);
 
+			// lhagaman, maybe should set up custom chi2 calculation here as well? Doesn't seem to be used...
+
+			// start lhagaman custom chi2 calculation
+
+			
+			bool use_custom_chi2 = false;
+
+			if (use_custom_chi2) {
+
+				bool all_channels = false;
+				bool just_wc = false;
+				bool just_glee = true;
+
+				TMatrixD matrix_cov_total_user = matrix_cov_syst;
+
+				// these are labeled as target and constraining, but actually we're doing a joint chi2 and not a constraint in this code
+				int ind_tar_start = 0;
+				int ind_tar_end = 0; // up to but not including
+				int ind_constr_start = 0;
+				int ind_constr_end = 0;
+
+				if (all_channels) {
+					ind_tar_start = 0;
+					ind_tar_end = 0 + 2*4; // two bins, four channels
+					ind_constr_start = 2*4;
+					ind_constr_end = 2*4 + 4*16;
+				}
+
+				if (just_wc) {
+					ind_tar_start = 0;
+					ind_tar_end = 0 + 2*2;
+					ind_constr_start = 2*4;
+					ind_constr_end = 2*4 + 4*16;
+				}
+
+				if (just_glee) {
+					ind_tar_start = 2*2;
+					ind_tar_end = 2*2 + 2*2;
+					ind_constr_start = 2*4;
+					ind_constr_end = 2*4 + 4*16;
+				}
+
+				TMatrixD user_matrix_pred;
+				TMatrixD user_matrix_data;
+
+				int tar_bins = ind_tar_end - ind_tar_start;
+				int constr_bins = ind_constr_end - ind_constr_start;
+
+				user_matrix_pred.Clear();
+				user_matrix_pred.ResizeTo(1, tar_bins + constr_bins);
+				TMatrixDSub(user_matrix_pred, 0, 0, 0, tar_bins - 1) = matrix_pred.GetSub(0, 0, ind_tar_start, ind_tar_end - 1);
+				TMatrixDSub(user_matrix_pred, 0, 0, tar_bins, tar_bins + constr_bins - 1) = matrix_pred.GetSub(0, 0, ind_constr_start, ind_constr_end - 1);
+
+				user_matrix_data.Clear();
+				user_matrix_data.ResizeTo(1, tar_bins + constr_bins);
+				TMatrixDSub(user_matrix_data, 0, 0, 0, tar_bins - 1) = matrix_meas.GetSub(0, 0, ind_tar_start, ind_tar_end - 1);
+				TMatrixDSub(user_matrix_data, 0, 0, tar_bins, tar_bins + constr_bins - 1) = matrix_meas.GetSub(0, 0, ind_constr_start, ind_constr_end - 1);
+
+
+				TMatrixD user_matrix_cov(tar_bins + constr_bins, tar_bins + constr_bins);
+				TMatrixDSub(user_matrix_cov, 0, tar_bins - 1, 0, tar_bins - 1) = matrix_cov_total_user.GetSub(ind_tar_start, ind_tar_end - 1, ind_tar_start, ind_tar_end - 1);
+				TMatrixDSub(user_matrix_cov, 0, tar_bins - 1, tar_bins, tar_bins + constr_bins - 1) = matrix_cov_total_user.GetSub(ind_tar_start, ind_tar_end - 1, ind_constr_start, ind_constr_end - 1);
+				TMatrixDSub(user_matrix_cov, tar_bins, tar_bins + constr_bins - 1, 0, tar_bins - 1) = matrix_cov_total_user.GetSub(ind_constr_start, ind_constr_end - 1, ind_tar_start, ind_tar_end - 1);
+				TMatrixDSub(user_matrix_cov, tar_bins, tar_bins + constr_bins - 1, tar_bins, tar_bins + constr_bins - 1) = matrix_cov_total_user.GetSub(ind_constr_start, ind_constr_end - 1, ind_constr_start, ind_constr_end - 1);
+
+				TMatrixD user_matrix_cov_inv = user_matrix_cov;
+				user_matrix_cov_inv.Invert();
+
+				TMatrixD matrix_delta_user = user_matrix_pred - user_matrix_data;
+				TMatrixD matrix_delta_user_t = matrix_delta_user;
+				matrix_delta_user_t.T();
+
+				double chi2_user = (matrix_delta_user * user_matrix_cov_inv * matrix_delta_user_t)(0,0);
+
+				chi2 = chi2_user;
+
+			}
+			
+
+			cout << "lhagaman, this is where we could set custom chi2 in Minimization_Lee_strength_FullCov: " << chi2 << "\n";
+
+
+			// end custom chi2 calculation
+
+			/////////
+
 			if( 0 ) {
 				// TMatrixD matrix_gof_trans( bins_newworld, 20*2+26*2+11*3 );// oldworld, newworld
 				// for(int idx=1; idx<=20; idx++) matrix_gof_trans(6+idx-1, idx-1) = 1;
@@ -657,20 +911,24 @@ void TLee::Minimization_Lee_strength_FullCov(double Lee_initial_value, bool flag
 				for(int idx=1; idx<=26*2; idx++) matrix_gof_trans(26*4+idx-1, 26*2+idx-1) = 1;
 				for(int idx=1; idx<=11*3; idx++) matrix_gof_trans(26*8+idx-1, 26*4+idx-1) = 1;
 				TMatrixD matrix_gof_trans_T = matrix_gof_trans.T(); matrix_gof_trans.T(); 
-				*/
-				/*
+				
+				
 				/// 1eNp
 				TMatrixD matrix_gof_trans( bins_newworld, 26*2+26*2+11*3 );// oldworld, newworld
 				for(int idx=1; idx<=26*2; idx++) matrix_gof_trans(26*2+idx-1, idx-1) = 1;
 				for(int idx=1; idx<=26*2; idx++) matrix_gof_trans(26*6+idx-1, 26*2+idx-1) = 1;
 				for(int idx=1; idx<=11*3; idx++) matrix_gof_trans(26*8+idx-1, 26*4+idx-1) = 1;
 				TMatrixD matrix_gof_trans_T = matrix_gof_trans.T(); matrix_gof_trans.T(); 
+
 				*/
+				
 
 				/// check
 				TMatrixD matrix_gof_trans( bins_newworld, bins_newworld );// oldworld, newworld
 				for(int idx=1; idx<=bins_newworld; idx++) matrix_gof_trans(idx-1, idx-1) = 1;
 				TMatrixD matrix_gof_trans_T = matrix_gof_trans.T(); matrix_gof_trans.T();
+
+				
 
 
 
@@ -678,6 +936,7 @@ void TLee::Minimization_Lee_strength_FullCov(double Lee_initial_value, bool flag
 				TMatrixD matrix_user_delta_T = matrix_user_delta.T(); matrix_user_delta.T();
 				TMatrixD matrix_user_cov_total = matrix_gof_trans_T*matrix_cov_total*matrix_gof_trans;
 				TMatrixD matrix_user_cov_total_inv = matrix_user_cov_total; matrix_user_cov_total_inv.Invert();
+				
 				minimization_NDF = matrix_user_delta.GetNcols();
 				chi2 = (matrix_user_delta*matrix_user_cov_total_inv*matrix_user_delta_T)(0,0);
 			}
@@ -691,6 +950,8 @@ void TLee::Minimization_Lee_strength_FullCov(double Lee_initial_value, bool flag
 			);
 
 	min_Lee.SetFunction(Chi2Functor_Lee);
+
+	std::cout << "WARNING: using 1D LEE strength in Minimization_Lee_strength_FullCov\n";
 
 	min_Lee.SetVariable( 0, "Lee_strength", Lee_initial_value, 1e-2);
 	min_Lee.SetLowerLimitedVariable(0, "Lee_strength", Lee_initial_value, 1e-2, 0);
@@ -743,7 +1004,9 @@ void TLee::Minimization_Lee_strength_FullCov(double Lee_initial_value, bool flag
 	//                      minimization_Lee_strength_val, minosError_low, minosError_hgh)<<endl;
 	// }
 
-}  
+}
+
+
 
 ///////////////////////////////////////////////////////// ccc
 
@@ -1311,10 +1574,52 @@ int TLee::Exe_Goodness_of_fit_detailed(vector<int>vc_target_detailed_chs, vector
 	matrix_gof_trans.T();
 
 	TMatrixD matrix_pred = matrix_pred_newworld * matrix_gof_trans;
+	//TMatrixD matrix_data = map_fake_data * matrix_gof_trans; // tried to fix to update data to asimov
 	TMatrixD matrix_data = matrix_data_newworld * matrix_gof_trans;
 	TMatrixD matrix_syst = matrix_gof_trans_T * matrix_absolute_cov_newworld * matrix_gof_trans;
 
+	/*
+	cout << "printing data and prediction inside Exe_Goodness of fit\n";
+	for (int i = 0; i < num_X + num_Y; i++) {
+		cout << "    " << matrix_data(0, i) << ", " << matrix_pred(0, i) << "\n";
+	}
+	cout << "done printing\n";
+	*/
+
 	Exe_Goodness_of_fit(num_Y, num_X, matrix_pred, matrix_data, matrix_syst, index);  
+
+	return 1;
+}
+
+// target detailed channels are constrained by supported detailed channels
+int TLee::Get_Constrained_Chi2_detailed(vector<int>vc_target_detailed_chs, vector<int>vc_support_detailed_chs, int index)
+{
+	int num_Y = vc_target_detailed_chs.size();
+	int num_X = vc_support_detailed_chs.size();
+
+	TMatrixD matrix_gof_trans( bins_newworld, num_Y+num_X );// oldworld, newworld
+	int new_ch = -1;
+
+	for(int idx=0; idx<num_Y; idx++) {
+		int old_ch = vc_target_detailed_chs.at(idx);
+		new_ch++;
+		matrix_gof_trans(old_ch, new_ch) = 1;
+	}
+
+	for(int idx=0; idx<num_X; idx++) {
+		int old_ch = vc_support_detailed_chs.at(idx);
+		new_ch++;
+		matrix_gof_trans(old_ch, new_ch) = 1;
+	}
+
+	TMatrixD matrix_gof_trans_T = matrix_gof_trans.T();
+	matrix_gof_trans.T();
+
+	TMatrixD matrix_pred = matrix_pred_newworld * matrix_gof_trans;
+	TMatrixD matrix_data = matrix_data_newworld * matrix_gof_trans;
+	TMatrixD matrix_syst = matrix_gof_trans_T * matrix_absolute_cov_newworld * matrix_gof_trans;
+
+	Get_Constrained_Chi2(num_Y, num_X, matrix_pred, matrix_data, matrix_syst, index);  
 
 	return 1;
 }
@@ -1418,9 +1723,277 @@ int TLee::Exe_Goodness_of_fit(vector<int>vc_target_chs, vector<int>vc_support_ch
 	return 1;
 }
 
+// target constrained by support
+int TLee::Get_Constrained_Chi2(vector<int>vc_target_chs, vector<int>vc_support_chs, int index)
+{
+	TString roostr = "";
+
+	cout<<Form(" ---> Goodness of fit, %2d", index)<<endl;
+
+	/////////////////////////////////////////////////////////////////////////////////////////////
+
+	int size_target = vc_target_chs.size();
+	int size_support = vc_support_chs.size();
+
+	for(int idx=0; idx<size_target; idx++) {    
+		if( size_support==0 ) break;
+		for(int jdx=0; jdx<size_support; jdx++) {      
+			if( vc_target_chs.at(idx)==vc_support_chs.at(jdx) ) {
+				cout<<endl<<" Are you joking? There is same channel for target and support: "<<vc_target_chs.at(idx)<<endl<<endl;
+				exit(1);
+			}
+		}// jdx
+	}// idx
+
+	/////////////////////////
+
+	int num_Y = 0;
+	int num_X = 0;
+
+	for(int idx=0; idx<size_target; idx++) {
+		int ch_target = vc_target_chs.at(idx);
+		if(  map_data_spectrum_ch_bin.find(ch_target)==map_data_spectrum_ch_bin.end() ) {
+			cout<<" There is no such a target channel: "<<ch_target<<endl;
+			exit(1);
+		}
+		int nbins = map_data_spectrum_ch_bin[ch_target].size();
+		num_Y += nbins;
+	}
+
+	for(int idx=0; idx<size_support; idx++) {
+		int ch_support = vc_support_chs.at(idx);
+		if(  map_data_spectrum_ch_bin.find(ch_support)==map_data_spectrum_ch_bin.end() ) {
+			cout<<" There is no such a support channel: "<<ch_support<<endl;
+			exit(1);
+		}
+		int nbins = map_data_spectrum_ch_bin[ch_support].size();
+		num_X += nbins;
+	}
+
+	/////////////////////////
+
+	int gline_eff = -1;  
+	map<int, map<int, int> >map_local2global;
+	for( auto it_ch=map_data_spectrum_ch_bin.begin(); it_ch!=map_data_spectrum_ch_bin.end(); it_ch++ ) {
+		int ich = it_ch->first;
+		for( auto it_bin=map_data_spectrum_ch_bin[ich].begin(); it_bin!=map_data_spectrum_ch_bin[ich].end(); it_bin++ ) {
+			int ibin = it_bin->first;
+			gline_eff++;
+			map_local2global[ich][ibin] = gline_eff;
+		}
+	}
+
+	/////////////////////////
+
+	TMatrixD matrix_gof_trans( bins_newworld, num_Y+num_X );// oldworld, newworld
+	int line_newworld = -1;  
+
+	for(int idx=0; idx<size_target; idx++) {
+		int ch_target = vc_target_chs.at(idx);  
+		int nbins = map_data_spectrum_ch_bin[ch_target].size();
+		for(int ibin=0; ibin<nbins; ibin++) {
+			int gbin = map_local2global[ch_target][ibin];
+			line_newworld++;
+			matrix_gof_trans(gbin, line_newworld) = 1;
+		}
+	}
+
+	for(int idx=0; idx<size_support; idx++) {
+		int ch_support = vc_support_chs.at(idx);  
+		int nbins = map_data_spectrum_ch_bin[ch_support].size();
+		for(int ibin=0; ibin<nbins; ibin++) {
+			int gbin = map_local2global[ch_support][ibin];
+			line_newworld++;
+			matrix_gof_trans(gbin, line_newworld) = 1;
+		}
+	}
+
+	TMatrixD matrix_gof_trans_T = matrix_gof_trans.T();
+	matrix_gof_trans.T();
+
+	TMatrixD matrix_pred = matrix_pred_newworld * matrix_gof_trans;
+	TMatrixD matrix_data = matrix_data_newworld * matrix_gof_trans;
+	TMatrixD matrix_syst = matrix_gof_trans_T * matrix_absolute_cov_newworld * matrix_gof_trans;
+
+	Get_Constrained_Chi2(num_Y, num_X, matrix_pred, matrix_data, matrix_syst, index);
+
+	return 1;
+}
+
 ///////////////////////////////////////////////////////// cccf
 
 // Y constrained by X
+
+int TLee::Get_Constrained_Chi2(int num_Y, int num_X, TMatrixD matrix_pred, TMatrixD matrix_data, TMatrixD matrix_syst, int index)
+{
+	///////////////////////////////////////////////////////////////////////////////////////////// for no-systematics
+
+	for(int ibin=0; ibin<matrix_syst.GetNrows(); ibin++) {
+		if( matrix_syst(ibin, ibin)==0 ) matrix_syst(ibin, ibin) = 1e-6;
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////// noConstraint
+
+	TMatrixD matrix_cov_stat(num_Y+num_X, num_Y+num_X);  
+	TMatrixD matrix_cov_total(num_Y+num_X, num_Y+num_X);
+	matrix_cov_total = matrix_cov_stat + matrix_syst;
+
+	matrix_pred.T(); matrix_data.T();
+	TMatrixD matrix_pred_Y = matrix_pred.GetSub(0, num_Y-1, 0, 0);
+	TMatrixD matrix_data_Y = matrix_data.GetSub(0, num_Y-1, 0, 0);
+	matrix_pred.T(); matrix_data.T();
+
+	TMatrixD matrix_YY = matrix_cov_total.GetSub(0, num_Y-1, 0, num_Y-1);
+
+	///////////////////////////// goodness of fit, Pearson's format test
+
+	/// docDB 32520, when the prediction is sufficiently low
+	double array_pred_protect[11] = {0, 0.461, 0.916, 1.382, 1.833, 2.298, 2.767, 3.225, 3.669, 4.141, 4.599};
+	//double array_pred_protect[11] = {0};
+	//array_pred_protect[1] = {0.461};
+
+	TMatrixD matrix_goodness_cov_total_noConstraint(num_Y, num_Y);
+	for( int i=0; i<num_Y; i++ ) {
+		double val_pred = matrix_pred_Y(i, 0);
+		double val_data = matrix_data_Y(i, 0);        
+		matrix_goodness_cov_total_noConstraint(i,i) = val_pred;
+
+		int int_data = (int)(val_data+0.1);
+		if( int_data>=1 && int_data<=10 ) {
+			if( val_pred<array_pred_protect[int_data] ) {
+				double numerator = pow(val_pred-val_data, 2);
+				double denominator = 2*( val_pred - val_data + val_data*log(val_data/val_pred) );
+				matrix_goodness_cov_total_noConstraint(i,i) = numerator/denominator;
+			}
+		}
+		if( (val_pred==val_data) && (val_pred==0) ) matrix_goodness_cov_total_noConstraint(i,i) = 1e-6;
+	}  
+	matrix_goodness_cov_total_noConstraint = matrix_goodness_cov_total_noConstraint + matrix_YY;
+
+	matrix_pred_Y.T(); matrix_data_Y.T();
+	TMatrixD matrix_delta_noConstraint = matrix_pred_Y - matrix_data_Y;
+	matrix_pred_Y.T(); matrix_data_Y.T();
+	TMatrixD matrix_delta_noConstraint_T = matrix_pred_Y - matrix_data_Y;
+
+	TMatrixD matrix_cov_noConstraint_inv = matrix_goodness_cov_total_noConstraint;
+	matrix_cov_noConstraint_inv.Invert();
+	TMatrixD matrix_chi2_noConstraint = matrix_delta_noConstraint * matrix_cov_noConstraint_inv * matrix_delta_noConstraint_T;
+	double val_chi2_noConstraint = matrix_chi2_noConstraint(0,0);
+	double p_value_noConstraint = TMath::Prob( val_chi2_noConstraint, num_Y );
+	double val_data_noConstraint = 0;
+	double val_pred_noConstraint = 0;
+	for(int idx=0; idx<num_Y; idx++) {
+		val_data_noConstraint += matrix_data_Y(idx,0);
+		val_pred_noConstraint += matrix_pred_Y(idx,0);
+	}
+	cout<<TString::Format(" ---> GOF noConstraint: chi2 %6.2f, ndf %3d, chi2/ndf %6.2f, p-value %10.8f, meas/pred %4.2f %4.2f",
+			val_chi2_noConstraint, num_Y, val_chi2_noConstraint/num_Y, p_value_noConstraint,
+			val_data_noConstraint, val_pred_noConstraint
+			)<<endl;
+
+	val_GOF_noConstrain = val_chi2_noConstraint;
+	val_GOF_NDF = num_Y;
+
+	matrix_pred.T(); matrix_data.T();
+	TMatrixD matrix_pred_X = matrix_pred.GetSub(num_Y, num_Y+num_X-1, 0, 0);
+	TMatrixD matrix_data_X = matrix_data.GetSub(num_Y, num_Y+num_X-1, 0, 0);
+	matrix_pred.T(); matrix_data.T();
+
+	TMatrixD matrix_XX = matrix_cov_total.GetSub(num_Y, num_Y+num_X-1, num_Y, num_Y+num_X-1);
+	for(int ibin=1; ibin<=num_X; ibin++) {
+
+		//matrix_XX(ibin-1, ibin-1) += matrix_pred_X(ibin-1, 0);// Pearson's term for statistics test
+
+		double user_stat = matrix_pred_X(ibin-1, 0);
+		double val_meas = matrix_data_X(ibin-1,0);
+		double val_pred = matrix_pred_X(ibin-1,0);
+		int int_meas = (int)(val_meas+0.1);    
+		if( int_meas>=1 && int_meas<=10) {
+			if( val_pred<array_pred_protect[int_meas] ) {
+				double numerator = pow(val_pred-val_meas, 2);
+				double denominator = 2*( val_pred - val_meas + val_meas*log(val_meas/val_pred) );
+				user_stat = numerator/denominator;
+			}
+		}    
+		matrix_XX(ibin-1, ibin-1) += user_stat;
+
+
+	}
+	TMatrixD matrix_XX_inv = matrix_XX;
+	matrix_XX_inv.Invert();
+
+	TMatrixD matrix_YX = matrix_cov_total.GetSub(0, num_Y-1, num_Y, num_Y+num_X-1);
+	TMatrixD matrix_XY(num_X, num_Y); matrix_XY.Transpose(matrix_YX);
+
+	TMatrixD matrix_Y_under_X = matrix_pred_Y + matrix_YX * matrix_XX_inv * (matrix_data_X - matrix_pred_X);
+	TMatrixD matrix_YY_under_XX = matrix_YY - matrix_YX * matrix_XX_inv * matrix_XY;
+
+
+	double pred_cv_before = 0;
+	double pred_err_before = 0;
+
+	double pred_cv_after = 0;
+	double pred_err_after = 0;
+
+	for(int idx=0; idx<num_Y; idx++) {
+		pred_cv_before += matrix_pred_Y(idx, 0);
+		pred_cv_after += matrix_Y_under_X(idx, 0);
+
+		for(int jdx=0; jdx<num_Y; jdx++) {
+			pred_err_before += matrix_YY(idx, jdx);
+			pred_err_after += matrix_YY_under_XX(idx, jdx);
+		}
+	}
+
+
+	/////////////////////////////
+	///////////////////////////// goodness of fit, Pearson's format test
+
+	TMatrixD matrix_goodness_cov_total_wiConstraint(num_Y, num_Y);
+	for( int i=0; i<num_Y; i++ ) {
+		double val_pred = matrix_Y_under_X(i, 0);
+		double val_data = matrix_data_Y(i, 0);    
+		matrix_goodness_cov_total_wiConstraint(i,i) = val_pred;
+
+
+		int int_data = (int)(val_data+0.1);
+		if( int_data>=1 && int_data<=10) {
+			if( val_pred<array_pred_protect[int_data] ) {
+				double numerator = pow(val_pred-val_data, 2);
+				double denominator = 2*( val_pred - val_data + val_data*log(val_data/val_pred) );
+				matrix_goodness_cov_total_wiConstraint(i,i) = numerator/denominator;
+			}
+		}
+
+		if( (val_pred==val_data) && (val_pred==0) ) matrix_goodness_cov_total_wiConstraint(i,i) = 1e-6;
+	}  
+	matrix_goodness_cov_total_wiConstraint = matrix_goodness_cov_total_wiConstraint + matrix_YY_under_XX;
+
+	matrix_Y_under_X.T(); matrix_data_Y.T();
+	TMatrixD matrix_delta_wiConstraint = matrix_Y_under_X - matrix_data_Y;
+	matrix_Y_under_X.T(); matrix_data_Y.T();
+	TMatrixD matrix_delta_wiConstraint_T = matrix_Y_under_X - matrix_data_Y;  
+
+	TMatrixD matrix_cov_wiConstraint_inv = matrix_goodness_cov_total_wiConstraint;
+	matrix_cov_wiConstraint_inv.Invert();
+	TMatrixD matrix_chi2_wiConstraint = matrix_delta_wiConstraint * matrix_cov_wiConstraint_inv * matrix_delta_wiConstraint_T;
+	double val_chi2_wiConstraint = matrix_chi2_wiConstraint(0,0);
+	double p_value_wiConstraint = TMath::Prob( val_chi2_wiConstraint, num_Y );
+	double val_data_wiConstraint = 0;
+	double val_pred_wiConstraint = 0;
+	for(int idx=0; idx<num_Y; idx++) {
+		val_data_wiConstraint += matrix_data_Y(idx,0);
+		val_pred_wiConstraint += matrix_Y_under_X(idx,0);
+	}  
+	cout<<TString::Format(" ---> GOF wiConstraint: chi2 %6.2f, ndf %3d, chi2/ndf %6.2f, p-value %10.8f, meas/pred %4.2f %4.2f",
+			val_chi2_wiConstraint, num_Y, val_chi2_wiConstraint/num_Y, p_value_wiConstraint,
+			val_data_wiConstraint, val_pred_wiConstraint
+			)<<endl<<endl;
+
+	val_GOF_wiConstrain = val_chi2_wiConstraint;
+
+}
+
 
 int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatrixD matrix_data, TMatrixD matrix_syst, int index)
 {
@@ -2152,6 +2725,8 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 	////////////////
 
 	roostr = TString::Format("h1_spectra_wi2no_%02d", index);
+	ofstream bin_contents_file(TString::Format("./bin_contents_%02d.txt", index));
+	cout << "saving bin contents to file " << TString::Format("./bin_contents_%02d.txt", index) << "...";
 	TString roostr_wi2no = roostr;
 	//TH1D *h1_spectra_wi2no = (TH1D*)h1_pred_Y_noConstraint->Clone(roostr);
 	TH1D *h1_spectra_wi2no = new TH1D(roostr, "", num_Y, 0, num_Y);
@@ -2162,7 +2737,12 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 		double val_wi2no = val_wiConstraint/val_noConstraint;
 		if( val_noConstraint==0 ) val_wi2no = 0;
 		h1_spectra_wi2no->SetBinContent(ibin, val_wi2no);
+		
+		bin_contents_file << "bin " << ibin << " value no constraint: " << val_noConstraint << "\n"; 
+		bin_contents_file << "bin " << ibin << " value wi constraint: " << val_wiConstraint << "\n"; 
 	}
+	bin_contents_file.close();
+	cout << "done\n";
 
 	roostr = TString::Format("canv_spectra_wi2no_%02d", index);
 	TCanvas *canv_spectra_wi2no = new TCanvas(roostr, roostr, 900, 650);
@@ -2223,7 +2803,7 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 	gh_data->Draw("same pe");
 	h1_pred_Y_wiConstraint->Draw("same axis");
 
-	/* 
+	
 	   cout<<endl;
 	   double data_FC = 0;
 	   double data_PC = 0;
@@ -2235,7 +2815,7 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 	   cout<<" ---> pred noConstraint "<<h1_pred_Y_noConstraint->Integral(1,8)<<"\t"<<h1_pred_Y_noConstraint->Integral(9,16)<<endl;
 	   cout<<" ---> pred wiConstraint "<<h1_pred_Y_wiConstraint->Integral(1,8)<<"\t"<<h1_pred_Y_wiConstraint->Integral(9,16)<<endl;
 	   cout<<endl;
-	   */
+	   
 
 	TLegend *lg_top_total = new TLegend(0.5, 0.45, 0.85, 0.85);
 	// h1_pred_Y_wiConstraint->SetMaximum(40);
@@ -2321,13 +2901,18 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 
 	roostr = TString::Format("h1_spectra_relerr_wi_%02d", index);
 	TH1D *h1_spectra_relerr_wi = new TH1D(roostr, "", num_Y, 0, num_Y);
-
+	ofstream bin_errors_file(TString::Format("./bin_errors_%02d.txt", index));
+	cout << "saving bin errors to file " << TString::Format("./bin_errors_%02d.txt", index) << "...";
 	for(int ibin=1; ibin<=num_Y; ibin++) {    
 		double val_noConstraint = h1_pred_Y_noConstraint_rel_error->GetBinError(ibin);
 		double val_wiConstraint = h1_pred_Y_wiConstraint_rel_error->GetBinError(ibin);
 		h1_spectra_relerr->SetBinContent(ibin, val_noConstraint);
-		h1_spectra_relerr_wi->SetBinContent(ibin, val_wiConstraint);    
+		h1_spectra_relerr_wi->SetBinContent(ibin, val_wiConstraint);   
+		bin_errors_file << "bin " << ibin << " error no constraint: " << val_noConstraint << "\n"; 
+		bin_errors_file << "bin " << ibin << " error wi constraint: " << val_wiConstraint << "\n"; 
 	}
+	bin_errors_file.close();
+	cout << "done\n";
 
 	roostr = TString::Format("canv_spectra_relerr_%02d", index);
 	TCanvas *canv_spectra_relerr = new TCanvas(roostr, roostr, 900, 650);
@@ -2379,6 +2964,7 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 
 	return 1;
 }
+
 
 ///////////////////////////////////////////////////////// ccc
 
@@ -2651,14 +3237,21 @@ void TLee::Set_Collapse()
 	//////////////////////////////////////// pred
 
 	TMatrixD matrix_transform_Lee = matrix_transform;
+	TMatrixD matrix_transform_Lee_1_1 = matrix_transform;
 	for(int ibin=0; ibin<matrix_transform_Lee.GetNrows(); ibin++) { // these loops new from Xiangpan Np/0p
 		for(int jbin=0; jbin<matrix_transform_Lee.GetNcols(); jbin++) {
 
-			if( map_Lee_oldworld.find(ibin)!=map_Lee_oldworld.end() ) matrix_transform_Lee(ibin, jbin) *= scaleF_Lee;
+			//if( map_Lee_oldworld.find(ibin)!=map_Lee_oldworld.end() ) matrix_transform_Lee(ibin, jbin) *= scaleF_Lee;
 
-			if( map_Lee_Np_oldworld.find(ibin)!=map_Lee_Np_oldworld.end() ) matrix_transform_Lee(ibin, jbin) *= scaleF_Lee_Np;
+			if( map_Lee_Np_oldworld.find(ibin)!=map_Lee_Np_oldworld.end() ){
+				matrix_transform_Lee(ibin, jbin) *= scaleF_Lee_Np;
+				matrix_transform_Lee_1_1(ibin, jbin) *= 1;
+			} 
 
-			if( map_Lee_0p_oldworld.find(ibin)!=map_Lee_0p_oldworld.end() ) matrix_transform_Lee(ibin, jbin) *= scaleF_Lee_0p;
+			if( map_Lee_0p_oldworld.find(ibin)!=map_Lee_0p_oldworld.end() ){
+				matrix_transform_Lee(ibin, jbin) *= scaleF_Lee_0p;
+				matrix_transform_Lee_1_1(ibin, jbin) *= 1;
+			}
 		}
 	}
 	//for(int ibin=0; ibin<matrix_transform_Lee.GetNrows(); ibin++) {
@@ -2678,6 +3271,9 @@ void TLee::Set_Collapse()
 	matrix_pred_newworld.Clear();
 	matrix_pred_newworld.ResizeTo(1, bins_newworld);
 	matrix_pred_newworld = matrix_pred_oldworld * matrix_transform_Lee;
+	TMatrixD matrix_pred_newworld_LEE_1_1 = matrix_pred_oldworld * matrix_transform_Lee_1_1;
+
+
 	if( bins_newworld!=matrix_pred_newworld.GetNcols() ) { cerr<<"bins_newworld!=matrix_pred_newworld.GetNcols()"<<endl; exit(1); }
 	for(int ibin=0; ibin<bins_newworld; ibin++) map_pred_spectrum_newworld_bin[ibin] = matrix_pred_newworld(0, ibin);
 
@@ -2714,11 +3310,22 @@ void TLee::Set_Collapse()
 				double data_stat_cov = data_correlation * data_sigma_i * data_sigma_j;
 
 				/// MC_stat
-				double pred_sigma_i = sqrt( gh_mc_stat_bin[idx]->Eval( scaleF_Lee ) );
-				double pred_sigma_j = sqrt( gh_mc_stat_bin[jdx]->Eval( scaleF_Lee ) );
+
+				// this was the old way to calculate it, when we had an array of MC stat values at different scaling points
+				//double pred_sigma_i = sqrt( gh_mc_stat_bin[idx]->Eval( scaleF_Lee ) );
+				//double pred_sigma_j = sqrt( gh_mc_stat_bin[jdx]->Eval( scaleF_Lee ) );
+
+				// we approximate by using (1,1) to get the fractional covariance matrix for all phase space points
+				// 
+				double pred_sigma_i = sqrt( gh_mc_stat_bin[idx]->Eval( 1 ) );
+				double pred_sigma_j = sqrt( gh_mc_stat_bin[idx]->Eval( 1 ) );
+
 				double pred_correlation = matrix_pred_MCstat_correlation(idx, jdx);
 				if (idx==jdx) pred_correlation = 0.; // leave the diagonal entries to be calculated as usual later
 				double pred_stat_cov = pred_correlation * pred_sigma_i * pred_sigma_j;
+
+				// right now, it's the MC stat at (1,1), so we transform it to this phase space point
+				pred_stat_cov = pred_stat_cov * (matrix_pred_newworld(0, idx) * matrix_pred_newworld(0, jdx)) / (matrix_pred_newworld_LEE_1_1(0, idx) * matrix_pred_newworld_LEE_1_1(0, jdx));
 
 				matrix_absolute_data_stat_cov(idx, jdx) = data_stat_cov;
 				matrix_absolute_pred_stat_cov(idx, jdx) = pred_stat_cov;
@@ -2763,16 +3370,50 @@ void TLee::Set_Collapse()
 	//cout << "lhagaman debug 2, matrix_absolute_cov_oldworld(6,6): " << matrix_absolute_cov_oldworld(6,6) << "\n";
 	//cout << "lhagaman debug 2, matrix_absolute_cov_newworld(6,6): " << matrix_absolute_cov_newworld(6,6) << "\n";
 
+	std::cout << "about to print stat cov matrices, flag_syst_mc_data_stat_cor = " << flag_syst_mc_data_stat_cor << "\n";
+
 	if(flag_syst_mc_data_stat_cor){
 		//cout << "adding stat cov matrices with shapes (" << matrix_absolute_cov_newworld.GetNrows() << ", " << matrix_absolute_cov_newworld.GetNcols() << ") (" << matrix_absolute_data_stat_cov.GetNrows() << ", " << matrix_absolute_data_stat_cov.GetNcols() << ") (" << matrix_absolute_pred_stat_cov.GetNrows() << ", " << matrix_absolute_pred_stat_cov.GetNcols() << ")\n";
 		matrix_absolute_cov_newworld += matrix_absolute_data_stat_cov;
 		matrix_absolute_cov_newworld += matrix_absolute_pred_stat_cov;
+
+		std::cout << "saving correlated stat covariance matrices to text files...\n";
+
+		ofstream data_stat_cor_file;
+		data_stat_cor_file.open("data_stat_cor.txt");
+		for(int idx=0; idx<bins_newworld; idx++) {
+			for(int jdx=0; jdx<bins_newworld; jdx++) {
+				data_stat_cor_file << matrix_absolute_data_stat_cov(idx, jdx) << " ";
+			}
+			data_stat_cor_file << "\n";
+		}
+		data_stat_cor_file.close();
+
+		ofstream pred_stat_cor_file;
+		pred_stat_cor_file.open("pred_stat_cor.txt");
+		for(int idx=0; idx<bins_newworld; idx++) {
+			for(int jdx=0; jdx<bins_newworld; jdx++) {
+				pred_stat_cor_file << matrix_absolute_pred_stat_cov(idx, jdx) << " ";
+			}
+			pred_stat_cor_file << "\n";
+		}
+		pred_stat_cor_file.close();
+
+		std::cout << "done saving correlated stat covariance matrices to text files\n";
+
+
+
 		//cout << "done adding stat cov matrices\n";
 	}
 	if( flag_syst_mc_stat ) {
 		for(int ibin=0; ibin<bins_newworld; ibin++) {
-			double val_mc_stat_cov = gh_mc_stat_bin[ibin]->Eval( scaleF_Lee );
+
+			double val_mc_stat_cov = gh_mc_stat_bin[ibin]->Eval( 1 );
 			//if( scaleF_Lee<=0 ) val_mc_stat_cov = gh_mc_stat_bin[ibin]->Eval( 0 );
+			
+			// right now, it's the MC stat at (1,1), so we transform it to this phase space point
+			val_mc_stat_cov = val_mc_stat_cov * (matrix_pred_newworld(0, ibin) * matrix_pred_newworld(0, ibin)) / (matrix_pred_newworld_LEE_1_1(0, ibin) * matrix_pred_newworld_LEE_1_1(0, ibin));
+
 			matrix_absolute_cov_newworld(ibin, ibin) += val_mc_stat_cov;
 			//matrix_absolute_cov_newworld(ibin, ibin) += val_mc_stat_cov/4.;
 		}
@@ -2843,7 +3484,12 @@ void TLee::Set_Collapse()
 		matrix_absolute_reweight_cor_cov_newworld = matrix_transform_Lee_T * matrix_input_cov_reweight_cor * matrix_transform_Lee;
 
 		for(int ibin=0; ibin<bins_newworld; ibin++) {
-			double val_mc_stat_cov = gh_mc_stat_bin[ibin]->Eval( scaleF_Lee );
+			
+			double val_mc_stat_cov = gh_mc_stat_bin[ibin]->Eval( 1 );
+
+			// right now, it's the MC stat at (1,1), so we transform it to this phase space point
+			val_mc_stat_cov = val_mc_stat_cov * (matrix_pred_newworld(0, ibin) * matrix_pred_newworld(0, ibin)) / (matrix_pred_newworld_LEE_1_1(0, ibin) * matrix_pred_newworld_LEE_1_1(0, ibin));
+			
 			matrix_absolute_mc_stat_cov_newworld(ibin, ibin) = val_mc_stat_cov;
 		}// ibin    
 	}
@@ -3136,279 +3782,271 @@ void TLee::Set_Spectra_MatrixCov()
 		//cout << "about to do BR uncertainty removal\n";
 
 		int disable_BR_uncertainty_2d = 1; 
-    if (disable_BR_uncertainty_2d) {
-      float num_true_signal_uncollapsed[2*3*4+16*3*4 + 2*4+16*4] = { // two bins, bkg and Np sig and 0p sig, four channels, then 16 bins, bkg and Np sig and 0p sig, four channels
-      0, 0, 3.5805990866563366, 0, 0.9140275069286945, 0, 0, 0, 1.7527819219337124, 0, 7.9040791176465195, 0, // wc 1gNp and 1g0p bkg and Np sig and 0p sig
-0, 0, 4.608920883373407, 0, 0.05623029314291005, 0, 0, 0, 1.2579023711773536, 0, 4.869193204224594, 0, // gLEE 1g1p and 1g0p bkg and Np sig and 0p sig
-0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 Np bkg
-0.0, 0.007580748339334285, 0.29915273747269794, 0.9005965233444302, 1.2047980916451504, 0.9348587874820815, 0.6980418758797149, 0.43816531449704765, 0.2700421450030017, 0.16471577441236462, 0.10971743407671042, 0.0577198602342186, 0.043724647524303606, 0.03084785292278447, 0.010670240603663395, 0.025454584589269302, // NC Pi0 Np Np sig
-0.0, 0.00473618501871967, 0.12446511024522608, 0.22569077918524388, 0.22965506499279026, 0.1749721945058793, 0.11666017309328591, 0.07872327164611637, 0.05588424911972911, 0.02095869185759458, 0.018903259812670825, 0.008331638644912154, 0.007211647383488895, 0.007276838294402843, 0.001587711653173507, 0.0033807139153738675, // NC Pi0 Np 0p sig
-0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 0p bkg
-0.0, 0.08126392492179649, 0.7338407363344367, 0.8025132937487207, 0.6052717488222443, 0.42374017780254913, 0.24584738259877525, 0.13733709240162728, 0.07366724889648335, 0.03246575380885375, 0.01582321665013353, 0.01272567264858715, 0.007590197441126101, 0.003994743814933699, 0.0021238622479327063, 0.0010038709865094475, // NC Pi0 0p Np sig
-0.0, 0.3128742293705761, 1.3991916874807617, 1.2090691115370802, 0.8405862887723607, 0.4409635851103322, 0.22548845909382642, 0.11796471483263193, 0.04951563289353267, 0.02425347473095041, 0.014229295187263347, 0.010202520211913146, 0.003947053743028839, 0.0019393117700099438, 0.0009354407835004963, 0.0005361505947591994, // NC Pi0 0p 0p sig
-0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC Np bkg
-0.0, 0.0, 0.0009354407835004026, 0.022129612483016824, 0.057373341336996425, 0.08908636291274993, 0.10107724873019405, 0.09433682980504332, 0.09097177480115726, 0.07639596071667581, 0.05171440392866433, 0.04391243729432137, 0.04107408378340338, 0.020142610641102898, 0.012090902617923227, 0.023454894353467814, // numuCC Np Np sig
-0.0, 0.0, 0.0, 0.006457517785815997, 0.016526416883805767, 0.02085386261199286, 0.025715617007417667, 0.017840407724943233, 0.01612712669506465, 0.011605681387163377, 0.009198649225403338, 0.007744558686152786, 0.003342472945260383, 0.003800744235219311, 0.00046772039175019264, 0.005036855771556242, // numuCC Np 0p sig
-0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC 0p bkg
-0.0, 0.0, 0.0032645936404600527, 0.02796180933996033, 0.05879216142373471, 0.0671383303900547, 0.060308472356297854, 0.051399202854417764, 0.03651466627988015, 0.03636511747997584, 0.021614202019361484, 0.009714059689058141, 0.011605681387163114, 0.007795488050152566, 0.002523152436673781, 0.00817403810778955, // numuCC 0p Np sig
-0.0, 0.0004677203917502013, 0.02305236487263078, 0.04627659182929781, 0.06477898830019951, 0.06609918895103262, 0.06442738818336255, 0.048979482298771304, 0.028506011671937226, 0.017714838348237727, 0.013261823243345516, 0.009451629906334968, 0.005087785135555967, 0.002591582639682788, 0.0009354407835003853, 0.0019393117700097773, // numuCC 0p 0p sig
-0, 0, 0, 0, 0, 0, 0, 0, // EXT, 1g channels
-0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // EXT, NC Pi0 channels
-0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // EXT, numuCC channels
-      };   
+		if (disable_BR_uncertainty_2d) {
+			float num_true_signal_uncollapsed[2*3*4+16*3*4 + 2*4+16*4] = { // two bins, bkg and Np sig and 0p sig, four channels, then 16 bins, bkg and Np sig and 0p sig, four channels
+				0, 0, 3.5805990866563366, 0, 0.9140275069286945, 0, 0, 0, 1.7527819219337124, 0, 7.9040791176465195, 0, // wc 1gNp and 1g0p bkg and Np sig and 0p sig
+				0, 0, 4.608920883373407, 0, 0.05623029314291005, 0, 0, 0, 1.2579023711773536, 0, 4.869193204224594, 0, // gLEE 1g1p and 1g0p bkg and Np sig and 0p sig
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 Np bkg
+				0.0, 0.007580748339334285, 0.29915273747269794, 0.9005965233444302, 1.2047980916451504, 0.9348587874820815, 0.6980418758797149, 0.43816531449704765, 0.2700421450030017, 0.16471577441236462, 0.10971743407671042, 0.0577198602342186, 0.043724647524303606, 0.03084785292278447, 0.010670240603663395, 0.025454584589269302, // NC Pi0 Np Np sig
+				0.0, 0.00473618501871967, 0.12446511024522608, 0.22569077918524388, 0.22965506499279026, 0.1749721945058793, 0.11666017309328591, 0.07872327164611637, 0.05588424911972911, 0.02095869185759458, 0.018903259812670825, 0.008331638644912154, 0.007211647383488895, 0.007276838294402843, 0.001587711653173507, 0.0033807139153738675, // NC Pi0 Np 0p sig
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 0p bkg
+				0.0, 0.08126392492179649, 0.7338407363344367, 0.8025132937487207, 0.6052717488222443, 0.42374017780254913, 0.24584738259877525, 0.13733709240162728, 0.07366724889648335, 0.03246575380885375, 0.01582321665013353, 0.01272567264858715, 0.007590197441126101, 0.003994743814933699, 0.0021238622479327063, 0.0010038709865094475, // NC Pi0 0p Np sig
+				0.0, 0.3128742293705761, 1.3991916874807617, 1.2090691115370802, 0.8405862887723607, 0.4409635851103322, 0.22548845909382642, 0.11796471483263193, 0.04951563289353267, 0.02425347473095041, 0.014229295187263347, 0.010202520211913146, 0.003947053743028839, 0.0019393117700099438, 0.0009354407835004963, 0.0005361505947591994, // NC Pi0 0p 0p sig
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC Np bkg
+				0.0, 0.0, 0.0009354407835004026, 0.022129612483016824, 0.057373341336996425, 0.08908636291274993, 0.10107724873019405, 0.09433682980504332, 0.09097177480115726, 0.07639596071667581, 0.05171440392866433, 0.04391243729432137, 0.04107408378340338, 0.020142610641102898, 0.012090902617923227, 0.023454894353467814, // numuCC Np Np sig
+				0.0, 0.0, 0.0, 0.006457517785815997, 0.016526416883805767, 0.02085386261199286, 0.025715617007417667, 0.017840407724943233, 0.01612712669506465, 0.011605681387163377, 0.009198649225403338, 0.007744558686152786, 0.003342472945260383, 0.003800744235219311, 0.00046772039175019264, 0.005036855771556242, // numuCC Np 0p sig
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC 0p bkg
+				0.0, 0.0, 0.0032645936404600527, 0.02796180933996033, 0.05879216142373471, 0.0671383303900547, 0.060308472356297854, 0.051399202854417764, 0.03651466627988015, 0.03636511747997584, 0.021614202019361484, 0.009714059689058141, 0.011605681387163114, 0.007795488050152566, 0.002523152436673781, 0.00817403810778955, // numuCC 0p Np sig
+				0.0, 0.0004677203917502013, 0.02305236487263078, 0.04627659182929781, 0.06477898830019951, 0.06609918895103262, 0.06442738818336255, 0.048979482298771304, 0.028506011671937226, 0.017714838348237727, 0.013261823243345516, 0.009451629906334968, 0.005087785135555967, 0.002591582639682788, 0.0009354407835003853, 0.0019393117700097773, // numuCC 0p 0p sig
+				0, 0, 0, 0, 0, 0, 0, 0, // EXT, 1g channels
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // EXT, NC Pi0 channels
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // EXT, numuCC channels
+			};   
      
-      if (idx == 17) {
-		bool abs_value_eigenvals = true;
-		
-		if (abs_value_eigenvals) {
+		if (idx == 17) {
+			bool abs_value_eigenvals = true;
 			
-			cout << "before modifying Xs matrix:\n";
-
-                        // copy un-collapsed Xs matrix, make sure it's symmetrical
-                        TMatrixD myMatrix = (*map_matrix_flux_Xs_frac[idx]);
-                        if (!myMatrix.IsSymmetric()) {
-                                std::cout << "    Matrix is not symmetric!\n";
-                                myMatrix = 0.5 * (myMatrix + myMatrix.T()); // Symmetrization
-                        }
-
-                        // put it into a symmetric matrix type
-                        TMatrixDSym symMatrix(myMatrix.GetNrows());
-                        for (Int_t i = 0; i < symMatrix.GetNrows(); ++i) {
-                                for (Int_t j = 0; j <= i; ++j) {
-                                        symMatrix(i, j) = myMatrix(i, j);
-                                }
-                        }
-
-                        // get the eigenvalues and eigenvectors
-                        TMatrixDSymEigen eig(symMatrix);
-                        TVectorD eigenvalues = eig.GetEigenValues();
-                        TMatrixD eigenvectors = eig.GetEigenVectors();
-
-                        for (Int_t i = 0; i < eigenvalues.GetNrows(); ++i) {
-                                Double_t eigenvalue = eigenvalues[i];
-                                if (eigenvalue < 0) cout << "    negative eigenvalue: " << eigenvalue << "\n";
-                        }
-
-                }
-
-
-
-
-                for (int ibin=0; ibin<bins_oldworld; ibin++) {
-                        for (int jbin=0; jbin<bins_oldworld; jbin++) {
-
-                                // Here, we assume that true Np NC Delta events are fully correlated with 
-                                // true Np NC Delta events in other selection channels. Even if this isn't fully accurate,
-                                // the non-1g signal channels should basically not matter at all (the gLEE data release didn't
-                                // include this information because of a similar approximation).
-
-                                // So, the covariance matrix associated with the NC Delta BR uncertainty is fully correlated,
-                                // so we just need the sigma associated with the row and column to calculate it and subtract it off.
-                                // See 2022_06_01 slack between Mark and Lee for more information about this approximation.
-
-                                float sigma_BR_row = num_true_signal_uncollapsed[ibin];
-                                float sigma_BR_col = num_true_signal_uncollapsed[jbin];
-
-                                //cout << "sigma_BR_row, sigma_BR_col = " << sigma_BR_row << ", " << sigma_BR_col << "\n";
-
-                                //if (ibin < 8) cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin);
-                                //if (ibin < 8 && jbin < 8) cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin);
-				float old_val = (*map_matrix_flux_Xs_frac[idx])(ibin, jbin);
-
-				// lhagaman changed 2023_07_25, stats can cause zeros in Xs file with nonzeros in CV file, don't subtract in that case
+			if (abs_value_eigenvals) {
 				
-				
+				cout << "before modifying Xs matrix:\n";
 
-				bool subtract_all_sig_by_one_to_zero = false; // subtracts all the sig-sig bins by one, ideal fully correlated matrix subtraction, except for avoiding negatives
-				bool subtract_all_sig_sig_chs_by_one = false; // same as above, but allowing negatives and requiring one of the bin to be in the sig chs
-				bool subtract_all_sig_both_sig_chs_by_one = false; // same as above, but requiring both of the bins to be in the sig chs
-				bool subtract_all_sig_both_sig_chs_by_one_to_zero = false; // same as above, but avoiding making negative numbers
-				bool subtract_sig_diags_by_one = false; // subtracting just from the signal diagonals
-				bool subtract_sig_diags_by_one_zero_all_corrs = false; // subtracting just from the signal diagonals, zeroing out all correlations
-				bool subtract_sig_diags_by_one_zero_all_else = false; // subtracting just from the signal diagonals, zeroing out all correlations
-				bool zero_all = false; // zeroing out all nc delta chs
-				bool zero_either_all = false; // zeroing out all nc delta chs including corrs with non-nc delta chs
-				bool independent_blocks = false;
-				bool independent_truth_blocks = false; // USED THIS ONE FOR CURRENT TESTS
-
-				
-				bool subtract_all_sig_by_one = true;
-
-				if (subtract_all_sig_by_one_to_zero) {
-					if (sigma_BR_row > 0 && sigma_BR_col > 0 && old_val < 1) {
-						(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0.;
-						cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-					} else if (sigma_BR_row > 0 && sigma_BR_col > 0 && old_val >= 1) {
-						(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
-						cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-					}
-				} else if (subtract_all_sig_by_one) {
-					if (sigma_BR_row > 0 && sigma_BR_col > 0 && old_val == 0) { // stat issue, do nothing
-						//cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-					} else if (sigma_BR_row > 0 && sigma_BR_col > 0) { // should subtract, will sometimes end up negative, but not by too much
-						(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
-						//cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-					}
-				} else if (subtract_all_sig_sig_chs_by_one) {
-					if ((ibin < 2*3*4 || jbin < 2*3*4) && sigma_BR_row > 0 && sigma_BR_col > 0 && old_val == 0) { // stat issue, do nothing
-						cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-					} else if ((ibin < 2*3*4 || jbin < 2*3*4) && sigma_BR_row > 0 && sigma_BR_col > 0) { // should subtract, will sometimes end up negative, but not by too much
-						(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
-						cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-					}
-				} else if (subtract_all_sig_both_sig_chs_by_one) {
-					if ((ibin < 2*3*4 && jbin < 2*3*4) && sigma_BR_row > 0 && sigma_BR_col > 0 && old_val == 0) { // stat issue, do nothing
-						cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-					} else if ((ibin < 2*3*4 && jbin < 2*3*4) && sigma_BR_row > 0 && sigma_BR_col > 0) { // should subtract, will sometimes end up negative, but not by too much
-						(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
-						cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-					}
-				} else if (subtract_all_sig_both_sig_chs_by_one_to_zero) {
-					if ((ibin < 2*3*4 && jbin < 2*3*4) && sigma_BR_row > 0 && sigma_BR_col > 0 && old_val < 1) {
-						(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0.;
-						cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-					} else if ((ibin < 2*3*4 && jbin < 2*3*4) && sigma_BR_row > 0 && sigma_BR_col > 0 && old_val >= 1) { // should subtract, will sometimes end up negative, but not by too much
-						(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1;
-						cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-					}
-				} else if (subtract_sig_diags_by_one) {
-					if ((ibin < 2*3*4 && ibin==jbin) && sigma_BR_row > 0 && sigma_BR_col > 0 && old_val == 0) { // stat issue, do nothing
-						cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-					} else if ((ibin < 2*3*4 && ibin==jbin) && sigma_BR_row > 0 && sigma_BR_col > 0) { // should subtract, will sometimes end up negative, but not by too much
-						(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
-						cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-					}
-				} else if (subtract_sig_diags_by_one_zero_all_corrs) {
-					if ((ibin < 2*3*4 && ibin==jbin) && sigma_BR_row > 0 && sigma_BR_col > 0) {
-                                                (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
-						cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-					} else if ((ibin < 2*3*4 || jbin < 2*3*4) && sigma_BR_row > 0 && sigma_BR_col > 0) {
-						(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0;
-						cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-					}
-				} else if (subtract_sig_diags_by_one_zero_all_else) {
-					if ((ibin < 2*3*4 && ibin==jbin) && sigma_BR_row > 0 && sigma_BR_col > 0) {
-                                                (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
-						cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-					} else if (sigma_BR_row > 0 && sigma_BR_col > 0) {
-						(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0;
-						cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-					}
-				} else if (zero_all) {
-					if (sigma_BR_row > 0 && sigma_BR_col > 0) {
-                                                (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0;
-						cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-					}
-				} else if (zero_either_all) {
-					if (sigma_BR_row > 0 || sigma_BR_col > 0) {
-                                                (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0;
-						cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-					}
-				} else if (independent_blocks) {
-					if ((sigma_BR_row > 0 || sigma_BR_col > 0) && ibin < 2*3*4 && jbin < 2*3*4) { // sig chs block, subtracting one
-                                                (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1;
-						cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-					} else if ((sigma_BR_row > 0 || sigma_BR_col > 0) && ((ibin < 2*3*4 && jbin >= 2*3*4) || (jbin < 2*3*4 && ibin >= 2*3*4))) { // off diag (sig ch vs non-sig ch) block, zeroing out
-                                                (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0;
-						cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-					} // non-sig ch vs non-sig ch block left alone
-				} else if (independent_truth_blocks) {
-					if (sigma_BR_row > 0 && sigma_BR_col > 0 && old_val > 0) { // truth signal vs true signal, subtracting one
-                                                (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1;
-						cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-					} else if (sigma_BR_row > 0 || sigma_BR_col > 0) { // corr between true signal and non-signal, zeroing
-                                                (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0;
-						cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-					} // non-sig ch vs non-sig ch block left alone
+				// copy un-collapsed Xs matrix, make sure it's symmetrical
+				TMatrixD myMatrix = (*map_matrix_flux_Xs_frac[idx]);
+				if (!myMatrix.IsSymmetric()) {
+						std::cout << "    Matrix is not symmetric!\n";
+						myMatrix = 0.5 * (myMatrix + myMatrix.T()); // Symmetrization
 				}
 
+				// put it into a symmetric matrix type
+				TMatrixDSym symMatrix(myMatrix.GetNrows());
+				for (Int_t i = 0; i < symMatrix.GetNrows(); ++i) {
+						for (Int_t j = 0; j <= i; ++j) {
+								symMatrix(i, j) = myMatrix(i, j);
+						}
+				}
 
+				// get the eigenvalues and eigenvectors
+				TMatrixDSymEigen eig(symMatrix);
+				TVectorD eigenvalues = eig.GetEigenValues();
+				TMatrixD eigenvectors = eig.GetEigenVectors();
+
+				for (Int_t i = 0; i < eigenvalues.GetNrows(); ++i) {
+						Double_t eigenvalue = eigenvalues[i];
+						//if (eigenvalue < 0) cout << "    negative eigenvalue: " << eigenvalue << "\n";
+				}
+
+			}
+
+
+
+
+			for (int ibin=0; ibin<bins_oldworld; ibin++) {
+				for (int jbin=0; jbin<bins_oldworld; jbin++) {
+					// Here, we assume that true Np NC Delta events are fully correlated with 
+					// true Np NC Delta events in other selection channels. Even if this isn't fully accurate,
+					// the non-1g signal channels should basically not matter at all (the gLEE data release didn't
+					// include this information because of a similar approximation).
+
+					// So, the covariance matrix associated with the NC Delta BR uncertainty is fully correlated,
+					// so we just need the sigma associated with the row and column to calculate it and subtract it off.
+					// See 2022_06_01 slack between Mark and Lee for more information about this approximation.
+
+					float sigma_BR_row = num_true_signal_uncollapsed[ibin];
+					float sigma_BR_col = num_true_signal_uncollapsed[jbin];
+
+					//cout << "sigma_BR_row, sigma_BR_col = " << sigma_BR_row << ", " << sigma_BR_col << "\n";
+
+					//if (ibin < 8) cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin);
+					//if (ibin < 8 && jbin < 8) cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin);
+			
+					float old_val = (*map_matrix_flux_Xs_frac[idx])(ibin, jbin);
+
+					// lhagaman changed 2023_07_25, stats can cause zeros in Xs file with nonzeros in CV file, don't subtract in that case
+					
+					bool subtract_all_sig_by_one_to_zero = false; // subtracts all the sig-sig bins by one, ideal fully correlated matrix subtraction, except for avoiding negatives
+					bool subtract_all_sig_sig_chs_by_one = false; // same as above, but allowing negatives and requiring one of the bin to be in the sig chs
+					bool subtract_all_sig_both_sig_chs_by_one = false; // same as above, but requiring both of the bins to be in the sig chs
+					bool subtract_all_sig_both_sig_chs_by_one_to_zero = false; // same as above, but avoiding making negative numbers
+					bool subtract_sig_diags_by_one = false; // subtracting just from the signal diagonals
+					bool subtract_sig_diags_by_one_zero_all_corrs = false; // subtracting just from the signal diagonals, zeroing out all correlations
+					bool subtract_sig_diags_by_one_zero_all_else = false; // subtracting just from the signal diagonals, zeroing out all correlations
+					bool zero_all = false; // zeroing out all nc delta chs
+					bool zero_either_all = false; // zeroing out all nc delta chs including corrs with non-nc delta chs
+					bool independent_blocks = false;
+					bool independent_truth_blocks = false; // USED THIS ONE FOR CURRENT TESTS
+
+					
+					bool subtract_all_sig_by_one = true;
+
+					if (subtract_all_sig_by_one_to_zero) {
+						if (sigma_BR_row > 0 && sigma_BR_col > 0 && old_val < 1) {
+							(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0.;
+							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
+						} else if (sigma_BR_row > 0 && sigma_BR_col > 0 && old_val >= 1) {
+							(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
+							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
+						}
+					} else if (subtract_all_sig_by_one) {
+						if (sigma_BR_row > 0 && sigma_BR_col > 0 && old_val == 0) { // stat issue, do nothing
+							//cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
+						} else if (sigma_BR_row > 0 && sigma_BR_col > 0) { // should subtract, will sometimes end up negative, but not by too much
+							(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
+							//cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
+						}
+					} else if (subtract_all_sig_sig_chs_by_one) {
+						if ((ibin < 2*3*4 || jbin < 2*3*4) && sigma_BR_row > 0 && sigma_BR_col > 0 && old_val == 0) { // stat issue, do nothing
+							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
+						} else if ((ibin < 2*3*4 || jbin < 2*3*4) && sigma_BR_row > 0 && sigma_BR_col > 0) { // should subtract, will sometimes end up negative, but not by too much
+							(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
+							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
+						}
+					} else if (subtract_all_sig_both_sig_chs_by_one) {
+						if ((ibin < 2*3*4 && jbin < 2*3*4) && sigma_BR_row > 0 && sigma_BR_col > 0 && old_val == 0) { // stat issue, do nothing
+							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
+						} else if ((ibin < 2*3*4 && jbin < 2*3*4) && sigma_BR_row > 0 && sigma_BR_col > 0) { // should subtract, will sometimes end up negative, but not by too much
+							(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
+							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
+						}
+					} else if (subtract_all_sig_both_sig_chs_by_one_to_zero) {
+						if ((ibin < 2*3*4 && jbin < 2*3*4) && sigma_BR_row > 0 && sigma_BR_col > 0 && old_val < 1) {
+							(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0.;
+							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
+						} else if ((ibin < 2*3*4 && jbin < 2*3*4) && sigma_BR_row > 0 && sigma_BR_col > 0 && old_val >= 1) { // should subtract, will sometimes end up negative, but not by too much
+							(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1;
+							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
+						}
+					} else if (subtract_sig_diags_by_one) {
+						if ((ibin < 2*3*4 && ibin==jbin) && sigma_BR_row > 0 && sigma_BR_col > 0 && old_val == 0) { // stat issue, do nothing
+							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
+						} else if ((ibin < 2*3*4 && ibin==jbin) && sigma_BR_row > 0 && sigma_BR_col > 0) { // should subtract, will sometimes end up negative, but not by too much
+							(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
+							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
+						}
+					} else if (subtract_sig_diags_by_one_zero_all_corrs) {
+						if ((ibin < 2*3*4 && ibin==jbin) && sigma_BR_row > 0 && sigma_BR_col > 0) {
+													(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
+							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
+						} else if ((ibin < 2*3*4 || jbin < 2*3*4) && sigma_BR_row > 0 && sigma_BR_col > 0) {
+							(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0;
+							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
+						}
+					} else if (subtract_sig_diags_by_one_zero_all_else) {
+						if ((ibin < 2*3*4 && ibin==jbin) && sigma_BR_row > 0 && sigma_BR_col > 0) {
+													(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
+							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
+						} else if (sigma_BR_row > 0 && sigma_BR_col > 0) {
+							(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0;
+							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
+						}
+					} else if (zero_all) {
+						if (sigma_BR_row > 0 && sigma_BR_col > 0) {
+													(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0;
+							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
+						}
+					} else if (zero_either_all) {
+						if (sigma_BR_row > 0 || sigma_BR_col > 0) {
+													(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0;
+							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
+						}
+					} else if (independent_blocks) {
+						if ((sigma_BR_row > 0 || sigma_BR_col > 0) && ibin < 2*3*4 && jbin < 2*3*4) { // sig chs block, subtracting one
+													(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1;
+							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
+						} else if ((sigma_BR_row > 0 || sigma_BR_col > 0) && ((ibin < 2*3*4 && jbin >= 2*3*4) || (jbin < 2*3*4 && ibin >= 2*3*4))) { // off diag (sig ch vs non-sig ch) block, zeroing out
+													(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0;
+							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
+						} // non-sig ch vs non-sig ch block left alone
+					} else if (independent_truth_blocks) {
+						if (sigma_BR_row > 0 && sigma_BR_col > 0 && old_val > 0) { // truth signal vs true signal, subtracting one
+													(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1;
+							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
+						} else if (sigma_BR_row > 0 || sigma_BR_col > 0) { // corr between true signal and non-signal, zeroing
+													(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0;
+							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
+						} // non-sig ch vs non-sig ch block left alone
+					}
+
+            	//cout << "done with " << ibin << ", " << jbin << "\n";
+
+				}   
+        	}
+
+			// done looping over bins
+			
+			if (abs_value_eigenvals) {
+
+				cout << "After modifying Xs matrix (subtracting one):\n";
 				
-
-
-                                //cout << "done with " << ibin << ", " << jbin << "\n";
-
-			}   
-
-
-
-                }
-
-		// done looping over bins
-		
-		if (abs_value_eigenvals) {
-
-			cout << "After modifying Xs matrix (subtracting one):\n";
-			
-			// copy un-collapsed Xs matrix, make sure it's symmetrical
-			TMatrixD myMatrix = (*map_matrix_flux_Xs_frac[idx]);
-			/*if (!myMatrix.IsSymmetric()) {
-				std::cout << "    Matrix is not symmetric!\n";
-				myMatrix = 0.5 * (myMatrix + myMatrix.T()); // Symmetrization
-			}*/
-			
-			// put it into a symmetric matrix type
-			TMatrixDSym symMatrix(myMatrix.GetNrows());
-			for (Int_t i = 0; i < symMatrix.GetNrows(); ++i) {
-				for (Int_t j = 0; j <= i; ++j) {
-					symMatrix(i, j) = myMatrix(i, j);
+				// copy un-collapsed Xs matrix, make sure it's symmetrical
+				TMatrixD myMatrix = (*map_matrix_flux_Xs_frac[idx]);
+				/*if (!myMatrix.IsSymmetric()) {
+					std::cout << "    Matrix is not symmetric!\n";
+					myMatrix = 0.5 * (myMatrix + myMatrix.T()); // Symmetrization
+				}*/
+				
+				// put it into a symmetric matrix type
+				TMatrixDSym symMatrix(myMatrix.GetNrows());
+				for (Int_t i = 0; i < symMatrix.GetNrows(); ++i) {
+					for (Int_t j = 0; j <= i; ++j) {
+						symMatrix(i, j) = myMatrix(i, j);
+					}
 				}
-			}
 
-			// get the eigenvalues and eigenvectors
-			TMatrixDSymEigen eig(symMatrix);
-			TVectorD eigenvalues = eig.GetEigenValues();
-			TMatrixD eigenvectors = eig.GetEigenVectors();
-			
-			// make negative zero, print it
-			for (Int_t i = 0; i < eigenvalues.GetNrows(); ++i) {
-				Double_t eigenvalue = eigenvalues[i];
-				if (eigenvalue < 0) {cout << "    negative eigenvalue: " << eigenvalue << "\n";
-					eigenvalues[i] = 0.;
-				}	
-				//cout << "    " << i << " eigenvalue: " << eigenvalue << "\n";	
-			}
-
-			// making diagonal eigenvalues matrix
-			TMatrixD diagEigenvalues(eigenvalues.GetNrows(), eigenvalues.GetNrows());
-			diagEigenvalues.Zero();
-			for (Int_t i = 0; i < eigenvalues.GetNrows(); ++i) {
-				diagEigenvalues(i, i) = eigenvalues[i];
-			}
-
-			TMatrixD eigenvectors_original = eigenvectors;
-			TMatrixD eigenvectors_transpose = eigenvectors.T();
-
-			// getting the new full matrix
-			TMatrixD modifiedMatrix = eigenvectors_original * diagEigenvalues * eigenvectors_transpose;
-			(*map_matrix_flux_Xs_frac[idx]) = modifiedMatrix;
-		
-			cout << "After absolute valuing:\n";
-			
-			// put it into a symmetric matrix type
-			TMatrixDSym symMatrix2(modifiedMatrix.GetNrows());
-			for (Int_t i = 0; i < modifiedMatrix.GetNrows(); ++i) {
-				for (Int_t j = 0; j <= i; ++j) {
-					symMatrix2(i, j) = modifiedMatrix(i, j);
+				// get the eigenvalues and eigenvectors
+				TMatrixDSymEigen eig(symMatrix);
+				TVectorD eigenvalues = eig.GetEigenValues();
+				TMatrixD eigenvectors = eig.GetEigenVectors();
+				
+				// make negative zero, print it
+				for (Int_t i = 0; i < eigenvalues.GetNrows(); ++i) {
+					Double_t eigenvalue = eigenvalues[i];
+					if (eigenvalue < 0) {
+						//cout << "    negative eigenvalue: " << eigenvalue << "\n";
+						eigenvalues[i] = 0.;
+					}	
+					//cout << "    " << i << " eigenvalue: " << eigenvalue << "\n";	
 				}
-			}
 
-			// get the eigenvalues and eigenvectors
-			TMatrixDSymEigen eig2(symMatrix2);
-			TVectorD eigenvalues2 = eig2.GetEigenValues();
-			TMatrixD eigenvectors2 = eig2.GetEigenVectors();
+				// making diagonal eigenvalues matrix
+				TMatrixD diagEigenvalues(eigenvalues.GetNrows(), eigenvalues.GetNrows());
+				diagEigenvalues.Zero();
+				for (Int_t i = 0; i < eigenvalues.GetNrows(); ++i) {
+					diagEigenvalues(i, i) = eigenvalues[i];
+				}
+
+				TMatrixD eigenvectors_original = eigenvectors;
+				TMatrixD eigenvectors_transpose = eigenvectors.T();
+
+				// getting the new full matrix
+				TMatrixD modifiedMatrix = eigenvectors_original * diagEigenvalues * eigenvectors_transpose;
+				(*map_matrix_flux_Xs_frac[idx]) = modifiedMatrix;
 			
-			// print negatives
-			for (Int_t i = 0; i < eigenvalues2.GetNrows(); ++i) {
-				Double_t eigenvalue2 = eigenvalues2[i];
-				if (eigenvalue2 < 0) cout << "    negative eigenvalue: " << eigenvalue2 << "\n";	
-				//cout << "    " << i << " eigenvalue: " << eigenvalue2 << "\n";	
+				cout << "After absolute valuing:\n";
+				
+				// put it into a symmetric matrix type
+				TMatrixDSym symMatrix2(modifiedMatrix.GetNrows());
+				for (Int_t i = 0; i < modifiedMatrix.GetNrows(); ++i) {
+					for (Int_t j = 0; j <= i; ++j) {
+						symMatrix2(i, j) = modifiedMatrix(i, j);
+					}
+				}
+
+				// get the eigenvalues and eigenvectors
+				TMatrixDSymEigen eig2(symMatrix2);
+				TVectorD eigenvalues2 = eig2.GetEigenValues();
+				TMatrixD eigenvectors2 = eig2.GetEigenVectors();
+				
+				// print negatives
+				for (Int_t i = 0; i < eigenvalues2.GetNrows(); ++i) {
+					Double_t eigenvalue2 = eigenvalues2[i];
+					//if (eigenvalue2 < 0) cout << "    negative eigenvalue: " << eigenvalue2 << "\n";	
+					//cout << "    " << i << " eigenvalue: " << eigenvalue2 << "\n";	
+				}
+
 			}
 
-		}
-
-        }    
-    }    
+        }
+    }
 
 
 
@@ -3467,7 +4105,7 @@ void TLee::Set_Spectra_MatrixCov()
     
   map<int, TString>map_detectorfile_str;
   
-  /* 
+  
   map_detectorfile_str[1] = detector_directory+"cov_LYDown.root";
   map_detectorfile_str[2] = detector_directory+"cov_LYRayleigh.root";
   map_detectorfile_str[3] = detector_directory+"cov_Recomb2.root";
@@ -3478,7 +4116,7 @@ void TLee::Set_Spectra_MatrixCov()
   map_detectorfile_str[8] = detector_directory+"cov_WMX.root";
   map_detectorfile_str[9] = detector_directory+"cov_WMYZ.root";
   map_detectorfile_str[10]= detector_directory+"cov_LYatt.root";
-  */
+  
 
   map<int, TFile*>map_file_detector_frac;
   map<int, TMatrixD*>map_matrix_detector_frac;
@@ -3595,9 +4233,9 @@ void TLee::Set_Spectra_MatrixCov()
       matrix_input_cov_reweight_cor(ibin, jbin) = val_cov * val_i * val_j;
 
       for(auto it=matrix_input_cov_detector_sub.begin(); it!=matrix_input_cov_detector_sub.end(); it++) {
-	int idx = it->first;
-	val_cov = matrix_detector_sub_frac[idx](ibin, jbin);
-	matrix_input_cov_detector_sub[idx](ibin, jbin) = val_cov * val_i * val_j;
+		int idx = it->first;
+		val_cov = matrix_detector_sub_frac[idx](ibin, jbin);
+		matrix_input_cov_detector_sub[idx](ibin, jbin) = val_cov * val_i * val_j;
       }
   
     }
@@ -3658,15 +4296,16 @@ void TLee::Set_Spectra_MatrixCov()
       int gbin = 0; int lbin = 0; double val_pred = 0; double mc_stat = 0; double nn_stat = 0;
       if(idx==1) { InputFile_aa>>Lee>>run; }
       else {
-	InputFile_aa>>gbin>>lbin>>val_pred>>mc_stat>>nn_stat;
-	line++;
-	map_mc_stat_file_bin_Lee[ifile][line-1] = Lee;
-	map_mc_stat_file_bin_mcStat[ifile][line-1] = mc_stat;
+		InputFile_aa>>gbin>>lbin>>val_pred>>mc_stat>>nn_stat;
+		line++;
+		map_mc_stat_file_bin_Lee[ifile][line-1] = Lee;
+		map_mc_stat_file_bin_mcStat[ifile][line-1] = mc_stat;
       }
     }
   }
   
   /// gh_mc_stat_bin
+  // should contain mc stat information for just one point, (1,1)
   for(int ibin=0; ibin<gbins_mc_stat; ibin++) {
     gh_mc_stat_bin[ibin] = new TGraph(); gh_mc_stat_bin[ibin]->SetName(TString::Format("gh_mc_stat_bin_%03d", ibin));
     

@@ -202,15 +202,16 @@ void cal_CL_Asimov()
     int vec_size = vec_min_status->size();
     for(int isize=0; isize<vec_size; isize++) {
       if( vec_min_status->at(isize)==0 ) {
-	double chi2_val = vec_chi2_var->at(isize);
-	double min_chi2 = vec_min_chi2->at(isize);
-	double dchi2 = chi2_val - min_chi2;
-	double pos_dchi2 = fabs(dchi2);
-	if( dchi2 < 0 && pos_dchi2>1e-6 ) {
-	  cout<<" Invalid dchi2 very close to 0: "<<dchi2<<endl;
-	  cout << "min chi2: " << min_chi2 << "\n";
+        double chi2_val = vec_chi2_var->at(isize);
+        double min_chi2 = vec_min_chi2->at(isize);
+        
+        double dchi2 = chi2_val - min_chi2;
+        double pos_dchi2 = fabs(dchi2);
+        if( dchi2 < 0 && pos_dchi2>1e-6 ) {
+          cout<<" Invalid dchi2, not super close to 0: "<<dchi2<<endl;
+          cout << "min chi2: " << min_chi2 << "\n";
           continue;
-	}
+        }
 
 	map_vec_toys_chi2_var[grid_Np][grid_0p].push_back( chi2_val );
 	map_vec_toys_min_chi2[grid_Np][grid_0p].push_back( min_chi2 );

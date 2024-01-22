@@ -66,14 +66,14 @@ int main( int argc, char** argv )
   // test, disabling all but nc_pi0_overlay and nc_delta_overlay, to replicate what we had before
   // (maybe there's a problem with nueCC or CCpi0 files causing the DetVar to be so high, especially LYAtt?)
 
-  cov.add_disabled_ch_name("wc_1gNp_cc_pi0_overlay");
-  cov.add_disabled_ch_name("wc_1gNp_nue_overlay");
-  cov.add_disabled_ch_name("wc_1g0p_cc_pi0_overlay");
-  cov.add_disabled_ch_name("wc_1g0p_nue_overlay");
-  cov.add_disabled_ch_name("glee_1g1p_cc_pi0_overlay");
-  cov.add_disabled_ch_name("glee_1g1p_nue_overlay");
-  cov.add_disabled_ch_name("glee_1g0p_cc_pi0_overlay");
-  cov.add_disabled_ch_name("glee_1g0p_nue_overlay");
+  //cov.add_disabled_ch_name("wc_1gNp_cc_pi0_overlay");
+  //cov.add_disabled_ch_name("wc_1gNp_nue_overlay");
+  //cov.add_disabled_ch_name("wc_1g0p_cc_pi0_overlay");
+  //cov.add_disabled_ch_name("wc_1g0p_nue_overlay");
+  //cov.add_disabled_ch_name("glee_1g1p_cc_pi0_overlay");
+  //cov.add_disabled_ch_name("glee_1g1p_nue_overlay");
+  //cov.add_disabled_ch_name("glee_1g0p_cc_pi0_overlay");
+  //cov.add_disabled_ch_name("glee_1g0p_nue_overlay");
 
   // test, disabling nc delta or nc pi0 overlays to see one at a time
   //cov.add_disabled_ch_name("wc_1gNp_nc_pi0_overlay");
@@ -81,10 +81,10 @@ int main( int argc, char** argv )
   //cov.add_disabled_ch_name("glee_1g1p_nc_pi0_overlay");
   //cov.add_disabled_ch_name("glee_1g0p_nc_pi0_overlay");
 
-  cov.add_disabled_ch_name("wc_1gNp_nc_delta_overlay");
-  cov.add_disabled_ch_name("wc_1g0p_nc_delta_overlay");
-  cov.add_disabled_ch_name("glee_1g1p_nc_delta_overlay");
-  cov.add_disabled_ch_name("glee_1g0p_nc_delta_overlay");
+  //cov.add_disabled_ch_name("wc_1gNp_nc_delta_overlay");
+  //cov.add_disabled_ch_name("wc_1g0p_nc_delta_overlay");
+  //cov.add_disabled_ch_name("glee_1g1p_nc_delta_overlay");
+  //cov.add_disabled_ch_name("glee_1g0p_nc_delta_overlay");
 
  
   // temporary, for NC Pi0 model validation test

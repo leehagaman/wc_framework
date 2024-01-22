@@ -1,0 +1,9 @@
+*.png
+*.pdf
+*.root
+*.txt
+*.log
+.vscode
+*.o
+*.so
+**/bin

@@ -214,6 +214,10 @@ public:
   // target detailed channels are constrained by supported detailed channels
   int Exe_Goodness_of_fit_detailed(vector<int>vc_target_detailed_chs, vector<int>vc_support_detailed_chs, int index);
 
+  int Get_Constrained_Chi2(int num_Y, int num_X, TMatrixD matrix_pred, TMatrixD matrix_data, TMatrixD matrix_syst, int index);
+  int Get_Constrained_Chi2(vector<int>vc_target_chs, vector<int>vc_support_chs, int index);
+  int Get_Constrained_Chi2_detailed(vector<int>vc_target_detailed_chs, vector<int>vc_support_detailed_chs, int index);
+
   // Significance corrected by look elsewhere effect
   double GetChi2(TMatrixD matrix_pred_temp, TMatrixD matrix_meas_temp, TMatrixD matrix_syst_abscov_temp);
   void Plotting_singlecase(TMatrixD matrix_pred_temp, TMatrixD matrix_meas_temp, TMatrixD matrix_syst_abscov_temp, bool saveFIG, TString ffstr, int index);

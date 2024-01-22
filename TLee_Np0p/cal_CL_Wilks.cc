@@ -147,11 +147,14 @@ void cal_CL_Wilks()
     int vec_size = vec_min_status->size();
     for(int isize=0; isize<vec_size; isize++) {
       if( vec_min_status->at(isize)==0 && (vec_min_chi2->at(isize) < data_min_chi2) ) {
-	data_min_chi2 = vec_min_chi2->at(isize);
-	data_min_fNp_val = vec_min_fNp_val->at(isize);
-	data_min_f0p_val = vec_min_f0p_val->at(isize);
-	data_min_fNp_err = vec_min_fNp_err->at(isize);
-	data_min_f0p_err = vec_min_f0p_err->at(isize);	
+        // lhagaman added, got really high data_min_fNp values occasionally 
+        if (vec_min_fNp_val->at(isize) < 100 && vec_min_f0p_val->at(isize) < 100) {
+          data_min_chi2 = vec_min_chi2->at(isize);
+          data_min_fNp_val = vec_min_fNp_val->at(isize);
+          data_min_f0p_val = vec_min_f0p_val->at(isize);
+          data_min_fNp_err = vec_min_fNp_err->at(isize);
+          data_min_f0p_err = vec_min_f0p_err->at(isize);	
+        }
       }
 
       map_data_chi2_var[grid_Np][grid_0p] = vec_chi2_var->at(isize);
@@ -201,17 +204,20 @@ void cal_CL_Wilks()
     int vec_size = vec_min_status->size();
     for(int isize=0; isize<vec_size; isize++) {
       if( vec_min_status->at(isize)==0 ) {
-	double chi2_val = vec_chi2_var->at(isize);
-	double min_chi2 = vec_min_chi2->at(isize);
-	double dchi2 = chi2_val - min_chi2;
-	if( dchi2<0 ) {
-	  cout<<" Invalid dchi2 less than 0: "<<dchi2<<endl;
-	  continue;
-	}
+        double chi2_val = vec_chi2_var->at(isize);
+        double min_chi2 = vec_min_chi2->at(isize);
 
-	map_vec_toys_chi2_var[grid_Np][grid_0p].push_back( chi2_val );
-	map_vec_toys_min_chi2[grid_Np][grid_0p].push_back( min_chi2 );
-	map_vec_toys_dchi2[grid_Np][grid_0p].push_back( dchi2 );
+        double dchi2 = chi2_val - min_chi2;
+        double pos_dchi2 = fabs(dchi2);
+        if( dchi2 < 0 && pos_dchi2>1e-6 ) {
+          cout<<" Invalid dchi2, not super close to 0: "<<dchi2<<endl;
+          cout << "min chi2: " << min_chi2 << "\n";
+          continue;
+        }
+
+        map_vec_toys_chi2_var[grid_Np][grid_0p].push_back( chi2_val );
+        map_vec_toys_min_chi2[grid_Np][grid_0p].push_back( min_chi2 );
+        map_vec_toys_dchi2[grid_Np][grid_0p].push_back( dchi2 );
       }
     }// for(int isize=0; isize<vec_size; isize++)
     
