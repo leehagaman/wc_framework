@@ -772,6 +772,53 @@ int main(int argc, char** argv)
 		cout << "done\n";
 	}
 
+	bool calculate_chi2_15_5 = false;
+	if ( calculate_chi2_15_5 ) {
+
+		cout << "getting chi2 at (15, 5) point...\n";
+
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse(); // prediction is ready
+
+		std::cout << "prediction ready\n";
+
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+
+		std::cout << "measurement ready\n";
+
+		double pars_2d[2] = {15, 5};
+
+		std::cout << "calculating chi2\n";
+
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		cout << "in read_TLee_v20, chi2 = " << chi2_var << "\n";
+	}
+
+	bool calculate_chi2_15_5_toys = true;
+	if ( calculate_chi2_15_5_toys ) {
+
+		cout << "getting chi2 at (15, 5) point...\n";
+
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse(); // prediction is ready
+
+		std::cout << "prediction ready\n";
+
+		int num_toys = 5;
+
+		//Lee_test->Set_measured_data(); // measurement is ready, real data
+		Lee_test->Set_Variations( num_toys ); // fake data with one toy
+
+		for (int itoy = 1; itoy <= num_toys; itoy++){
+			Lee_test->Set_toy_Variation( itoy ); //  look at first toy
+			double pars_2d[2] = {15, 5};
+			double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+			cout << "in read_TLee_v20, chi2 = " << chi2_var << "\n";
+		}
+	}
+
 
 	bool test_15_5 = false;
 
@@ -1088,7 +1135,7 @@ int main(int argc, char** argv)
 	}
 
 	// small test before doing full grid
-	if( 1 ) {
+	if( 0 ) {
 
 		///////
 		
@@ -1248,12 +1295,12 @@ int main(int argc, char** argv)
 		std::cout << "i file: " << ifile << "\n";
 
 		if (ifile==-1) {
-		std::cout << "creating asimov root file\n";
-		roostr = TString("sub_fit_Asimov.root");
+			std::cout << "creating asimov root file\n";
+			roostr = TString("sub_fit_Asimov.root");
 		} else if (ifile==0) {
-		roostr = TString("sub_fit_data.root");
+			roostr = TString("sub_fit_data.root");
 		} else {
-		roostr = TString::Format("sub_fit_%06d.root", ifile);
+			roostr = TString::Format("sub_fit_%06d.root", ifile);
 		}
 		
 		TFile *subroofile = new TFile(roostr, "recreate");
@@ -1280,7 +1327,7 @@ int main(int argc, char** argv)
 
 
 		if (ifile==0 or ifile==-1) { // run it with data or Asimov
-		Ntoys = 1;
+			Ntoys = 1;
 		}
 		
 		/////// 2d space of (Np, 0p)

@@ -1,0 +1,4 @@
+joint2_nueCC_Enu_FC_signal_nue_overlay 1
+joint2_nueCC_Enu_PC_signal_nue_overlay 0
+End
+Name_of_histogram_used_for_signal

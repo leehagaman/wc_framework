@@ -1,0 +1,7 @@
+8    cc_pio     18   /data1/hagaman/xin_files/processed_checkout_rootfiles/prodgenie_cc_pi0_overlay_run1_PF/reinteractions_proton_Geant4.root              ./hist_rootfiles/XsFlux/cov_18.root       0         1       1.42319e+20      1
+
+8    cc_pio     19   /data1/hagaman/xin_files/processed_checkout_rootfiles/prodgenie_cc_pi0_overlay_run1_PF/UBGenieFluxSmallUni.root                       ./hist_rootfiles/XsFlux/cov_19.root       0         2       1.42319e+20      1
+
+-1        end        -1        end             end         -1            -1           -1-        -1
+
+

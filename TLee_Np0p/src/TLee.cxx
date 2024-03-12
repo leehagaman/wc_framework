@@ -286,6 +286,10 @@ void TLee::Minimization_Lee_Np_0p_strength_FullCov(double Lee_Np_value, double L
 
 double TLee::FCN_Np_0p(const double *par)
 {
+
+	//std::cout << "at start of FCN_Np_0p\n";
+	//std::cout << "map_fake_data.size():" << map_fake_data.size() << "\n";
+
 	double chi2 = 0;
 
 	////////////////////////// prediction in the fitting
@@ -307,10 +311,11 @@ double TLee::FCN_Np_0p(const double *par)
 		matrix_meas(0, ibin) = map_fake_data[ibin];
 	}
 
+
+
 	//////////////////////////
 
 	TMatrixD matrix_cov_syst = matrix_absolute_cov_newworld;
-
 
 	//cout << "lhagaman debug 1, matrix_absolute_cov_newworld shape: (" << matrix_absolute_cov_newworld.GetNrows() << "," << matrix_absolute_cov_newworld.GetNcols() << ")\n";
 	//cout << "lhagaman debug 1, matrix_absolute_cov_newworld(6,6): " << matrix_absolute_cov_newworld(6,6) << "\n";
@@ -333,6 +338,7 @@ double TLee::FCN_Np_0p(const double *par)
 
 		matrix_cov_syst(ibin, ibin) += val_stat_cov;
 	}
+
 
 	/*
 	// calculate sum of all matrix elements
@@ -390,19 +396,16 @@ double TLee::FCN_Np_0p(const double *par)
 
 	bool use_custom_joint_chi2 = true; // here, joint refers to sig+bkg channels
 	bool use_custom_constrained_chi2 = false;
+	
 	bool all_channels = false;
 	bool just_wc = true;
 	bool just_glee = false;
 	bool exclude_1g_overflow_bins = false; // currently works for joint chi2 but not constrained chi2
-	bool exclude_1g_overflow_bins_method_2 = true; // zeros the data bins instead of rebuilding the covariance matrix
+	bool exclude_1g_overflow_bins_method_2 = false; // zeros the data bins instead of rebuilding the covariance matrix
+	bool temp_debug_1g_overflow_bins = false;
+
 
 	if (use_custom_joint_chi2) {
-
-		std::cout << "printing data spectrum:\n";
-		for (int i=0; i<matrix_meas.GetNcols(); i++){
-			std::cout << matrix_meas(0, i) << ", ";
-		}
-		std::cout << "done printing data spectrum\n";
 
 		bool two_bin_test = false;
 		bool four_bin_test = false;
@@ -481,24 +484,6 @@ double TLee::FCN_Np_0p(const double *par)
 		TMatrixDSub(user_matrix_cov, tar_bins, tar_bins + constr_bins - 1, 0, tar_bins - 1) = matrix_cov_total_user.GetSub(ind_constr_start, ind_constr_end - 1, ind_tar_start, ind_tar_end - 1);
 		TMatrixDSub(user_matrix_cov, tar_bins, tar_bins + constr_bins - 1, tar_bins, tar_bins + constr_bins - 1) = matrix_cov_total_user.GetSub(ind_constr_start, ind_constr_end - 1, ind_constr_start, ind_constr_end - 1);
 
-		// print user_matrix_cov
-		/*std::cout << "printing covariance matrix:\n";
-		for (int i=0; i<user_matrix_cov.GetNrows(); i++){
-			for (int j=0; j<user_matrix_cov.GetNrows(); j++){
-				std::cout << user_matrix_cov(i, j) << ", ";
-			}
-			std::cout << "\n";
-		}
-		std::cout << "done printing covariance matrix\n";
-		*/
-
-		// print prediction
-		std::cout << "printing prediction:\n";
-		for (int i=0; i<user_matrix_pred.GetNcols(); i++){
-			std::cout << user_matrix_pred(0, i) << ", ";
-		}
-		std::cout << "\ndone printing prediction\n";
-
 		TMatrixD user_matrix_cov_inv = user_matrix_cov;
 		user_matrix_cov_inv.Invert();
 
@@ -506,73 +491,63 @@ double TLee::FCN_Np_0p(const double *par)
 		TMatrixD matrix_delta_user_t = matrix_delta_user;
 		matrix_delta_user_t.T();
 
-		bool print_1_bin = false;
-		if (print_1_bin) {
-			cout << "user_matrix_data(0,0): " << user_matrix_data(0, 0) << "\n";
-			cout << "user_matrix_pred(0,0): " << user_matrix_pred(0, 0) << "\n";
-			cout << "matrix_delta_user(0,0): " << matrix_delta_user(0, 0) << "\n";
-			cout << "user_matrix_cov(0,0): " << user_matrix_cov(0, 0) << "\n";
-			cout << "user_matrix_cov_frac(0,0): " << user_matrix_cov(0, 0) / (user_matrix_pred(0,0) * user_matrix_pred(0,0)) << "\n";
-			cout << "user_matrix_cov_inv(0,0): " << user_matrix_cov_inv(0, 0) << "\n";
-
-			cout << "shapes being multiplied: (" << matrix_delta_user_t.GetNrows() << "," << matrix_delta_user_t.GetNcols() << ") (" << user_matrix_cov_inv.GetNrows() << "," << user_matrix_cov_inv.GetNcols() << ") (" << matrix_delta_user.GetNrows() << "," << matrix_delta_user.GetNcols() << ")\n";
-		}
-
-		bool print_signal_bins = false;
-		if (print_signal_bins) {
-			cout << "user_matrix_data signals: " << user_matrix_data(0,0) << " " << user_matrix_data(0,2) << " " << user_matrix_data(0,4) << " " << user_matrix_data(0,6)  << "\n";
-			cout << "user_matrix_pred signals: " << user_matrix_pred(0,0) << " " << user_matrix_pred(0,2) << " " << user_matrix_pred(0,4) << " " << user_matrix_pred(0,6)  << "\n";
-			cout << "matrix_delta_user signals: " << matrix_delta_user(0,0) << " " << matrix_delta_user(0,2) << " " << matrix_delta_user(0,4) << " " << matrix_delta_user(0,6)  << "\n";
-			/*cout << "user_matrix_cov signals: " << user_matrix_cov(0,0) << " " << user_matrix_cov(0,2) << " " << user_matrix_cov(0,4) << " " << user_matrix_cov(0,6)  << "\n";
-			cout << "                       : " << user_matrix_cov(2,0) << " " << user_matrix_cov(2,2) << " " << user_matrix_cov(2,4) << " " << user_matrix_cov(2,6)  << "\n";
-			cout << "                       : " << user_matrix_cov(4,0) << " " << user_matrix_cov(4,2) << " " << user_matrix_cov(4,4) << " " << user_matrix_cov(4,6)  << "\n";
-			cout << "                       : " << user_matrix_cov(6,0) << " " << user_matrix_cov(6,2) << " " << user_matrix_cov(6,4) << " " << user_matrix_cov(6,6)  << "\n";
-
-			cout << "user_matrix_cov_inv signals: " << user_matrix_cov_inv(0,0) << " " << user_matrix_cov_inv(0,2) << " " << user_matrix_cov_inv(0,4) << " " << user_matrix_cov_inv(0,6)  << "\n";
-			cout << "                       : " << user_matrix_cov_inv(2,0) << " " << user_matrix_cov_inv(2,2) << " " << user_matrix_cov_inv(2,4) << " " << user_matrix_cov_inv(2,6)  << "\n";
-			cout << "                       : " << user_matrix_cov_inv(4,0) << " " << user_matrix_cov_inv(4,2) << " " << user_matrix_cov_inv(4,4) << " " << user_matrix_cov_inv(4,6)  << "\n";
-			cout << "                       : " << user_matrix_cov_inv(6,0) << " " << user_matrix_cov_inv(6,2) << " " << user_matrix_cov_inv(6,4) << " " << user_matrix_cov_inv(6,6)  << "\n";
-
-
-
-			cout << "user_matrix_cov_frac signals: " << user_matrix_cov(0,0)/(user_matrix_pred(0,0)*user_matrix_pred(0,0)) << " " << user_matrix_cov(0,2)/(user_matrix_pred(0,0)*user_matrix_pred(0,2)) << " " << user_matrix_cov(0,4)/(user_matrix_pred(0,0)*user_matrix_pred(0,4)) << " " << user_matrix_cov(0,6)/(user_matrix_pred(0,0)*user_matrix_pred(0,6))  << "\n";
-			cout << "                            : " << user_matrix_cov(2,0)/(user_matrix_pred(0,2)*user_matrix_pred(0,0)) << " " << user_matrix_cov(2,2)/(user_matrix_pred(0,2)*user_matrix_pred(0,2)) << " " << user_matrix_cov(2,4)/(user_matrix_pred(0,2)*user_matrix_pred(0,4)) << " " << user_matrix_cov(2,6)/(user_matrix_pred(0,2)*user_matrix_pred(0,6))  << "\n";
-			cout << "                            : " << user_matrix_cov(4,0)/(user_matrix_pred(0,4)*user_matrix_pred(0,0)) << " " << user_matrix_cov(4,2)/(user_matrix_pred(0,4)*user_matrix_pred(0,2)) << " " << user_matrix_cov(4,4)/(user_matrix_pred(0,4)*user_matrix_pred(0,4)) << " " << user_matrix_cov(4,6)/(user_matrix_pred(0,4)*user_matrix_pred(0,6))  << "\n";
-			cout << "                            : " << user_matrix_cov(6,0)/(user_matrix_pred(0,6)*user_matrix_pred(0,0)) << " " << user_matrix_cov(6,2)/(user_matrix_pred(0,6)*user_matrix_pred(0,2)) << " " << user_matrix_cov(6,4)/(user_matrix_pred(0,6)*user_matrix_pred(0,4)) << " " << user_matrix_cov(6,6)/(user_matrix_pred(0,6)*user_matrix_pred(0,6))  << "\n";
-			*/
-		}
-
-		bool print_eight_bins = false;
-		if (print_eight_bins) {
-			cout << "user_matrix_data signals: " << user_matrix_data(0,0) << " " << user_matrix_data(0,2) << " " << user_matrix_data(0,4) << " " << user_matrix_data(0,6)  << " " << user_matrix_data(0,8)  << " " << user_matrix_data(0,10)  << " " << user_matrix_data(0,12)  << " " << user_matrix_data(0,14) << "\n";
-			cout << "user_matrix_pred signals: " << user_matrix_pred(0,0) << " " << user_matrix_pred(0,2) << " " << user_matrix_pred(0,4) << " " << user_matrix_pred(0,6)  << " " << user_matrix_pred(0,8)  << " " << user_matrix_pred(0,10)  << " " << user_matrix_pred(0,12)  << " " << user_matrix_pred(0,14) << "\n";
-			cout << "matrix_delta_user signals: " << matrix_delta_user(0,0) << " " << matrix_delta_user(0,2) << " " << matrix_delta_user(0,4) << " " << matrix_delta_user(0,6)  << " " << matrix_delta_user(0,8)  << " " << matrix_delta_user(0,10)  << " " << matrix_delta_user(0,12)  << " " << matrix_delta_user(0,14) << "\n";
-			cout << "user_matrix_cov signals: " << user_matrix_cov(0,0) << " " << user_matrix_cov(0,2) << " " << user_matrix_cov(0,4) << " " << user_matrix_cov(0,6)  << " " << user_matrix_cov(0,8)  << " " << user_matrix_cov(0,10)  << " " << user_matrix_cov(0,12)  << " " << user_matrix_cov(0,14) << "\n";
-			cout << "                       : " << user_matrix_cov(2,0) << " " << user_matrix_cov(2,2) << " " << user_matrix_cov(2,4) << " " << user_matrix_cov(2,6)  << " " << user_matrix_cov(2,8)  << " " << user_matrix_cov(2,10)  << " " << user_matrix_cov(2,12)  << " " << user_matrix_cov(2,14) << "\n";
-			cout << "                       : " << user_matrix_cov(4,0) << " " << user_matrix_cov(4,2) << " " << user_matrix_cov(4,4) << " " << user_matrix_cov(4,6)  << " " << user_matrix_cov(4,8)  << " " << user_matrix_cov(4,10)  << " " << user_matrix_cov(4,12)  << " " << user_matrix_cov(4,14) << "\n";
-			cout << "                       : " << user_matrix_cov(6,0) << " " << user_matrix_cov(6,2) << " " << user_matrix_cov(6,4) << " " << user_matrix_cov(6,6)  << " " << user_matrix_cov(6,8)  << " " << user_matrix_cov(6,10)  << " " << user_matrix_cov(6,12)  << " " << user_matrix_cov(6,14) << "\n";
-			cout << "                       : " << user_matrix_cov(8,0) << " " << user_matrix_cov(8,2) << " " << user_matrix_cov(8,4) << " " << user_matrix_cov(8,6)  << " " << user_matrix_cov(8,8)  << " " << user_matrix_cov(8,10)  << " " << user_matrix_cov(8,12)  << " " << user_matrix_cov(8,14) << "\n";
-			cout << "                       : " << user_matrix_cov(10,0) << " " << user_matrix_cov(10,2) << " " << user_matrix_cov(10,4) << " " << user_matrix_cov(10,6)  << " " << user_matrix_cov(10,8)  << " " << user_matrix_cov(10,10)  << " " << user_matrix_cov(10,12)  << " " << user_matrix_cov(10,14) << "\n";
-			cout << "                       : " << user_matrix_cov(12,0) << " " << user_matrix_cov(12,2) << " " << user_matrix_cov(12,4) << " " << user_matrix_cov(12,6)  << " " << user_matrix_cov(12,8)  << " " << user_matrix_cov(12,10)  << " " << user_matrix_cov(12,12)  << " " << user_matrix_cov(12,14) << "\n";
-			cout << "                       : " << user_matrix_cov(14,0) << " " << user_matrix_cov(14,2) << " " << user_matrix_cov(14,4) << " " << user_matrix_cov(14,6)  << " " << user_matrix_cov(14,8)  << " " << user_matrix_cov(14,10)  << " " << user_matrix_cov(14,12)  << " " << user_matrix_cov(14,14) << "\n";
-
-			cout << "user_matrix_cov_frac signals: " << user_matrix_cov(0,0)/(user_matrix_pred(0,0)*user_matrix_pred(0,0)) << " " << user_matrix_cov(0,2)/(user_matrix_pred(0,0)*user_matrix_pred(0,2)) << " " << user_matrix_cov(0,4)/(user_matrix_pred(0,0)*user_matrix_pred(0,4)) << " " << user_matrix_cov(0,6)/(user_matrix_pred(0,0)*user_matrix_pred(0,6))  << " " << user_matrix_cov(0,8)/(user_matrix_pred(0,0)*user_matrix_pred(0,8))  << " " << user_matrix_cov(0,10)/(user_matrix_pred(0,0)*user_matrix_pred(0,10))  << " " << user_matrix_cov(0,12)/(user_matrix_pred(0,0)*user_matrix_pred(0,12))  << " " << user_matrix_cov(0,14)/(user_matrix_pred(0,0)*user_matrix_pred(0,14)) << "\n";
-			cout << "                            : " << user_matrix_cov(2,0)/(user_matrix_pred(0,2)*user_matrix_pred(0,0)) << " " << user_matrix_cov(2,2)/(user_matrix_pred(0,2)*user_matrix_pred(0,2)) << " " << user_matrix_cov(2,4)/(user_matrix_pred(0,2)*user_matrix_pred(0,4)) << " " << user_matrix_cov(2,6)/(user_matrix_pred(0,2)*user_matrix_pred(0,6))  << " " << user_matrix_cov(2,8)/(user_matrix_pred(0,2)*user_matrix_pred(0,8))  << " " << user_matrix_cov(2,10)/(user_matrix_pred(0,2)*user_matrix_pred(0,10))  << " " << user_matrix_cov(2,12)/(user_matrix_pred(0,2)*user_matrix_pred(0,12))  << " " << user_matrix_cov(2,14)/(user_matrix_pred(0,2)*user_matrix_pred(0,14)) << "\n";
-			cout << "                            : " << user_matrix_cov(4,0)/(user_matrix_pred(0,4)*user_matrix_pred(0,0)) << " " << user_matrix_cov(4,2)/(user_matrix_pred(0,4)*user_matrix_pred(0,2)) << " " << user_matrix_cov(4,4)/(user_matrix_pred(0,4)*user_matrix_pred(0,4)) << " " << user_matrix_cov(4,6)/(user_matrix_pred(0,4)*user_matrix_pred(0,6))  << " " << user_matrix_cov(4,8)/(user_matrix_pred(0,4)*user_matrix_pred(0,8))  << " " << user_matrix_cov(4,10)/(user_matrix_pred(0,4)*user_matrix_pred(0,10))  << " " << user_matrix_cov(4,12)/(user_matrix_pred(0,4)*user_matrix_pred(0,12))  << " " << user_matrix_cov(4,14)/(user_matrix_pred(0,4)*user_matrix_pred(0,14)) << "\n";
-			cout << "                            : " << user_matrix_cov(6,0)/(user_matrix_pred(0,6)*user_matrix_pred(0,0)) << " " << user_matrix_cov(6,2)/(user_matrix_pred(0,6)*user_matrix_pred(0,2)) << " " << user_matrix_cov(6,4)/(user_matrix_pred(0,6)*user_matrix_pred(0,4)) << " " << user_matrix_cov(6,6)/(user_matrix_pred(0,6)*user_matrix_pred(0,6))  << " " << user_matrix_cov(6,8)/(user_matrix_pred(0,6)*user_matrix_pred(0,8))  << " " << user_matrix_cov(6,10)/(user_matrix_pred(0,6)*user_matrix_pred(0,10))  << " " << user_matrix_cov(6,12)/(user_matrix_pred(0,6)*user_matrix_pred(0,12))  << " " << user_matrix_cov(6,14)/(user_matrix_pred(0,6)*user_matrix_pred(0,14)) << "\n";
-			cout << "                            : " << user_matrix_cov(8,0)/(user_matrix_pred(0,8)*user_matrix_pred(0,0)) << " " << user_matrix_cov(8,2)/(user_matrix_pred(0,8)*user_matrix_pred(0,2)) << " " << user_matrix_cov(8,4)/(user_matrix_pred(0,8)*user_matrix_pred(0,4)) << " " << user_matrix_cov(8,6)/(user_matrix_pred(0,8)*user_matrix_pred(0,6))  << " " << user_matrix_cov(8,8)/(user_matrix_pred(0,8)*user_matrix_pred(0,8))  << " " << user_matrix_cov(8,10)/(user_matrix_pred(0,8)*user_matrix_pred(0,10))  << " " << user_matrix_cov(8,12)/(user_matrix_pred(0,8)*user_matrix_pred(0,12))  << " " << user_matrix_cov(8,14)/(user_matrix_pred(0,8)*user_matrix_pred(0,14)) << "\n";
-			cout << "                            : " << user_matrix_cov(10,0)/(user_matrix_pred(0,10)*user_matrix_pred(0,0)) << " " << user_matrix_cov(10,2)/(user_matrix_pred(0,10)*user_matrix_pred(0,2)) << " " << user_matrix_cov(10,4)/(user_matrix_pred(0,10)*user_matrix_pred(0,4)) << " " << user_matrix_cov(10,6)/(user_matrix_pred(0,10)*user_matrix_pred(0,6))  << " " << user_matrix_cov(10,8)/(user_matrix_pred(0,10)*user_matrix_pred(0,8))  << " " << user_matrix_cov(10,10)/(user_matrix_pred(0,10)*user_matrix_pred(0,10))  << " " << user_matrix_cov(10,12)/(user_matrix_pred(0,10)*user_matrix_pred(0,12))  << " " << user_matrix_cov(10,14)/(user_matrix_pred(0,10)*user_matrix_pred(0,14)) << "\n";
-			cout << "                            : " << user_matrix_cov(12,0)/(user_matrix_pred(0,12)*user_matrix_pred(0,0)) << " " << user_matrix_cov(12,2)/(user_matrix_pred(0,12)*user_matrix_pred(0,2)) << " " << user_matrix_cov(12,4)/(user_matrix_pred(0,12)*user_matrix_pred(0,4)) << " " << user_matrix_cov(12,6)/(user_matrix_pred(0,12)*user_matrix_pred(0,6))  << " " << user_matrix_cov(12,8)/(user_matrix_pred(0,12)*user_matrix_pred(0,8))  << " " << user_matrix_cov(12,10)/(user_matrix_pred(0,12)*user_matrix_pred(0,10))  << " " << user_matrix_cov(12,12)/(user_matrix_pred(0,12)*user_matrix_pred(0,12))  << " " << user_matrix_cov(12,14)/(user_matrix_pred(0,12)*user_matrix_pred(0,14)) << "\n";
-			cout << "                            : " << user_matrix_cov(14,0)/(user_matrix_pred(0,14)*user_matrix_pred(0,0)) << " " << user_matrix_cov(14,2)/(user_matrix_pred(0,14)*user_matrix_pred(0,2)) << " " << user_matrix_cov(14,4)/(user_matrix_pred(0,14)*user_matrix_pred(0,4)) << " " << user_matrix_cov(14,6)/(user_matrix_pred(0,14)*user_matrix_pred(0,6))  << " " << user_matrix_cov(14,8)/(user_matrix_pred(0,14)*user_matrix_pred(0,8))  << " " << user_matrix_cov(14,10)/(user_matrix_pred(0,14)*user_matrix_pred(0,10))  << " " << user_matrix_cov(14,12)/(user_matrix_pred(0,14)*user_matrix_pred(0,12))  << " " << user_matrix_cov(14,14)/(user_matrix_pred(0,14)*user_matrix_pred(0,14)) << "\n";
-
-		}
-
 		double chi2_user;
 
-		//std::cout << "data, pred counts:\n";
-		//for (int j_=0; j_ < 8; j_++){
-		//	std::cout << "   " << j_ << ", " << user_matrix_data(0, j_) << ", " << user_matrix_pred(0, j_) << "\n";
-		//}
+		if (temp_debug_1g_overflow_bins) {
+
+			if (user_matrix_data(0, 1) > 0) std::cout << "first 8 of meas: " << user_matrix_data(0, 0) << ", " << user_matrix_data(0, 1) << ", " << user_matrix_data(0, 2) << ", " << user_matrix_data(0, 3) << ", " << user_matrix_data(0, 4) << ", " << user_matrix_data(0, 5) << ", " << user_matrix_data(0, 6) << ", " << user_matrix_data(0, 7) << "\n";
+
+			chi2_user = (matrix_delta_user * user_matrix_cov_inv * matrix_delta_user_t)(0,0);
+			
+			if (user_matrix_data(0, 1) > 0) std::cout << "original chi2 calculation: " << chi2_user << "\n";
+
+			TMatrixD temp_matrix_delta_user_t = matrix_delta_user_t;
+			TMatrixD temp_user_matrix_cov_inv = user_matrix_cov_inv;
+			TMatrixD new_chi2_vals = ElementMult(temp_matrix_delta_user_t, temp_user_matrix_cov_inv * temp_matrix_delta_user_t); // This line changes the inputs!!! I don't know why
+
+			double new_sum_total = 0;
+			double new_sum = 0;
+			for (int i_=0; i_ < new_chi2_vals.GetNrows(); i_++){
+				new_sum_total += new_chi2_vals(i_, 0);
+				if ((all_channels && (i_!=1 && i_!=3 && i_!=5 && i_!=7))
+				|| (just_wc && (i_!=1 && i_!=3))
+				|| (just_glee && (i_!=1 && i_!=3))) {
+					new_sum += new_chi2_vals(i_, 0);
+				} else {
+					//std::cout << "  overflow bin val: " << i_ << ", " << user_matrix_pred(0, i_) << ", " << user_matrix_data(0, i_) << "\n";
+				}
+			}
+			if (user_matrix_data(0, 1) > 0) std::cout << "recalculated original chi2 value: " << new_sum_total << "\n";
+			if (user_matrix_data(0, 1) > 0) std::cout << "new chi2 value, excluded method 1: " << new_sum << "\n";
+
+
+			TMatrixD new_matrix_data = user_matrix_data;
+			TMatrixD new_matrix_pred = user_matrix_pred;
+
+			if (all_channels) {
+				new_matrix_data(0, 1) = 0;
+				new_matrix_data(0, 3) = 0;
+				new_matrix_data(0, 5) = 0;
+				new_matrix_data(0, 7) = 0;
+				new_matrix_pred(0, 1) = 0;
+				new_matrix_pred(0, 3) = 0;
+				new_matrix_pred(0, 5) = 0;
+				new_matrix_pred(0, 7) = 0;
+			} else if (just_wc || just_glee) {
+				new_matrix_data(0, 1) = 0;
+				new_matrix_data(0, 3) = 0;
+				new_matrix_pred(0, 1) = 0;
+				new_matrix_pred(0, 3) = 0;
+			}
+
+
+			TMatrixD new_matrix_delta_user = new_matrix_pred - new_matrix_data;
+			TMatrixD new_matrix_delta_user_t = new_matrix_delta_user;
+			new_matrix_delta_user_t.T();
+			chi2_user = (new_matrix_delta_user * user_matrix_cov_inv * new_matrix_delta_user_t)(0,0);
+			if (user_matrix_data(0, 1) > 0) std::cout << "new chi2 value, excluded method 2: " << chi2_user << "\n";
+
+		}
 
 		if (exclude_1g_overflow_bins) { 
 			// cutting out 1g channel overflow bins, which are explicitly made empty for data and prediction, 
@@ -616,13 +591,16 @@ double TLee::FCN_Np_0p(const double *par)
 			std::cout << "new chi2 value: " << chi2_user << "\n";
 		} else {
 			chi2_user = (matrix_delta_user * user_matrix_cov_inv * matrix_delta_user_t)(0,0);
+			//std::cout << "calculating chi2_user again here: " << chi2_user << "\n";
 		}
 
+		//std::cout << "at end, using new things: " << (new_matrix_delta_user * user_matrix_cov_inv * new_matrix_delta_user_t)(0,0) << "\n";
 
-
-		if (print_1_bin || print_signal_bins) cout << "chi2_user: " << chi2_user << "\n";
 
 		chi2 = chi2_user;
+
+		//std::cout << "set chi2 to chi2_user: " << chi2 << "\n";
+
 
 	}
 
@@ -720,6 +698,8 @@ double TLee::FCN_Np_0p(const double *par)
 	// end custom chi2 calculation
 
 	/////////
+
+	//std::cout << "return chi2: " << chi2 << "\n";
 
 	return chi2;
 }
@@ -1033,12 +1013,22 @@ void TLee::Set_fakedata(TMatrixD matrix_fakedata)
 	map_fake_data.clear();
 	int cols = matrix_fakedata.GetNcols();
 	for(int ibin=0; ibin<cols; ibin++) map_fake_data[ibin] = matrix_fakedata(0, ibin);    
+	std::cout << "In Set_fakedata, first element: " << matrix_fakedata(0, 0) << "\n";
 }
 
 ///////////////////////////////////////////////////////// ccc
 
 void TLee::Set_Variations(int num_toy)
 {
+	/*std::cout << "inside Set_Variations\n";
+	
+	std::cout << "CV predictions to fluctuate, plus diag sigmas:\n";
+	for (int ibin=0; ibin < bins_newworld; ibin++) {
+		std::cout << "    " << map_pred_spectrum_newworld_bin[ibin] << " +/- " << sqrt(matrix_absolute_cov_newworld(ibin, ibin)) << "\n";
+	}
+	std::cout << "done printing\n";
+	*/
+
 	map_toy_variation.clear();
 
 	//////////////////////////
@@ -1079,6 +1069,8 @@ void TLee::Set_Variations(int num_toy)
 		int eff_line = 0;
 
 RANDOM_AGAIN:
+
+		//std::cout << "doing random...\n";
 		eff_line++;
 
 		for(int ibin=0; ibin<bins_newworld; ibin++) {
@@ -1094,7 +1086,12 @@ RANDOM_AGAIN:
 		bool FLAG_negtive = 0;
 		for(int ibin=0; ibin<bins_newworld; ibin++) {
 			double val_with_syst = matrix_variation(ibin,0) + map_pred_spectrum_newworld_bin[ibin];// key point
+			// it's bad if a positive bin fluctuates to negative, but if it's a zero bin with zero uncertainty fluctuating, that's a numerical error and it's fine to continue
+			if (map_pred_spectrum_newworld_bin[ibin] == 0 && abs(matrix_absolute_cov_newworld(ibin, ibin)) < 1e-3) val_with_syst = 0;
 			if( val_with_syst<0 ) {
+
+				//std::cout << "Fluctuated less than zero, original, var: " << map_pred_spectrum_newworld_bin[ibin] << ", " << val_with_syst << "\n";
+
 				FLAG_negtive = 1;
 				break;
 			}
@@ -3327,6 +3324,11 @@ void TLee::Set_Collapse()
 				// right now, it's the MC stat at (1,1), so we transform it to this phase space point
 				pred_stat_cov = pred_stat_cov * (matrix_pred_newworld(0, idx) * matrix_pred_newworld(0, jdx)) / (matrix_pred_newworld_LEE_1_1(0, idx) * matrix_pred_newworld_LEE_1_1(0, jdx));
 
+				// Trying to fix nan values that arose in the covariance matrices
+				// I think these could come from empty bins in the spectra, in which case uncertainties should be uncorrelated
+				if (isnan(data_stat_cov)) data_stat_cov = 0.;
+				if (isnan(pred_stat_cov)) pred_stat_cov = 0.;
+
 				matrix_absolute_data_stat_cov(idx, jdx) = data_stat_cov;
 				matrix_absolute_pred_stat_cov(idx, jdx) = pred_stat_cov;
 
@@ -3370,38 +3372,10 @@ void TLee::Set_Collapse()
 	//cout << "lhagaman debug 2, matrix_absolute_cov_oldworld(6,6): " << matrix_absolute_cov_oldworld(6,6) << "\n";
 	//cout << "lhagaman debug 2, matrix_absolute_cov_newworld(6,6): " << matrix_absolute_cov_newworld(6,6) << "\n";
 
-	std::cout << "about to print stat cov matrices, flag_syst_mc_data_stat_cor = " << flag_syst_mc_data_stat_cor << "\n";
-
 	if(flag_syst_mc_data_stat_cor){
 		//cout << "adding stat cov matrices with shapes (" << matrix_absolute_cov_newworld.GetNrows() << ", " << matrix_absolute_cov_newworld.GetNcols() << ") (" << matrix_absolute_data_stat_cov.GetNrows() << ", " << matrix_absolute_data_stat_cov.GetNcols() << ") (" << matrix_absolute_pred_stat_cov.GetNrows() << ", " << matrix_absolute_pred_stat_cov.GetNcols() << ")\n";
 		matrix_absolute_cov_newworld += matrix_absolute_data_stat_cov;
 		matrix_absolute_cov_newworld += matrix_absolute_pred_stat_cov;
-
-		std::cout << "saving correlated stat covariance matrices to text files...\n";
-
-		ofstream data_stat_cor_file;
-		data_stat_cor_file.open("data_stat_cor.txt");
-		for(int idx=0; idx<bins_newworld; idx++) {
-			for(int jdx=0; jdx<bins_newworld; jdx++) {
-				data_stat_cor_file << matrix_absolute_data_stat_cov(idx, jdx) << " ";
-			}
-			data_stat_cor_file << "\n";
-		}
-		data_stat_cor_file.close();
-
-		ofstream pred_stat_cor_file;
-		pred_stat_cor_file.open("pred_stat_cor.txt");
-		for(int idx=0; idx<bins_newworld; idx++) {
-			for(int jdx=0; jdx<bins_newworld; jdx++) {
-				pred_stat_cor_file << matrix_absolute_pred_stat_cov(idx, jdx) << " ";
-			}
-			pred_stat_cor_file << "\n";
-		}
-		pred_stat_cor_file.close();
-
-		std::cout << "done saving correlated stat covariance matrices to text files\n";
-
-
 
 		//cout << "done adding stat cov matrices\n";
 	}
@@ -3413,6 +3387,11 @@ void TLee::Set_Collapse()
 			
 			// right now, it's the MC stat at (1,1), so we transform it to this phase space point
 			val_mc_stat_cov = val_mc_stat_cov * (matrix_pred_newworld(0, ibin) * matrix_pred_newworld(0, ibin)) / (matrix_pred_newworld_LEE_1_1(0, ibin) * matrix_pred_newworld_LEE_1_1(0, ibin));
+
+			// added to try to remove nans from cov matrix
+			// conveniently, this also fixes the issue with empty overflow bins fluctuating up from 0 to 1!
+			// this required adding a change near the goto statement, because a gaussian with mu=0 and sigma=0 seems to give tiny negative fluctuations
+			if (matrix_pred_newworld_LEE_1_1(0, ibin) == 0) val_mc_stat_cov = 0;
 
 			matrix_absolute_cov_newworld(ibin, ibin) += val_mc_stat_cov;
 			//matrix_absolute_cov_newworld(ibin, ibin) += val_mc_stat_cov/4.;
@@ -3808,12 +3787,12 @@ void TLee::Set_Spectra_MatrixCov()
 			
 			if (abs_value_eigenvals) {
 				
-				cout << "before modifying Xs matrix:\n";
+				//cout << "before modifying Xs matrix:\n";
 
 				// copy un-collapsed Xs matrix, make sure it's symmetrical
 				TMatrixD myMatrix = (*map_matrix_flux_Xs_frac[idx]);
 				if (!myMatrix.IsSymmetric()) {
-						std::cout << "    Matrix is not symmetric!\n";
+						//std::cout << "    Matrix is not symmetric!\n";
 						myMatrix = 0.5 * (myMatrix + myMatrix.T()); // Symmetrization
 				}
 
@@ -3839,6 +3818,7 @@ void TLee::Set_Spectra_MatrixCov()
 
 
 
+			std::cout << "subtracting one from uncollapsed sig bins\n";
 
 			for (int ibin=0; ibin<bins_oldworld; ibin++) {
 				for (int jbin=0; jbin<bins_oldworld; jbin++) {
@@ -3972,10 +3952,10 @@ void TLee::Set_Spectra_MatrixCov()
         	}
 
 			// done looping over bins
+
+			std::cout << "zeroing negative eigenvalues\n";
 			
 			if (abs_value_eigenvals) {
-
-				cout << "After modifying Xs matrix (subtracting one):\n";
 				
 				// copy un-collapsed Xs matrix, make sure it's symmetrical
 				TMatrixD myMatrix = (*map_matrix_flux_Xs_frac[idx]);
@@ -3996,6 +3976,7 @@ void TLee::Set_Spectra_MatrixCov()
 				TMatrixDSymEigen eig(symMatrix);
 				TVectorD eigenvalues = eig.GetEigenValues();
 				TMatrixD eigenvectors = eig.GetEigenVectors();
+
 				
 				// make negative zero, print it
 				for (Int_t i = 0; i < eigenvalues.GetNrows(); ++i) {
@@ -4021,6 +4002,8 @@ void TLee::Set_Spectra_MatrixCov()
 				TMatrixD modifiedMatrix = eigenvectors_original * diagEigenvalues * eigenvectors_transpose;
 				(*map_matrix_flux_Xs_frac[idx]) = modifiedMatrix;
 			
+				/*
+				
 				cout << "After absolute valuing:\n";
 				
 				// put it into a symmetric matrix type
@@ -4030,6 +4013,11 @@ void TLee::Set_Spectra_MatrixCov()
 						symMatrix2(i, j) = modifiedMatrix(i, j);
 					}
 				}
+
+
+				
+				std::cout << "getting eigenvalues and eigenvectors at the end, this code is not used:\n";
+
 
 				// get the eigenvalues and eigenvectors
 				TMatrixDSymEigen eig2(symMatrix2);
@@ -4042,6 +4030,11 @@ void TLee::Set_Spectra_MatrixCov()
 					//if (eigenvalue2 < 0) cout << "    negative eigenvalue: " << eigenvalue2 << "\n";	
 					//cout << "    " << i << " eigenvalue: " << eigenvalue2 << "\n";	
 				}
+
+				std::cout << "done getting eigenvalues and eigenvectors at the end\n";
+
+				*/
+
 
 			}
 

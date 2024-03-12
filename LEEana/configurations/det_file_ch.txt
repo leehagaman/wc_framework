@@ -1,0 +1,131 @@
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_LYDown_run1.root				all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_LYAttenuation_run1_disabled.root			all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_LYRayleigh_run1.root			all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_Recomb2_run1.root 			all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_SCE_run1.root				all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_WireModThetaXZ_run1.root			all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_WireModThetaYZ_run1.root			all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_WireModX_run1.root			all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_WireModYZ_run1.root			all
+
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_LYDown_run3.root                         all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_LYAttenuation_run3.root                  all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_LYRayleigh_run3.root                     all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_Recomb2_run3.root                        all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_SCE_run3.root                            all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_WireModThetaXZ_run3.root                 all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_WireModThetaYZ_run3.root                 all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_WireModX_run3.root                       all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_WireModYZ_run3.root                      all
+
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_LYDown_run3b.root                         all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_LYAttenuation_run3b.root                  all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_LYRayleigh_run3b.root                     all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_Recomb2_run3b.root                        all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_SCE_run3b.root                            all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_WireModThetaXZ_run3b.root                 all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_WireModThetaYZ_run3b.root                 all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_WireModX_run3b.root                       all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nu_overlay_WCP_DetVar_WireModYZ_run3b.root                      all
+
+
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_pi0_overlay_WCP_DetVar_LYDown_run1.root                         all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_pi0_overlay_WCP_DetVar_LYAttenuation_run1_disabled.root                  all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_pi0_overlay_WCP_DetVar_LYRayleigh_run1.root                     all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_pi0_overlay_WCP_DetVar_Recomb2_run1.root                        all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_pi0_overlay_WCP_DetVar_SCE_run1.root                            all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_pi0_overlay_WCP_DetVar_WireModThetaXZ_run1.root                 all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_pi0_overlay_WCP_DetVar_WireModThetaYZ_run1.root                 all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_pi0_overlay_WCP_DetVar_WireModX_run1.root                       all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_pi0_overlay_WCP_DetVar_WireModYZ_run1.root                      all
+
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_pi0_overlay_WCP_DetVar_LYDown_run3.root                         all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_pi0_overlay_WCP_DetVar_LYAttenuation_run3.root                  all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_pi0_overlay_WCP_DetVar_LYRayleigh_run3.root                     all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_pi0_overlay_WCP_DetVar_Recomb2_run3.root                        all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_pi0_overlay_WCP_DetVar_SCE_run3.root                            all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_pi0_overlay_WCP_DetVar_WireModThetaXZ_run3.root                 all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_pi0_overlay_WCP_DetVar_WireModThetaYZ_run3.root                 all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_pi0_overlay_WCP_DetVar_WireModX_run3.root                       all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_pi0_overlay_WCP_DetVar_WireModYZ_run3.root                      all
+
+
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_delta_overlay_WCP_DetVar_LYDown_run1_PF.root                          all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_delta_overlay_WCP_DetVar_LYAttenuation_run1_PF_disabled.root                   all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_delta_overlay_WCP_DetVar_LYRayleigh_run1_PF.root                      all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_delta_overlay_WCP_DetVar_Recomb2_run1_PF.root                         all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_delta_overlay_WCP_DetVar_SCE_run1_PF.root                             all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_delta_overlay_WCP_DetVar_WireModThetaXZ_run1_PF.root                  all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_delta_overlay_WCP_DetVar_WireModThetaYZ_run1_PF.root                  all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_delta_overlay_WCP_DetVar_WireModX_run1_PF.root                        all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_delta_overlay_WCP_DetVar_WireModYZ_run1_PF.root                       all
+
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_delta_overlay_WCP_DetVar_LYDown_run3_PF.root                         all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_delta_overlay_WCP_DetVar_LYAttenuation_run3_PF.root                  all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_delta_overlay_WCP_DetVar_LYRayleigh_run3_PF.root                     all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_delta_overlay_WCP_DetVar_Recomb2_run3_PF.root                        all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_delta_overlay_WCP_DetVar_SCE_run3_PF.root                            all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_delta_overlay_WCP_DetVar_WireModThetaXZ_run3_PF.root                 all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_delta_overlay_WCP_DetVar_WireModThetaYZ_run3_PF.root                 all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_delta_overlay_WCP_DetVar_WireModX_run3_PF.root                       all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_nc_delta_overlay_WCP_DetVar_WireModYZ_run3_PF.root                      all
+
+
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_LYDown_run1.root                          all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_LYAttenuation_run1_disabled.root                   all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_LYRayleigh_run1.root                      all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_Recomb2_run1.root                         all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_SCE_run1.root                             all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_WireModThetaXZ_run1.root                  all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_WireModThetaYZ_run1.root                  all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_WireModX_run1.root                        all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_WireModYZ_run1.root                       all
+
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_LYDown_run3a.root                          all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_LYAttenuation_run3a.root                   all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_LYRayleigh_run3a.root                      all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_Recomb2_run3a.root                         all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_SCE_run3a.root                             all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_WireModThetaXZ_run3a.root                  all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_WireModThetaYZ_run3a.root                  all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_WireModX_run3a.root                        all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_WireModYZ_run3a.root                       all
+
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_LYDown_run3b.root                          all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_LYAttenuation_run3b.root                   all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_LYRayleigh_run3b.root                      all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_Recomb2_run3b.root                         all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_SCE_run3b.root                             all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_WireModThetaXZ_run3b.root                  all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_WireModThetaYZ_run3b.root                  all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_WireModX_run3b.root                        all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_cc_pi0_overlay_WCP_DetVar_WireModYZ_run3b.root                       all
+
+
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_intrinsic_nue_overlay_WCP_DetVar_LYAttenuation_run1_disabled.root     all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_intrinsic_nue_overlay_WCP_DetVar_LYAttenuation_run3.root     all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_intrinsic_nue_overlay_WCP_DetVar_LYDown_run1.root     all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_intrinsic_nue_overlay_WCP_DetVar_LYDown_run3.root     all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_intrinsic_nue_overlay_WCP_DetVar_LYRayleigh_run1.root     all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_intrinsic_nue_overlay_WCP_DetVar_LYRayleigh_run3.root     all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_intrinsic_nue_overlay_WCP_DetVar_Recomb2_run1.root     all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_intrinsic_nue_overlay_WCP_DetVar_Recomb2_run3.root     all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_intrinsic_nue_overlay_WCP_DetVar_SCE_run1.root     all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_intrinsic_nue_overlay_WCP_DetVar_SCE_run3.root     all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_intrinsic_nue_overlay_WCP_DetVar_WireModThetaXZ_run1.root     all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_intrinsic_nue_overlay_WCP_DetVar_WireModThetaXZ_run3.root     all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_intrinsic_nue_overlay_WCP_DetVar_WireModThetaYZ_run1.root     all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_intrinsic_nue_overlay_WCP_DetVar_WireModThetaYZ_run3.root     all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_intrinsic_nue_overlay_WCP_DetVar_WireModX_run1.root     all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_intrinsic_nue_overlay_WCP_DetVar_WireModX_run3.root     all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_intrinsic_nue_overlay_WCP_DetVar_WireModYZ_run1.root     all
+/home/lee/hd1/glee_added_rootfiles/glee_added_hist_rootfiles/DetVar/WCPcheckout_prodgenie_bnb_intrinsic_nue_overlay_WCP_DetVar_WireModYZ_run3.root     all
+
+
+
+end														end
+#file														#cut
+
+
+
+

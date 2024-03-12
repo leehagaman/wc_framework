@@ -1,0 +1,8 @@
+5	BNB			1		/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_data_bnb_run1_PF.root					./hist_rootfiles/run1_data_bnb.root						1.42319e+20	1	0	1
+3	EXTBNB			1		/data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_data_extbnb_run1_PF.root					./hist_rootfiles/checkout_data_extbnb_run1.root					2.21814e+20	2	0	1	
+6       nc_pi0                  1               /data1/hagaman/xin_files/processed_checkout_rootfiles/checkout_prodgenie_nc_pi0_overlay_run1_PF.root                    ./hist_rootfiles/checkout_prodgenie_nc_pi0_overlay_run1.root                    0               3       0       1
+
+
+
+-1	end			-1		end																end										-1		-1	-1	-1
+#file	#type			#period		#filename															#outfile_name									#ext_pot	#file_no #norm	#norm_period
