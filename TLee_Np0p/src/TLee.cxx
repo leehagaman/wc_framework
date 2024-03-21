@@ -402,6 +402,7 @@ double TLee::FCN_Np_0p(const double *par)
 	bool all_channels = false;
 	bool just_wc = true;
 	bool just_glee = false;
+
 	bool exclude_1g_overflow_bins = false; // currently works for joint chi2 but not constrained chi2
 	bool exclude_1g_overflow_bins_method_2 = false; // zeros the data bins instead of rebuilding the covariance matrix
 	bool temp_debug_1g_overflow_bins = false;
@@ -488,6 +489,12 @@ double TLee::FCN_Np_0p(const double *par)
 
 		TMatrixD user_matrix_cov_inv = user_matrix_cov;
 		user_matrix_cov_inv.Invert();
+
+		// print user_matrix_data
+		/*std::cout << "in TLee.cxx, calculating chi2s, user_matrix_data: \n";
+		for (int i_=0; i_ < user_matrix_data.GetNcols(); i_++){
+			std::cout << "user_matrix_data entry " << i_ << " = " << user_matrix_data(0, i_) << "\n";
+		}*/
 
 		TMatrixD matrix_delta_user = user_matrix_pred - user_matrix_data;
 		TMatrixD matrix_delta_user_t = matrix_delta_user;

@@ -781,52 +781,180 @@ int main(int argc, char** argv)
 		cout << "done\n";
 	}
 
-	bool calculate_chi2_15_5 = false;
-	if ( calculate_chi2_15_5 ) {
 
-		cout << "getting chi2 at (15, 5) point...\n";
+	//ofstream chi2_values_15_5;
+	//chi2_values_15_5.open("chi2_values_15_5.txt");
+
+	bool calculate_chi2_15_5_data_and_toys = false;
+	if ( calculate_chi2_15_5_data_and_toys ) {
+
+		cout << "in calculate_chi2_15_5_data_and_toys...\ngetting chi2 at (15, 5) point...\n";
 
 		Lee_test->scaleF_Lee_Np = 1;
 		Lee_test->scaleF_Lee_0p = 1;
 		Lee_test->Set_Collapse(); // prediction is ready
 
-		std::cout << "prediction ready\n";
+		//std::cout << "prediction ready\n";
 
 		Lee_test->Set_measured_data(); // measurement is ready, real data
 
-		std::cout << "measurement ready\n";
+		//std::cout << "measurement ready\n";
 
 		double pars_2d[2] = {15, 5};
 
-		std::cout << "calculating chi2\n";
+		//std::cout << "calculating chi2\n";
 
 		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
-		cout << "in read_TLee_v20, chi2 = " << chi2_var << "\n";
+		cout << "data vs (15, 5) chi2 = " << chi2_var << "\n";
+		//chi2_values_15_5 <<"data vs (15, 5) chi2 = " << chi2_var << "\n";
+
 	}
 
-	bool calculate_chi2_15_5_toys = true;
-	if ( calculate_chi2_15_5_toys ) {
+	if ( calculate_chi2_15_5_data_and_toys ) {
 
-		cout << "getting chi2 at (15, 5) point...\n";
+		cout << "in calculate_chi2_15_5_data_and_toys...\ngetting chi2 at (15, 5) point...\n";
 
 		Lee_test->scaleF_Lee_Np = 1;
 		Lee_test->scaleF_Lee_0p = 1;
 		Lee_test->Set_Collapse(); // prediction is ready
 
-		std::cout << "prediction ready\n";
+		//std::cout << "prediction ready\n";
 
-		int num_toys = 5;
+		int num_toys = 100;
 
 		//Lee_test->Set_measured_data(); // measurement is ready, real data
-		Lee_test->Set_Variations( num_toys ); // fake data with one toy
+		Lee_test->Set_Variations( num_toys ); // fake data number of toys
+
+		cout << "calculating chi2 toy values...\n";
 
 		for (int itoy = 1; itoy <= num_toys; itoy++){
-			Lee_test->Set_toy_Variation( itoy ); //  look at first toy
+			Lee_test->Set_toy_Variation( itoy ); //  look at ith toy
 			double pars_2d[2] = {15, 5};
 			double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
-			cout << "in read_TLee_v20, chi2 = " << chi2_var << "\n";
+			cout << "(1, 1) toy vs (15, 5), chi2 = " << chi2_var << "\n";
+			//chi2_values_15_5 <<"(1, 1) toy vs (15, 5), chi2 = " << chi2_var << "\n";
 		}
+		cout << "done\n";
 	}
+
+	if ( calculate_chi2_15_5_data_and_toys ) {
+
+		cout << "in calculate_chi2_15_5_data_and_toys...\ngetting chi2 at (15, 5) point...\n";
+
+		Lee_test->scaleF_Lee_Np = 15;
+		Lee_test->scaleF_Lee_0p = 5;
+		Lee_test->Set_Collapse(); // prediction is ready
+
+		//std::cout << "prediction ready\n";
+
+		int num_toys = 100;
+
+		//Lee_test->Set_measured_data(); // measurement is ready, real data
+		Lee_test->Set_Variations( num_toys ); // fake data number of toys
+
+		cout << "calculating chi2 toy values...\n";
+
+		for (int itoy = 1; itoy <= num_toys; itoy++){
+			Lee_test->Set_toy_Variation( itoy ); //  look at ith toy
+			double pars_2d[2] = {15, 5};
+			double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+			cout << "(15, 5) toy vs (15, 5), chi2 = " << chi2_var << "\n";
+			//chi2_values_15_5 <<"(15, 5) toy vs (15, 5), chi2 = " << chi2_var << "\n";
+		}
+		cout << "done\n";
+
+	}
+
+	//chi2_values_15_5.close();
+
+	// open file
+	ofstream chi2_and_chi2min_15_5_data_and_toys;
+	chi2_and_chi2min_15_5_data_and_toys.open("chi2_and_chi2min_15_5_data_and_toys.txt");
+	bool calculate_chi2_and_chi2min_15_5_data_and_toys = true;
+	if ( calculate_chi2_and_chi2min_15_5_data_and_toys ) { // doing data
+		cout << "in calculate_chi2_and_chi2min_15_5_data_and_toys...\n";
+
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+
+		double pars_2d[2] = {15, 5}; // phase space point for the prediction
+
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		chi2_and_chi2min_15_5_data_and_toys << "data vs (15, 5) chi2 = " << chi2_var << "\n";
+
+		// minimization
+		double initial_Np = 1;
+		double initial_0p = 1;
+		Lee_test->Minimization_Lee_Np_0p_strength_FullCov(initial_Np, initial_0p, "");
+		double chi2_min = Lee_test->minimization_chi2;	
+		chi2_and_chi2min_15_5_data_and_toys << "data vs (15, 5) chi2_min = " << chi2_min << "\n";
+		double dchi2 = chi2_var - chi2_min;
+		chi2_and_chi2min_15_5_data_and_toys << "data vs (15, 5) dchi2 = " << dchi2 << "\n";
+	}
+	if ( calculate_chi2_and_chi2min_15_5_data_and_toys ) { // doing (15, 5) toys
+		cout << "in calculate_chi2_and_chi2min_15_5_data_and_toys...\n";
+
+		Lee_test->scaleF_Lee_Np = 15;
+		Lee_test->scaleF_Lee_0p = 5;
+		Lee_test->Set_Collapse(); // prediction is ready
+
+		int num_toys = 1000;
+
+		Lee_test->Set_Variations( num_toys ); // fake data number of toys
+
+		double pars_2d[2] = {15, 5};
+
+		cout << "starting loop over toys...\n";
+		for (int itoy = 1; itoy <= num_toys; itoy++){
+			Lee_test->Set_toy_Variation( itoy ); //  look at ith toy
+			double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+			chi2_and_chi2min_15_5_data_and_toys << "(15, 5) toy vs (15, 5) chi2 = " << chi2_var << "\n";
+
+			// minimization	
+			double initial_Np = 15;
+			double initial_0p = 5;
+			Lee_test->Minimization_Lee_Np_0p_strength_FullCov(initial_Np, initial_0p, "");
+			double chi2_min = Lee_test->minimization_chi2;	
+			chi2_and_chi2min_15_5_data_and_toys << "(15, 5) toy vs (15, 5) chi2_min = " << chi2_min << "\n";
+			double dchi2 = chi2_var - chi2_min;
+			chi2_and_chi2min_15_5_data_and_toys << "(15, 5) toy vs (15, 5) dchi2 = " << dchi2 << "\n";
+		}
+		cout << "done\n";
+	}
+	if ( calculate_chi2_and_chi2min_15_5_data_and_toys ) { // doing (1, 1) toys
+		cout << "in calculate_chi2_and_chi2min_15_5_data_and_toys...\n";
+
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse(); // prediction is ready
+
+		int num_toys = 1000;
+
+		Lee_test->Set_Variations( num_toys ); // fake data number of toys
+
+		double pars_2d[2] = {15, 5};
+
+		cout << "starting loop over toys...\n";
+		for (int itoy = 1; itoy <= num_toys; itoy++){
+			Lee_test->Set_toy_Variation( itoy ); //  look at ith toy
+			double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+			chi2_and_chi2min_15_5_data_and_toys << "(1, 1) toy vs (15, 5) chi2 = " << chi2_var << "\n";
+
+			// minimization			
+			double initial_Np = 1;
+			double initial_0p = 1;		
+			Lee_test->Minimization_Lee_Np_0p_strength_FullCov(initial_Np, initial_0p, "");
+			double chi2_min = Lee_test->minimization_chi2;	
+			chi2_and_chi2min_15_5_data_and_toys << "(1, 1) toy vs (15, 5) chi2_min = " << chi2_min << "\n";
+			double dchi2 = chi2_var - chi2_min;
+			chi2_and_chi2min_15_5_data_and_toys << "(1, 1) toy vs (15, 5) dchi2 = " << dchi2 << "\n";
+		}
+		cout << "done\n";
+	}
+	chi2_and_chi2min_15_5_data_and_toys.close();
+
+
+
+
 
 
 	bool test_15_5 = false;
