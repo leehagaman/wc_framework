@@ -5,6 +5,8 @@
 #include <TMatrixD.h>
 #include <TMatrixDSymEigen.h>
 
+//#include "WCPLEEANA/Configure_Lee.h"
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 namespace DataBase {
@@ -3325,7 +3327,7 @@ void TLee::Set_Collapse()
 				pred_stat_cov = pred_stat_cov * (matrix_pred_newworld(0, idx) * matrix_pred_newworld(0, jdx)) / (matrix_pred_newworld_LEE_1_1(0, idx) * matrix_pred_newworld_LEE_1_1(0, jdx));
 
 				// Trying to fix nan values that arose in the covariance matrices
-				// I think these could come from empty bins in the spectra, in which case uncertainties should be uncorrelated
+				// I think these could come from empty bins in the spectra, in which case uncertainties should be uncorrelated (diagonals, not necessarily though)
 				if (isnan(data_stat_cov)) data_stat_cov = 0.;
 				if (isnan(pred_stat_cov)) pred_stat_cov = 0.;
 
@@ -3382,8 +3384,9 @@ void TLee::Set_Collapse()
 	if( flag_syst_mc_stat ) {
 		for(int ibin=0; ibin<bins_newworld; ibin++) {
 
-			double val_mc_stat_cov = gh_mc_stat_bin[ibin]->Eval( 1 );
-			//if( scaleF_Lee<=0 ) val_mc_stat_cov = gh_mc_stat_bin[ibin]->Eval( 0 );
+			double val_mc_stat_cov = gh_mc_stat_bin[ibin]->Eval( 1 ); // value at LEE (1,1), rescaled in next line
+
+			double old_mc_stat_cov = val_mc_stat_cov;
 			
 			// right now, it's the MC stat at (1,1), so we transform it to this phase space point
 			val_mc_stat_cov = val_mc_stat_cov * (matrix_pred_newworld(0, ibin) * matrix_pred_newworld(0, ibin)) / (matrix_pred_newworld_LEE_1_1(0, ibin) * matrix_pred_newworld_LEE_1_1(0, ibin));
@@ -3391,10 +3394,39 @@ void TLee::Set_Collapse()
 			// added to try to remove nans from cov matrix
 			// conveniently, this also fixes the issue with empty overflow bins fluctuating up from 0 to 1!
 			// this required adding a change near the goto statement, because a gaussian with mu=0 and sigma=0 seems to give tiny negative fluctuations
-			if (matrix_pred_newworld_LEE_1_1(0, ibin) == 0) val_mc_stat_cov = 0;
+
+			// This code is wrong! Need nonzero stat uncertainty for some bins, zero stat uncertainty only for the empty overflow bins
+			//if (matrix_pred_newworld_LEE_1_1(0, ibin) == 0) {
+			//	cout << "setting mc stat value to zero for this bin: " << ibin << "\n"; // prints 1, 3, 5, 7, 8, 40
+			//	val_mc_stat_cov = 0;
+			//}
+
+			/*cout << "sizeof(array_no_stat_bins): " << sizeof(array_no_stat_bins) << "\n";
+			cout << "sizeof(array_no_stat_bins[0]): " << sizeof(array_no_stat_bins[0]) << "\n";
+			cout << "sizeof(array_no_stat_bins[1]): " << sizeof(array_no_stat_bins[1]) << "\n";
+			cout << "sizeof(array_no_stat_bins[2]): " << sizeof(array_no_stat_bins[2]) << "\n";
+			cout << "sizeof(array_no_stat_bins[3]): " << sizeof(array_no_stat_bins[3]) << "\n";*/
+			//int size_array_no_stat_bins = sizeof(array_no_stat_bins)/sizeof(array_no_stat_bins[0]);
+			
+			//for(int idx=0; idx<num_no_stat_bins; idx++) {
+			//	cout << "array_no_stat_bins[" << idx << "] = " << array_no_stat_bins[idx] << "\n";
+			//}
+
+ 			// this bin is zero, so we want to add back the inital mc stat uncertainty (before going through frac cov), instead of being nan
+			if (matrix_pred_newworld_LEE_1_1(0, ibin) == 0) {
+				val_mc_stat_cov = old_mc_stat_cov;
+				//cout << "setting mc stat value to the original nonzero value for this bin: " << ibin << "\n"; // prints ?
+			}
+			
+			// this bin is explicitly empty, and we want no mc stat uncertainty at all
+			for(int idx=0; idx<num_no_stat_bins; idx++) {
+				if (array_no_stat_bins[idx] == ibin) { // this is explicitly a zero-uncertainty, empty overflow bin. Nonzero for matrix invertability
+					val_mc_stat_cov = 0;
+					//cout << "setting mc stat value to zero for this bin: " << ibin << "\n"; // prints ?
+				}
+			}
 
 			matrix_absolute_cov_newworld(ibin, ibin) += val_mc_stat_cov;
-			//matrix_absolute_cov_newworld(ibin, ibin) += val_mc_stat_cov/4.;
 		}
 	}
 
@@ -3816,8 +3848,6 @@ void TLee::Set_Spectra_MatrixCov()
 
 			}
 
-
-
 			std::cout << "subtracting one from uncollapsed sig bins\n";
 
 			for (int ibin=0; ibin<bins_oldworld; ibin++) {
@@ -3842,111 +3872,17 @@ void TLee::Set_Spectra_MatrixCov()
 					float old_val = (*map_matrix_flux_Xs_frac[idx])(ibin, jbin);
 
 					// lhagaman changed 2023_07_25, stats can cause zeros in Xs file with nonzeros in CV file, don't subtract in that case
-					
-					bool subtract_all_sig_by_one_to_zero = false; // subtracts all the sig-sig bins by one, ideal fully correlated matrix subtraction, except for avoiding negatives
-					bool subtract_all_sig_sig_chs_by_one = false; // same as above, but allowing negatives and requiring one of the bin to be in the sig chs
-					bool subtract_all_sig_both_sig_chs_by_one = false; // same as above, but requiring both of the bins to be in the sig chs
-					bool subtract_all_sig_both_sig_chs_by_one_to_zero = false; // same as above, but avoiding making negative numbers
-					bool subtract_sig_diags_by_one = false; // subtracting just from the signal diagonals
-					bool subtract_sig_diags_by_one_zero_all_corrs = false; // subtracting just from the signal diagonals, zeroing out all correlations
-					bool subtract_sig_diags_by_one_zero_all_else = false; // subtracting just from the signal diagonals, zeroing out all correlations
-					bool zero_all = false; // zeroing out all nc delta chs
-					bool zero_either_all = false; // zeroing out all nc delta chs including corrs with non-nc delta chs
-					bool independent_blocks = false;
-					bool independent_truth_blocks = false; // USED THIS ONE FOR CURRENT TESTS
-
-					
+	
 					bool subtract_all_sig_by_one = true;
 
-					if (subtract_all_sig_by_one_to_zero) {
-						if (sigma_BR_row > 0 && sigma_BR_col > 0 && old_val < 1) {
-							(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0.;
-							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-						} else if (sigma_BR_row > 0 && sigma_BR_col > 0 && old_val >= 1) {
-							(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
-							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-						}
-					} else if (subtract_all_sig_by_one) {
+					if (subtract_all_sig_by_one) {
 						if (sigma_BR_row > 0 && sigma_BR_col > 0 && old_val == 0) { // stat issue, do nothing
 							//cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
 						} else if (sigma_BR_row > 0 && sigma_BR_col > 0) { // should subtract, will sometimes end up negative, but not by too much
 							(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
 							//cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
 						}
-					} else if (subtract_all_sig_sig_chs_by_one) {
-						if ((ibin < 2*3*4 || jbin < 2*3*4) && sigma_BR_row > 0 && sigma_BR_col > 0 && old_val == 0) { // stat issue, do nothing
-							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-						} else if ((ibin < 2*3*4 || jbin < 2*3*4) && sigma_BR_row > 0 && sigma_BR_col > 0) { // should subtract, will sometimes end up negative, but not by too much
-							(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
-							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-						}
-					} else if (subtract_all_sig_both_sig_chs_by_one) {
-						if ((ibin < 2*3*4 && jbin < 2*3*4) && sigma_BR_row > 0 && sigma_BR_col > 0 && old_val == 0) { // stat issue, do nothing
-							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-						} else if ((ibin < 2*3*4 && jbin < 2*3*4) && sigma_BR_row > 0 && sigma_BR_col > 0) { // should subtract, will sometimes end up negative, but not by too much
-							(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
-							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-						}
-					} else if (subtract_all_sig_both_sig_chs_by_one_to_zero) {
-						if ((ibin < 2*3*4 && jbin < 2*3*4) && sigma_BR_row > 0 && sigma_BR_col > 0 && old_val < 1) {
-							(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0.;
-							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-						} else if ((ibin < 2*3*4 && jbin < 2*3*4) && sigma_BR_row > 0 && sigma_BR_col > 0 && old_val >= 1) { // should subtract, will sometimes end up negative, but not by too much
-							(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1;
-							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-						}
-					} else if (subtract_sig_diags_by_one) {
-						if ((ibin < 2*3*4 && ibin==jbin) && sigma_BR_row > 0 && sigma_BR_col > 0 && old_val == 0) { // stat issue, do nothing
-							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-						} else if ((ibin < 2*3*4 && ibin==jbin) && sigma_BR_row > 0 && sigma_BR_col > 0) { // should subtract, will sometimes end up negative, but not by too much
-							(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
-							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-						}
-					} else if (subtract_sig_diags_by_one_zero_all_corrs) {
-						if ((ibin < 2*3*4 && ibin==jbin) && sigma_BR_row > 0 && sigma_BR_col > 0) {
-													(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
-							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-						} else if ((ibin < 2*3*4 || jbin < 2*3*4) && sigma_BR_row > 0 && sigma_BR_col > 0) {
-							(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0;
-							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-						}
-					} else if (subtract_sig_diags_by_one_zero_all_else) {
-						if ((ibin < 2*3*4 && ibin==jbin) && sigma_BR_row > 0 && sigma_BR_col > 0) {
-													(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
-							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-						} else if (sigma_BR_row > 0 && sigma_BR_col > 0) {
-							(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0;
-							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-						}
-					} else if (zero_all) {
-						if (sigma_BR_row > 0 && sigma_BR_col > 0) {
-													(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0;
-							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-						}
-					} else if (zero_either_all) {
-						if (sigma_BR_row > 0 || sigma_BR_col > 0) {
-													(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0;
-							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-						}
-					} else if (independent_blocks) {
-						if ((sigma_BR_row > 0 || sigma_BR_col > 0) && ibin < 2*3*4 && jbin < 2*3*4) { // sig chs block, subtracting one
-													(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1;
-							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-						} else if ((sigma_BR_row > 0 || sigma_BR_col > 0) && ((ibin < 2*3*4 && jbin >= 2*3*4) || (jbin < 2*3*4 && ibin >= 2*3*4))) { // off diag (sig ch vs non-sig ch) block, zeroing out
-													(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0;
-							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-						} // non-sig ch vs non-sig ch block left alone
-					} else if (independent_truth_blocks) {
-						if (sigma_BR_row > 0 && sigma_BR_col > 0 && old_val > 0) { // truth signal vs true signal, subtracting one
-													(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1;
-							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-						} else if (sigma_BR_row > 0 || sigma_BR_col > 0) { // corr between true signal and non-signal, zeroing
-													(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) = 0;
-							cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-						} // non-sig ch vs non-sig ch block left alone
 					}
-
-            	//cout << "done with " << ibin << ", " << jbin << "\n";
 
 				}   
         	}
@@ -3976,9 +3912,8 @@ void TLee::Set_Spectra_MatrixCov()
 				TMatrixDSymEigen eig(symMatrix);
 				TVectorD eigenvalues = eig.GetEigenValues();
 				TMatrixD eigenvectors = eig.GetEigenVectors();
-
 				
-				// make negative zero, print it
+				// make negative zero
 				for (Int_t i = 0; i < eigenvalues.GetNrows(); ++i) {
 					Double_t eigenvalue = eigenvalues[i];
 					if (eigenvalue < 0) {
@@ -4001,63 +3936,13 @@ void TLee::Set_Spectra_MatrixCov()
 				// getting the new full matrix
 				TMatrixD modifiedMatrix = eigenvectors_original * diagEigenvalues * eigenvectors_transpose;
 				(*map_matrix_flux_Xs_frac[idx]) = modifiedMatrix;
-			
-				/*
-				
-				cout << "After absolute valuing:\n";
-				
-				// put it into a symmetric matrix type
-				TMatrixDSym symMatrix2(modifiedMatrix.GetNrows());
-				for (Int_t i = 0; i < modifiedMatrix.GetNrows(); ++i) {
-					for (Int_t j = 0; j <= i; ++j) {
-						symMatrix2(i, j) = modifiedMatrix(i, j);
-					}
-				}
-
-
-				
-				std::cout << "getting eigenvalues and eigenvectors at the end, this code is not used:\n";
-
-
-				// get the eigenvalues and eigenvectors
-				TMatrixDSymEigen eig2(symMatrix2);
-				TVectorD eigenvalues2 = eig2.GetEigenValues();
-				TMatrixD eigenvectors2 = eig2.GetEigenVectors();
-				
-				// print negatives
-				for (Int_t i = 0; i < eigenvalues2.GetNrows(); ++i) {
-					Double_t eigenvalue2 = eigenvalues2[i];
-					//if (eigenvalue2 < 0) cout << "    negative eigenvalue: " << eigenvalue2 << "\n";	
-					//cout << "    " << i << " eigenvalue: " << eigenvalue2 << "\n";	
-				}
-
-				std::cout << "done getting eigenvalues and eigenvectors at the end\n";
-
-				*/
-
 
 			}
-
         }
     }
 
-
-
-
-
-    //matrix_sub_flux_geant4_Xs_oldworld[idx].Clear();
-    //matrix_sub_flux_geant4_Xs_oldworld[idx].ResizeTo(bins_oldworld, bins_oldworld);
-    //matrix_sub_flux_geant4_Xs_oldworld[idx] += (*map_matrix_flux_Xs_frac[idx]); 
-    
-    //cout << "about to start adding matrices\n";
-
-    //cout << "matrix_flux_Xs_frac shape: (" << matrix_flux_Xs_frac.GetNrows() << ", " << matrix_flux_Xs_frac.GetNcols() << ")\n";
-    //cout << "(*map_matrix_flux_Xs_frac[" << idx << "] shape: (" << (*map_matrix_flux_Xs_frac[idx]).GetNrows() << ", " << (*map_matrix_flux_Xs_frac[idx]).GetNcols() << ")\n";
-    
     matrix_flux_Xs_frac += (*map_matrix_flux_Xs_frac[idx]);    
     
-    //cout << "added overall, about to add components\n";
-
     if( idx<=16 ) {// flux
       matrix_flux_frac += (*map_matrix_flux_Xs_frac[idx]);
     }else if( idx==17 ){// interaction
@@ -4068,29 +3953,8 @@ void TLee::Set_Spectra_MatrixCov()
       matrix_reweight_cor_frac += (*map_matrix_flux_Xs_frac[idx]);
     }
 
-    /*
-    if (idx==19) {
-	cout << "lhagaman debug:\n";
-	cout << "    flux_Xs cov(2,2) = " << matrix_flux_Xs_frac(0,0) << "\n";
-	cout << "    flux cov(2,2) = " << matrix_flux_frac(0,0) << "\n";
-	cout << "    Xs cov(2,2) = " << matrix_Xs_frac(0,0) << "\n";
-	cout << "    rw cov(2,2) = " << matrix_reweight_frac(0,0) << "\n";
-	cout << "    rw_cor cov(2,2) = " << matrix_reweight_cor_frac(0,0) << "\n";
-    }
-    */
-    //cout << "done adding stuff here\n";
-
   }
   cout<<endl;   
-
-  /*
-  cout << "at end of Xs stuff:\n";
-  cout << "  matrix_flux_Xs_frac.Min(): " << matrix_flux_Xs_frac.Min() << "\n";
-  cout << "  matrix_flux_frac.Min(): " << matrix_flux_frac.Min() << "\n";
-  cout << "  matrix_Xs_frac.Min(): " << matrix_Xs_frac.Min() << "\n";
-  cout << "  matrix_reweight_frac.Min(): " << matrix_reweight_frac.Min() << "\n";
-  cout << "  matrix_reweight_cor_frac.Min(): " << matrix_reweight_cor_frac.Min() << "\n";
-  */
 
   ////////////////////////////////////////// detector
 

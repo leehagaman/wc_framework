@@ -117,6 +117,15 @@ int main(int argc, char** argv)
 	Lee_test->flag_syst_mc_stat    = config_Lee::flag_syst_mc_stat;
 	Lee_test->flag_syst_mc_data_stat_cor    = config_Lee::flag_syst_mc_data_stat_cor;
 
+
+	// declaring Lee_test as an empty int[4]
+	Lee_test->array_no_stat_bins = new int[4];	
+	for (int i = 0; i < 4; i++) {
+		Lee_test->array_no_stat_bins[i] = config_Lee::array_no_stat_bins[i];
+	}
+
+	Lee_test->num_no_stat_bins = config_Lee::num_no_stat_bins;
+
 	Lee_test->Set_Spectra_MatrixCov();
 	Lee_test->Set_POT_implement();
 	Lee_test->Set_TransformMatrix();
