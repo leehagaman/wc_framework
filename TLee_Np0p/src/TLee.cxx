@@ -322,6 +322,14 @@ double TLee::FCN_Np_0p(const double *par)
 	//cout << "lhagaman debug 1, matrix_absolute_cov_newworld shape: (" << matrix_absolute_cov_newworld.GetNrows() << "," << matrix_absolute_cov_newworld.GetNcols() << ")\n";
 	//cout << "lhagaman debug 1, matrix_absolute_cov_newworld(6,6): " << matrix_absolute_cov_newworld(6,6) << "\n";
 
+	TMatrixD matrix_data_stat_diag(matrix_cov_syst.GetNrows(), matrix_cov_syst.GetNcols());
+	for(int ibin=0; ibin<matrix_cov_syst.GetNrows(); ibin++) {
+		for (int jbin=0; jbin<matrix_cov_syst.GetNcols(); jbin++) {
+			matrix_data_stat_diag(ibin, jbin) = 0;
+		}
+	}
+
+	// adding data stat diag uncertainty to matrix_absolute_cov_newworld here, so it shouldn't be added inside Set_Collapse
 	for(int ibin=0; ibin<matrix_cov_syst.GetNrows(); ibin++) {
 		double val_stat_cov = 0;
 		double val_meas = matrix_meas(0, ibin);
@@ -337,6 +345,8 @@ double TLee::FCN_Np_0p(const double *par)
 
 		/// Neyman
 		//val_stat_cov = val_meas;
+
+		matrix_data_stat_diag(ibin, ibin) = val_stat_cov;
 
 		matrix_cov_syst(ibin, ibin) += val_stat_cov;
 	}
@@ -3324,7 +3334,7 @@ void TLee::Set_Collapse()
 				// we approximate by using (1,1) to get the fractional covariance matrix for all phase space points
 				// 
 				double pred_sigma_i = sqrt( gh_mc_stat_bin[idx]->Eval( 1 ) );
-				double pred_sigma_j = sqrt( gh_mc_stat_bin[idx]->Eval( 1 ) );
+				double pred_sigma_j = sqrt( gh_mc_stat_bin[jdx]->Eval( 1 ) );
 
 				double pred_correlation = matrix_pred_MCstat_correlation(idx, jdx);
 				if (idx==jdx) pred_correlation = 0.; // leave the diagonal entries to be calculated as usual later
@@ -3388,6 +3398,9 @@ void TLee::Set_Collapse()
 
 		//cout << "done adding stat cov matrices\n";
 	}
+
+	
+	TMatrixD mc_stat_diag_cov(bins_newworld, bins_newworld);
 	if( flag_syst_mc_stat ) {
 		for(int ibin=0; ibin<bins_newworld; ibin++) {
 
@@ -3433,6 +3446,7 @@ void TLee::Set_Collapse()
 				}
 			}
 
+			mc_stat_diag_cov(ibin, ibin) = val_mc_stat_cov;
 			matrix_absolute_cov_newworld(ibin, ibin) += val_mc_stat_cov;
 		}
 	}
@@ -3464,6 +3478,170 @@ void TLee::Set_Collapse()
 	   */
 
 	////////////////////////////////////////
+
+	bool save_cv_and_cov_matrices = false;
+	if (save_cv_and_cov_matrices) {
+
+		// delete all files in directory
+		system("rm cv_and_cov_csv_outputs/*");
+
+		cout << "saving matrix_pred_newworld in csv format\n";
+		ofstream pred_newworld_file; pred_newworld_file.open("cv_and_cov_csv_outputs/pred_newworld.csv");
+		for(int i=0; i<bins_newworld; i++) pred_newworld_file << matrix_pred_newworld(0,i) << ",";
+		pred_newworld_file << "\n";
+		pred_newworld_file.close();
+
+		// just doing data stat diag for saving to a file for debugging, isn't actually used in this function
+		TMatrixD matrix_data_stat_diag(matrix_absolute_cov_newworld.GetNrows(), matrix_absolute_cov_newworld.GetNcols());
+		for(int ibin=0; ibin<matrix_absolute_cov_newworld.GetNrows(); ibin++) {
+			for (int jbin=0; jbin<matrix_absolute_cov_newworld.GetNcols(); jbin++) {
+				matrix_data_stat_diag(ibin, jbin) = 0;
+			}
+		}
+		for(int ibin=0; ibin<matrix_absolute_cov_newworld.GetNrows(); ibin++) {
+			double val_stat_cov = 0;
+			double val_meas = matrix_pred_newworld(0,ibin); // assuming Asimov data for this data stat estimation
+			double val_pred = matrix_pred_newworld(0,ibin);
+			/// CNP
+			if( val_meas==0 ) val_stat_cov = val_pred/2;
+			else val_stat_cov = 3./( 1./val_meas + 2./val_pred );
+			if( val_meas==0 && val_pred==0 ) val_stat_cov = 1e-6;
+			/// Pearson
+			//val_stat_cov = val_pred;
+			/// Neyman
+			//val_stat_cov = val_meas;
+			matrix_data_stat_diag(ibin, ibin) = val_stat_cov;
+		}
+
+		cout << "saving Asimov data stat diag cov in csv format\n";
+		ofstream Asimov_data_stat_diag_cov_file; Asimov_data_stat_diag_cov_file.open("cv_and_cov_csv_outputs/Asimov_data_stat_diag_cov.csv");
+		for(int i=0; i<bins_newworld; i++) {
+			for(int j=0; j<bins_newworld; j++) Asimov_data_stat_diag_cov_file << matrix_data_stat_diag(i,j) << ",";
+			Asimov_data_stat_diag_cov_file << "\n";
+		}
+		Asimov_data_stat_diag_cov_file.close();
+		cout << "saving real data stat corr cov in csv format\n";
+		ofstream real_data_stat_corr_cov_file; real_data_stat_corr_cov_file.open("cv_and_cov_csv_outputs/real_data_stat_cor_cov.csv");
+		for(int i=0; i<bins_newworld; i++) {
+			for(int j=0; j<bins_newworld; j++) real_data_stat_corr_cov_file << matrix_absolute_data_stat_cov(i,j) << ",";
+			real_data_stat_corr_cov_file << "\n";
+		}
+		real_data_stat_corr_cov_file.close();
+
+		cout << "saving mc stat diag cov in csv format\n";
+		ofstream mc_stat_diag_cov_file; mc_stat_diag_cov_file.open("cv_and_cov_csv_outputs/mc_stat_diag_cov.csv");
+		for(int i=0; i<bins_newworld; i++) {
+			for(int j=0; j<bins_newworld; j++) mc_stat_diag_cov_file << mc_stat_diag_cov(i,j) << ",";
+			mc_stat_diag_cov_file << "\n";
+		}
+		mc_stat_diag_cov_file.close();
+		cout << "saving mc stat corr cov in csv format\n";
+		ofstream mc_stat_corr_cov_file; mc_stat_corr_cov_file.open("cv_and_cov_csv_outputs/mc_stat_cor_cov.csv");
+		for(int i=0; i<bins_newworld; i++) {
+			for(int j=0; j<bins_newworld; j++) mc_stat_corr_cov_file << matrix_absolute_pred_stat_cov(i,j) << ",";
+			mc_stat_corr_cov_file << "\n";
+		}
+		mc_stat_corr_cov_file.close();
+
+		cout << "saving matrix_absolute_cov_newworld (total cov w/out data stat diag) in csv format\n";
+		ofstream total_cov_no_data_stat_diag_file; total_cov_no_data_stat_diag_file.open("cv_and_cov_csv_outputs/total_cov_no_data_stat_diag.csv");
+		for(int i=0; i<bins_newworld; i++) {
+			for(int j=0; j<bins_newworld; j++) total_cov_no_data_stat_diag_file << matrix_absolute_cov_newworld(i,j) << ",";
+			total_cov_no_data_stat_diag_file << "\n";
+		}
+		total_cov_no_data_stat_diag_file.close();
+
+
+		// copying this part from flag_individual_cov_newworld options below
+
+		matrix_absolute_flux_cov_newworld.Clear();
+		matrix_absolute_Xs_cov_newworld.Clear();
+		matrix_absolute_detector_cov_newworld.Clear();
+		matrix_absolute_mc_stat_cov_newworld.Clear();
+		matrix_absolute_additional_cov_newworld.Clear();
+		matrix_absolute_reweight_cov_newworld.Clear();
+		matrix_absolute_reweight_cor_cov_newworld.Clear();
+
+		matrix_absolute_flux_cov_newworld.ResizeTo( bins_newworld, bins_newworld );
+		matrix_absolute_Xs_cov_newworld.ResizeTo( bins_newworld, bins_newworld );
+		matrix_absolute_detector_cov_newworld.ResizeTo( bins_newworld, bins_newworld );
+		matrix_absolute_mc_stat_cov_newworld.ResizeTo( bins_newworld, bins_newworld );
+		matrix_absolute_additional_cov_newworld.ResizeTo( bins_newworld, bins_newworld );
+		matrix_absolute_reweight_cov_newworld.ResizeTo( bins_newworld, bins_newworld );
+		matrix_absolute_reweight_cor_cov_newworld.ResizeTo( bins_newworld, bins_newworld );
+
+		for(auto it=matrix_input_cov_detector_sub.begin(); it!=matrix_input_cov_detector_sub.end(); it++) {
+			int idx = it->first;
+			matrix_absolute_detector_sub_cov_newworld[idx].Clear();
+			matrix_absolute_detector_sub_cov_newworld[idx].ResizeTo( bins_newworld, bins_newworld );
+			matrix_absolute_detector_sub_cov_newworld[idx] = matrix_transform_Lee_T * matrix_input_cov_detector_sub[idx] * matrix_transform_Lee;
+		}
+
+		matrix_absolute_flux_cov_newworld = matrix_transform_Lee_T * matrix_input_cov_flux * matrix_transform_Lee;
+		matrix_absolute_Xs_cov_newworld = matrix_transform_Lee_T * matrix_input_cov_Xs * matrix_transform_Lee;
+		matrix_absolute_detector_cov_newworld = matrix_transform_Lee_T * matrix_input_cov_detector * matrix_transform_Lee;
+		matrix_absolute_additional_cov_newworld = matrix_transform_Lee_T * matrix_input_cov_additional * matrix_transform_Lee;
+		matrix_absolute_reweight_cov_newworld = matrix_transform_Lee_T * matrix_input_cov_reweight * matrix_transform_Lee;
+		matrix_absolute_reweight_cor_cov_newworld = matrix_transform_Lee_T * matrix_input_cov_reweight_cor * matrix_transform_Lee;
+
+		cout << "saving matrix_absolute_flux_cov_newworld in csv format\n";
+		ofstream flux_cov_file; flux_cov_file.open("cv_and_cov_csv_outputs/flux_cov.csv");
+		for(int i=0; i<bins_newworld; i++) {
+			for(int j=0; j<bins_newworld; j++) flux_cov_file << matrix_absolute_flux_cov_newworld(i,j) << ",";
+			flux_cov_file << "\n";
+		}
+		flux_cov_file.close();
+
+		cout << "saving matrix_absolute_Xs_cov_newworld in csv format\n";
+		ofstream Xs_cov_file; Xs_cov_file.open("cv_and_cov_csv_outputs/Xs_cov.csv");
+		for(int i=0; i<bins_newworld; i++) {
+			for(int j=0; j<bins_newworld; j++) Xs_cov_file << matrix_absolute_Xs_cov_newworld(i,j) << ",";
+			Xs_cov_file << "\n";
+		}
+		Xs_cov_file.close();
+
+		cout << "saving matrix_absolute_detector_cov_newworld in csv format\n";
+		ofstream detector_cov_file; detector_cov_file.open("cv_and_cov_csv_outputs/detector_cov.csv");
+		for(int i=0; i<bins_newworld; i++) {
+			for(int j=0; j<bins_newworld; j++) detector_cov_file << matrix_absolute_detector_cov_newworld(i,j) << ",";
+			detector_cov_file << "\n";
+		}
+		detector_cov_file.close();
+
+		cout << "saving matrix_absolute_mc_stat_cov_newworld in csv format\n";
+		ofstream mc_stat_cov_file; mc_stat_cov_file.open("cv_and_cov_csv_outputs/mc_stat_cov.csv");
+		for(int i=0; i<bins_newworld; i++) {
+			for(int j=0; j<bins_newworld; j++) mc_stat_cov_file << matrix_absolute_mc_stat_cov_newworld(i,j) << ",";
+			mc_stat_cov_file << "\n";
+		}
+		mc_stat_cov_file.close();
+
+		cout << "saving matrix_absolute_additional_cov_newworld in csv format\n";
+		ofstream additional_cov_file; additional_cov_file.open("cv_and_cov_csv_outputs/additional_cov.csv");
+		for(int i=0; i<bins_newworld; i++) {
+			for(int j=0; j<bins_newworld; j++) additional_cov_file << matrix_absolute_additional_cov_newworld(i,j) << ",";
+			additional_cov_file << "\n";
+		}
+		additional_cov_file.close();
+
+		cout << "saving matrix_absolute_reweight_cov_newworld in csv format\n";
+		ofstream reweight_cov_file; reweight_cov_file.open("cv_and_cov_csv_outputs/reweight_cov.csv");
+		for(int i=0; i<bins_newworld; i++) {
+			for(int j=0; j<bins_newworld; j++) reweight_cov_file << matrix_absolute_reweight_cov_newworld(i,j) << ",";
+			reweight_cov_file << "\n";
+		}
+		reweight_cov_file.close();
+
+		cout << "saving matrix_absolute_reweight_cor_cov_newworld in csv format\n";
+		ofstream reweight_cor_cov_file; reweight_cor_cov_file.open("cv_and_cov_csv_outputs/reweight_cor_cov.csv");
+		for(int i=0; i<bins_newworld; i++) {
+			for(int j=0; j<bins_newworld; j++) reweight_cor_cov_file << matrix_absolute_reweight_cor_cov_newworld(i,j) << ",";
+			reweight_cor_cov_file << "\n";
+		}
+		reweight_cor_cov_file.close();
+
+	}
+
 
 	if( flag_individual_cov_newworld ) {
 		cout<<" ---> Producing the systematics for plotting (should appear only one time)"<<endl;

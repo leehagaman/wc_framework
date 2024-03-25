@@ -782,8 +782,24 @@ int main(int argc, char** argv)
 	}
 
 
-	//ofstream chi2_values_15_5;
-	//chi2_values_15_5.open("chi2_values_15_5.txt");
+	bool calculate_chi2_15_5_data = false;
+	if ( calculate_chi2_15_5_data ) {
+
+		cout << "in calculate_chi2_15_5_data...\ngetting chi2 at (15, 5) point...\n";
+
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse(); // prediction is ready
+
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+
+		double pars_2d[2] = {15, 5};
+
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		cout << "data vs (15, 5) chi2 = " << chi2_var << "\n";
+
+	}
+
 
 	bool calculate_chi2_15_5_data_and_toys = false;
 	if ( calculate_chi2_15_5_data_and_toys ) {
@@ -868,9 +884,13 @@ int main(int argc, char** argv)
 	//chi2_values_15_5.close();
 
 	// open file
-	ofstream chi2_and_chi2min_15_5_data_and_toys;
-	chi2_and_chi2min_15_5_data_and_toys.open("chi2_and_chi2min_15_5_data_and_toys.txt");
+
 	bool calculate_chi2_and_chi2min_15_5_data_and_toys = true;
+	int num_toys = 1000;
+	ofstream chi2_and_chi2min_15_5_data_and_toys;
+	if (calculate_chi2_and_chi2min_15_5_data_and_toys) {
+		chi2_and_chi2min_15_5_data_and_toys.open("chi2_and_chi2min_15_5_data_and_toys.txt");
+	}
 	if ( calculate_chi2_and_chi2min_15_5_data_and_toys ) { // doing data
 		cout << "in calculate_chi2_and_chi2min_15_5_data_and_toys...\n";
 
@@ -897,7 +917,7 @@ int main(int argc, char** argv)
 		Lee_test->scaleF_Lee_0p = 5;
 		Lee_test->Set_Collapse(); // prediction is ready
 
-		int num_toys = 1000;
+		//int num_toys = 10;
 
 		Lee_test->Set_Variations( num_toys ); // fake data number of toys
 
@@ -927,7 +947,7 @@ int main(int argc, char** argv)
 		Lee_test->scaleF_Lee_0p = 1;
 		Lee_test->Set_Collapse(); // prediction is ready
 
-		int num_toys = 1000;
+		//int num_toys = 10;
 
 		Lee_test->Set_Variations( num_toys ); // fake data number of toys
 
