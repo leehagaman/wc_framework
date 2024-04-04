@@ -3479,14 +3479,20 @@ void TLee::Set_Collapse()
 
 	////////////////////////////////////////
 
-	bool save_cv_and_cov_matrices = false;
+	bool save_cv_and_cov_matrices = true;
 	if (save_cv_and_cov_matrices) {
 
-		// delete all files in directory
-		system("rm cv_and_cov_csv_outputs/*");
+		std::cout << "scaleF_Lee_Np, scaleF_Lee_0p: " << scaleF_Lee_Np << ", " << scaleF_Lee_0p << "\n";
+
+		std::string dir_name = "cv_and_cov_csv_outputs/lee_" + std::to_string((int)scaleF_Lee_Np) + "_" + std::to_string((int)scaleF_Lee_0p) + "/";
+
+		std::cout << "deleting and remaking " << dir_name << "\n";
+
+		system(("rm -rf " + dir_name).c_str());
+		system(("mkdir " + dir_name).c_str());
 
 		cout << "saving matrix_pred_newworld in csv format\n";
-		ofstream pred_newworld_file; pred_newworld_file.open("cv_and_cov_csv_outputs/pred_newworld.csv");
+		ofstream pred_newworld_file; pred_newworld_file.open(dir_name + "pred_newworld.csv");
 		for(int i=0; i<bins_newworld; i++) pred_newworld_file << matrix_pred_newworld(0,i) << ",";
 		pred_newworld_file << "\n";
 		pred_newworld_file.close();
@@ -3514,14 +3520,14 @@ void TLee::Set_Collapse()
 		}
 
 		cout << "saving Asimov data stat diag cov in csv format\n";
-		ofstream Asimov_data_stat_diag_cov_file; Asimov_data_stat_diag_cov_file.open("cv_and_cov_csv_outputs/Asimov_data_stat_diag_cov.csv");
+		ofstream Asimov_data_stat_diag_cov_file; Asimov_data_stat_diag_cov_file.open(dir_name + "Asimov_data_stat_diag_cov.csv");
 		for(int i=0; i<bins_newworld; i++) {
 			for(int j=0; j<bins_newworld; j++) Asimov_data_stat_diag_cov_file << matrix_data_stat_diag(i,j) << ",";
 			Asimov_data_stat_diag_cov_file << "\n";
 		}
 		Asimov_data_stat_diag_cov_file.close();
 		cout << "saving real data stat corr cov in csv format\n";
-		ofstream real_data_stat_corr_cov_file; real_data_stat_corr_cov_file.open("cv_and_cov_csv_outputs/real_data_stat_cor_cov.csv");
+		ofstream real_data_stat_corr_cov_file; real_data_stat_corr_cov_file.open(dir_name + "real_data_stat_cor_cov.csv");
 		for(int i=0; i<bins_newworld; i++) {
 			for(int j=0; j<bins_newworld; j++) real_data_stat_corr_cov_file << matrix_absolute_data_stat_cov(i,j) << ",";
 			real_data_stat_corr_cov_file << "\n";
@@ -3529,14 +3535,14 @@ void TLee::Set_Collapse()
 		real_data_stat_corr_cov_file.close();
 
 		cout << "saving mc stat diag cov in csv format\n";
-		ofstream mc_stat_diag_cov_file; mc_stat_diag_cov_file.open("cv_and_cov_csv_outputs/mc_stat_diag_cov.csv");
+		ofstream mc_stat_diag_cov_file; mc_stat_diag_cov_file.open(dir_name + "mc_stat_diag_cov.csv");
 		for(int i=0; i<bins_newworld; i++) {
 			for(int j=0; j<bins_newworld; j++) mc_stat_diag_cov_file << mc_stat_diag_cov(i,j) << ",";
 			mc_stat_diag_cov_file << "\n";
 		}
 		mc_stat_diag_cov_file.close();
 		cout << "saving mc stat corr cov in csv format\n";
-		ofstream mc_stat_corr_cov_file; mc_stat_corr_cov_file.open("cv_and_cov_csv_outputs/mc_stat_cor_cov.csv");
+		ofstream mc_stat_corr_cov_file; mc_stat_corr_cov_file.open(dir_name + "mc_stat_cor_cov.csv");
 		for(int i=0; i<bins_newworld; i++) {
 			for(int j=0; j<bins_newworld; j++) mc_stat_corr_cov_file << matrix_absolute_pred_stat_cov(i,j) << ",";
 			mc_stat_corr_cov_file << "\n";
@@ -3544,7 +3550,7 @@ void TLee::Set_Collapse()
 		mc_stat_corr_cov_file.close();
 
 		cout << "saving matrix_absolute_cov_newworld (total cov w/out data stat diag) in csv format\n";
-		ofstream total_cov_no_data_stat_diag_file; total_cov_no_data_stat_diag_file.open("cv_and_cov_csv_outputs/total_cov_no_data_stat_diag.csv");
+		ofstream total_cov_no_data_stat_diag_file; total_cov_no_data_stat_diag_file.open(dir_name + "total_cov_no_data_stat_diag.csv");
 		for(int i=0; i<bins_newworld; i++) {
 			for(int j=0; j<bins_newworld; j++) total_cov_no_data_stat_diag_file << matrix_absolute_cov_newworld(i,j) << ",";
 			total_cov_no_data_stat_diag_file << "\n";
@@ -3585,7 +3591,7 @@ void TLee::Set_Collapse()
 		matrix_absolute_reweight_cor_cov_newworld = matrix_transform_Lee_T * matrix_input_cov_reweight_cor * matrix_transform_Lee;
 
 		cout << "saving matrix_absolute_flux_cov_newworld in csv format\n";
-		ofstream flux_cov_file; flux_cov_file.open("cv_and_cov_csv_outputs/flux_cov.csv");
+		ofstream flux_cov_file; flux_cov_file.open(dir_name + "flux_cov.csv");
 		for(int i=0; i<bins_newworld; i++) {
 			for(int j=0; j<bins_newworld; j++) flux_cov_file << matrix_absolute_flux_cov_newworld(i,j) << ",";
 			flux_cov_file << "\n";
@@ -3593,7 +3599,7 @@ void TLee::Set_Collapse()
 		flux_cov_file.close();
 
 		cout << "saving matrix_absolute_Xs_cov_newworld in csv format\n";
-		ofstream Xs_cov_file; Xs_cov_file.open("cv_and_cov_csv_outputs/Xs_cov.csv");
+		ofstream Xs_cov_file; Xs_cov_file.open(dir_name + "Xs_cov.csv");
 		for(int i=0; i<bins_newworld; i++) {
 			for(int j=0; j<bins_newworld; j++) Xs_cov_file << matrix_absolute_Xs_cov_newworld(i,j) << ",";
 			Xs_cov_file << "\n";
@@ -3601,7 +3607,7 @@ void TLee::Set_Collapse()
 		Xs_cov_file.close();
 
 		cout << "saving matrix_absolute_detector_cov_newworld in csv format\n";
-		ofstream detector_cov_file; detector_cov_file.open("cv_and_cov_csv_outputs/detector_cov.csv");
+		ofstream detector_cov_file; detector_cov_file.open(dir_name + "detector_cov.csv");
 		for(int i=0; i<bins_newworld; i++) {
 			for(int j=0; j<bins_newworld; j++) detector_cov_file << matrix_absolute_detector_cov_newworld(i,j) << ",";
 			detector_cov_file << "\n";
@@ -3609,7 +3615,7 @@ void TLee::Set_Collapse()
 		detector_cov_file.close();
 
 		cout << "saving matrix_absolute_mc_stat_cov_newworld in csv format\n";
-		ofstream mc_stat_cov_file; mc_stat_cov_file.open("cv_and_cov_csv_outputs/mc_stat_cov.csv");
+		ofstream mc_stat_cov_file; mc_stat_cov_file.open(dir_name + "mc_stat_cov.csv");
 		for(int i=0; i<bins_newworld; i++) {
 			for(int j=0; j<bins_newworld; j++) mc_stat_cov_file << matrix_absolute_mc_stat_cov_newworld(i,j) << ",";
 			mc_stat_cov_file << "\n";
@@ -3617,7 +3623,7 @@ void TLee::Set_Collapse()
 		mc_stat_cov_file.close();
 
 		cout << "saving matrix_absolute_additional_cov_newworld in csv format\n";
-		ofstream additional_cov_file; additional_cov_file.open("cv_and_cov_csv_outputs/additional_cov.csv");
+		ofstream additional_cov_file; additional_cov_file.open(dir_name + "additional_cov.csv");
 		for(int i=0; i<bins_newworld; i++) {
 			for(int j=0; j<bins_newworld; j++) additional_cov_file << matrix_absolute_additional_cov_newworld(i,j) << ",";
 			additional_cov_file << "\n";
@@ -3625,7 +3631,7 @@ void TLee::Set_Collapse()
 		additional_cov_file.close();
 
 		cout << "saving matrix_absolute_reweight_cov_newworld in csv format\n";
-		ofstream reweight_cov_file; reweight_cov_file.open("cv_and_cov_csv_outputs/reweight_cov.csv");
+		ofstream reweight_cov_file; reweight_cov_file.open(dir_name + "reweight_cov.csv");
 		for(int i=0; i<bins_newworld; i++) {
 			for(int j=0; j<bins_newworld; j++) reweight_cov_file << matrix_absolute_reweight_cov_newworld(i,j) << ",";
 			reweight_cov_file << "\n";
@@ -3633,7 +3639,7 @@ void TLee::Set_Collapse()
 		reweight_cov_file.close();
 
 		cout << "saving matrix_absolute_reweight_cor_cov_newworld in csv format\n";
-		ofstream reweight_cor_cov_file; reweight_cor_cov_file.open("cv_and_cov_csv_outputs/reweight_cor_cov.csv");
+		ofstream reweight_cor_cov_file; reweight_cor_cov_file.open(dir_name + "reweight_cor_cov.csv");
 		for(int i=0; i<bins_newworld; i++) {
 			for(int j=0; j<bins_newworld; j++) reweight_cor_cov_file << matrix_absolute_reweight_cor_cov_newworld(i,j) << ",";
 			reweight_cor_cov_file << "\n";

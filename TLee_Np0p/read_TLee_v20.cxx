@@ -782,14 +782,14 @@ int main(int argc, char** argv)
 	}
 
 
-	bool calculate_chi2_15_5_data = false;
+	bool calculate_chi2_15_5_data = true;
 	if ( calculate_chi2_15_5_data ) {
 
 		cout << "in calculate_chi2_15_5_data...\ngetting chi2 at (15, 5) point...\n";
 
-		Lee_test->scaleF_Lee_Np = 1;
-		Lee_test->scaleF_Lee_0p = 1;
-		Lee_test->Set_Collapse(); // prediction is ready
+		//Lee_test->scaleF_Lee_Np = 1;
+		//Lee_test->scaleF_Lee_0p = 1;
+		//Lee_test->Set_Collapse(); // prediction is ready
 
 		Lee_test->Set_measured_data(); // measurement is ready, real data
 
@@ -797,7 +797,23 @@ int main(int argc, char** argv)
 
 		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
 		cout << "data vs (15, 5) chi2 = " << chi2_var << "\n";
+	}
 
+	bool calculate_chi2_1_1_data = true;
+	if ( calculate_chi2_1_1_data ) {
+
+		cout << "in calculate_chi2_1_1_data...\ngetting chi2 at (15, 5) point...\n";
+
+		//Lee_test->scaleF_Lee_Np = 1;
+		//Lee_test->scaleF_Lee_0p = 1;
+		//Lee_test->Set_Collapse(); // prediction is ready
+
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+
+		double pars_2d[2] = {1, 1};
+
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		cout << "data vs (1, 1) chi2 = " << chi2_var << "\n";
 	}
 
 
@@ -885,7 +901,7 @@ int main(int argc, char** argv)
 
 	// open file
 
-	bool calculate_chi2_and_chi2min_15_5_data_and_toys = true;
+	bool calculate_chi2_and_chi2min_15_5_data_and_toys = false;
 	int num_toys = 1000;
 	ofstream chi2_and_chi2min_15_5_data_and_toys;
 	if (calculate_chi2_and_chi2min_15_5_data_and_toys) {
@@ -971,10 +987,6 @@ int main(int argc, char** argv)
 		cout << "done\n";
 	}
 	chi2_and_chi2min_15_5_data_and_toys.close();
-
-
-
-
 
 
 	bool test_15_5 = false;
