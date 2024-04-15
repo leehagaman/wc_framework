@@ -787,9 +787,9 @@ int main(int argc, char** argv)
 
 		cout << "in calculate_chi2_15_5_data...\ngetting chi2 at (15, 5) point...\n";
 
-		//Lee_test->scaleF_Lee_Np = 1;
-		//Lee_test->scaleF_Lee_0p = 1;
-		//Lee_test->Set_Collapse(); // prediction is ready
+		Lee_test->scaleF_Lee_Np = 15;
+		Lee_test->scaleF_Lee_0p = 5;
+		Lee_test->Set_Collapse(); // prediction is ready
 
 		Lee_test->Set_measured_data(); // measurement is ready, real data
 
@@ -802,11 +802,11 @@ int main(int argc, char** argv)
 	bool calculate_chi2_1_1_data = true;
 	if ( calculate_chi2_1_1_data ) {
 
-		cout << "in calculate_chi2_1_1_data...\ngetting chi2 at (15, 5) point...\n";
+		cout << "in calculate_chi2_1_1_data...\ngetting chi2 at (1, 1) point...\n";
 
-		//Lee_test->scaleF_Lee_Np = 1;
-		//Lee_test->scaleF_Lee_0p = 1;
-		//Lee_test->Set_Collapse(); // prediction is ready
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse(); // prediction is ready
 
 		Lee_test->Set_measured_data(); // measurement is ready, real data
 

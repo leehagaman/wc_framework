@@ -1025,6 +1025,17 @@ void TLee::Set_measured_data()
 {
 	map_fake_data.clear();
 	for(int ibin=0; ibin<bins_newworld; ibin++) map_fake_data[ibin] = matrix_data_newworld(0, ibin);
+
+	bool save_cv_and_cov_matrices = true; // also have to change in Set_Collapse
+	if (save_cv_and_cov_matrices) {
+		std::string dir_name = "cv_and_cov_csv_outputs/lee_" + std::to_string((int)scaleF_Lee_Np) + "_" + std::to_string((int)scaleF_Lee_0p) + "/";
+
+		cout << "saving meas in csv format\n";
+		ofstream meas_file; meas_file.open(dir_name + "meas.csv");
+		for(int i=0; i<bins_newworld; i++) meas_file << matrix_data_newworld(0,i) << ",";
+		meas_file << "\n";
+		meas_file.close();
+	}
 }
 
 void TLee::Set_fakedata(TMatrixD matrix_fakedata)
@@ -3479,17 +3490,17 @@ void TLee::Set_Collapse()
 
 	////////////////////////////////////////
 
-	bool save_cv_and_cov_matrices = true;
+	bool save_cv_and_cov_matrices = true; // also have to change in Set_measured_data
 	if (save_cv_and_cov_matrices) {
 
 		std::cout << "scaleF_Lee_Np, scaleF_Lee_0p: " << scaleF_Lee_Np << ", " << scaleF_Lee_0p << "\n";
 
 		std::string dir_name = "cv_and_cov_csv_outputs/lee_" + std::to_string((int)scaleF_Lee_Np) + "_" + std::to_string((int)scaleF_Lee_0p) + "/";
 
-		std::cout << "deleting and remaking " << dir_name << "\n";
-
-		system(("rm -rf " + dir_name).c_str());
-		system(("mkdir " + dir_name).c_str());
+		// this part could delete the meas info that was saved
+		//std::cout << "deleting and remaking " << dir_name << "\n";
+		//system(("rm -rf " + dir_name).c_str());
+		//system(("mkdir " + dir_name).c_str());
 
 		cout << "saving matrix_pred_newworld in csv format\n";
 		ofstream pred_newworld_file; pred_newworld_file.open(dir_name + "pred_newworld.csv");
