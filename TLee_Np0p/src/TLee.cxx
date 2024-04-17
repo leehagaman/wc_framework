@@ -406,13 +406,14 @@ double TLee::FCN_Np_0p(const double *par)
 
 	// start lhagaman custom chi2 calculation
 
-	bool use_custom_joint_chi2 = true; // here, joint refers to sig+bkg channels
-	bool use_custom_constrained_chi2 = false;
+	bool use_custom_joint_chi2 = false; // here, joint refers to sig+bkg channels
+	bool use_custom_constrained_chi2 = true;
 	
 	bool all_channels = false;
 	bool just_wc = true;
 	bool just_glee = false;
 
+	// none of these needed anymore, now keep track of explicitly zero bins in Configure_Lee.h, array_no_stat_bins
 	bool exclude_1g_overflow_bins = false; // currently works for joint chi2 but not constrained chi2
 	bool exclude_1g_overflow_bins_method_2 = false; // zeros the data bins instead of rebuilding the covariance matrix
 	bool temp_debug_1g_overflow_bins = false;
@@ -1026,7 +1027,7 @@ void TLee::Set_measured_data()
 	map_fake_data.clear();
 	for(int ibin=0; ibin<bins_newworld; ibin++) map_fake_data[ibin] = matrix_data_newworld(0, ibin);
 
-	bool save_cv_and_cov_matrices = true; // also have to change in Set_Collapse
+	bool save_cv_and_cov_matrices = false; // also have to change in Set_Collapse
 	if (save_cv_and_cov_matrices) {
 		std::string dir_name = "cv_and_cov_csv_outputs/lee_" + std::to_string((int)scaleF_Lee_Np) + "_" + std::to_string((int)scaleF_Lee_0p) + "/";
 
@@ -3490,7 +3491,7 @@ void TLee::Set_Collapse()
 
 	////////////////////////////////////////
 
-	bool save_cv_and_cov_matrices = true; // also have to change in Set_measured_data
+	bool save_cv_and_cov_matrices = false; // also have to change in Set_measured_data
 	if (save_cv_and_cov_matrices) {
 
 		std::cout << "scaleF_Lee_Np, scaleF_Lee_0p: " << scaleF_Lee_Np << ", " << scaleF_Lee_0p << "\n";
