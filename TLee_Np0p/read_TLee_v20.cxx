@@ -844,6 +844,7 @@ int main(int argc, char** argv)
 		double initial_Np = 1;
 		double initial_0p = 1;
 		Lee_test->Minimization_Lee_Np_0p_strength_FullCov(initial_Np, initial_0p, "");
+		chi2_and_chi2min_15_5_data_and_toys  << "data vs (15, 5) minimization point = (" << Lee_test->minimization_Lee_Np_strength_val << ", " << Lee_test->minimization_Lee_0p_strength_val << ")\n"; 
 		double chi2_min = Lee_test->minimization_chi2;	
 		chi2_and_chi2min_15_5_data_and_toys << "data vs (15, 5) chi2_min = " << chi2_min << "\n";
 		double dchi2 = chi2_var - chi2_min;
@@ -879,6 +880,7 @@ int main(int argc, char** argv)
 			double initial_Np = 15;
 			double initial_0p = 5;
 			Lee_test->Minimization_Lee_Np_0p_strength_FullCov(initial_Np, initial_0p, "");
+			chi2_and_chi2min_15_5_data_and_toys  << "(15, 5) toy #" << itoy << " minimization point = (" << Lee_test->minimization_Lee_Np_strength_val << ", " << Lee_test->minimization_Lee_0p_strength_val << ")\n"; 
 			double chi2_min = Lee_test->minimization_chi2;	
 			chi2_and_chi2min_15_5_data_and_toys << "(15, 5) toy #" << itoy << " vs (15, 5) chi2_min = " << chi2_min << "\n";
 			double dchi2 = chi2_var - chi2_min;
@@ -916,6 +918,7 @@ int main(int argc, char** argv)
 			double initial_Np = 1;
 			double initial_0p = 1;		
 			Lee_test->Minimization_Lee_Np_0p_strength_FullCov(initial_Np, initial_0p, "");
+			chi2_and_chi2min_15_5_data_and_toys  << "(1, 1) toy #" << itoy << " minimization point = (" << Lee_test->minimization_Lee_Np_strength_val << ", " << Lee_test->minimization_Lee_0p_strength_val << ")\n"; 
 			double chi2_min = Lee_test->minimization_chi2;	
 			chi2_and_chi2min_15_5_data_and_toys << "(1, 1) toy #" << itoy << " vs (15, 5) chi2_min = " << chi2_min << "\n";
 			double dchi2 = chi2_var - chi2_min;

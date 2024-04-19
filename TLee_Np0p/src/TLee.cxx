@@ -5,6 +5,8 @@
 #include <TMatrixD.h>
 #include <TMatrixDSymEigen.h>
 
+//#include <TRandom.h>
+
 //#include "WCPLEEANA/Configure_Lee.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1051,8 +1053,12 @@ void TLee::Set_fakedata(TMatrixD matrix_fakedata)
 
 void TLee::Set_Variations(int num_toy)
 {
-	/*std::cout << "inside Set_Variations\n";
-	
+
+	rand->SetSeed(42);
+
+	//std::cout << "inside Set_Variations, just set seed to 0\n";
+
+	/*
 	std::cout << "CV predictions to fluctuate, plus diag sigmas:\n";
 	for (int ibin=0; ibin < bins_newworld; ibin++) {
 		std::cout << "    " << map_pred_spectrum_newworld_bin[ibin] << " +/- " << sqrt(matrix_absolute_cov_newworld(ibin, ibin)) << "\n";
@@ -1107,6 +1113,10 @@ RANDOM_AGAIN:
 		for(int ibin=0; ibin<bins_newworld; ibin++) {
 			if( matrix_eigenvalue(ibin)>=0 ) {
 				matrix_element(ibin,0) = rand->Gaus( 0, sqrt( matrix_eigenvalue(ibin) ) );
+				//if (curr_num_print < num_prints) {
+				//	cout << "just drew random number: " << sqrt(matrix_eigenvalue(ibin)) << ", " << matrix_element(ibin,0) << "\n";
+				//	curr_num_print++;
+				//}
 			}
 			else {
 				matrix_element(ibin,0) = 0;
