@@ -816,8 +816,143 @@ int main(int argc, char** argv)
 		cout << "data vs (1, 1) chi2 = " << chi2_var << "\n";
 	}
 
+	bool calculate_chi2_1248_0_data = false;
+	if ( calculate_chi2_1248_0_data ) {
 
-	bool calculate_chi2_and_chi2min_15_5_data_and_toys = true;
+		cout << "in calculate_chi2_1248_0_data...\ngetting chi2 at (1248, 0) point...\n";
+
+		Lee_test->scaleF_Lee_Np = 1248;
+		Lee_test->scaleF_Lee_0p = 0;
+		Lee_test->Set_Collapse(); // prediction is ready
+
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+
+		double pars_2d[2] = {1248, 0};
+
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		cout << "data vs (1248, 0) chi2 = " << chi2_var << "\n";
+	}
+
+	bool calculate_chi2_weird_fake_data_point = false;
+	if (calculate_chi2_weird_fake_data_point) {
+		/*
+		From 1000 pseudo-experiments, example of weird point
+		(15, 5) toy #283 fake data: 109 0 205 0 155 0 269 0 0 20 251 490 606 571 515 390 386 69 87 67 55 52 20 46 0 208 1028 945 802 480 383 161 51 82 39 36 2 21 5 32 0 9 126 768 1643 2591 3162 3168 2964 2397 1755 1505 1084 744 472 1096 15 28 675 1758 1998 2056 1818 1710 1529 1249 1018 894 518 253 383 614 
+		(15, 5) toy #283 vs (15, 5) chi2 = 89.7803
+		(15, 5) toy #283 minimization point = (1248.43, 1e-06)
+		(15, 5) toy #283 vs (15, 5) chi2_min = 50.7839
+		(15, 5) toy #283 vs (15, 5) dchi2 = 38.9964
+		*/
+
+		cout << "investigating weird fake data point...\n";
+
+		Lee_test->scaleF_Lee_Np = 15;
+		Lee_test->scaleF_Lee_0p = 5;
+		Lee_test->Set_Collapse(); // prediction is ready
+		cout << "set the prediction\n";
+
+		Double_t weird_data[72] = {109, 0, 205, 0, 155, 0, 269, 0, 0, 20, 251, 490, 606, 571, 515, 390, 386, 69, 87, 67, 55, 52, 20, 46, 0, 208, 1028, 945, 802, 480, 383, 161, 51, 82, 39, 36, 2, 21, 5, 32, 0, 9, 126, 768, 1643, 2591, 3162, 3168, 2964, 2397, 1755, 1505, 1084, 744, 472, 1096, 15, 28, 675, 1758, 1998, 2056, 1818, 1710, 1529, 1249, 1018, 894, 518, 253, 383, 614};
+		TMatrixD weird_data_TMatrixD = TMatrixD(1, 72, weird_data);
+		Lee_test->matrix_data_newworld = weird_data_TMatrixD;
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+		cout << "set the data\n";
+
+		double pars_2d[2] = {15, 5}; // phase space point for the prediction
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+
+		cout << "weird_data vs (15, 5) chi2 = " << chi2_var << "\n";
+
+		// minimization
+		/*double initial_Np = 1;
+		double initial_0p = 1;
+		Lee_test->Minimization_Lee_Np_0p_strength_FullCov(initial_Np, initial_0p, "");
+		cout << "weird_data vs (15, 5) minimization point = (" << Lee_test->minimization_Lee_Np_strength_val << ", " << Lee_test->minimization_Lee_0p_strength_val << ")\n"; 
+		double chi2_min = Lee_test->minimization_chi2;	
+		cout << "weird_data vs (15, 5) chi2_min = " << chi2_min << "\n";
+		double dchi2 = chi2_var - chi2_min;
+		cout << "weird_data vs (15, 5) dchi2 = " << dchi2 << "\n";
+		*/
+
+	}
+
+
+	bool create_chi2_map = false;
+	if (create_chi2_map) {
+		
+		cout << "creating real data chi2 map...\n";
+
+		ofstream data_chi2_map;
+		data_chi2_map.open("data_chi2_map.txt");
+
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+
+		double pars_2d[2] = {1, 1};
+		double chi2_var = -1;
+		float scale_Np = 0;
+		float scale_0p = 0;
+
+		int num_Np_bins = 100;
+		int num_0p_bins = 100;
+		for (int i = 0; i <= num_Np_bins; i++){
+			cout << "done with row " << i << "\n";
+			for (int j = 0; j <= num_0p_bins; j++) {
+				scale_Np = 10*i;
+				scale_0p = 10*j;
+				//scale_Np = i;
+				//scale_0p = j;
+				Lee_test->scaleF_Lee_Np = scale_Np;
+				Lee_test->scaleF_Lee_0p = scale_0p;
+				Lee_test->Set_Collapse(); // prediction is ready
+				pars_2d[0] = scale_Np; pars_2d[1] = scale_0p;
+				chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+				data_chi2_map << "(" << scale_Np << ", " << scale_0p << ") : " << chi2_var << "\n";
+			}
+		}
+
+		data_chi2_map.close();
+	}
+
+	bool create_weird_data_chi2_map = true;
+	if (create_weird_data_chi2_map) {
+		
+		cout << "creating weird data chi2 map...\n";
+
+		ofstream weird_data_chi2_map;
+		weird_data_chi2_map.open("weird_data_chi2_map.txt");
+
+		Double_t weird_data[72] = {109, 0, 205, 0, 155, 0, 269, 0, 0, 20, 251, 490, 606, 571, 515, 390, 386, 69, 87, 67, 55, 52, 20, 46, 0, 208, 1028, 945, 802, 480, 383, 161, 51, 82, 39, 36, 2, 21, 5, 32, 0, 9, 126, 768, 1643, 2591, 3162, 3168, 2964, 2397, 1755, 1505, 1084, 744, 472, 1096, 15, 28, 675, 1758, 1998, 2056, 1818, 1710, 1529, 1249, 1018, 894, 518, 253, 383, 614};
+		TMatrixD weird_data_TMatrixD = TMatrixD(1, 72, weird_data);
+		Lee_test->matrix_data_newworld = weird_data_TMatrixD;
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+
+		double pars_2d[2] = {1, 1};
+		double chi2_var = -1;
+		float scale_Np = 0;
+		float scale_0p = 0;
+
+		int num_Np_bins = 100;
+		int num_0p_bins = 100;
+		for (int i = 0; i <= num_Np_bins; i++){
+			cout << "done with row " << i << "\n";
+			for (int j = 0; j <= num_0p_bins; j++) {
+				//scale_Np = 10*i;
+				//scale_0p = 10*j;
+				scale_Np = i;
+				scale_0p = j;
+				Lee_test->scaleF_Lee_Np = scale_Np;
+				Lee_test->scaleF_Lee_0p = scale_0p;
+				Lee_test->Set_Collapse(); // prediction is ready
+				pars_2d[0] = scale_Np; pars_2d[1] = scale_0p;
+				chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+				weird_data_chi2_map << "(" << scale_Np << ", " << scale_0p << ") : " << chi2_var << "\n";
+			}
+		}
+
+		weird_data_chi2_map.close();
+	}
+
+
+	bool calculate_chi2_and_chi2min_15_5_data_and_toys = false;
 	int num_toys = 1000;
 	ofstream chi2_and_chi2min_15_5_data_and_toys;
 	if (calculate_chi2_and_chi2min_15_5_data_and_toys) {

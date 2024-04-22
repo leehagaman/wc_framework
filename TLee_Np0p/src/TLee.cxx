@@ -429,6 +429,26 @@ double TLee::FCN_Np_0p(const double *par)
 
 		TMatrixD matrix_cov_total_user = matrix_cov_syst_temp;
 
+		bool save_data_pred_cov_pred_to_file = false;
+		if (save_data_pred_cov_pred_to_file) {
+			cout << "saving data, pred, and cov to file...";
+			ofstream data_pred_cov_file; data_pred_cov_file.open("data_pred_cov_file.csv");
+			data_pred_cov_file << "data: ";
+			for(int i=0; i<bins_newworld; i++) data_pred_cov_file << matrix_data_newworld(0,i) << ",";
+			data_pred_cov_file << "\npred: ";
+			for(int i=0; i<bins_newworld; i++) data_pred_cov_file << matrix_pred_newworld(0,i) << ",";
+			data_pred_cov_file << "\ncov:\n";
+			for(int i=0; i<bins_newworld; i++) {
+				for(int j=0; j<bins_newworld; j++) {
+					data_pred_cov_file << matrix_cov_total_user(i,j) << ",";
+				}
+				data_pred_cov_file << "\n";
+			}
+			data_pred_cov_file.close();
+			cout << " done\n";
+
+		}
+
 		// these are labeled as target and constraining, but actually we're doing a joint chi2 and not a constraint in this code
 		int ind_tar_start = 0;
 		int ind_tar_end = 0; // up to but not including
