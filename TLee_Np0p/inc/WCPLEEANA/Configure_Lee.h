@@ -37,6 +37,38 @@ namespace config_Lee
   int array_LEE_Np_ch[8] = {2, 5, 8, 11, 14, 17, 20, 23};// element value "0" will not be set to the LEE_ch
   int array_LEE_0p_ch[8] = {3, 6, 9, 12, 15, 18, 21, 24};// element value "0" will not be set to the LEE_ch
 
+  // Just doing Np scaling for the signal channels!
+  //int array_LEE_Np_ch[4] = {2, 5, 8, 11};// element value "0" will not be set to the LEE_ch
+  //int array_LEE_0p_ch[4] = {3, 6, 9, 12};// element value "0" will not be set to the LEE_ch
+
+  /*
+  Uncollapsed Bin #        Collapsed Bin #    cov_input.txt block index (channel #)    description
+  1-2,                     1-2                1,                                       WC 1gNp background
+  3-4,                     1-2                2,                                       WC 1gNp True Np signal
+  5-6,                     1-2                3,                                       WC 1gNp True 0p signal
+  7-8,                     3-4                4,                                       WC 1g0p background
+  9-10,                    3-4                5,                                       WC 1g0p True Np signal
+  11-12,                   3-4                6,                                       WC 1g0p True 0p signal
+  13-14,                   5-6                7,                                       Pandora 1g1p background
+  15-16,                   5-6                8,                                       Pandora 1g1p True Np signal
+  17-18,                   5-6                9,                                       Pandora 1g1p True 0p signal
+  19-20,                   6-7                10,                                      Pandora 1g0p background
+  21-22,                   6-7                11,                                      Pandora 1g0p True Np signal
+  23-24,                   6-7                12,                                      Pandora 1g0p True 0p signal
+  25-40,                   8-23               13,                                      WC NC Pi0 Np background
+  41-56,                   8-23               14,                                      WC NC Pi0 Np True Np signal
+  57-72,                   8-23               15,                                      WC NC Pi0 Np True 0p signal
+  73-88,                   24-39              16,                                      WC NC Pi0 0p background
+  89-104,                  24-39              17,                                      WC NC Pi0 0p True Np signal
+  105-120,                 24-39              18,                                      WC NC Pi0 0p True 0p signal
+  121-136,                 40-55              19,                                      WC numuCC Np background
+  137-152,                 40-55              20,                                      WC numuCC Np True Np signal
+  153-168,                 40-55              21,                                      WC numuCC Np True 0p signal
+  169-184,                 40-55              22,                                      WC numuCC 0p background
+  185-200,                 40-55              23,                                      WC numuCC 0p True Np signal
+  201-216,                 40-55              24,                                      WC numuCC 0p True 0p signal
+  */
+
   // Warning: need to change Lee_test->array_no_stat_bins = new int[4];	in read_TLee_v20.cxx if we change the length here
   int array_no_stat_bins[4] = {1, 3, 5, 7}; // in reco space, these are the explicitly empty overflow bins where we want no uncertainties
   int num_no_stat_bins = 4;
@@ -60,9 +92,9 @@ namespace config_Lee
   
   bool flag_syst_flux_Xs    = 1;
   bool flag_syst_detector   = 1;
-  bool flag_syst_additional = 1;
-  bool flag_syst_mc_stat    = 1;
-  bool flag_syst_mc_data_stat_cor = 1; // adds off-diagonal elements to the data and pred stat cor matrices
+  bool flag_syst_additional = 0;
+  bool flag_syst_mc_stat    = 0;
+  bool flag_syst_mc_data_stat_cor = 0; // adds off-diagonal elements to the data and pred stat cor matrices
 
   bool flag_syst_reweight        = 0;
   bool flag_syst_reweight_cor    = 0;

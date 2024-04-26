@@ -833,6 +833,23 @@ int main(int argc, char** argv)
 		cout << "data vs (1248, 0) chi2 = " << chi2_var << "\n";
 	}
 
+	bool calculate_chi2_200_0_data = false;
+	if ( calculate_chi2_200_0_data ) {
+
+		cout << "in calculate_chi2_200_0_data...\ngetting chi2 at (200, 0) point...\n";
+
+		Lee_test->scaleF_Lee_Np = 200;
+		Lee_test->scaleF_Lee_0p = 0;
+		Lee_test->Set_Collapse(); // prediction is ready
+
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+
+		double pars_2d[2] = {200, 0};
+
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		cout << "data vs (200, 0) chi2 = " << chi2_var << "\n";
+	}
+
 	bool calculate_chi2_weird_fake_data_point = false;
 	if (calculate_chi2_weird_fake_data_point) {
 		/*
@@ -876,7 +893,7 @@ int main(int argc, char** argv)
 	}
 
 
-	bool create_chi2_map = false;
+	bool create_chi2_map = true;
 	if (create_chi2_map) {
 		
 		cout << "creating real data chi2 map...\n";
@@ -912,7 +929,7 @@ int main(int argc, char** argv)
 		data_chi2_map.close();
 	}
 
-	bool create_weird_data_chi2_map = true;
+	bool create_weird_data_chi2_map = false;
 	if (create_weird_data_chi2_map) {
 		
 		cout << "creating weird data chi2 map...\n";
@@ -1565,7 +1582,7 @@ int main(int argc, char** argv)
 
 		
 		///////
-		int Ntoys = 30; // number of toy-MC used to generate the distribution_dchi2
+		int Ntoys = 100; // number of toy-MC used to generate the distribution_dchi2
 		// changed this from 100 to 1 since it shouldn't matter for Asimov
 		// changed this from 100 to 10 to speed it up, same number of toys as for 1D initially
 

@@ -344,9 +344,11 @@ double TLee::FCN_Np_0p(const double *par)
 
 		/// Pearson
 		//val_stat_cov = val_pred;
+		//if (val_stat_cov==0) val_stat_cov = 1e-6;
 
 		/// Neyman
 		//val_stat_cov = val_meas;
+		//if (val_stat_cov==0) val_stat_cov = 1e-6;
 
 		matrix_data_stat_diag(ibin, ibin) = val_stat_cov;
 
@@ -650,7 +652,6 @@ double TLee::FCN_Np_0p(const double *par)
 
 		TMatrixD matrix_cov_total_user = matrix_cov_syst_temp;
 
-		// these are labeled as target and constraining, but actually we're doing a joint chi2 and not a constraint in this code
 		int ind_tar_start = 0;
 		int ind_tar_end = 0; // up to but not including
 		int ind_constr_start = 0;
@@ -3304,7 +3305,7 @@ void TLee::Set_Collapse()
 			if( map_Lee_Np_oldworld.find(ibin)!=map_Lee_Np_oldworld.end() ){
 				matrix_transform_Lee(ibin, jbin) *= scaleF_Lee_Np;
 				matrix_transform_Lee_1_1(ibin, jbin) *= 1;
-			} 
+			}
 
 			if( map_Lee_0p_oldworld.find(ibin)!=map_Lee_0p_oldworld.end() ){
 				matrix_transform_Lee(ibin, jbin) *= scaleF_Lee_0p;
@@ -3383,6 +3384,7 @@ void TLee::Set_Collapse()
 				double pred_stat_cov = pred_correlation * pred_sigma_i * pred_sigma_j;
 
 				// right now, it's the MC stat at (1,1), so we transform it to this phase space point
+				// approximation, same fractional covariance matrix for all excess phase space points
 				pred_stat_cov = pred_stat_cov * (matrix_pred_newworld(0, idx) * matrix_pred_newworld(0, jdx)) / (matrix_pred_newworld_LEE_1_1(0, idx) * matrix_pred_newworld_LEE_1_1(0, jdx));
 
 				// Trying to fix nan values that arose in the covariance matrices
@@ -3435,6 +3437,10 @@ void TLee::Set_Collapse()
 
 	if(flag_syst_mc_data_stat_cor){
 		//cout << "adding stat cov matrices with shapes (" << matrix_absolute_cov_newworld.GetNrows() << ", " << matrix_absolute_cov_newworld.GetNcols() << ") (" << matrix_absolute_data_stat_cov.GetNrows() << ", " << matrix_absolute_data_stat_cov.GetNcols() << ") (" << matrix_absolute_pred_stat_cov.GetNrows() << ", " << matrix_absolute_pred_stat_cov.GetNcols() << ")\n";
+		
+		// these are only off-diagonal correlated uncertainties
+		// CNP data stat diagonal uncertainty is added later
+		// MC stat diagonal uncertainty is added below
 		matrix_absolute_cov_newworld += matrix_absolute_data_stat_cov;
 		matrix_absolute_cov_newworld += matrix_absolute_pred_stat_cov;
 

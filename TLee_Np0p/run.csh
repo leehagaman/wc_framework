@@ -22,6 +22,7 @@ sleep 1
 nohup ./read_TLee_v20 -f 9 > log_files/log_09.txt &
 sleep 1
 nohup ./read_TLee_v20 -f 10 > log_files/log_10.txt &
+sleep 1
 
 nohup ./read_TLee_v20 -f 11 > log_files/log_11.txt &
 sleep 1
@@ -42,6 +43,7 @@ sleep 1
 nohup ./read_TLee_v20 -f 19 > log_files/log_19.txt &
 sleep 1
 nohup ./read_TLee_v20 -f 20 > log_files/log_20.txt &
+sleep 1
 
 nohup ./read_TLee_v20 -f 21 > log_files/log_21.txt &
 sleep 1
@@ -54,7 +56,7 @@ sleep 1
 nohup ./read_TLee_v20 -f 25 > log_files/log_25.txt &
 sleep 1
 nohup ./read_TLee_v20 -f 26 > log_files/log_26.txt &
-sleep
+sleep 1
 nohup ./read_TLee_v20 -f 27 > log_files/log_27.txt &
 sleep 1
 nohup ./read_TLee_v20 -f 28 > log_files/log_28.txt &
