@@ -2523,6 +2523,11 @@ void TLee::Set_Collapse()
 				if (idx==jdx) pred_correlation = 0.; // leave the diagonal entries to be calculated as usual later
 				double pred_stat_cov = pred_correlation * pred_sigma_i * pred_sigma_j;
 
+				// Trying to fix nan values that arose in the covariance matrices
+				// I think these could come from empty bins in the spectra, in which case uncertainties should be uncorrelated (diagonals, not necessarily though)
+				if (isnan(data_stat_cov)) data_stat_cov = 0.;
+				if (isnan(pred_stat_cov)) pred_stat_cov = 0.;
+
 				matrix_absolute_data_stat_cov(idx, jdx) = data_stat_cov;
 				matrix_absolute_pred_stat_cov(idx, jdx) = pred_stat_cov;
 
@@ -2578,6 +2583,12 @@ void TLee::Set_Collapse()
 	if( flag_syst_mc_stat ) {
 		for(int ibin=0; ibin<bins_newworld; ibin++) {
 			double val_mc_stat_cov = gh_mc_stat_bin[ibin]->Eval( scaleF_Lee );
+
+			// this is explicitly a zero-uncertainty, empty overflow bin.
+			for(int idx=0; idx<num_no_stat_bins; idx++) {
+				if (array_no_stat_bins[idx] == ibin) val_mc_stat_cov = 0;
+			}
+
 			//if( scaleF_Lee<=0 ) val_mc_stat_cov = gh_mc_stat_bin[ibin]->Eval( 0 );
 			matrix_absolute_cov_newworld(ibin, ibin) += val_mc_stat_cov;
 			//matrix_absolute_cov_newworld(ibin, ibin) += val_mc_stat_cov/4.;
@@ -2933,16 +2944,18 @@ void TLee::Set_Spectra_MatrixCov()
 
 	// added lhagaman 2023_07_01, must be disabled for systematic plots, must be enabled for 1d LEE fitting
   // 2d LEE fitting is handled in a different set of files
+
+  // update 2024_05_01: Want to only scale signal in the signal channels
   
   
   map_Lee_ch[2] = 1;
   map_Lee_ch[4] = 1;
   map_Lee_ch[6] = 1;
   map_Lee_ch[8] = 1;
-  map_Lee_ch[10] = 1;
-  map_Lee_ch[12] = 1;
-  map_Lee_ch[14] = 1;
-  map_Lee_ch[16] = 1;
+  //map_Lee_ch[10] = 1;
+  //map_Lee_ch[12] = 1;
+  //map_Lee_ch[14] = 1;
+  //map_Lee_ch[16] = 1;
   
 
   bins_oldworld = 0;
@@ -3028,7 +3041,7 @@ void TLee::Set_Spectra_MatrixCov()
 
     // these numbers gotten from histogram_plotter_v3.ipynb, 2023_06_29
 
-    int disable_BR_uncertainty_1d = 0;
+    int disable_BR_uncertainty_1d = 1;
     if (disable_BR_uncertainty_1d) {
         float num_true_signal_uncollapsed[2*2*4+16*2*4 + 2*4+16*4] = { // two bins, bkg and sig, four channels, then 16 bins, bkg and sig, four channels
 		0, 0, 4.494626593585051, 0, 0, 0, 9.656861039580827, 0, // wc 1gNp and 1g0p bkg and sig
@@ -3082,7 +3095,7 @@ void TLee::Set_Spectra_MatrixCov()
 		}
     }
 
-	int disable_BR_uncertainty_2d = 1; 
+	int disable_BR_uncertainty_2d = 0; 
 
 	if (disable_BR_uncertainty_2d) {
 

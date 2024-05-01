@@ -112,6 +112,11 @@ namespace config_Lee
   // this shows the fractional uncertainty from different types, pretty useful
   bool flag_plotting_systematics   = 1;
   
+
+  int array_no_stat_bins[4] = {1, 3, 5, 7}; // in reco space, these are the explicitly empty overflow bins where we want no uncertainties
+  int num_no_stat_bins = 4;
+
+
   ////////// goodness of fit
   
   double Lee_strength_for_GoF         = 1; // changing here for x_delta=0 or x_delta=1 (only other change needed is -l0.000001 in merge_hist, and -l0 in plot_hist)

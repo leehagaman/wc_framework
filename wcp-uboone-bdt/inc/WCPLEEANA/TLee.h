@@ -83,6 +83,9 @@ public:
   bool flag_syst_reweight;
   bool flag_syst_reweight_cor;
 
+  int* array_no_stat_bins; 
+  int num_no_stat_bins;
+
   bool flag_lookelsewhere;
   
   TString spectra_file;
