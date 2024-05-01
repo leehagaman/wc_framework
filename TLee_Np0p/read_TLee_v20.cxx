@@ -893,7 +893,7 @@ int main(int argc, char** argv)
 	}
 
 
-	bool create_chi2_map = true;
+	bool create_chi2_map = false;
 	if (create_chi2_map) {
 		
 		cout << "creating real data chi2 map...\n";
@@ -1536,7 +1536,7 @@ int main(int argc, char** argv)
 
 
 	// full grid
-    if( 0 ) {
+    if( 1 ) {
 
 		///////
 		
