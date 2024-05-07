@@ -327,8 +327,8 @@ void TLee::Minimization_Lee_strength_FullCov(double Lee_initial_value, bool flag
 	      bool two_bin_test = false; 
 
 	      bool all_channels = false;
-	      bool just_wc = true;
-	      bool just_glee = false;
+	      bool just_wc = false;
+	      bool just_glee = true;
 
 	      TMatrixD matrix_cov_total_user = matrix_cov_syst_temp;
 
@@ -597,6 +597,8 @@ void TLee::Set_Variations(int num_toy)
 	for(int itoy=1; itoy<=num_toy; itoy++) {    
 		TMatrixD matrix_element(bins_newworld, 1);
 
+		//cout << "doing toy...\n";
+
 		int eff_line = 0;
 
 RANDOM_AGAIN:
@@ -615,13 +617,23 @@ RANDOM_AGAIN:
 		bool FLAG_negtive = 0;
 		for(int ibin=0; ibin<bins_newworld; ibin++) {
 			double val_with_syst = matrix_variation(ibin,0) + map_pred_spectrum_newworld_bin[ibin];// key point
+
+			// it's bad if a positive bin fluctuates to negative, but if it's a zero bin with zero uncertainty fluctuating, that's a numerical error and it's fine to continue
+			if (map_pred_spectrum_newworld_bin[ibin] == 0 && abs(matrix_absolute_cov_newworld(ibin, ibin)) < 1e-3) val_with_syst = 0;
+
 			if( val_with_syst<0 ) {
+				//cout << "negative bin fluctuation at ibin=" << ibin << "\n";
+
 				FLAG_negtive = 1;
 				break;
 			}
 		}
 
-		if( FLAG_negtive ) goto RANDOM_AGAIN;    
+		if( FLAG_negtive ) {
+			//cout << "redrawing...\n";
+			goto RANDOM_AGAIN;
+		}
+		
 
 		for(int ibin=0; ibin<bins_newworld; ibin++) {
 			double val_with_syst = matrix_variation(ibin,0) + map_pred_spectrum_newworld_bin[ibin];// key point
@@ -2465,7 +2477,7 @@ void TLee::Set_Collapse()
 {
 	//////////////////////////////////////// pred
 
-	std::cout << "scaleF_Lee: " << scaleF_Lee << "\n";
+	//std::cout << "scaleF_Lee: " << scaleF_Lee << "\n";
 
 	TMatrixD matrix_transform_Lee = matrix_transform;
 	for(int ibin=0; ibin<matrix_transform_Lee.GetNrows(); ibin++) {

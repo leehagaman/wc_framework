@@ -1130,22 +1130,88 @@ int main(int argc, char** argv)
   
   //////////////////////////////////////////////////////////////////////////////////////// example: simple versus simple likelihood ratio test
 
-  if( 0 ) {    
-    cout << "\nexample: simple versus simple likelihood ratio test\n";
+  bool do_two_hypothesis_testing = 1;
+  int num_toy = 1000;
+  ofstream two_hypothesis_text;
+  // append ifile to the name of the file
+	two_hypothesis_text.open("two_hypothesis_text_files/two_hypothesis_text_" + std::to_string(ifile) + ".txt");
+
+  if( do_two_hypothesis_testing ) {    
+    cout << "\nTwo Hypothesis Test, real data\n";
     Lee_test->Set_measured_data();// use the measured data as the input data for the fitting
 
-    cout << "\ngetting LEE=3.18 chi^2:\n";
+    cout << "getting LEE=3.18 chi^2...\n";
     Lee_test->Minimization_Lee_strength_FullCov(3.18, 1);// (initial value, fix or not)
     double val_chi2_Lee = Lee_test->minimization_chi2;
 
-    cout << "\ngetting LEE=1.00 chi^2:\n";
+    cout << "getting LEE=1.00 chi^2...\n";
     Lee_test->Minimization_Lee_strength_FullCov(1, 1);// (initial value, fix or not)
     double val_chi2_sm = Lee_test->minimization_chi2;
 
     double val_dchi2 = val_chi2_Lee - val_chi2_sm;
     
-    cout<<endl<<TString::Format("\n ---> dchi2 = Lee - sm: %7.4f, LEE %7.4f, sm %7.4f", val_dchi2, val_chi2_Lee, val_chi2_sm)<<endl<<endl;
+    two_hypothesis_text << "real data chi2_SM, chi2_LEE, chi2_LEE_minus_SM: " << val_chi2_sm << ", " << val_chi2_Lee << ", " <<  val_dchi2 << "\n";
   }
+
+  if( do_two_hypothesis_testing ) {    
+    cout << "\nTwo Hypothesis Test, SM toys\n";
+
+
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+    Lee_test->Set_Variations( num_toy );
+
+    for (int itoy=1; itoy<=num_toy; itoy++) {
+
+      if (itoy%50==0) {
+        cout << "    Toy " << itoy << " / " << num_toy << "\n";
+      }
+
+      Lee_test->Set_toy_Variation(itoy);
+
+      Lee_test->Minimization_Lee_strength_FullCov(3.18, 1);// (initial value, fix or not)
+      double val_chi2_Lee = Lee_test->minimization_chi2;
+
+      Lee_test->Minimization_Lee_strength_FullCov(1, 1);// (initial value, fix or not)
+      double val_chi2_sm = Lee_test->minimization_chi2;
+
+      double val_dchi2 = val_chi2_Lee - val_chi2_sm;
+      
+      two_hypothesis_text << "SM Toy data chi2_SM, chi2_LEE, chi2_LEE_minus_SM: " << val_chi2_sm << ", " << val_chi2_Lee << ", " <<  val_dchi2 << "\n";
+    
+    }
+  }
+
+  if( do_two_hypothesis_testing ) {    
+    cout << "\nTwo Hypothesis Test, LEE toys\n";
+
+    Lee_test->scaleF_Lee = 3.18;
+    Lee_test->Set_Collapse();
+    Lee_test->Set_Variations( num_toy );
+
+    for (int itoy=1; itoy<=num_toy; itoy++) {
+
+      if (itoy%50==0) {
+        cout << "    Toy " << itoy << " / " << num_toy << "\n";
+      }
+
+      Lee_test->Set_toy_Variation(itoy);
+
+      Lee_test->Minimization_Lee_strength_FullCov(3.18, 1);// (initial value, fix or not)
+      double val_chi2_Lee = Lee_test->minimization_chi2;
+
+      Lee_test->Minimization_Lee_strength_FullCov(1, 1);// (initial value, fix or not)
+      double val_chi2_sm = Lee_test->minimization_chi2;
+
+      double val_dchi2 = val_chi2_Lee - val_chi2_sm;
+      
+      two_hypothesis_text << "LEE Toy data chi2_SM, chi2_LEE, chi2_LEE_minus_SM: " << val_chi2_sm << ", " << val_chi2_Lee << ", " <<  val_dchi2 << "\n";
+    
+    }
+  }
+
+  two_hypothesis_text.close();
+  
 
   ////////////////////////////////////////////////////////// sensitivity calcualtion by FC
   
@@ -1167,7 +1233,7 @@ int main(int argc, char** argv)
     for(int itoy=1; itoy<=N_toy; itoy++) {
             
       if( itoy%max(N_toy/10,1)==0 ) {
-	cout<<TString::Format(" ---> processing toy ( total cov ): %4.2f, %6d", itoy*1./N_toy, itoy)<<endl;
+	      cout<<TString::Format(" ---> processing toy ( total cov ): %4.2f, %6d", itoy*1./N_toy, itoy)<<endl;
       }
       cout<<Form(" running %6d", itoy)<<endl;
       
@@ -1245,6 +1311,26 @@ int main(int argc, char** argv)
 
   ////////////////////////////////////////////////  Feldman-Cousins approach --> heavy computation cost
 
+  if( 0 ) { // Tiny FC toy test
+
+    cout << "making chi2 distribution for FC fitting:\n";
+
+    
+    /////////////// range: [low, hgh] with step
+    
+    double Lee_true_low = 0;
+    double Lee_true_hgh = 0;
+    double Lee_step     = 0.15;
+    
+    /////////////// dchi2 distribution 
+    
+    // used 100 * 10 for joint, ~10 hours
+    // using 10*10 for wc_only, hopefully ~1 hour
+    int num_toy = 1;    
+    Lee_test->Exe_Feldman_Cousins(Lee_true_low, Lee_true_hgh, Lee_step, num_toy, ifile);
+
+  }
+
   if( 0 ) {
 
     cout << "making chi2 distribution for FC fitting:\n";
@@ -1259,7 +1345,7 @@ int main(int argc, char** argv)
     /////////////// dchi2 distribution 
     
     // used 100 * 10 for joint, ~10 hours
-    // using 10*10 for wc_only, hopefully ~1 hour
+    // using 100 tests, 30 cores, 10 toys, hopefully ~1 hour, but I'll need to see
     int num_toy = 10;    
     Lee_test->Exe_Feldman_Cousins(Lee_true_low, Lee_true_hgh, Lee_step, num_toy, ifile);
 

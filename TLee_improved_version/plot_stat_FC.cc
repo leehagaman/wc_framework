@@ -414,14 +414,16 @@ void plot_stat_FC()
       }// itoy
 
       double val_CL = line_eff*100./size_toy;
-      if( val_Lee100*1./100<0.02 ) continue;
+      //if( val_Lee100*1./100<0.02 ) continue;
       gh_CL_data->SetPoint( gh_CL_data->GetN(), val_Lee100*1./100, val_CL );
 
-      cout << "val_Lee, val_dchi2_data = " << val_Lee100 * 1./100 << ", " << val_dchi2_data << "\n";
+      cout << "val_Lee, val_dchi2_data, CL = " << val_Lee100 * 1./100 << ", " << val_dchi2_data << ", " << gh_CL_data->Eval(val_Lee100 * 1./100) << "\n";
       
       gh_scan_dchi2_data->SetPoint( gh_scan_dchi2_data->GetN(), val_Lee100*1./100, val_dchi2_data );
       
     }// idx
+
+
 
     //////////////////////////////////////////////////////////////////////////////
     
@@ -480,7 +482,7 @@ void plot_stat_FC()
     double val_at_SM = -1; // these added, lhagaman 2023_09_01 for two-hypothesis tests. Haven't tested this code yet, will wait for 
     double val_at_LEE = -1;
     for(int iscan=max_Lee100; iscan>=0; iscan--) {
-      if (iscan % 10 == 0) cout << "test, iscan = " << iscan << "\n";
+      //if (iscan % 10 == 0) cout << "test, iscan = " << iscan << "\n";
       if (iscan == 100) { // I think I use a 100 offset here
         val_at_SM = gh_CL_data->Eval( (iscan-1)*1./100 );
         cout << "iscan = " << iscan << ", p_value at SM: " << val_at_SM << "\n";
