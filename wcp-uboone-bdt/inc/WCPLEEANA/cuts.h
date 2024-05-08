@@ -21,8 +21,8 @@
 
 namespace LEEana{
   // this is for the real data, for fake data this should be 1 ...
-  //double em_charge_scale = 0.95;
-  double em_charge_scale = 1.0;
+  double em_charge_scale = 0.95;
+  //double em_charge_scale = 1.0;
 
   // correct reco neutrino energy and reco shower energy
   double get_reco_Enu_corr(KineInfo& kine, bool flag_data);
@@ -1844,7 +1844,16 @@ int LEEana::get_xs_signal_no(int cut_file, std::map<TString, int>& map_cut_xs_bi
 // (this means that it won't get added to the signal histogram in Xs analyses)
 // 0 means that it doesn't pass for any reason (some of these should eventually be recategorized as -1)
 // 1 means that it passes
-int LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, EvalInfo& eval, PFevalInfo& pfeval, TaggerInfo& tagger, KineInfo& kine){
+int LEEana::get_cut_pass(TString ch_name_0, TString add_cut, bool flag_data, EvalInfo& eval, PFevalInfo& pfeval, TaggerInfo& tagger, KineInfo& kine){
+
+  // write a function that takes a ch_name_0, and if it ends in "_dup_1", "_dup_2", etc., strips that off and sets a ch_name variable
+
+  // copy the string
+  TString ch_name = ch_name_0;
+  if (ch_name.EndsWith("_dup_1")) ch_name = ch_name.ReplaceAll("_dup_1","");
+  if (ch_name.EndsWith("_dup_2")) ch_name = ch_name.ReplaceAll("_dup_2","");
+  if (ch_name.EndsWith("_dup_3")) ch_name = ch_name.ReplaceAll("_dup_3","");
+  if (ch_name.EndsWith("_dup_4")) ch_name = ch_name.ReplaceAll("_dup_4","");
 
 	//std::cout << "lhagaman debug, inside get_cut_pass\n";
     	
@@ -3770,6 +3779,12 @@ int LEEana::get_cut_pass(TString ch_name, TString add_cut, bool flag_data, EvalI
                   return true;
 	    }
 	    return false;
+
+    }else if (ch_name == "ovlp_1gXp_1gXp" || ch_name == "ovlp_1gXp_1gXp_ext" || ch_name == "ovlp_1gXp_1gXp_dirt"
+	  || ch_name == "ovlp_1gXp_1gXp_nc_pi0_overlay" || ch_name == "ovlp_1gXp_1gXp_cc_pi0_overlay"
+	  || ch_name == "ovlp_1gXp_1gXp_nue_overlay" || ch_name == "ovlp_1gXp_1gXp_overlay" || ch_name == "ovlp_1gXp_1gXp_nc_delta_overlay"){
+    if ((flag_glee_1g1p_sel || flag_glee_1g0p_sel) && (flag_FC && flag_ncdelta_sel)) return true;
+    return false;
 
   }else if (ch_name == "constr_nc_pi0_Np" || ch_name == "constr_nc_pi0_Np_ext" || ch_name == "constr_nc_pi0_Np_dirt"){
     if (flag_FC && flag_ncpio_sel && (!flag_ncdelta_sel) && (!flag_0p)) return true;

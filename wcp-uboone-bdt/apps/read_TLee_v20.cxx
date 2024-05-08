@@ -313,6 +313,158 @@ int main(int argc, char** argv)
   
   // start joint plots
 
+  bool make_one_bin_kinematic_plots = true;
+
+  // WC 1gNp
+  if (make_one_bin_kinematic_plots){
+
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+
+    vector<int>vc_target_chs;
+    vc_target_chs.push_back(0);
+    vector<int>vc_support_chs;
+    for (int i=10; i < 10 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333001 );
+  }
+
+  // WC 1g0p
+  if (make_one_bin_kinematic_plots){
+
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+
+    vector<int>vc_target_chs;
+    vc_target_chs.push_back(2);
+    vector<int>vc_support_chs;
+    for (int i=10; i < 10 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333002 );
+  }
+
+  // gLEE 1g1p
+  if (make_one_bin_kinematic_plots){
+
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+
+    vector<int>vc_target_chs;
+    vc_target_chs.push_back(4);
+    vector<int>vc_support_chs;
+    for (int i=10; i < 10 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333003 );
+  }
+
+  // gLEE 1g0p
+  if (make_one_bin_kinematic_plots){
+
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+
+    vector<int>vc_target_chs;
+    vc_target_chs.push_back(6);
+    vector<int>vc_support_chs;
+    for (int i=10; i < 10 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333004 );
+  }
+
+  // Overlap WC 1gXp gLEE 1gXp
+  if (make_one_bin_kinematic_plots){
+
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+
+    vector<int>vc_target_chs;
+    vc_target_chs.push_back(8);
+    vector<int>vc_support_chs;
+    for (int i=10; i < 10 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333005 );
+  }
+
+  // WC 1gNp and 1g0p
+  if (make_one_bin_kinematic_plots){
+
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+
+    vector<int>vc_target_chs;
+    vc_target_chs.push_back(0);
+    vc_target_chs.push_back(2);
+    vector<int>vc_support_chs;
+    for (int i=10; i < 10 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333006 );
+  }
+
+  // gLEE 1g1p and 1g0p
+  if (make_one_bin_kinematic_plots){
+
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+
+    vector<int>vc_target_chs;
+    vc_target_chs.push_back(4);
+    vc_target_chs.push_back(6);
+    vector<int>vc_support_chs;
+    for (int i=10; i < 10 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333007 );
+  }
+
+  // WC 1gNp and 1g0p and gLEE 1g1p and 1g0p
+  if (make_one_bin_kinematic_plots){
+
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+
+    vector<int>vc_target_chs;
+    vc_target_chs.push_back(0);
+    vc_target_chs.push_back(2);
+    vc_target_chs.push_back(4);
+    vc_target_chs.push_back(6);
+    vector<int>vc_support_chs;
+    for (int i=10; i < 10 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333008 );
+  }
+
+  // Constraining channels (constrained by signal channels, but shouldn't actually use or care about the constrained result)
+  if (make_one_bin_kinematic_plots){
+
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+
+    vector<int>vc_target_chs;
+    for (int i=10; i < 10 + 16 * 4; i++){
+      vc_target_chs.push_back(i);
+    }
+    vector<int>vc_support_chs;
+    vc_support_chs.push_back(0);
+    vc_support_chs.push_back(2);
+    vc_support_chs.push_back(4);
+    vc_support_chs.push_back(6);
+
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333009 );
+  }
+
+
+
+
+
+  // below was older constrained stuff, before 2024_05_07
+
   int make_joint_constrained_plots = 0;
 
   if (make_joint_constrained_plots) { // four signal channel bins constrained by four constraining channels
@@ -1130,7 +1282,7 @@ int main(int argc, char** argv)
   
   //////////////////////////////////////////////////////////////////////////////////////// example: simple versus simple likelihood ratio test
 
-  bool do_two_hypothesis_testing = 1;
+  bool do_two_hypothesis_testing = 0;
   int num_toy = 1000;
   ofstream two_hypothesis_text;
   // append ifile to the name of the file

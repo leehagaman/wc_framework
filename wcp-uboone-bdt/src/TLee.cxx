@@ -318,7 +318,7 @@ void TLee::Minimization_Lee_strength_FullCov(double Lee_initial_value, bool flag
 
       // start lhagaman custom chi2 calculation
 
-      bool use_custom_chi2 = true;
+      bool use_custom_chi2 = false;
 
       if (use_custom_chi2) {
 
@@ -326,9 +326,9 @@ void TLee::Minimization_Lee_strength_FullCov(double Lee_initial_value, bool flag
 
 	      bool two_bin_test = false; 
 
-	      bool all_channels = false;
+	      bool all_channels = true;
 	      bool just_wc = false;
-	      bool just_glee = true;
+	      bool just_glee = false;
 
 	      TMatrixD matrix_cov_total_user = matrix_cov_syst_temp;
 
@@ -1948,8 +1948,8 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 	////////////////
 
 	roostr = TString::Format("h1_spectra_wi2no_%02d", index);
-	ofstream bin_contents_file(TString::Format("./generated_text_files/bin_contents_%02d.txt", index));
-	cout << "saving bin contents to file " << TString::Format("./generated_text_files/bin_contents_%02d.txt", index) << "...";
+	ofstream bin_contents_file(TString::Format("./plot_outputs/bin_contents_%02d.txt", index));
+	cout << "saving bin contents to file " << TString::Format("./plot_outputs/bin_contents_%02d.txt", index) << "...";
 	TString roostr_wi2no = roostr;
 	//TH1D *h1_spectra_wi2no = (TH1D*)h1_pred_Y_noConstraint->Clone(roostr);
 	TH1D *h1_spectra_wi2no = new TH1D(roostr, "", num_Y, 0, num_Y);
@@ -1964,6 +1964,8 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 		bin_contents_file << "bin " << ibin << " value no constraint: " << val_noConstraint << "\n"; 
 		bin_contents_file << "bin " << ibin << " value wi constraint: " << val_wiConstraint << "\n"; 
 	}
+	bin_contents_file << "val_chi2_noConstraint, ndf, p_value_noConstraint: " << val_chi2_noConstraint << ", " << num_Y << ", " << p_value_noConstraint << "\n";
+	bin_contents_file << "val_chi2_wiConstraint, ndf, p_value_wiConstraint: " << val_chi2_wiConstraint << ", " << num_Y << ", " << p_value_wiConstraint << "\n";
 	bin_contents_file.close();
 	cout << "done\n";
 
@@ -2116,7 +2118,7 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 	// lg_bot_total->SetBorderSize(0); lg_bot_total->SetTextSize(0.078);
 	// lg_bot_total->SetFillColor(10); 
 
-	roostr = TString::Format("canv_spectra_GoF_total_%02d.png", index); canv_spectra_GoF_total->SaveAs(roostr);
+	roostr = TString::Format("plot_outputs/canv_spectra_GoF_total_%02d.png", index); canv_spectra_GoF_total->SaveAs(roostr);
 
 	//////////////////////////////////////////////////////////////////
 
@@ -2125,8 +2127,8 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 
 	roostr = TString::Format("h1_spectra_relerr_wi_%02d", index);
 	TH1D *h1_spectra_relerr_wi = new TH1D(roostr, "", num_Y, 0, num_Y);
-	ofstream bin_errors_file(TString::Format("./generated_text_files/bin_errors_%02d.txt", index));
-	cout << "saving bin errors to file " << TString::Format("./generated_text_files/bin_errors_%02d.txt", index) << "...";
+	ofstream bin_errors_file(TString::Format("./plot_outputs/bin_errors_%02d.txt", index));
+	cout << "saving bin errors to file " << TString::Format("./plot_outputs/bin_errors_%02d.txt", index) << "...";
 	for(int ibin=1; ibin<=num_Y; ibin++) {    
 		double val_noConstraint = h1_pred_Y_noConstraint_rel_error->GetBinError(ibin);
 		double val_wiConstraint = h1_pred_Y_wiConstraint_rel_error->GetBinError(ibin);
@@ -2183,7 +2185,8 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 		}
 	} 
 
-	roostr = TString::Format("canv_spectra_relerr_%02d.png", index); canv_spectra_relerr->SaveAs(roostr);
+	// stop saving relerr, I never use it
+	//roostr = TString::Format("plot_outputs/canv_spectra_relerr_%02d.png", index); canv_spectra_relerr->SaveAs(roostr);
 	//roostr = TString::Format("canv_h1_spectra_relerr_wi_%02d.root", index); h1_spectra_relerr_wi->SaveAs(roostr);  
 
 	return 1;
@@ -2252,8 +2255,8 @@ void TLee::Plotting_systematics()
 	TH1D *h1_pred_totalsyst = new TH1D("h1_pred_totalsyst", "", rows, 0, rows);
 	TH1D *h1_meas = new TH1D("h1_meas", "", rows, 0, rows);
 
-	ofstream error_breakdown_file("./generated_text_files/error_breakdown.txt");
-	cout << "saving error breakdown to file ./generated_text_files/error_breakdown.txt" << "...";
+	ofstream error_breakdown_file("./plot_outputs/error_breakdown.txt");
+	cout << "saving error breakdown to file ./plot_outputs/error_breakdown.txt" << "...";
 
 	for(int ibin=1; ibin<=rows; ibin++) {
 		for(int jbin=1; jbin<=rows; jbin++) {
@@ -2960,10 +2963,10 @@ void TLee::Set_Spectra_MatrixCov()
   // update 2024_05_01: Want to only scale signal in the signal channels
   
   
-  map_Lee_ch[2] = 1;
-  map_Lee_ch[4] = 1;
-  map_Lee_ch[6] = 1;
-  map_Lee_ch[8] = 1;
+  //map_Lee_ch[2] = 1;
+  //map_Lee_ch[4] = 1;
+  //map_Lee_ch[6] = 1;
+  //map_Lee_ch[8] = 1;
   //map_Lee_ch[10] = 1;
   //map_Lee_ch[12] = 1;
   //map_Lee_ch[14] = 1;
@@ -3053,7 +3056,7 @@ void TLee::Set_Spectra_MatrixCov()
 
     // these numbers gotten from histogram_plotter_v3.ipynb, 2023_06_29
 
-    int disable_BR_uncertainty_1d = 1;
+    int disable_BR_uncertainty_1d = 0;
     if (disable_BR_uncertainty_1d) {
         float num_true_signal_uncollapsed[2*2*4+16*2*4 + 2*4+16*4] = { // two bins, bkg and sig, four channels, then 16 bins, bkg and sig, four channels
 		0, 0, 4.494626593585051, 0, 0, 0, 9.656861039580827, 0, // wc 1gNp and 1g0p bkg and sig
@@ -3505,8 +3508,8 @@ void TLee::Set_Spectra_MatrixCov()
 
     matrix_detector_frac += (*map_matrix_detector_frac[idx]);
 
-	std::cout << "Uncollapsed DetVar frac component:" << (*map_matrix_detector_frac[idx])(30,30) << "\n";
-	std::cout << "Uncollapsed DetVar component:" << (*map_matrix_detector_frac[idx])(30,30) * map_input_spectrum_oldworld_bin[30] * map_input_spectrum_oldworld_bin[30] << "\n";
+	//std::cout << "Uncollapsed DetVar frac component:" << (*map_matrix_detector_frac[idx])(30,30) << "\n";
+	//std::cout << "Uncollapsed DetVar component:" << (*map_matrix_detector_frac[idx])(30,30) * map_input_spectrum_oldworld_bin[30] * map_input_spectrum_oldworld_bin[30] << "\n";
 
     matrix_detector_sub_frac[idx].Clear();
     matrix_detector_sub_frac[idx].ResizeTo(bins_oldworld, bins_oldworld);
