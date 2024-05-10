@@ -113,8 +113,11 @@ namespace config_Lee
   bool flag_plotting_systematics   = 1;
   
 
-  int array_no_stat_bins[4] = {1, 3, 5, 7}; // in reco space, these are the explicitly empty overflow bins where we want no uncertainties
-  int num_no_stat_bins = 4;
+  //int array_no_stat_bins[4] = {1, 3, 5, 7}; // in reco space, these are the explicitly empty overflow bins where we want no uncertainties
+  //int num_no_stat_bins = 4;
+
+  int array_no_stat_bins[0] = {}; // in reco space, these are the explicitly empty overflow bins where we want no uncertainties
+  int num_no_stat_bins = 0;
 
 
   ////////// goodness of fit

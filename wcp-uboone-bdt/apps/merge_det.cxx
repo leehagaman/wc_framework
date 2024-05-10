@@ -712,6 +712,8 @@ int main( int argc, char** argv )
       T_eval_cv->SetBranchStatus("gl_true_Enu",1);
       T_eval_cv->SetBranchStatus("gl_true_Elep",1);
       T_eval_cv->SetBranchStatus("gl_reco_Eshower",1);
+      T_eval_cv->SetBranchStatus("gl_reco_shower_dirz",1);
+      T_eval_cv->SetBranchStatus("gl_reco_shower_implied_dirz",1);
       T_eval_cv->SetBranchStatus("gl_simple_pot_weight",1);
       T_eval_cv->SetBranchStatus("gl_rem_orig_wc_pot_weight",1);
       T_eval_cv->SetBranchStatus("gl_new_pot_weight",1);
@@ -874,6 +876,8 @@ int main( int argc, char** argv )
       T_eval_det->SetBranchStatus("gl_true_Enu",1);
       T_eval_det->SetBranchStatus("gl_true_Elep",1);
       T_eval_det->SetBranchStatus("gl_reco_Eshower",1);
+      T_eval_det->SetBranchStatus("gl_reco_shower_dirz",1);
+      T_eval_det->SetBranchStatus("gl_reco_shower_implied_dirz",1);
       T_eval_det->SetBranchStatus("gl_simple_pot_weight",1);
       T_eval_det->SetBranchStatus("gl_rem_orig_wc_pot_weight",1);
       T_eval_det->SetBranchStatus("gl_new_pot_weight",1);

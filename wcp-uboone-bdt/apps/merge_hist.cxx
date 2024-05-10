@@ -75,7 +75,7 @@ int main( int argc, char** argv )
   // data POT ...
   std::map<int, double> map_data_period_pot;
   //  std::vector<TH1F*> temp_histograms;
-  
+
   // open all the histograms ...
   for (auto it = map_inputfile_info.begin(); it != map_inputfile_info.end(); it++){
     TString input_filename = it->first;
@@ -112,9 +112,6 @@ int main( int argc, char** argv )
     }
   }
 
-  
- 
-  
   // create histograms for data, create histograms for predictions
   // obsch --> histograms (data, prediction, prediction_err2
   std::map<int, std::vector<TH1F*> > map_obsch_histos;
@@ -170,15 +167,19 @@ int main( int argc, char** argv )
     }
   }
 
-
+  //cout << "about to fill data histograms...\n";
   
   // get data histograms ...
   cov.fill_data_histograms(run, map_obsch_histos, map_name_histogram);
 
+  //cout << "about to fill pred histograms...\n";
 
   
   // get predictions and its uncertainties ...,
   cov.fill_pred_histograms(run, map_obsch_histos, map_obsch_bayes, map_obsch_infos, map_name_histogram, lee_strength, map_data_period_pot, flag_breakdown, map_obsch_subhistos);
+
+  //cout << "done filling pred histograms...\n";
+
 
     /* for (auto it = map_obsch_subhistos.begin(); it!= map_obsch_subhistos.end(); it++){ */
     /*         for(size_t i=0; i<it->second.size(); i++){ */

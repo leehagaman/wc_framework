@@ -681,6 +681,8 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
       T_eval->SetBranchStatus("gl_true_Enu",1);
       T_eval->SetBranchStatus("gl_true_Elep",1);
       T_eval->SetBranchStatus("gl_reco_Eshower",1);
+      T_eval->SetBranchStatus("gl_reco_shower_dirz",1);
+      T_eval->SetBranchStatus("gl_reco_shower_implied_dirz",1);
       T_eval->SetBranchStatus("gl_simple_pot_weight",1);
       T_eval->SetBranchStatus("gl_rem_orig_wc_pot_weight",1);
       T_eval->SetBranchStatus("gl_new_pot_weight",1);

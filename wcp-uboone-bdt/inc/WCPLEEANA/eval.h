@@ -90,6 +90,8 @@ namespace LEEana{
     Float_t gl_true_Enu;
     Float_t gl_true_Elep;
     Float_t gl_reco_Eshower;
+    Float_t gl_reco_shower_dirz;
+    Float_t gl_reco_shower_implied_dirz;
     Float_t gl_simple_pot_weight;
     Float_t gl_rem_orig_wc_pot_weight;
     Float_t gl_new_pot_weight;
@@ -129,6 +131,8 @@ void LEEana::set_tree_address(TTree *tree0, EvalInfo& eval_info, int flag){
     tree0->SetBranchAddress("gl_true_Enu",&eval_info.gl_true_Enu);
     tree0->SetBranchAddress("gl_true_Elep",&eval_info.gl_true_Elep);
     tree0->SetBranchAddress("gl_reco_Eshower",&eval_info.gl_reco_Eshower);
+    tree0->SetBranchAddress("gl_reco_shower_dirz",&eval_info.gl_reco_shower_dirz);
+    tree0->SetBranchAddress("gl_reco_shower_implied_dirz",&eval_info.gl_reco_shower_implied_dirz);
     tree0->SetBranchAddress("gl_simple_pot_weight",&eval_info.gl_simple_pot_weight);
     tree0->SetBranchAddress("gl_rem_orig_wc_pot_weight",&eval_info.gl_rem_orig_wc_pot_weight);
     tree0->SetBranchAddress("gl_new_pot_weight",&eval_info.gl_new_pot_weight);
@@ -309,6 +313,8 @@ void LEEana::put_tree_address(TTree *tree0, EvalInfo& eval_info, int flag){
     tree0->Branch("gl_true_Enu",&eval_info.gl_true_Enu,"data/F");
     tree0->Branch("gl_true_Elep",&eval_info.gl_true_Elep,"data/F");
     tree0->Branch("gl_reco_Eshower",&eval_info.gl_reco_Eshower,"data/F");
+    tree0->Branch("gl_reco_shower_dirz",&eval_info.gl_reco_shower_dirz,"data/F");
+    tree0->Branch("gl_reco_shower_implied_dirz",&eval_info.gl_reco_shower_implied_dirz,"data/F");
     tree0->Branch("gl_simple_pot_weight",&eval_info.gl_simple_pot_weight,"data/F");
     tree0->Branch("gl_rem_orig_wc_pot_weight",&eval_info.gl_rem_orig_wc_pot_weight,"data/F");
     tree0->Branch("gl_new_pot_weight",&eval_info.gl_new_pot_weight,"data/F");

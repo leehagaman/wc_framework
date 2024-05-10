@@ -1220,6 +1220,25 @@ int TLee::Exe_Goodness_of_fit(vector<int>vc_target_chs, vector<int>vc_support_ch
 
 int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatrixD matrix_data, TMatrixD matrix_syst, int index)
 {
+
+	if (0) {
+		cout << "inside Exe_Goodness_of_fit, printing matrix_pred, matrix_data, matrix_syst diags...\n";
+		for (int i = 0; i < matrix_syst.GetNrows(); i++) {
+			cout << i << ", " << matrix_pred(0, i) << ", " << matrix_data(0, i) << ", " << matrix_syst(i, i) << endl;
+		}
+		cout << "done printing matrix_syst diags\n";
+
+		cout << "saving matrix_syst to text file...\n";
+		ofstream ofs("exe_goodness_of_fit_matrix_syst.txt");
+		for (int i = 0; i < matrix_syst.GetNrows(); i++) {
+			for (int j = 0; j < matrix_syst.GetNcols(); j++) {
+				ofs << matrix_syst(i, j) << " ";
+			}
+			ofs << endl;
+		}
+		ofs.close();
+	}
+
 	TString roostr = "";
 
 	if( num_Y+num_X!=matrix_syst.GetNrows() ) {cout<<" ERROR"<<endl; exit(10);}
@@ -1509,7 +1528,9 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 	TMatrixD matrix_delta_noConstraint_T = matrix_pred_Y - matrix_data_Y;
 
 	TMatrixD matrix_cov_noConstraint_inv = matrix_goodness_cov_total_noConstraint;
+	cout << "inverting matrix_cov_noConstraint_inv...\n";
 	matrix_cov_noConstraint_inv.Invert();
+	cout << "done\n";
 	TMatrixD matrix_chi2_noConstraint = matrix_delta_noConstraint * matrix_cov_noConstraint_inv * matrix_delta_noConstraint_T;
 	double val_chi2_noConstraint = matrix_chi2_noConstraint(0,0);
 	double p_value_noConstraint = TMath::Prob( val_chi2_noConstraint, num_Y );
@@ -1706,6 +1727,7 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 	TMatrixD matrix_XX = matrix_cov_total.GetSub(num_Y, num_Y+num_X-1, num_Y, num_Y+num_X-1);
 	for(int ibin=1; ibin<=num_X; ibin++) {
 
+		// this term isn't needed, redundant with user_stat = matrix_pred_X(ibin-1, 0) below
 		//matrix_XX(ibin-1, ibin-1) += matrix_pred_X(ibin-1, 0);// Pearson's term for statistics test
 
 		double user_stat = matrix_pred_X(ibin-1, 0);
@@ -1724,12 +1746,22 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 
 	}
 	TMatrixD matrix_XX_inv = matrix_XX;
+	cout << "inverting matrix_XX_inv...\n";
 	matrix_XX_inv.Invert();
+	cout << "done\n";
 
 	TMatrixD matrix_YX = matrix_cov_total.GetSub(0, num_Y-1, num_Y, num_Y+num_X-1);
 	TMatrixD matrix_XY(num_X, num_Y); matrix_XY.Transpose(matrix_YX);
 
 	TMatrixD matrix_Y_under_X = matrix_pred_Y + matrix_YX * matrix_XX_inv * (matrix_data_X - matrix_pred_X);
+
+	for(int ibin=0; ibin<num_Y; ibin++) {
+		if( matrix_Y_under_X(ibin, 0)<0 ) {
+			cout << "WARNING: NEGATIVE CONSTRAINED PREDICTION, SETTING TO 0\n";
+			matrix_Y_under_X(ibin, 0) = 0;
+		}
+	}
+
 	TMatrixD matrix_YY_under_XX = matrix_YY - matrix_YX * matrix_XX_inv * matrix_XY;
 	// Here, only for systetmaics uncertainty because of no stat in matrix_YY
 
@@ -1805,7 +1837,9 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 	TMatrixD matrix_delta_wiConstraint_T = matrix_Y_under_X - matrix_data_Y;  
 
 	TMatrixD matrix_cov_wiConstraint_inv = matrix_goodness_cov_total_wiConstraint;
+	cout << "inverting matrix_cov_wiConstraint_inv...\n";
 	matrix_cov_wiConstraint_inv.Invert();
+	cout << "done\n";
 	TMatrixD matrix_chi2_wiConstraint = matrix_delta_wiConstraint * matrix_cov_wiConstraint_inv * matrix_delta_wiConstraint_T;
 	double val_chi2_wiConstraint = matrix_chi2_wiConstraint(0,0);
 	double p_value_wiConstraint = TMath::Prob( val_chi2_wiConstraint, num_Y );
@@ -2644,6 +2678,13 @@ void TLee::Set_Collapse()
 	}
 	collapsed_cov_matrix_file.close();
 
+	std::ofstream collapsed_cov_matrix_diags_file;
+	collapsed_cov_matrix_diags_file.open("./text_cov_matrix_outputs/collapsed_cov_matrix_diags_file.txt");
+	for (int curr_i = 0; curr_i < bins_newworld; curr_i ++){
+		collapsed_cov_matrix_diags_file << curr_i << ", " << matrix_absolute_cov_newworld(curr_i, curr_i) << "\n";
+	}
+	collapsed_cov_matrix_diags_file.close();
+
 	std::ofstream additional_mc_stat_cov_matrix_file;
 	additional_mc_stat_cov_matrix_file.open("./text_cov_matrix_outputs/additional_mc_stat_cov_matrix_file.txt");
 	for (int curr_i = 0; curr_i < bins_newworld; curr_i ++){
@@ -2967,6 +3008,8 @@ void TLee::Set_Spectra_MatrixCov()
   //map_Lee_ch[4] = 1;
   //map_Lee_ch[6] = 1;
   //map_Lee_ch[8] = 1;
+
+  // never use these
   //map_Lee_ch[10] = 1;
   //map_Lee_ch[12] = 1;
   //map_Lee_ch[14] = 1;

@@ -311,12 +311,197 @@ int main(int argc, char** argv)
  
   // start lhagaman added
   
-  // start joint plots
+  bool make_kinematic_plots = true;
 
-  bool make_one_bin_kinematic_plots = true;
+  // all constrained by constraining
+  if (make_kinematic_plots) {
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    for (int i=0; i < 16*4 + 7 + 13 + 11*4; i++){
+      vc_target_chs.push_back(i);
+    }
+    vector<int>vc_support_chs;
+    for (int i=16*4 + 7 + 13 + 11*4; i < 16*4 + 7 + 13 + 11*4 + 16*4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 444000 );
+  }
+
+  // just constraining WC 1gNp neutrino energy
+  if (make_kinematic_plots) {
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    for (int i=16*0; i < 16*1; i++){
+      vc_target_chs.push_back(i);
+    }
+    vector<int>vc_support_chs;
+    for (int i=16*4 + 7 + 13 + 11*4; i < 16*4 + 7 + 13 + 11*4 + 16*4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 444001 );
+  }
+  
+  // just constraining WC 1g0p neutrino energy
+  if (make_kinematic_plots) {
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    for (int i=16*1; i < 16*2; i++){
+      vc_target_chs.push_back(i);
+    }
+    vector<int>vc_support_chs;
+    for (int i=16*4 + 7 + 13 + 11*4; i < 16*4 + 7 + 13 + 11*4 + 16*4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 444002 );
+  }
+
+  // just constraining WC 1gNp shower energy
+  if (make_kinematic_plots) {
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    for (int i=16*2; i < 16*3; i++){
+      vc_target_chs.push_back(i);
+    }
+    vector<int>vc_support_chs;
+    for (int i=16*4 + 7 + 13 + 11*4; i < 16*4 + 7 + 13 + 11*4 + 16*4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 444003 );
+  }
+
+  // just constraining WC 1g0p shower energy
+  if (make_kinematic_plots) {
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    for (int i=16*3; i < 16*4; i++){
+      vc_target_chs.push_back(i);
+    }
+    vector<int>vc_support_chs;
+    for (int i=16*4 + 7 + 13 + 11*4; i < 16*4 + 7 + 13 + 11*4 + 16*4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 444004 );
+  }
+
+  // just constraining gl 1g1p shower energy
+  if (make_kinematic_plots) {
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    for (int i=16*4; i < 16*4 + 7; i++){
+      vc_target_chs.push_back(i);
+    }
+    vector<int>vc_support_chs;
+    for (int i=16*4 + 7 + 13 + 11*4; i < 16*4 + 7 + 13 + 11*4 + 16*4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 444005 );
+  }
+
+  // just constraining gl 1g0p shower energy
+  if (make_kinematic_plots) {
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    for (int i=16*4 + 7; i < 16*4 + 7 + 13; i++){
+      vc_target_chs.push_back(i);
+    }
+    vector<int>vc_support_chs;
+    for (int i=16*4 + 7 + 13 + 11*4; i < 16*4 + 7 + 13 + 11*4 + 16*4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 444006 );
+  }
+
+  // just constraining WC 1gNp costheta
+  if (make_kinematic_plots) {
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    for (int i=16*4 + 7 + 13; i < 16*4 + 7 + 13 + 11; i++){
+      vc_target_chs.push_back(i);
+    }
+    vector<int>vc_support_chs;
+    for (int i=16*4 + 7 + 13 + 11*4; i < 16*4 + 7 + 13 + 11*4 + 16*4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 444007 );
+  }
+
+  // just constraining WC 1g0p costheta
+  if (make_kinematic_plots) {
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    for (int i=16*4 + 7 + 13 + 11; i < 16*4 + 7 + 13 + 11*2; i++){
+      vc_target_chs.push_back(i);
+    }
+    vector<int>vc_support_chs;
+    for (int i=16*4 + 7 + 13 + 11*4; i < 16*4 + 7 + 13 + 11*4 + 16*4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 444008 );
+  }
+
+  // just constraining gl 1g1p costheta
+  if (make_kinematic_plots) {
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    for (int i=16*4 + 7 + 13 + 11*2; i < 16*4 + 7 + 13 + 11*3; i++){
+      vc_target_chs.push_back(i);
+    }
+    vector<int>vc_support_chs;
+    for (int i=16*4 + 7 + 13 + 11*4; i < 16*4 + 7 + 13 + 11*4 + 16*4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 444009 );
+  }
+
+  // just constraining gl 1g0p costheta
+  if (make_kinematic_plots) {
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    for (int i=16*4 + 7 + 13 + 11*3; i < 16*4 + 7 + 13 + 11*4; i++){
+      vc_target_chs.push_back(i);
+    }
+    vector<int>vc_support_chs;
+    for (int i=16*4 + 7 + 13 + 11*4; i < 16*4 + 7 + 13 + 11*4 + 16*4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 444010 );
+  }
+
+  // plotting constraining channels, constrained by signal channels
+  if (make_kinematic_plots) {
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+    
+    vector<int>vc_support_chs;
+    for (int i=0; i < 16*4 + 7 + 13 + 11*4; i++){
+      vc_support_chs.push_back(i);
+    }
+    
+    vector<int>vc_target_chs;
+    for (int i=16*4 + 7 + 13 + 11*4; i < 16*4 + 7 + 13 + 11*4 + 16*4; i++){
+      vc_target_chs.push_back(i);
+    }
+
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 444011 );
+  }
+  
+
+
+  bool make_one_bin_plots = false;
 
   // WC 1gNp
-  if (make_one_bin_kinematic_plots){
+  if (make_one_bin_plots){
 
     Lee_test->scaleF_Lee = 1;
     Lee_test->Set_Collapse();
@@ -331,7 +516,7 @@ int main(int argc, char** argv)
   }
 
   // WC 1g0p
-  if (make_one_bin_kinematic_plots){
+  if (make_one_bin_plots){
 
     Lee_test->scaleF_Lee = 1;
     Lee_test->Set_Collapse();
@@ -346,7 +531,7 @@ int main(int argc, char** argv)
   }
 
   // gLEE 1g1p
-  if (make_one_bin_kinematic_plots){
+  if (make_one_bin_plots){
 
     Lee_test->scaleF_Lee = 1;
     Lee_test->Set_Collapse();
@@ -361,7 +546,7 @@ int main(int argc, char** argv)
   }
 
   // gLEE 1g0p
-  if (make_one_bin_kinematic_plots){
+  if (make_one_bin_plots){
 
     Lee_test->scaleF_Lee = 1;
     Lee_test->Set_Collapse();
@@ -376,7 +561,7 @@ int main(int argc, char** argv)
   }
 
   // Overlap WC 1gXp gLEE 1gXp
-  if (make_one_bin_kinematic_plots){
+  if (make_one_bin_plots){
 
     Lee_test->scaleF_Lee = 1;
     Lee_test->Set_Collapse();
@@ -391,7 +576,7 @@ int main(int argc, char** argv)
   }
 
   // WC 1gNp and 1g0p
-  if (make_one_bin_kinematic_plots){
+  if (make_one_bin_plots){
 
     Lee_test->scaleF_Lee = 1;
     Lee_test->Set_Collapse();
@@ -407,7 +592,7 @@ int main(int argc, char** argv)
   }
 
   // gLEE 1g1p and 1g0p
-  if (make_one_bin_kinematic_plots){
+  if (make_one_bin_plots){
 
     Lee_test->scaleF_Lee = 1;
     Lee_test->Set_Collapse();
@@ -423,7 +608,7 @@ int main(int argc, char** argv)
   }
 
   // WC 1gNp and 1g0p and gLEE 1g1p and 1g0p
-  if (make_one_bin_kinematic_plots){
+  if (make_one_bin_plots){
 
     Lee_test->scaleF_Lee = 1;
     Lee_test->Set_Collapse();
@@ -441,7 +626,7 @@ int main(int argc, char** argv)
   }
 
   // Constraining channels (constrained by signal channels, but shouldn't actually use or care about the constrained result)
-  if (make_one_bin_kinematic_plots){
+  if (make_one_bin_plots){
 
     Lee_test->scaleF_Lee = 1;
     Lee_test->Set_Collapse();

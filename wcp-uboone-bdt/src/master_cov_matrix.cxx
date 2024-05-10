@@ -407,7 +407,10 @@ LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString 
       for (auto it2 = chs.begin(); it2 != chs.end(); it2++){
 	int ch = *it2;
 	std::set<std::pair<TString, TString> > subchs = map_pred_ch_subch[ch];
+  //std::cout << "inside master_cov_matrix, about to add to map_pred_obsch_histos...\n";
 	for (auto it3 = subchs.begin(); it3 != subchs.end(); it3++){
+    //std::cout << "adding to map_pred_obsch_histos...\n";
+
 	  std::pair<TString, TString> subch = *it3;
 	  std::set<std::pair<TString, int> > histos = map_pred_subch_histos[subch];
 
@@ -419,6 +422,8 @@ LEEana::CovMatrix::CovMatrix(TString cov_filename, TString cv_filename, TString 
 	  //}
 	  
 	}
+  //std::cout << "done adding to map_pred_obsch_histos\n";
+
       }
     }
   }
@@ -1857,6 +1862,8 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
       T_eval->SetBranchStatus("gl_true_Enu",1);
       T_eval->SetBranchStatus("gl_true_Elep",1);
       T_eval->SetBranchStatus("gl_reco_Eshower",1);
+      T_eval->SetBranchStatus("gl_reco_shower_dirz",1);
+      T_eval->SetBranchStatus("gl_reco_shower_implied_dirz",1);
       T_eval->SetBranchStatus("gl_simple_pot_weight",1);
       T_eval->SetBranchStatus("gl_rem_orig_wc_pot_weight",1);
       T_eval->SetBranchStatus("gl_new_pot_weight",1);

@@ -344,6 +344,8 @@ double LEEana::get_kine_var(KineInfo& kine, EvalInfo& eval, PFevalInfo& pfeval, 
     return get_reco_showerKE_corr(pfeval, flag_data) * 1000.;
   }else if (var_name == "gl_reco_Eshower"){
     return eval.gl_reco_Eshower;
+  }else if (var_name == "gl_reco_shower_dirz"){
+    return eval.gl_reco_shower_dirz;
   }else if (var_name == "kine_reco_Eproton"){
     return get_reco_Eproton(kine);
   }else if (var_name == "kine_reco_Epion"){
