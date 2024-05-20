@@ -49,6 +49,7 @@ void LEEana::CovMatrix::gen_data_stat_cov_matrix(int run, std::map<int, TH1F*>& 
     get_data_events_info(input_filename, map_all_events, map_histoname_infos);      
   }
 
+
   const int rows = cov_mat_bootstrapping->GetNcols();
   TPrincipal prin(rows, "ND");
   Double_t *x = new Double_t[rows];
@@ -64,6 +65,7 @@ void LEEana::CovMatrix::gen_data_stat_cov_matrix(int run, std::map<int, TH1F*>& 
     //std::cout << htemp->GetSum() << std::endl;
     map_filename_histo[filename] = htemp;
   } 
+
 
   // working on the boostrapping
   // lhagaman 2023_07_18, lowered 5000 to 500
@@ -82,22 +84,23 @@ void LEEana::CovMatrix::gen_data_stat_cov_matrix(int run, std::map<int, TH1F*>& 
       hobs->Reset();
       
       for (auto it1 = map_no_histoname.begin(); it1 != map_no_histoname.end(); it1++){
-	TString histoname = it1->second;
-	int tmp_obsch = std::get<1>(map_histoname_infos[histoname]);
-	TH1F *htmp = map_histoname_hist[histoname];
+        TString histoname = it1->second;
+        int tmp_obsch = std::get<1>(map_histoname_infos[histoname]);
+        TH1F *htmp = map_histoname_hist[histoname];
 
-	if (tmp_obsch == obsch) hobs->Add(htmp);
-	//	std::cout << obsch << " " << tmp_obsch << " " << htmp << std::endl;
+        if (tmp_obsch == obsch) hobs->Add(htmp);
+        //	std::cout << obsch << " " << tmp_obsch << " " << htmp << std::endl;
       }
       int start_bin = map_obsch_startbin[obsch];
       //std::cout << start_bin << std::endl;
       for (int i=0;i!=hobs->GetNbinsX()+1;i++){
-	x[start_bin+i] = hobs->GetBinContent(i+1) ;
-	//std::cout << x[start_bin+i] << std::endl;
+        x[start_bin+i] = hobs->GetBinContent(i+1) ;
+        //std::cout << x[start_bin+i] << std::endl;
       }
     }
     prin.AddRow(x);
   }
+
   (*cov_mat_bootstrapping) = (*(TMatrixD*)prin.GetCovarianceMatrix());
   for (int i=0;i!=rows;i++){
     for (int j=0;j!=rows;j++){
@@ -129,6 +132,7 @@ void LEEana::CovMatrix::gen_data_stat_cov_matrix(int run, std::map<int, TH1F*>& 
       //	std::cout << obsch << " " << tmp_obsch << " " << htmp << std::endl;
     }
   }
+
   
 }
 

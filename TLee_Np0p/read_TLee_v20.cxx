@@ -1538,6 +1538,8 @@ int main(int argc, char** argv)
 	// full grid
     if( 1 ) {
 
+		bool thirty_by_thirty = true;
+
 		///////
 		
 		int grid_Np = 0;
@@ -1594,8 +1596,17 @@ int main(int argc, char** argv)
 		/////// 2d space of (Np, 0p)
 		int bins_Np = 16;
 		int bins_0p = 16;
+
+		if (thirty_by_thirty) { // actually keeping the same number of bins; 0, 2, 4, ..., 28, 30
+			bins_Np = 16;
+			bins_0p = 16;
+		}
 		
 		TH2D *h2d_space = new TH2D("h2d_space", "", bins_Np, -0.5, 15.5, bins_0p, -0.5, 15.5);
+
+		if (thirty_by_thirty) {
+			h2d_space = new TH2D("h2d_space", "", bins_Np, -1, 31, bins_0p, -1, 31);
+		}
 
 		double pars_2d[2] = {0};
 

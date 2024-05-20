@@ -311,7 +311,7 @@ int main(int argc, char** argv)
  
   // start lhagaman added
   
-  bool make_kinematic_plots = true;
+  bool make_kinematic_plots = false;
 
   // all constrained by constraining
   if (make_kinematic_plots) {

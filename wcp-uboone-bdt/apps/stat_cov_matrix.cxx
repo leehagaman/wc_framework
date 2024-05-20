@@ -41,12 +41,14 @@ int main( int argc, char** argv )
   std::map<TString, std::tuple<int, int, TString, float, int, double, int> > map_inputfile_info = cov.get_map_inputfile_info();
   // Construct the histogram ...
 
+
   // outfilename ...
   TString outfile_name = "./hist_rootfiles/run_data_stat.root";
 
   TH1F *htemp;
   std::map<TString, TH1F*> map_histoname_hist;
   std::map<int, TH1F*> map_obsch_hist;
+
   
   for (auto it = map_inputfile_info.begin(); it!=map_inputfile_info.end(); it++){
     TString input_filename = it->first;
@@ -62,27 +64,27 @@ int main( int argc, char** argv )
       std::vector< std::tuple<TString,  int, float, float, TString, TString, TString, TString > > histo_infos = cov.get_histograms(input_filename, 0);
       
       for (auto it1 = histo_infos.begin(); it1 != histo_infos.end(); it1++){
-	TString histoname = std::get<0>(*it1);
-	Int_t nbin = std::get<1>(*it1);
-	float llimit = std::get<2>(*it1);
-	float hlimit = std::get<3>(*it1);
-	TString var_name = std::get<4>(*it1);
-	TString ch_name = std::get<5>(*it1);
-	TString add_cut = std::get<6>(*it1);
-	TString weight = std::get<7>(*it1);
+        TString histoname = std::get<0>(*it1);
+        Int_t nbin = std::get<1>(*it1);
+        float llimit = std::get<2>(*it1);
+        float hlimit = std::get<3>(*it1);
+        TString var_name = std::get<4>(*it1);
+        TString ch_name = std::get<5>(*it1);
+        TString add_cut = std::get<6>(*it1);
+        TString weight = std::get<7>(*it1);
 	
-	//std::cout << std::get<0>(*it1)  << " " << std::get<1>(*it1) << " " << std::get<4>(*it1) << " " << std::get<5>(*it1) << " " << std::get<6>(*it1) << " " << std::get<7>(*it1) << std::endl;
-	htemp = new TH1F(histoname, histoname, nbin, llimit, hlimit);
-	map_histoname_hist[histoname] = htemp;
+        //std::cout << std::get<0>(*it1)  << " " << std::get<1>(*it1) << " " << std::get<4>(*it1) << " " << std::get<5>(*it1) << " " << std::get<6>(*it1) << " " << std::get<7>(*it1) << std::endl;
+        htemp = new TH1F(histoname, histoname, nbin, llimit, hlimit);
+        map_histoname_hist[histoname] = htemp;
 
-	
-	
-	int obsch = cov.get_obsch_name(ch_name);
+        
+        
+        int obsch = cov.get_obsch_name(ch_name);
 
-	if (map_obsch_hist.find(obsch) == map_obsch_hist.end()){
-	  TH1F *htemp1 = (TH1F*)htemp->Clone(Form("pred_obsch_%d",obsch));
-	  map_obsch_hist[obsch] = htemp1;
-	}
+        if (map_obsch_hist.find(obsch) == map_obsch_hist.end()){
+          TH1F *htemp1 = (TH1F*)htemp->Clone(Form("pred_obsch_%d",obsch));
+          map_obsch_hist[obsch] = htemp1;
+        }
       }
       //  std::cout << input_filename << " " << filetype << " " << out_filename << std::endl; 
     }
@@ -90,8 +92,10 @@ int main( int argc, char** argv )
   std::cout << outfile_name << std::endl;
 
 
+
   TMatrixD* mat_collapse = cov.get_mat_collapse();
   //  std::cout << mat_collapse->GetNrows() << " " << mat_collapse->GetNcols() << std::endl;
+
   
   // create a covariance matrix for bootstrapping ...
   TMatrixD* cov_mat = new TMatrixD(mat_collapse->GetNcols(), mat_collapse->GetNcols());
@@ -109,19 +113,19 @@ int main( int argc, char** argv )
       double val_2 = (*vec_mean)(j);
       double val = (*cov_mat)(i,j);
       if (val_1 ==0 && val_2 == 0){
-	(*frac_cov_mat)(i,j) = 0;
+        (*frac_cov_mat)(i,j) = 0;
       }else if (val_1 ==0 || val_2 ==0){
-	if (val !=0){
-	  if (i==j){
-	    (*frac_cov_mat)(i,j) = 1.; //
-	  }else{
-	    (*frac_cov_mat)(i,j) = 0;
-	  }
-	}else{
-	  (*frac_cov_mat)(i,j) = 0;
-	}
+        if (val !=0){
+          if (i==j){
+            (*frac_cov_mat)(i,j) = 1.; //
+          }else{
+            (*frac_cov_mat)(i,j) = 0;
+          }
+        }else{
+          (*frac_cov_mat)(i,j) = 0;
+        }
       }else{
-	(*frac_cov_mat)(i,j) = val/val_1/val_2;
+	      (*frac_cov_mat)(i,j) = val/val_1/val_2;
       }
     }
   }
@@ -138,6 +142,7 @@ int main( int argc, char** argv )
   for (auto it = map_obsch_hist.begin(); it != map_obsch_hist.end(); it++){
     ((TH1F*)it->second)->SetDirectory(file);
   }
+
   
   file->Write();
   file->Close();
