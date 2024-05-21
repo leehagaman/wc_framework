@@ -4033,167 +4033,131 @@ void TLee::Set_Spectra_MatrixCov()
 
 		int disable_BR_uncertainty_2d = 1; 
 		if (disable_BR_uncertainty_2d) {
-			float num_true_signal_uncollapsed[2*3*4+16*3*4 + 2*4+16*4] = { // two bins, bkg and Np sig and 0p sig, four channels, then 16 bins, bkg and Np sig and 0p sig, four channels
-				0, 0, 3.5805990866563366, 0, 0.9140275069286945, 0, 0, 0, 1.7527819219337124, 0, 7.9040791176465195, 0, // wc 1gNp and 1g0p bkg and Np sig and 0p sig
-				0, 0, 4.608920883373407, 0, 0.05623029314291005, 0, 0, 0, 1.2579023711773536, 0, 4.869193204224594, 0, // gLEE 1g1p and 1g0p bkg and Np sig and 0p sig
+
+			// zero is bkg, 1 is Np, 2 is 0p
+			int bkg_Np_0p_bin[2*3*4 + 16*3*4 + 2*4 + 16*4] = { // two bins, bkg and Np sig and 0p sig, four channels, then 16 bins, bkg and Np sig and 0p sig, four channels
+				0, 0, 1, 1, 2, 2, // wc 1gNp bkg and Np sig and 0p sig
+				0, 0, 1, 1, 2, 2, // wc 1g0p bkg and Np sig and 0p sig
+				0, 0, 1, 1, 2, 2, // gLEE 1g1p bkg and Np sig and 0p sig
+				0, 0, 1, 1, 2, 2, // gLEE 1g0p bkg and Np sig and 0p sig
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 Np bkg
-				0.0, 0.007580748339334285, 0.29915273747269794, 0.9005965233444302, 1.2047980916451504, 0.9348587874820815, 0.6980418758797149, 0.43816531449704765, 0.2700421450030017, 0.16471577441236462, 0.10971743407671042, 0.0577198602342186, 0.043724647524303606, 0.03084785292278447, 0.010670240603663395, 0.025454584589269302, // NC Pi0 Np Np sig
-				0.0, 0.00473618501871967, 0.12446511024522608, 0.22569077918524388, 0.22965506499279026, 0.1749721945058793, 0.11666017309328591, 0.07872327164611637, 0.05588424911972911, 0.02095869185759458, 0.018903259812670825, 0.008331638644912154, 0.007211647383488895, 0.007276838294402843, 0.001587711653173507, 0.0033807139153738675, // NC Pi0 Np 0p sig
+				1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // NC Pi0 Np Np sig
+				2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, // NC Pi0 Np 0p sig
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 0p bkg
-				0.0, 0.08126392492179649, 0.7338407363344367, 0.8025132937487207, 0.6052717488222443, 0.42374017780254913, 0.24584738259877525, 0.13733709240162728, 0.07366724889648335, 0.03246575380885375, 0.01582321665013353, 0.01272567264858715, 0.007590197441126101, 0.003994743814933699, 0.0021238622479327063, 0.0010038709865094475, // NC Pi0 0p Np sig
-				0.0, 0.3128742293705761, 1.3991916874807617, 1.2090691115370802, 0.8405862887723607, 0.4409635851103322, 0.22548845909382642, 0.11796471483263193, 0.04951563289353267, 0.02425347473095041, 0.014229295187263347, 0.010202520211913146, 0.003947053743028839, 0.0019393117700099438, 0.0009354407835004963, 0.0005361505947591994, // NC Pi0 0p 0p sig
+				1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // NC Pi0 0p Np sig
+				2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, // NC Pi0 0p 0p sig
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC Np bkg
-				0.0, 0.0, 0.0009354407835004026, 0.022129612483016824, 0.057373341336996425, 0.08908636291274993, 0.10107724873019405, 0.09433682980504332, 0.09097177480115726, 0.07639596071667581, 0.05171440392866433, 0.04391243729432137, 0.04107408378340338, 0.020142610641102898, 0.012090902617923227, 0.023454894353467814, // numuCC Np Np sig
-				0.0, 0.0, 0.0, 0.006457517785815997, 0.016526416883805767, 0.02085386261199286, 0.025715617007417667, 0.017840407724943233, 0.01612712669506465, 0.011605681387163377, 0.009198649225403338, 0.007744558686152786, 0.003342472945260383, 0.003800744235219311, 0.00046772039175019264, 0.005036855771556242, // numuCC Np 0p sig
+				1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // numuCC Np Np sig
+				2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, // numuCC Np 0p sig
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC 0p bkg
-				0.0, 0.0, 0.0032645936404600527, 0.02796180933996033, 0.05879216142373471, 0.0671383303900547, 0.060308472356297854, 0.051399202854417764, 0.03651466627988015, 0.03636511747997584, 0.021614202019361484, 0.009714059689058141, 0.011605681387163114, 0.007795488050152566, 0.002523152436673781, 0.00817403810778955, // numuCC 0p Np sig
-				0.0, 0.0004677203917502013, 0.02305236487263078, 0.04627659182929781, 0.06477898830019951, 0.06609918895103262, 0.06442738818336255, 0.048979482298771304, 0.028506011671937226, 0.017714838348237727, 0.013261823243345516, 0.009451629906334968, 0.005087785135555967, 0.002591582639682788, 0.0009354407835003853, 0.0019393117700097773, // numuCC 0p 0p sig
-				0, 0, 0, 0, 0, 0, 0, 0, // EXT, 1g channels
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // EXT, NC Pi0 channels
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // EXT, numuCC channels
-			};   
+				1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // numuCC 0p Np sig
+				2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, // numuCC 0p 0p sig
+				0, 0, // wc 1gNp EXT
+				0, 0, // wc 1g0p EXT
+				0, 0, // gLEE 1g1p EXT
+				0, 0, // gLEE 1g0p EXT
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 Np EXT
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 0p EXT
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC Np EXT
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC Np EXT
+			};
+
      
-		if (idx == 17) {
-			bool abs_value_eigenvals = true;
-			
-			if (abs_value_eigenvals) {
-				
-				//cout << "before modifying Xs matrix:\n";
+			if (idx == 17) {
+				bool abs_value_eigenvals = true;
 
-				// copy un-collapsed Xs matrix, make sure it's symmetrical
-				TMatrixD myMatrix = (*map_matrix_flux_Xs_frac[idx]);
-				if (!myMatrix.IsSymmetric()) {
-						//std::cout << "    Matrix is not symmetric!\n";
+				std::cout << "subtracting one from uncollapsed sig-sig XS frac cov matrix bins\n";
+
+				for (int ibin=0; ibin<bins_oldworld; ibin++) {
+					for (int jbin=0; jbin<bins_oldworld; jbin++) {
+						// Here, we assume that true Np NC Delta events are fully correlated with 
+						// true Np NC Delta events in other selection channels. Even if this isn't fully accurate,
+						// the non-1g signal channels should basically not matter at all (the gLEE data release didn't
+						// include this information because of a similar approximation).
+
+						// So, the covariance matrix associated with the NC Delta BR uncertainty is fully correlated,
+						// so we just need the sigma associated with the row and column to calculate it and subtract it off.
+						// See 2022_06_01 slack between Mark and Lee for more information about this approximation.
+
+						float old_val = (*map_matrix_flux_Xs_frac[idx])(ibin, jbin);
+
+						// lhagaman changed 2023_07_25, stats can cause zeros in Xs file with nonzeros in CV file, don't subtract in that case
+
+						if (bkg_Np_0p_bin[ibin] > 0 && bkg_Np_0p_bin[jbin] > 0) { // this entry corresponds to signal and signal correlated bins
+							if (old_val > 0) { // this entry is nonzero, it includes BR uncertainty already
+								(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
+							}
+						}
+					}   
+				}
+
+				// done looping over bins
+
+				std::cout << "absolute valuing negative eigenvalues\n";
+				
+				if (abs_value_eigenvals) {
+					
+					// copy un-collapsed Xs matrix, make sure it's symmetrical
+					TMatrixD myMatrix = (*map_matrix_flux_Xs_frac[idx]);
+					if (!myMatrix.IsSymmetric()) {
+						std::cout << "    Matrix is not symmetric!\n";
 						myMatrix = 0.5 * (myMatrix + myMatrix.T()); // Symmetrization
-				}
-
-				// put it into a symmetric matrix type
-				TMatrixDSym symMatrix(myMatrix.GetNrows());
-				for (Int_t i = 0; i < symMatrix.GetNrows(); ++i) {
+					}
+					
+					// put it into a symmetric matrix type
+					TMatrixDSym symMatrix(myMatrix.GetNrows());
+					for (Int_t i = 0; i < symMatrix.GetNrows(); ++i) {
 						for (Int_t j = 0; j <= i; ++j) {
-								symMatrix(i, j) = myMatrix(i, j);
+							symMatrix(i, j) = myMatrix(i, j);
 						}
-				}
+					}
 
-				// get the eigenvalues and eigenvectors
-				TMatrixDSymEigen eig(symMatrix);
-				TVectorD eigenvalues = eig.GetEigenValues();
-				TMatrixD eigenvectors = eig.GetEigenVectors();
-
-				for (Int_t i = 0; i < eigenvalues.GetNrows(); ++i) {
+					// get the eigenvalues and eigenvectors
+					TMatrixDSymEigen eig(symMatrix);
+					TVectorD eigenvalues = eig.GetEigenValues();
+					TMatrixD eigenvectors = eig.GetEigenVectors();
+					
+					for (Int_t i = 0; i < eigenvalues.GetNrows(); ++i) {
 						Double_t eigenvalue = eigenvalues[i];
-						//if (eigenvalue < 0) cout << "    negative eigenvalue: " << eigenvalue << "\n";
-				}
-
-			}
-
-			std::cout << "subtracting one from uncollapsed sig bins\n";
-
-			for (int ibin=0; ibin<bins_oldworld; ibin++) {
-				for (int jbin=0; jbin<bins_oldworld; jbin++) {
-					// Here, we assume that true Np NC Delta events are fully correlated with 
-					// true Np NC Delta events in other selection channels. Even if this isn't fully accurate,
-					// the non-1g signal channels should basically not matter at all (the gLEE data release didn't
-					// include this information because of a similar approximation).
-
-					// So, the covariance matrix associated with the NC Delta BR uncertainty is fully correlated,
-					// so we just need the sigma associated with the row and column to calculate it and subtract it off.
-					// See 2022_06_01 slack between Mark and Lee for more information about this approximation.
-
-					float sigma_BR_row = num_true_signal_uncollapsed[ibin];
-					float sigma_BR_col = num_true_signal_uncollapsed[jbin];
-
-					//cout << "sigma_BR_row, sigma_BR_col = " << sigma_BR_row << ", " << sigma_BR_col << "\n";
-
-					//if (ibin < 8) cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin);
-					//if (ibin < 8 && jbin < 8) cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin);
-			
-					float old_val = (*map_matrix_flux_Xs_frac[idx])(ibin, jbin);
-
-					// lhagaman changed 2023_07_25, stats can cause zeros in Xs file with nonzeros in CV file, don't subtract in that case
-	
-					bool subtract_all_sig_by_one = true;
-
-					if (subtract_all_sig_by_one) {
-						if (sigma_BR_row > 0 && sigma_BR_col > 0 && old_val == 0) { // stat issue, do nothing
-							//cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-						} else if (sigma_BR_row > 0 && sigma_BR_col > 0) { // should subtract, will sometimes end up negative, but not by too much
-							(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
-							//cout << ibin << " " << jbin << ", " << sigma_BR_row << " " << sigma_BR_col << ", old entry, new entry: " << old_val << ", " << (*map_matrix_flux_Xs_frac[idx])(ibin, jbin) << "\n";
-						}
+						if (eigenvalue < 0) {
+							//cout << "    negative eigenvalue: " << eigenvalue << "\n";
+							eigenvalues[i] = -eigenvalue;
+						}	
+						//cout << "    " << i << " eigenvalue: " << eigenvalue << "\n";	
 					}
 
-				}   
-        	}
-
-			// done looping over bins
-
-			std::cout << "zeroing negative eigenvalues\n";
-			
-			if (abs_value_eigenvals) {
-				
-				// copy un-collapsed Xs matrix, make sure it's symmetrical
-				TMatrixD myMatrix = (*map_matrix_flux_Xs_frac[idx]);
-				/*if (!myMatrix.IsSymmetric()) {
-					std::cout << "    Matrix is not symmetric!\n";
-					myMatrix = 0.5 * (myMatrix + myMatrix.T()); // Symmetrization
-				}*/
-				
-				// put it into a symmetric matrix type
-				TMatrixDSym symMatrix(myMatrix.GetNrows());
-				for (Int_t i = 0; i < symMatrix.GetNrows(); ++i) {
-					for (Int_t j = 0; j <= i; ++j) {
-						symMatrix(i, j) = myMatrix(i, j);
+					// making diagonal eigenvalues matrix
+					TMatrixD diagEigenvalues(eigenvalues.GetNrows(), eigenvalues.GetNrows());
+					diagEigenvalues.Zero();
+					for (Int_t i = 0; i < eigenvalues.GetNrows(); ++i) {
+						diagEigenvalues(i, i) = eigenvalues[i];
 					}
+
+					TMatrixD eigenvectors_original = eigenvectors;
+					TMatrixD eigenvectors_transpose = eigenvectors.T();
+
+					// getting the new full matrix
+					TMatrixD modifiedMatrix = eigenvectors_original * diagEigenvalues * eigenvectors_transpose;
+					(*map_matrix_flux_Xs_frac[idx]) = modifiedMatrix;
+
 				}
-
-				// get the eigenvalues and eigenvectors
-				TMatrixDSymEigen eig(symMatrix);
-				TVectorD eigenvalues = eig.GetEigenValues();
-				TMatrixD eigenvectors = eig.GetEigenVectors();
-				
-				// make negative zero
-				for (Int_t i = 0; i < eigenvalues.GetNrows(); ++i) {
-					Double_t eigenvalue = eigenvalues[i];
-					if (eigenvalue < 0) {
-						//cout << "    negative eigenvalue: " << eigenvalue << "\n";
-						eigenvalues[i] = 0.;
-					}	
-					//cout << "    " << i << " eigenvalue: " << eigenvalue << "\n";	
-				}
-
-				// making diagonal eigenvalues matrix
-				TMatrixD diagEigenvalues(eigenvalues.GetNrows(), eigenvalues.GetNrows());
-				diagEigenvalues.Zero();
-				for (Int_t i = 0; i < eigenvalues.GetNrows(); ++i) {
-					diagEigenvalues(i, i) = eigenvalues[i];
-				}
-
-				TMatrixD eigenvectors_original = eigenvectors;
-				TMatrixD eigenvectors_transpose = eigenvectors.T();
-
-				// getting the new full matrix
-				TMatrixD modifiedMatrix = eigenvectors_original * diagEigenvalues * eigenvectors_transpose;
-				(*map_matrix_flux_Xs_frac[idx]) = modifiedMatrix;
-
 			}
-        }
-    }
+		}
 
-    matrix_flux_Xs_frac += (*map_matrix_flux_Xs_frac[idx]);    
-    
-    if( idx<=16 ) {// flux
-      matrix_flux_frac += (*map_matrix_flux_Xs_frac[idx]);
-    }else if( idx==17 ){// interaction
-      matrix_Xs_frac += (*map_matrix_flux_Xs_frac[idx]);
-    }else if( idx==18 ) {//reweight
-      matrix_reweight_frac += (*map_matrix_flux_Xs_frac[idx]);
-    }else if( idx==19 ) {//reweight cor
-      matrix_reweight_cor_frac += (*map_matrix_flux_Xs_frac[idx]);
-    }
+		matrix_flux_Xs_frac += (*map_matrix_flux_Xs_frac[idx]);    
+		
+		if( idx<=16 ) {// flux
+			matrix_flux_frac += (*map_matrix_flux_Xs_frac[idx]);
+		}else if( idx==17 ){// interaction
+			matrix_Xs_frac += (*map_matrix_flux_Xs_frac[idx]);
+		}else if( idx==18 ) {//reweight
+			matrix_reweight_frac += (*map_matrix_flux_Xs_frac[idx]);
+		}else if( idx==19 ) {//reweight cor
+			matrix_reweight_cor_frac += (*map_matrix_flux_Xs_frac[idx]);
+		}
 
-  }
-  cout<<endl;   
+	}
+	cout<<endl;   
 
   ////////////////////////////////////////// detector
 
