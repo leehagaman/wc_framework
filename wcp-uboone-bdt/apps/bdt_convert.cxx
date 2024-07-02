@@ -2765,7 +2765,7 @@ int main( int argc, char** argv )
 
     if (flag_check_run_subrun){
       if (flag_use_global_file_type){
-	(*eval.file_type) = global_file_type;
+	      (*eval.file_type) = global_file_type;
       }
       auto it1 = map_type_run_subrun.find(*eval.file_type);
       

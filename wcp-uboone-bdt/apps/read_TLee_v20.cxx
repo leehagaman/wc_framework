@@ -646,6 +646,42 @@ int main(int argc, char** argv)
 
 
 
+  bool make_sig_bkg_constr_plots = true;
+
+  if (make_sig_bkg_constr_plots) {
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+    // five channels per reco channel: 0p sig, Np sig, all sig, bkg, sig+bkg
+    // four reco channels, five interesting channels per reco channel, two bins per channel
+    vector<int>vc_target_chs;
+    for (int i=0; i < 4*5*2; i+=2){
+      vc_target_chs.push_back(i);
+    }
+    vector<int>vc_support_chs;
+    for (int i=4*5*2; i < 4*5*2 + 16*4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 666000 ); // All interesting bins constrained by constraining channels
+  }
+
+  if (make_sig_bkg_constr_plots) {
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+    // five channels per reco channel: 0p sig, Np sig, all sig, bkg, sig+bkg
+    // four reco channels, five interesting channels per reco channel, two bins per channel
+    vector<int>vc_target_chs;
+    for (int i=30; i < 40; i+=2){
+      vc_target_chs.push_back(i);
+    }
+    vector<int>vc_support_chs;
+    vc_support_chs.push_back(28); // gLEE 1g1p sig+bkg
+    for (int i=4*5*2; i < 4*5*2 + 16*4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 666001 ); // Pandora 1g0p bins constrained by Pandora 1g1p observation and constraining channels
+  }
+
+
 
 
   // below was older constrained stuff, before 2024_05_07

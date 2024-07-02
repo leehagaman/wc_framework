@@ -232,7 +232,8 @@ int main( int argc, char** argv )
 	if (nonzero_meas != 0)  bayes.add_meas_component(nonzero_meas, nonzero_sigma2, nonzero_weight);
 	
 	bayes.do_convolution();
-	
+
+
 	double cov = bayes.get_covariance();
 	//	double cov1 = bayes.get_covariance_mc(); //cov = cov1;
 	if(isnan(cov) || isinf(cov)) {

@@ -102,6 +102,7 @@ void LEEana::Bayes::add_meas_component(double meas, double sigma2, double weight
 
 
 void LEEana::Bayes::do_convolution(){
+
   llimit = 0;
   if (mean != 0){
     hlimit = mean + 12*sqrt(acc_sigma2) + 1;
