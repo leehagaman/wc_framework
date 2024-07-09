@@ -3088,17 +3088,28 @@ void TLee::Plotting_systematics()
 	TH1D *h1_pred_totalsyst = new TH1D("h1_pred_totalsyst", "", rows, 0, rows);
 	TH1D *h1_meas = new TH1D("h1_meas", "", rows, 0, rows);
 
+	ofstream error_breakdown_file("./plot_outputs/error_breakdown.txt");
+	ofstream cov_corr_text_file("./plot_outputs/cov_corr_text.txt");
+	cout << "saving error breakdown to file ./plot_outputs/error_breakdown.txt" << "...";
+	cout << "saving correlation matrix to file ./plot_outputs/corr_text.txt" << "...";
+
 	for(int ibin=1; ibin<=rows; ibin++) {
 		for(int jbin=1; jbin<=rows; jbin++) {
+
 			double cov_ij = matrix_absolute_cov_newworld(ibin-1,jbin-1);      
 			double cov_i  = matrix_absolute_cov_newworld(ibin-1,ibin-1);
 			double cov_j  = matrix_absolute_cov_newworld(jbin-1,jbin-1);      
+			double cv_i = matrix_pred_newworld(0, ibin-1);
+			double cv_j = matrix_pred_newworld(0, jbin-1);
 
 			double val_correlation = cov_ij/sqrt(cov_i*cov_j);
+			double frac_cov_ij = cov_ij/(cv_i * cv_j);
 			if( cov_i==0 || cov_j==0 ) val_correlation = 0;
 
 			h2_covariance_total->SetBinContent(ibin, jbin, cov_ij);
 			h2_correlation_total->SetBinContent(ibin, jbin, val_correlation);
+
+			cov_corr_text_file << ibin << " " << jbin << " " << cv_i << " " << cv_j << " " << cov_i << " " << cov_j << " " << cov_ij << " " << frac_cov_ij << " " << val_correlation << "\n";
 
 			if( ibin==jbin ) {
 				double val_cv = matrix_pred_newworld(0, ibin-1);
@@ -3123,6 +3134,17 @@ void TLee::Plotting_systematics()
 					h1_additional_relerr->SetBinContent( ibin, sqrt( cov_additional )/val_cv );
 					h1_reweight_relerr->SetBinContent( ibin, sqrt( cov_reweight )/val_cv );
 					h1_reweight_cor_relerr->SetBinContent( ibin, sqrt( cov_reweight_cor )/val_cv );
+
+					error_breakdown_file << "bin " << ibin << " total err: " << sqrt( cov_total )/val_cv << "\n";
+					error_breakdown_file << "bin " << ibin << " flux err: " << sqrt( cov_flux )/val_cv << "\n";
+					error_breakdown_file << "bin " << ibin << " Xs err: " << sqrt( cov_Xs )/val_cv << "\n";
+					error_breakdown_file << "bin " << ibin << " detector err: " << sqrt( cov_detector )/val_cv << "\n";
+					error_breakdown_file << "bin " << ibin << " mc_stat err: " << sqrt( cov_mc_stat )/val_cv << "\n";
+					error_breakdown_file << "bin " << ibin << " add_dirt err: " << sqrt( cov_additional )/val_cv << "\n";
+					error_breakdown_file << "bin " << ibin << " RW_uncorr err: " << sqrt( cov_reweight )/val_cv << "\n";
+					error_breakdown_file << "bin " << ibin << " RW_corr err: " << sqrt( cov_reweight_cor )/val_cv << "\n";
+					error_breakdown_file << "bin " << ibin << " RW_both err: " << sqrt( cov_reweight + cov_reweight_cor )/val_cv << "\n";
+
 				}
 
 				if( cov_total!=0 ) {
@@ -3141,6 +3163,10 @@ void TLee::Plotting_systematics()
 			}// ibin==jbin      
 		}// jbin
 	}// ibin
+	cov_corr_text_file.close();
+	error_breakdown_file.close();
+	cout << "done\n";
+
 
 	///////////////////////
 
@@ -3293,6 +3319,7 @@ void TLee::Plotting_systematics()
 
 void TLee::Set_Collapse()
 {
+	std::cout << "collapsing, scaleF_Lee_Np = " << scaleF_Lee_Np << ", scaleF_Lee_0p = " << scaleF_Lee_0p << "\n";
 	//////////////////////////////////////// pred
 
 	TMatrixD matrix_transform_Lee = matrix_transform;
@@ -3427,6 +3454,8 @@ void TLee::Set_Collapse()
 	matrix_absolute_cov_newworld.Clear();
 	matrix_absolute_cov_newworld.ResizeTo(bins_newworld, bins_newworld);
 	matrix_absolute_cov_newworld = matrix_transform_Lee_T * matrix_absolute_cov_oldworld * matrix_transform_Lee;
+
+	// other matrices already scaled: search matrix_absolute_flux_cov_newworld = matrix_transform_Lee_T * matrix_input_cov_flux * matrix_transform_Lee;
 
 	//cout << "getting matrix_absolute_cov_newworld from matrix_transform_Lee_T * matrix_absolute_cov_oldworld * matrix_transform_Lee:\n"; 
 	//cout << "    shapes: (" << matrix_absolute_cov_oldworld.GetNrows() << "," << matrix_absolute_cov_oldworld.GetNcols() << "), (" << matrix_transform_Lee.GetNrows() << "," << matrix_transform_Lee.GetNcols() << ") = (" << matrix_absolute_cov_newworld.GetNrows() << "," << matrix_absolute_cov_newworld.GetNcols() << ")\n"; 
@@ -3700,6 +3729,7 @@ void TLee::Set_Collapse()
 	if( flag_individual_cov_newworld ) {
 		cout<<" ---> Producing the systematics for plotting (should appear only one time)"<<endl;
 		cout<<" ---> The LEE strength used for the producing is corresponding to the one in the Configure_LEE.h"<<endl<<endl;
+		cout << "LEE strength: " << scaleF_Lee_Np << ", " << scaleF_Lee_0p << "\n";
 
 		flag_individual_cov_newworld = false;
 
@@ -3726,12 +3756,14 @@ void TLee::Set_Collapse()
 			matrix_absolute_detector_sub_cov_newworld[idx] = matrix_transform_Lee_T * matrix_input_cov_detector_sub[idx] * matrix_transform_Lee;
 		}
 
+		std::cout << "first entry of flux before collapse: " << matrix_input_cov_flux(0,0) << "\n";
 		matrix_absolute_flux_cov_newworld = matrix_transform_Lee_T * matrix_input_cov_flux * matrix_transform_Lee;
 		matrix_absolute_Xs_cov_newworld = matrix_transform_Lee_T * matrix_input_cov_Xs * matrix_transform_Lee;
 		matrix_absolute_detector_cov_newworld = matrix_transform_Lee_T * matrix_input_cov_detector * matrix_transform_Lee;
 		matrix_absolute_additional_cov_newworld = matrix_transform_Lee_T * matrix_input_cov_additional * matrix_transform_Lee;
 		matrix_absolute_reweight_cov_newworld = matrix_transform_Lee_T * matrix_input_cov_reweight * matrix_transform_Lee;
 		matrix_absolute_reweight_cor_cov_newworld = matrix_transform_Lee_T * matrix_input_cov_reweight_cor * matrix_transform_Lee;
+		std::cout << "first entry of flux after collapse: " << matrix_absolute_flux_cov_newworld(0,0) << "\n";
 
 		for(int ibin=0; ibin<bins_newworld; ibin++) {
 			

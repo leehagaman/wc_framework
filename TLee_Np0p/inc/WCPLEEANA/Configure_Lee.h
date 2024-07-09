@@ -92,9 +92,9 @@ namespace config_Lee
   
   bool flag_syst_flux_Xs    = 1;
   bool flag_syst_detector   = 1;
-  bool flag_syst_additional = 0;
-  bool flag_syst_mc_stat    = 0;
-  bool flag_syst_mc_data_stat_cor = 0; // adds off-diagonal elements to the data and pred stat cor matrices
+  bool flag_syst_additional = 1;
+  bool flag_syst_mc_stat    = 1;
+  bool flag_syst_mc_data_stat_cor = 1; // adds off-diagonal elements to the data and pred stat cor matrices
 
   bool flag_syst_reweight        = 0;
   bool flag_syst_reweight_cor    = 0;
@@ -102,8 +102,8 @@ namespace config_Lee
   //double Lee_strength_for_outputfile_covariance_matrix = 1;
   double Lee_strength_for_outputfile_covariance_matrix = 0;
 
-  double Lee_Np_strength_for_outputfile_covariance_matrix = 0;
-  double Lee_0p_strength_for_outputfile_covariance_matrix = 0;
+  double Lee_Np_strength_for_outputfile_covariance_matrix = 1;
+  double Lee_0p_strength_for_outputfile_covariance_matrix = 1000;
   
   bool flag_plotting_systematics   = 1; // TEMPORARY
   

@@ -136,9 +136,11 @@ int main(int argc, char** argv)
 	Lee_test->scaleF_Lee_Np = config_Lee::Lee_Np_strength_for_outputfile_covariance_matrix;
 	Lee_test->scaleF_Lee_0p = config_Lee::Lee_0p_strength_for_outputfile_covariance_matrix;
 
-	Lee_test->scaleF_Lee = config_Lee::Lee_strength_for_GoF;
-	Lee_test->scaleF_Lee_Np = config_Lee::Lee_Np_strength_for_GoF;
-	Lee_test->scaleF_Lee_0p = config_Lee::Lee_0p_strength_for_GoF;
+	// weird that this was just overwritten, commented it out
+
+	//Lee_test->scaleF_Lee = config_Lee::Lee_strength_for_GoF;
+	//Lee_test->scaleF_Lee_Np = config_Lee::Lee_Np_strength_for_GoF;
+	//Lee_test->scaleF_Lee_0p = config_Lee::Lee_0p_strength_for_GoF;
 
 	Lee_test->Set_Collapse();
 
@@ -238,7 +240,7 @@ int main(int argc, char** argv)
 
 	//////////
 
-	if( config_Lee::flag_plotting_systematics ) Lee_test->Plotting_systematics();
+	//if( config_Lee::flag_plotting_systematics ) Lee_test->Plotting_systematics();
 
 	//////////////////////////////////////////////////////////////////////////////////////// Goodness of fit
 
@@ -913,10 +915,10 @@ int main(int argc, char** argv)
 		for (int i = 0; i <= num_Np_bins; i++){
 			cout << "done with row " << i << "\n";
 			for (int j = 0; j <= num_0p_bins; j++) {
-				scale_Np = 10*i;
-				scale_0p = 10*j;
-				//scale_Np = i;
-				//scale_0p = j;
+				//scale_Np = 10*i;
+				//scale_0p = 10*j;
+				scale_Np = i;
+				scale_0p = j;
 				Lee_test->scaleF_Lee_Np = scale_Np;
 				Lee_test->scaleF_Lee_0p = scale_0p;
 				Lee_test->Set_Collapse(); // prediction is ready
@@ -1232,8 +1234,50 @@ int main(int argc, char** argv)
 		cout << "done\n";
 	}
 
+	bool collapse_1_1000 = false;
+	if (collapse_1_1000) { // collapsing to get the error breakdown at an excess point
+		cout << "getting predictions at (1, 1000) point...\n";
 
-	bool various_chi2_checks = true;
+		Lee_test->scaleF_Lee_Np = 1000;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse(); // prediction is ready
+
+		Lee_test->Plotting_systematics();
+
+		cout << "done\n";
+	}
+
+
+	bool constrained_glee_15_5_excess = true;
+	if (constrained_glee_15_5_excess) {
+		cout << "(wc + constraining bins) getting predictions at (15, 10) point...\n";
+
+		//Lee_test->scaleF_Lee_Np = 1;
+		//Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse(); // prediction is ready
+
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+
+		double pars_2d[2] = {1, 1000};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		//cout << "all bins: chi2 = " << chi2_var << "\n";
+
+		vector<int>vc_target_chs;
+		//vc_target_chs.push_back(0);
+		//vc_target_chs.push_back(2);
+		vc_target_chs.push_back(4);
+		vc_target_chs.push_back(6);
+		vector<int>vc_support_chs;
+		for (int i=8; i < 8 + 16 * 4; i++){
+			vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 777001 );
+
+		cout << "done\n";
+	}
+
+
+	bool various_chi2_checks = false;
 
 	if (various_chi2_checks) {
 		int Np_scale_points[] = {0, 1};
@@ -1246,14 +1290,20 @@ int main(int argc, char** argv)
 		double data_chi2 = -1;
 		double data_chi2_min = -1;
 		double data_dchi2 = -1;
+		double data_min_Np_strength_val = -1;
+		double data_min_0p_strength_val = -1;
 
 		double asimov_chi2 = -1;
 		double asimov_chi2_min = -1;
 		double asimov_dchi2 = -1;
+		double asimov_min_Np_strength_val = -1;
+		double asimov_min_0p_strength_val = -1;
 
 		double scaled_asimov_chi2 = -1;
 		double scaled_asimov_chi2_min = -1;
 		double scaled_asimov_dchi2 = -1;
+		double scaled_asimov_min_Np_strength_val = -1;
+		double scaled_asimov_min_0p_strength_val = -1;
 
 		// gLEE only constrained
 		vector<int>vc_target_chs;
@@ -1278,8 +1328,10 @@ int main(int argc, char** argv)
 				pars_2d[1] = zero_p_scale_points[j];
 				asimov_chi2 = Lee_test->FCN_Np_0p( pars_2d );
 				Lee_test->Minimization_Lee_Np_0p_strength_FullCov(1, 1, "");
-				asimov_chi2_min = Lee_test->minimization_chi2;	
+				asimov_chi2_min = Lee_test->minimization_chi2;
 				asimov_dchi2 = asimov_chi2 - asimov_chi2_min;
+				asimov_min_Np_strength_val = Lee_test->minimization_Lee_Np_strength_val;
+				asimov_min_0p_strength_val = Lee_test->minimization_Lee_0p_strength_val;
 
 				Lee_test->scaleF_Lee_Np = 0;
 				Lee_test->scaleF_Lee_0p = 15;
@@ -1291,6 +1343,8 @@ int main(int argc, char** argv)
 				Lee_test->Minimization_Lee_Np_0p_strength_FullCov(0, 15, "");
 				scaled_asimov_chi2_min = Lee_test->minimization_chi2;
 				scaled_asimov_dchi2 = scaled_asimov_chi2 - scaled_asimov_chi2_min;
+				scaled_asimov_min_Np_strength_val = Lee_test->minimization_Lee_Np_strength_val;
+				scaled_asimov_min_0p_strength_val = Lee_test->minimization_Lee_0p_strength_val;
 
 				Lee_test->scaleF_Lee_Np = 1;
 				Lee_test->scaleF_Lee_0p = 1;
@@ -1302,19 +1356,24 @@ int main(int argc, char** argv)
 				Lee_test->Minimization_Lee_Np_0p_strength_FullCov(1, 1, "");
 				data_chi2_min = Lee_test->minimization_chi2;
 				data_dchi2 = data_chi2 - data_chi2_min;
+				data_min_Np_strength_val = Lee_test->minimization_Lee_Np_strength_val;
+				data_min_0p_strength_val = Lee_test->minimization_Lee_0p_strength_val;
 
 
 				cout << "\n                                     asimov: " << asimov_chi2 << "\n";
 				cout << "                                 asimov min: " << asimov_chi2_min << "\n";
 				cout << "                               asimov dchi2: " << asimov_dchi2 << "\n";
+				cout << "                  asimov min (Np, 0p) scale: (" << asimov_min_Np_strength_val << ", " << asimov_min_0p_strength_val << ")\n";
 
 				cout << "\n                             (0, 15) asimov: " << scaled_asimov_chi2 << "\n";
 				cout << "                         (0, 15) asimov min: " << scaled_asimov_chi2_min << "\n";
 				cout << "                       (0, 15) asimov dchi2: " << scaled_asimov_dchi2 << "\n";
+				cout << "          (0, 15) asimov min (Np, 0p) scale: (" << scaled_asimov_min_Np_strength_val << ", " << scaled_asimov_min_0p_strength_val << ")\n";
 
 				cout << "\n                                     data: " << data_chi2 << "\n";
 				cout << "                                 data min: " << data_chi2_min << "\n";
 				cout << "                               data dchi2: " << data_dchi2 << "\n";
+				cout << "                  data min (Np, 0p) scale: (" << data_min_Np_strength_val << ", " << data_min_0p_strength_val << ")\n";
 
 			}
 		}
