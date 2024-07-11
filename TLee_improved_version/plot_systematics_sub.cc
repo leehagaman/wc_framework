@@ -611,31 +611,35 @@ void plot_systematics_sub()
       double total_cov_j = 0;
 
       for(int idx=detector_bgn; idx<=detector_end; idx++) {
-	if( idx==5 ) continue;
-	
-	double sub_cov = (*matrix_detector_sub[idx])(ibin-1, jbin-1);	
-	double cov_i = (*matrix_detector_sub[idx])(ibin-1, ibin-1);
-	double cov_j = (*matrix_detector_sub[idx])(jbin-1, jbin-1);
+        if( idx==5 ) continue;
+        
+        double sub_cov = (*matrix_detector_sub[idx])(ibin-1, jbin-1);	
+        double cov_i = (*matrix_detector_sub[idx])(ibin-1, ibin-1);
+        double cov_j = (*matrix_detector_sub[idx])(jbin-1, jbin-1);
 
-	total_cov_ij += sub_cov;
-	total_cov_i += cov_i;
-	total_cov_j += cov_j;
-	
-	double rel_cov = 0;
-	double correlation = 0;
-	if(cv_i==0 || cv_j==0) {
-	  if( ibin==jbin ) correlation = 1;
-	}
-	else {
-	  rel_cov = sub_cov/cv_i/cv_j;
-	  correlation = sub_cov/sqrt(cov_i)/sqrt(cov_j);
-	}
-	
-	if( ibin==jbin ) correlation = 1;
+        total_cov_ij += sub_cov;
+        total_cov_i += cov_i;
+        total_cov_j += cov_j;
+        
+        double rel_cov = 0;
+        double correlation = 0;
+        if(cv_i==0 || cv_j==0) {
+          if( ibin==jbin ) correlation = 1;
+        }
+        else {
+          rel_cov = sub_cov/cv_i/cv_j;
+          correlation = sub_cov/sqrt(cov_i)/sqrt(cov_j);
+        }
+        
+        if( ibin==jbin ) correlation = 1;
 
-	h2_sub_detector_abs_cov[idx]->SetBinContent(ibin, jbin, sub_cov);
-	h2_sub_detector_rel_cov[idx]->SetBinContent(ibin, jbin, rel_cov);
-	h2_sub_detector_correlation[idx]->SetBinContent(ibin, jbin, correlation);
+        h2_sub_detector_abs_cov[idx]->SetBinContent(ibin, jbin, sub_cov);
+        h2_sub_detector_rel_cov[idx]->SetBinContent(ibin, jbin, rel_cov);
+        h2_sub_detector_correlation[idx]->SetBinContent(ibin, jbin, correlation);
+
+        if (ibin==jbin){
+          std::cout << "detector rel cov: " << idx << " " << ibin << " " << rel_cov << "\n";
+        }
 	
       }// idx
 
@@ -643,11 +647,11 @@ void plot_systematics_sub()
       double rel_cov = 0;
       double correlation = 0;      
       if(cv_i==0 || cv_j==0) {
-	if( ibin==jbin ) correlation = 1;
+	      if( ibin==jbin ) correlation = 1;
       }
       else {
-	rel_cov = total_cov_ij/cv_i/cv_j;
-	correlation = total_cov_ij/sqrt(total_cov_i)/sqrt(total_cov_j);
+        rel_cov = total_cov_ij/cv_i/cv_j;
+        correlation = total_cov_ij/sqrt(total_cov_i)/sqrt(total_cov_j);
       }
       
       if( ibin==jbin ) correlation = 1;
@@ -675,7 +679,8 @@ void plot_systematics_sub()
       double sub_cov = h2_sub_detector_abs_cov[idx]->GetBinContent(ibin, ibin);
       double val_frac = 0;
       if( total_cov!=0 ) val_frac = sub_cov/total_cov * 100;
-      h1_frac_sub_detector[idx]->SetBinContent(ibin, val_frac);      
+      h1_frac_sub_detector[idx]->SetBinContent(ibin, val_frac);
+      //std::cout << "detvar: " << idx << " " << ibin << " " << val_frac << "\n";
     }// ibin
     
     //h1_stack_detector->Add( h1_frac_sub_detector[idx] );
@@ -1038,6 +1043,18 @@ void plot_systematics_sub()
   lg_fraction_total->AddEntry(h1_rel_detector, TString::Format("#color[%d]{detector}", color_detector ), "l");
   lg_fraction_total->AddEntry(h1_rel_mc_stat,  TString::Format("#color[%d]{MC stat}", color_mc_stat ), "l");
   lg_fraction_total->AddEntry(h1_rel_dirt,     TString::Format("#color[%d]{dirt}", color_dirt ), "l");
+
+  // print bin contents of each of these
+  for(int ibin=1; ibin<=rows; ibin++) {
+    double val_total = h1_rel_total->GetBinContent(ibin);
+    double val_flux = h1_rel_flux->GetBinContent(ibin);
+    double val_Xs = h1_rel_Xs->GetBinContent(ibin);
+    double val_geant = h1_rel_geant->GetBinContent(ibin);
+    double val_detector = h1_rel_detector->GetBinContent(ibin);
+    double val_mc_stat = h1_rel_mc_stat->GetBinContent(ibin);
+    double val_dirt = h1_rel_dirt->GetBinContent(ibin);
+    cout << "bin, total, flux, Xs, geant, detector, mc_stat, dirt: " << ibin << " " << val_total << " " << val_flux << " " << val_Xs << " " << val_geant << " " << val_detector << " " << val_mc_stat << " " << val_dirt << "\n";
+  }
   
   canv_h1_rel_total->SaveAs("canv_h1_rel_total.png");
   //canv_h1_rel_total->SaveAs("canv_h1_rel_total.pdf");

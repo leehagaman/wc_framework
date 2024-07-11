@@ -232,6 +232,7 @@ public:
   void Set_toy_Asimov();
   void Set_toy_Variation(int itoy);
   void Set_measured_data();
+  void Set_first_eight_bins_asimov_rest_measured();
   void Set_fakedata(TMatrixD matrix_fakedata);// 1, bins
   
   // minimization

@@ -41,6 +41,10 @@ namespace config_Lee
   int array_LEE_Np_ch[4] = {2, 5, 8, 11};// element value "0" will not be set to the LEE_ch
   int array_LEE_0p_ch[4] = {3, 6, 9, 12};// element value "0" will not be set to the LEE_ch
 
+  // TEMPORARY, for separate sig bkg constraint
+  //int array_LEE_Np_ch[12] = {2, 4, 7, 10, 12, 15, 17, 19, 23, 25, 27, 31};
+  //int array_LEE_0p_ch[12] = {1, 3, 8, 9,  11, 16, 18, 20, 24, 26, 28, 32};
+
   /*
   Uncollapsed Bin #        Collapsed Bin #    cov_input.txt block index (channel #)    description
   1-2,                     1-2                1,                                       WC 1gNp background
@@ -72,6 +76,14 @@ namespace config_Lee
   // Warning: need to change Lee_test->array_no_stat_bins = new int[4];	in read_TLee_v20.cxx if we change the length here
   int array_no_stat_bins[4] = {1, 3, 5, 7}; // in reco space, these are the explicitly empty overflow bins where we want no uncertainties
   int num_no_stat_bins = 4;
+
+  // TEMPORARY, for separate sig bkg constraint
+  // Warning: need to change Lee_test->array_no_stat_bins = new int[4];	in read_TLee_v20.cxx if we change the length here
+  //int array_no_stat_bins[20] = {1, 3, 5, 7, 9, 
+  //                            11, 13, 15, 17, 19, 
+  //                            21, 23, 25, 27, 29, 
+  //                           31, 33, 35, 37, 39}; // in reco space, these are the explicitly empty overflow bins where we want no uncertainties
+  //int num_no_stat_bins = 20;
   
   //int array_LEE_Np_ch[1] = {0};
   //int array_LEE_0p_ch[1] = {0};
@@ -103,7 +115,7 @@ namespace config_Lee
   double Lee_strength_for_outputfile_covariance_matrix = 0;
 
   double Lee_Np_strength_for_outputfile_covariance_matrix = 1;
-  double Lee_0p_strength_for_outputfile_covariance_matrix = 1000;
+  double Lee_0p_strength_for_outputfile_covariance_matrix = 1;
   
   bool flag_plotting_systematics   = 1; // TEMPORARY
   

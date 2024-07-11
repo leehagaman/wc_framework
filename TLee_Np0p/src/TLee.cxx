@@ -413,9 +413,9 @@ double TLee::FCN_Np_0p(const double *par)
 	bool use_custom_joint_chi2 = true; // here, joint refers to sig+bkg channels
 	bool use_custom_constrained_chi2 = false;
 	
-	bool all_channels = false;
+	bool all_channels = true;
 	bool just_wc = false;
-	bool just_glee = true;
+	bool just_glee = false;
 
 	// none of these needed anymore, now keep track of explicitly zero bins in Configure_Lee.h, array_no_stat_bins
 	bool exclude_1g_overflow_bins = false; // currently works for joint chi2 but not constrained chi2
@@ -1059,6 +1059,19 @@ void TLee::Set_measured_data()
 		for(int i=0; i<bins_newworld; i++) meas_file << matrix_data_newworld(0,i) << ",";
 		meas_file << "\n";
 		meas_file.close();
+	}
+}
+
+void TLee::Set_first_eight_bins_asimov_rest_measured()
+{
+	//cout << "first eight bins asimov, rest measured\n";
+	map_fake_data.clear();
+	for(int ibin=0; ibin<bins_newworld; ibin++) {
+		if (ibin < 8) {
+			map_fake_data[ibin] = matrix_pred_newworld(0, ibin);
+		} else {
+			map_fake_data[ibin] = matrix_data_newworld(0, ibin);
+		}
 	}
 }
 
@@ -2728,7 +2741,7 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 	TH1D *h1_pred_Y_wiConstraint_rel_error = (TH1D*)h1_pred_Y_noConstraint_rel_error->Clone("h1_pred_Y_wiConstraint_rel_error");
 	h1_pred_Y_wiConstraint_rel_error->Reset();
 	for(int ibin=1; ibin<=num_Y; ibin++) {    
-		double val_cv = h1_pred_Y_noConstraint->GetBinContent(ibin);
+		double val_cv = h1_pred_Y_wiConstraint->GetBinContent(ibin); // edited here 2024_07_10, was h1_pred_Y_noConstraint!
 		double val_err = h1_pred_Y_wiConstraint->GetBinError(ibin);
 		double rel_err = val_err/val_cv;
 		if( val_cv==0 ) rel_err = 0;
@@ -2863,6 +2876,8 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 	h1_pred_Y_wiConstraint->Draw("same axis");
 
 	
+	// not sure why this is here, seems very FC PC specific, needing at least 8 bins?
+	/*
 	   cout<<endl;
 	   double data_FC = 0;
 	   double data_PC = 0;
@@ -2874,6 +2889,7 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 	   cout<<" ---> pred noConstraint "<<h1_pred_Y_noConstraint->Integral(1,8)<<"\t"<<h1_pred_Y_noConstraint->Integral(9,16)<<endl;
 	   cout<<" ---> pred wiConstraint "<<h1_pred_Y_wiConstraint->Integral(1,8)<<"\t"<<h1_pred_Y_wiConstraint->Integral(9,16)<<endl;
 	   cout<<endl;
+	   */
 	   
 
 	TLegend *lg_top_total = new TLegend(0.5, 0.45, 0.85, 0.85);
@@ -2994,7 +3010,7 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 	h1_spectra_relerr->GetXaxis()->CenterTitle(); h1_spectra_relerr->GetYaxis()->CenterTitle(); 
 	h1_spectra_relerr->GetYaxis()->SetTitleOffset(1.18);
 	h1_spectra_relerr->GetYaxis()->SetNdivisions(509);
-	h1_spectra_relerr->GetYaxis()->SetTickLength(0.03);    
+	h1_spectra_relerr->GetYaxis()->SetTickLength(0.03);
 	if( flag_axis_userAA || flag_axis_userAB ) {/// ttt
 		func_xy_title(h1_spectra_relerr, title_axis_user,"Rel.Err to Pred no constraint");
 
@@ -3319,7 +3335,7 @@ void TLee::Plotting_systematics()
 
 void TLee::Set_Collapse()
 {
-	std::cout << "collapsing, scaleF_Lee_Np = " << scaleF_Lee_Np << ", scaleF_Lee_0p = " << scaleF_Lee_0p << "\n";
+	//std::cout << "collapsing, scaleF_Lee_Np = " << scaleF_Lee_Np << ", scaleF_Lee_0p = " << scaleF_Lee_0p << "\n";
 	//////////////////////////////////////// pred
 
 	TMatrixD matrix_transform_Lee = matrix_transform;
@@ -3756,14 +3772,14 @@ void TLee::Set_Collapse()
 			matrix_absolute_detector_sub_cov_newworld[idx] = matrix_transform_Lee_T * matrix_input_cov_detector_sub[idx] * matrix_transform_Lee;
 		}
 
-		std::cout << "first entry of flux before collapse: " << matrix_input_cov_flux(0,0) << "\n";
+		//std::cout << "first entry of flux before collapse: " << matrix_input_cov_flux(0,0) << "\n";
 		matrix_absolute_flux_cov_newworld = matrix_transform_Lee_T * matrix_input_cov_flux * matrix_transform_Lee;
 		matrix_absolute_Xs_cov_newworld = matrix_transform_Lee_T * matrix_input_cov_Xs * matrix_transform_Lee;
 		matrix_absolute_detector_cov_newworld = matrix_transform_Lee_T * matrix_input_cov_detector * matrix_transform_Lee;
 		matrix_absolute_additional_cov_newworld = matrix_transform_Lee_T * matrix_input_cov_additional * matrix_transform_Lee;
 		matrix_absolute_reweight_cov_newworld = matrix_transform_Lee_T * matrix_input_cov_reweight * matrix_transform_Lee;
 		matrix_absolute_reweight_cor_cov_newworld = matrix_transform_Lee_T * matrix_input_cov_reweight_cor * matrix_transform_Lee;
-		std::cout << "first entry of flux after collapse: " << matrix_absolute_flux_cov_newworld(0,0) << "\n";
+		//std::cout << "first entry of flux after collapse: " << matrix_absolute_flux_cov_newworld(0,0) << "\n";
 
 		for(int ibin=0; ibin<bins_newworld; ibin++) {
 			
@@ -4063,6 +4079,123 @@ void TLee::Set_Spectra_MatrixCov()
 
 		//cout << "about to do BR uncertainty removal\n";
 
+		int disable_BR_uncertainty_sig_bkg_2d = 0; 
+		if (disable_BR_uncertainty_sig_bkg_2d) {
+
+			// zero is bkg, 1 is Np sig, 2 is 0p sig
+			// two bins, eight sub-channels: 0p sig, Np sig, (0p sig alongside Np sig), bkg, (0p sig alongside Np sig alongside bkg)
+			// then 16 bins, 3 subchannels, four channels
+			// then EXT is two bins, four channels, then 16 bins, four channels
+			int bkg_Np_0p_bin[2*8*4 + 16*3*4 + 2*4 + 16*4] = { 
+				2, 2, 1, 1, 2, 2, 1, 1, 0, 0, 0, 0, 1, 1, 2, 2, // wc 1gNp
+				2, 2, 1, 1, 2, 2, 1, 1, 0, 0, 0, 0, 1, 1, 2, 2, // wc 1g0p
+				2, 2, 1, 1, 2, 2, 1, 1, 0, 0, 0, 0, 1, 1, 2, 2, // gLEE 1g1p
+				2, 2, 1, 1, 2, 2, 1, 1, 0, 0, 0, 0, 1, 1, 2, 2, // gLEE 1g0p
+
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 Np bkg
+				1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // NC Pi0 Np Np sig
+				2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, // NC Pi0 Np 0p sig
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 0p bkg
+				1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // NC Pi0 0p Np sig
+				2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, // NC Pi0 0p 0p sig
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC Np bkg
+				1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // numuCC Np Np sig
+				2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, // numuCC Np 0p sig
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC 0p bkg
+				1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // numuCC 0p Np sig
+				2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, // numuCC 0p 0p sig
+				0, 0, // wc 1gNp EXT
+				0, 0, // wc 1g0p EXT
+				0, 0, // gLEE 1g1p EXT
+				0, 0, // gLEE 1g0p EXT
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 Np EXT
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 0p EXT
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC Np EXT
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC Np EXT
+			};
+
+		
+			if (idx == 17) {
+				bool abs_value_eigenvals = true;
+
+				std::cout << "subtracting one from uncollapsed sig-sig XS frac cov matrix bins\n";
+
+				for (int ibin=0; ibin<bins_oldworld; ibin++) {
+					for (int jbin=0; jbin<bins_oldworld; jbin++) {
+						// Here, we assume that true Np NC Delta events are fully correlated with 
+						// true Np NC Delta events in other selection channels. Even if this isn't fully accurate,
+						// the non-1g signal channels should basically not matter at all (the gLEE data release didn't
+						// include this information because of a similar approximation).
+
+						// So, the covariance matrix associated with the NC Delta BR uncertainty is fully correlated,
+						// so we just need the sigma associated with the row and column to calculate it and subtract it off.
+						// See 2022_06_01 slack between Mark and Lee for more information about this approximation.
+
+						float old_val = (*map_matrix_flux_Xs_frac[idx])(ibin, jbin);
+
+						// lhagaman changed 2023_07_25, stats can cause zeros in Xs file with nonzeros in CV file, don't subtract in that case
+
+						if (bkg_Np_0p_bin[ibin] > 0 && bkg_Np_0p_bin[jbin] > 0) { // this entry corresponds to signal and signal correlated bins
+							if (old_val > 0) { // this entry is nonzero, it includes BR uncertainty already
+								(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
+							}
+						}
+					}   
+				}
+
+				// done looping over bins
+
+				std::cout << "absolute valuing negative eigenvalues\n";
+				
+				if (abs_value_eigenvals) {
+					
+					// copy un-collapsed Xs matrix, make sure it's symmetrical
+					TMatrixD myMatrix = (*map_matrix_flux_Xs_frac[idx]);
+					if (!myMatrix.IsSymmetric()) {
+						std::cout << "    Matrix is not symmetric!\n";
+						myMatrix = 0.5 * (myMatrix + myMatrix.T()); // Symmetrization
+					}
+					
+					// put it into a symmetric matrix type
+					TMatrixDSym symMatrix(myMatrix.GetNrows());
+					for (Int_t i = 0; i < symMatrix.GetNrows(); ++i) {
+						for (Int_t j = 0; j <= i; ++j) {
+							symMatrix(i, j) = myMatrix(i, j);
+						}
+					}
+
+					// get the eigenvalues and eigenvectors
+					TMatrixDSymEigen eig(symMatrix);
+					TVectorD eigenvalues = eig.GetEigenValues();
+					TMatrixD eigenvectors = eig.GetEigenVectors();
+					
+					for (Int_t i = 0; i < eigenvalues.GetNrows(); ++i) {
+						Double_t eigenvalue = eigenvalues[i];
+						if (eigenvalue < 0) {
+							//cout << "    negative eigenvalue: " << eigenvalue << "\n";
+							eigenvalues[i] = -eigenvalue;
+						}	
+						//cout << "    " << i << " eigenvalue: " << eigenvalue << "\n";	
+					}
+
+					// making diagonal eigenvalues matrix
+					TMatrixD diagEigenvalues(eigenvalues.GetNrows(), eigenvalues.GetNrows());
+					diagEigenvalues.Zero();
+					for (Int_t i = 0; i < eigenvalues.GetNrows(); ++i) {
+						diagEigenvalues(i, i) = eigenvalues[i];
+					}
+
+					TMatrixD eigenvectors_original = eigenvectors;
+					TMatrixD eigenvectors_transpose = eigenvectors.T();
+
+					// getting the new full matrix
+					TMatrixD modifiedMatrix = eigenvectors_original * diagEigenvalues * eigenvectors_transpose;
+					(*map_matrix_flux_Xs_frac[idx]) = modifiedMatrix;
+
+				}
+			}
+		}
+
 		int disable_BR_uncertainty_2d = 1; 
 		if (disable_BR_uncertainty_2d) {
 
@@ -4175,6 +4308,8 @@ void TLee::Set_Spectra_MatrixCov()
 				}
 			}
 		}
+
+		//cout << "lhagaman after BR removal code\n";
 
 		matrix_flux_Xs_frac += (*map_matrix_flux_Xs_frac[idx]);    
 		

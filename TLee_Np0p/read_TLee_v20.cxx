@@ -240,7 +240,7 @@ int main(int argc, char** argv)
 
 	//////////
 
-	//if( config_Lee::flag_plotting_systematics ) Lee_test->Plotting_systematics();
+	if( config_Lee::flag_plotting_systematics ) Lee_test->Plotting_systematics();
 
 	//////////////////////////////////////////////////////////////////////////////////////// Goodness of fit
 
@@ -1247,8 +1247,147 @@ int main(int argc, char** argv)
 		cout << "done\n";
 	}
 
+	bool constrained_true_Np_0p_sig_channels = false; // to be used with the sig bkg cnstr setup
+	if (constrained_true_Np_0p_sig_channels) {
+		cout << "constraining true Np and 0p signal channels...\n";
 
-	bool constrained_glee_15_5_excess = true;
+		//Lee_test->scaleF_Lee_Np = 1;
+		//Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse(); // prediction is ready
+
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+
+		double pars_2d[2] = {1000, 1};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		//cout << "all bins: chi2 = " << chi2_var << "\n";
+
+		vector<int>vc_target_chs;
+		for (int i=0; i < 40; i+=2){
+			vc_target_chs.push_back(i);
+		}
+
+		vector<int>vc_support_chs;
+		for (int i=40; i < 40 + 16 * 4; i++){
+			vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 888002 );
+
+		cout << "done\n";
+	}
+
+	bool constrained_sig_channels_to_compare_above = false; // to be used with the normal setup
+	if (constrained_sig_channels_to_compare_above) {
+		cout << "constraining signal channels...\n";
+
+		//Lee_test->scaleF_Lee_Np = 1;
+		//Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse(); // prediction is ready
+
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+
+		double pars_2d[2] = {1, 1};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		//cout << "all bins: chi2 = " << chi2_var << "\n";
+
+		vector<int>vc_target_chs;
+		for (int i=0; i < 8; i+=2){
+			vc_target_chs.push_back(i);
+		}
+
+		vector<int>vc_support_chs;
+		for (int i=8; i < 8 + 16 * 4; i++){
+			vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 888003 );
+
+		cout << "done\n";
+	}
+
+	bool constraining_glee1g0p_with_glee1g1p = false; // to be used with the normal setup
+	if (constraining_glee1g0p_with_glee1g1p) {
+		cout << "constraining gLEE 1g0p with gLEE 1g1p...\n";
+
+		//Lee_test->scaleF_Lee_Np = 1;
+		//Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse(); // prediction is ready
+
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+
+		double pars_2d[2] = {1000, 1};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		//cout << "all bins: chi2 = " << chi2_var << "\n";
+
+		vector<int>vc_target_chs;
+		vc_target_chs.push_back(6); // gLEE 1g0p
+		vector<int>vc_support_chs;
+		vc_support_chs.push_back(4); // gLEE 1g1p
+		for (int i=8; i < 8 + 16 * 4; i++){
+			vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 888004 );
+
+		cout << "done\n";
+	}
+
+	bool constraining_glee_only = false;
+	if (constraining_glee_only) {
+		cout << "constraining gLEE only...\n";
+
+		//Lee_test->scaleF_Lee_Np = 1;
+		//Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse(); // prediction is ready
+
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+
+		double pars_2d[2] = {1000, 1};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		//cout << "all bins: chi2 = " << chi2_var << "\n";
+
+		vector<int>vc_target_chs;
+		//vc_target_chs.push_back(0);
+		//vc_target_chs.push_back(2);
+		vc_target_chs.push_back(4);
+		vc_target_chs.push_back(6);
+		vector<int>vc_support_chs;
+		for (int i=8; i < 8 + 16 * 4; i++){
+			vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 888005 );
+
+		cout << "done\n";
+	}
+
+	bool constraining_glee_with_nc_pi0 = false;
+	if (constraining_glee_with_nc_pi0) {
+		cout << "constraining gLEE only using NC Pi0...\n";
+
+		//Lee_test->scaleF_Lee_Np = 1;
+		//Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse(); // prediction is ready
+
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+
+		double pars_2d[2] = {1, 1000};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		//cout << "all bins: chi2 = " << chi2_var << "\n";
+
+		vector<int>vc_target_chs;
+		//vc_target_chs.push_back(0);
+		//vc_target_chs.push_back(2);
+		vc_target_chs.push_back(4);
+		vc_target_chs.push_back(6);
+		vector<int>vc_support_chs;
+		for (int i=8; i < 8 + 4*16; i++){
+			vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 888006 );
+
+		cout << "done\n";
+	}
+
+
+
+	bool constrained_glee_15_5_excess = false;
 	if (constrained_glee_15_5_excess) {
 		cout << "(wc + constraining bins) getting predictions at (15, 10) point...\n";
 
@@ -1522,9 +1661,9 @@ int main(int argc, char** argv)
 
 
 	// full grid
-    if( 0 ) {
+    if( 1 ) {
 
-		bool thirty_by_thirty = true;
+		bool thirty_by_thirty = false;
 
 		///////
 		
@@ -1543,7 +1682,10 @@ int main(int argc, char** argv)
 	
 		std::cout << "i file: " << ifile << "\n";
 
-		if (ifile==-1) {
+		if (ifile==-2){
+			std::cout << "creating mixed Asimov/data root file\n";
+			roostr = TString("sub_fit_mixed_Asimov_data.root");
+		} else if (ifile==-1) {
 			std::cout << "creating asimov root file\n";
 			roostr = TString("sub_fit_Asimov.root");
 		} else if (ifile==0) {
@@ -1575,7 +1717,7 @@ int main(int argc, char** argv)
 		// changed this from 100 to 10 to speed it up, same number of toys as for 1D initially
 
 
-		if (ifile==0 or ifile==-1) { // run it with data or Asimov
+		if (ifile==0 || ifile==-1 || ifile==-2) { // run it with data or Asimov
 			Ntoys = 1;
 		}
 		
@@ -1625,7 +1767,12 @@ int main(int argc, char** argv)
 				
 				/// generate pseudo experiments
 				
-				if (ifile==0) { // make the data file
+				if (ifile==-2) {
+					Lee_test->scaleF_Lee_Np = 1.;
+					Lee_test->scaleF_Lee_0p = 1.;
+					Lee_test->Set_Collapse();
+					Lee_test->Set_first_eight_bins_asimov_rest_measured();
+				} else if (ifile==0) { // make the data file
 					Lee_test->Set_measured_data();
 				} else if (ifile==-1) { // make the Asimov file at the Standard Model
 					Lee_test->scaleF_Lee_Np = 1.;
