@@ -1712,7 +1712,7 @@ int main(int argc, char** argv)
 
 		
 		///////
-		int Ntoys = 100; // number of toy-MC used to generate the distribution_dchi2
+		int Ntoys = 50; // number of toy-MC used to generate the distribution_dchi2
 		// changed this from 100 to 1 since it shouldn't matter for Asimov
 		// changed this from 100 to 10 to speed it up, same number of toys as for 1D initially
 
