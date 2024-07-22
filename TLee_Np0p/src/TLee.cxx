@@ -431,7 +431,7 @@ double TLee::FCN_Np_0p(const double *par)
 
 		TMatrixD matrix_cov_total_user = matrix_cov_syst_temp;
 
-		bool save_data_pred_cov_pred_to_file = true;
+		bool save_data_pred_cov_pred_to_file = false;
 		if (save_data_pred_cov_pred_to_file) {
 			cout << "saving data, pred, and cov to data_pred_cov_file...";
 			ofstream data_pred_cov_file; data_pred_cov_file.open("data_pred_cov_file.csv");
@@ -3489,6 +3489,50 @@ void TLee::Set_Collapse()
 	//cout << "lhagaman debug 2, matrix_absolute_cov_oldworld(6,6): " << matrix_absolute_cov_oldworld(6,6) << "\n";
 	//cout << "lhagaman debug 2, matrix_absolute_cov_newworld(6,6): " << matrix_absolute_cov_newworld(6,6) << "\n";
 
+
+	//std::cout << "checking matrix_absolute_cov_newworld for pos. semidef. (before mc or data stat uncertainties):\n";
+	// make symmetrical matrix:
+	TMatrixD myMatrix = matrix_absolute_cov_newworld;
+	if (!myMatrix.IsSymmetric()) {
+		myMatrix = 0.5 * (myMatrix + myMatrix.T()); // Symmetrization, should be only very small changes
+	}
+	TMatrixDSym symMatrix(myMatrix.GetNrows());
+	for (Int_t i = 0; i < symMatrix.GetNrows(); ++i) {
+		for (Int_t j = 0; j <= i; ++j) {
+			symMatrix(i, j) = myMatrix(i, j);
+		}
+	}
+	// get the eigenvalues and eigenvectors
+	TMatrixDSymEigen eig(symMatrix);
+	TVectorD eigenvalues = eig.GetEigenValues();
+	TMatrixD eigenvectors = eig.GetEigenVectors();
+	TVectorD abs_val_neg_eigenvalues = eigenvalues;
+	//TVectorD zeroed_neg_eigenvalues = eigenvalues;
+	for (Int_t i = 0; i < eigenvalues.GetNrows(); ++i) {
+		Double_t eigenvalue = eigenvalues[i];
+		if (eigenvalue < 0) {
+			//cout << "    negative eigenvalue: " << eigenvalue << "\n";
+			abs_val_neg_eigenvalues[i] = -eigenvalue;
+			//zeroed_neg_eigenvalues[i] = 0;
+		}
+	}
+
+	bool abs_val_neg_eigenvals = true;
+	//bool zero_neg_eigenvalues = false;
+	if (abs_val_neg_eigenvals) {
+		//std::cout << "absolute valuing those negative eigenvalues:\n";
+		TMatrixD diagEigenvalues(eigenvalues.GetNrows(), eigenvalues.GetNrows());
+		diagEigenvalues.Zero();
+		for (Int_t i = 0; i < eigenvalues.GetNrows(); ++i) {
+			diagEigenvalues(i, i) = abs_val_neg_eigenvalues[i];
+		}
+		TMatrixD eigenvectors_original = eigenvectors;
+		TMatrixD eigenvectors_transpose = eigenvectors.T();
+		TMatrixD modifiedMatrix = eigenvectors_original * diagEigenvalues * eigenvectors_transpose;
+		matrix_absolute_cov_newworld = modifiedMatrix;
+	}
+
+
 	if(flag_syst_mc_data_stat_cor){
 		//cout << "adding stat cov matrices with shapes (" << matrix_absolute_cov_newworld.GetNrows() << ", " << matrix_absolute_cov_newworld.GetNcols() << ") (" << matrix_absolute_data_stat_cov.GetNrows() << ", " << matrix_absolute_data_stat_cov.GetNcols() << ") (" << matrix_absolute_pred_stat_cov.GetNrows() << ", " << matrix_absolute_pred_stat_cov.GetNcols() << ")\n";
 		
@@ -4171,48 +4215,6 @@ void TLee::Set_Spectra_MatrixCov()
 
 	}
 
-	std::cout << "checking matrix_flux_Xs_frac for pos. semidef:\n";
-	// make symmetrical matrix:
-	TMatrixD myMatrix = matrix_flux_Xs_frac;
-	if (!myMatrix.IsSymmetric()) {
-		myMatrix = 0.5 * (myMatrix + myMatrix.T()); // Symmetrization, should be only very small changes
-	}
-	TMatrixDSym symMatrix(myMatrix.GetNrows());
-	for (Int_t i = 0; i < symMatrix.GetNrows(); ++i) {
-		for (Int_t j = 0; j <= i; ++j) {
-			symMatrix(i, j) = myMatrix(i, j);
-		}
-	}
-	// get the eigenvalues and eigenvectors
-	TMatrixDSymEigen eig(symMatrix);
-	TVectorD eigenvalues = eig.GetEigenValues();
-	TMatrixD eigenvectors = eig.GetEigenVectors();
-	TVectorD abs_val_neg_eigenvalues = eigenvalues;
-	//TVectorD zeroed_neg_eigenvalues = eigenvalues;
-	for (Int_t i = 0; i < eigenvalues.GetNrows(); ++i) {
-		Double_t eigenvalue = eigenvalues[i];
-		if (eigenvalue < 0) {
-			cout << "    negative eigenvalue: " << eigenvalue << "\n";
-			abs_val_neg_eigenvalues[i] = -eigenvalue;
-			//zeroed_neg_eigenvalues[i] = 0;
-		}
-	}
-
-	bool abs_val_neg_eigenvals = true;
-	//bool zero_neg_eigenvalues = false;
-	if (abs_val_neg_eigenvals) {
-		std::cout << "absolute valuing those negative eigenvalues:\n";
-		TMatrixD diagEigenvalues(eigenvalues.GetNrows(), eigenvalues.GetNrows());
-		diagEigenvalues.Zero();
-		for (Int_t i = 0; i < eigenvalues.GetNrows(); ++i) {
-			diagEigenvalues(i, i) = abs_val_neg_eigenvalues[i];
-		}
-		TMatrixD eigenvectors_original = eigenvectors;
-		TMatrixD eigenvectors_transpose = eigenvectors.T();
-		TMatrixD modifiedMatrix = eigenvectors_original * diagEigenvalues * eigenvectors_transpose;
-		matrix_flux_Xs_frac = modifiedMatrix;
-	}
-
 	cout<<endl;   
 
   ////////////////////////////////////////// detector
@@ -4255,42 +4257,6 @@ void TLee::Set_Spectra_MatrixCov()
     matrix_detector_sub_frac[idx] = (*map_matrix_detector_frac[idx]);
   }
   cout<<endl;
-
-  
-  if( 0 ) {
-    cout<<endl<<" testestest "<<endl<<endl;
-    
-    int user_rows = matrix_detector_frac.GetNrows();
-    const double user_nue_reduced = sqrt(3.);
-    
-    for(int idx=0; idx<user_rows; idx++) {
-      for(int jdx=0; jdx<user_rows; jdx++) {
-
-	////
-        int flag_idx = 0;
-	if( idx>=1-1 || idx<=26*2-1 ) flag_idx = 1;
-	if( idx>=26*4+11*3 ) flag_idx = 1;
-	  
-	////
-	int flag_jdx = 0;
-	if( jdx>=1-1 || jdx<=26*2-1 ) flag_jdx = 1;
-	if( jdx>=26*4+11*3 ) flag_jdx = 1;
-
-	////
-	double val = matrix_detector_frac(idx, jdx);
-
-	if( flag_idx+flag_jdx==1 ) {
-	  val = val/user_nue_reduced;
-	}
-	if( flag_idx+flag_jdx==2 ) {
-	  val = val/user_nue_reduced/user_nue_reduced;
-	}
-
-	matrix_detector_frac(idx, jdx) = val;
-	
-      }// for(int jdx=0; jdx<user_rows; jdx++)
-    }//for(int idx=0; idx<user_rows; idx++)     
-  }
   
     
   ////////////////////////////////////////// additional
@@ -4360,18 +4326,6 @@ void TLee::Set_Spectra_MatrixCov()
   matrix_input_cov_additional = matrix_additional_abs;
   
   ////////////////////////////////////////// MC statistics
-
-  if( 0 ) {
-    TFile *mcfile = new TFile(mc_directory+"file_collapsed_covariance_matrix.root", "read");
-    TMatrixD *mc_matrix = (TMatrixD*)mcfile->Get("matrix_absolute_mc_stat_cov_newworld");
-    ofstream ListWrite("0.log", ios::out|ios::trunc);
-    ListWrite<<"0 0"<<endl;
-    for(int idx=0; idx< mc_matrix->GetNcols(); idx++) {
-      double cov = (*mc_matrix)(idx,idx);
-      ListWrite<<"0 0 0 "<<cov<<" 0"<<endl;
-    }
-    ListWrite.close();
-  }
   
   int mc_file_begin = syst_cov_mc_stat_begin;
   int mc_file_end = syst_cov_mc_stat_end;

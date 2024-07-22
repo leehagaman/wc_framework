@@ -661,19 +661,19 @@ int main(int argc, char** argv)
 
 	}
 
-	bool constraints_at_certain_bins = true;
+	bool constraints_at_certain_bins = false;
 
-	if (constraints_at_certain_bins ) {
+	if (constraints_at_certain_bins) {
 
-		cout << "getting constrained predictions at (1, 1) point...\n";
+		cout << "getting constrained predictions at (1, 15) point...\n";
 
-		//Lee_test->scaleF_Lee_Np = 1;
-		//Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
 		Lee_test->Set_Collapse(); // prediction is ready
 
 		Lee_test->Set_measured_data(); // measurement is ready, real data
 
-		double pars_2d[2] = {1, 1};
+		double pars_2d[2] = {1, 15};
 		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
 		//cout << "all bins: chi2 = " << chi2_var << "\n";
 
@@ -697,8 +697,8 @@ int main(int argc, char** argv)
 
 		cout << "getting constrained predictions at (15, 15) point...\n";
 
-		//Lee_test->scaleF_Lee_Np = 1;
-		//Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
 		Lee_test->Set_Collapse(); // prediction is ready
 
 		Lee_test->Set_measured_data(); // measurement is ready, real data
@@ -1856,7 +1856,7 @@ int main(int argc, char** argv)
 
 
 	// full grid
-    if( 0 ) {
+    if( 1 ) {
 
 		bool thirty_by_thirty = false;
 
