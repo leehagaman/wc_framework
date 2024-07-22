@@ -140,23 +140,23 @@ int main(int argc, char** argv)
     double M_kl = 0;
     for(int i=0; i<nbins; i++) {
       for(int j=0; j<nbins; j++) {
-	M_kl += matrix_syst(i,j);
+	      M_kl += matrix_syst(i,j);
       }
     }
 
     ///
     for(int i=0; i<nbins; i++) {
       for(int j=0; j<nbins; j++) {      
-	double N_i = matrix_pred(0, i);
-	double N_j = matrix_pred(0, j);
+        double N_i = matrix_pred(0, i);
+        double N_j = matrix_pred(0, j);
 
-	double M_ij = matrix_syst(i,j);      
-	double M_ik = 0; for(int k=0; k<nbins; k++) M_ik += matrix_syst(i,k);
-	double M_kj = 0; for(int k=0; k<nbins; k++) M_kj += matrix_syst(k,j);
+        double M_ij = matrix_syst(i,j);      
+        double M_ik = 0; for(int k=0; k<nbins; k++) M_ik += matrix_syst(i,k);
+        double M_kj = 0; for(int k=0; k<nbins; k++) M_kj += matrix_syst(k,j);
 
-	matrix_shape(i,j) = M_ij - N_j*M_ik/N_T - N_i*M_kj/N_T + N_i*N_j*M_kl/N_T/N_T;
-	matrix_mixed(i,j) = N_j*M_ik/N_T + N_i*M_kj/N_T - 2*N_i*N_j*M_kl/N_T/N_T;	
-	matrix_norm(i,j) = N_i*N_j*M_kl/N_T/N_T;
+        matrix_shape(i,j) = M_ij - N_j*M_ik/N_T - N_i*M_kj/N_T + N_i*N_j*M_kl/N_T/N_T;
+        matrix_mixed(i,j) = N_j*M_ik/N_T + N_i*M_kj/N_T - 2*N_i*N_j*M_kl/N_T/N_T;	
+        matrix_norm(i,j) = N_i*N_j*M_kl/N_T/N_T;
       }
     }
 
@@ -181,23 +181,23 @@ int main(int argc, char** argv)
     double M_kl = 0;
     for(int i=0; i<nbins; i++) {
       for(int j=0; j<nbins; j++) {
-	M_kl += matrix_syst(i,j);
+	      M_kl += matrix_syst(i,j);
       }
     }
 
     ///
     for(int i=0; i<nbins; i++) {
       for(int j=0; j<nbins; j++) {      
-	double N_i = matrix_pred(0, i);
-	double N_j = matrix_pred(0, j);
+        double N_i = matrix_pred(0, i);
+        double N_j = matrix_pred(0, j);
 
-	double M_ij = matrix_syst(i,j);      
-	double M_ik = 0; for(int k=0; k<nbins; k++) M_ik += matrix_syst(i,k);
-	double M_kj = 0; for(int k=0; k<nbins; k++) M_kj += matrix_syst(k,j);
+        double M_ij = matrix_syst(i,j);      
+        double M_ik = 0; for(int k=0; k<nbins; k++) M_ik += matrix_syst(i,k);
+        double M_kj = 0; for(int k=0; k<nbins; k++) M_kj += matrix_syst(k,j);
 
-	matrix_shape(i,j) = M_ij - N_j*M_ik/N_T - N_i*M_kj/N_T + N_i*N_j*M_kl/N_T/N_T;
-	matrix_mixed(i,j) = N_j*M_ik/N_T + N_i*M_kj/N_T - 2*N_i*N_j*M_kl/N_T/N_T;	
-	matrix_norm(i,j) = N_i*N_j*M_kl/N_T/N_T;
+        matrix_shape(i,j) = M_ij - N_j*M_ik/N_T - N_i*M_kj/N_T + N_i*N_j*M_kl/N_T/N_T;
+        matrix_mixed(i,j) = N_j*M_ik/N_T + N_i*M_kj/N_T - 2*N_i*N_j*M_kl/N_T/N_T;	
+        matrix_norm(i,j) = N_i*N_j*M_kl/N_T/N_T;
       }
     }
 
@@ -275,13 +275,13 @@ int main(int argc, char** argv)
       int size_map = it->second.size();
       int size_before = 0;
       for(int idx=1; idx<val_ch; idx++) {
-	int size_current = Lee_test->map_data_spectrum_ch_bin[idx].size();
-	size_before += size_current;
+        int size_current = Lee_test->map_data_spectrum_ch_bin[idx].size();
+        size_before += size_current;
       }
       
       vector<int>vc_target_chs;
       for(int ibin=1; ibin<size_map; ibin++) {
-	vc_target_chs.push_back( size_before + ibin -1 );
+	      vc_target_chs.push_back( size_before + ibin -1 );
       }
       
       vector<int>vc_support_chs;
@@ -608,9 +608,9 @@ int main(int argc, char** argv)
   }
 
   // WC 1gNp and 1g0p and gLEE 1g1p and 1g0p
-  if (make_one_bin_plots){
+  if (1 || make_one_bin_plots){
 
-    Lee_test->scaleF_Lee = 1;
+    Lee_test->scaleF_Lee = 15;
     Lee_test->Set_Collapse();
 
     vector<int>vc_target_chs;
@@ -619,7 +619,7 @@ int main(int argc, char** argv)
     vc_target_chs.push_back(4);
     vc_target_chs.push_back(6);
     vector<int>vc_support_chs;
-    for (int i=10; i < 10 + 16 * 4; i++){
+    for (int i=8; i < 8 + 16 * 4; i++){
       vc_support_chs.push_back(i);
     }
     Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333008 );
@@ -646,7 +646,7 @@ int main(int argc, char** argv)
 
 
 
-  bool make_sig_bkg_constr_plots = true;
+  bool make_sig_bkg_constr_plots = false;
 
   if (make_sig_bkg_constr_plots) {
     Lee_test->scaleF_Lee = 1;

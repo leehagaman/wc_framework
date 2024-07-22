@@ -7,6 +7,7 @@ mkdir two_d_rootfiles/new_folder_RENAME/joint
 
 echo doing wc_only...
 
+rm fc_files/*.root
 cp fc_files/wc_only/* fc_files
 root -l -q cal_CL.cc
 mv file_map_CL.root two_d_rootfiles/new_folder_RENAME/wc_only
@@ -23,6 +24,7 @@ mv file_map_CL_mixed_Asimov_data_Wilks.root two_d_rootfiles/new_folder_RENAME/wc
 
 echo doing glee_only...
 
+rm fc_files/*.root
 cp fc_files/glee_only/* fc_files
 root -l -q cal_CL.cc 
 mv file_map_CL.root two_d_rootfiles/new_folder_RENAME/glee_only
@@ -39,6 +41,7 @@ mv file_map_CL_mixed_Asimov_data_Wilks.root two_d_rootfiles/new_folder_RENAME/gl
 
 echo doing joint...
 
+rm fc_files/*.root
 cp fc_files/joint/* fc_files
 root -l -q cal_CL.cc 
 mv file_map_CL.root two_d_rootfiles/new_folder_RENAME/joint

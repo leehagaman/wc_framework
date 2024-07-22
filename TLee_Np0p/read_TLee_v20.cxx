@@ -661,9 +661,9 @@ int main(int argc, char** argv)
 
 	}
 
-	bool constraints_at_certain_bins = false;
+	bool constraints_at_certain_bins = true;
 
-	if ( constraints_at_certain_bins ) {
+	if (constraints_at_certain_bins ) {
 
 		cout << "getting constrained predictions at (1, 1) point...\n";
 
@@ -693,9 +693,9 @@ int main(int argc, char** argv)
 		cout << "done\n";
 	}
 
-	if ( constraints_at_certain_bins ) {
+	if (constraints_at_certain_bins ) {
 
-		cout << "getting constrained predictions at (0, 0) point...\n";
+		cout << "getting constrained predictions at (15, 15) point...\n";
 
 		//Lee_test->scaleF_Lee_Np = 1;
 		//Lee_test->scaleF_Lee_0p = 1;
@@ -703,7 +703,7 @@ int main(int argc, char** argv)
 
 		Lee_test->Set_measured_data(); // measurement is ready, real data
 
-		double pars_2d[2] = {0, 0};
+		double pars_2d[2] = {15, 15};
 		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
 		//cout << "all bins: chi2 = " << chi2_var << "\n";
 
@@ -722,6 +722,8 @@ int main(int argc, char** argv)
 
 		cout << "done\n";
 	}
+
+	/*
 
 	if ( constraints_at_certain_bins ) {
 
@@ -782,6 +784,7 @@ int main(int argc, char** argv)
 
 		cout << "done\n";
 	}
+	*/
 
 
 	bool calculate_chi2_15_5_data = false;
@@ -1419,8 +1422,8 @@ int main(int argc, char** argv)
 	bool various_chi2_checks = false;
 
 	if (various_chi2_checks) {
-		int Np_scale_points[] = {0, 1};
-		int zero_p_scale_points[] = {0, 15, 100, 1000};
+		int Np_scale_points[] = {0, 7, 15};
+		int zero_p_scale_points[] = {0, 7, 15};
 		int num_Np_scale_points = sizeof(Np_scale_points) / sizeof(Np_scale_points[0]);
 		int num_zero_p_scale_points = sizeof(zero_p_scale_points) / sizeof(zero_p_scale_points[0]);
 
@@ -1657,11 +1660,203 @@ int main(int argc, char** argv)
 		}// for(int bin_Np=1; bin_Np<=bins_Np; bin_Np++)
       
   	}
+
+
+
+
+	// sparse grid for debugging
+    if( 0 ) {
+
+		///////
+		
+		int grid_Np = 0;
+		int grid_0p = 0;
+		double true_Np = 0;
+		double true_0p = 0;
+		vector<int>vec_min_status;
+		vector<double>vec_chi2_var;
+		vector<double>vec_min_chi2;
+		vector<double>vec_dchi2;
+		vector<double>vec_min_fNp_val;
+		vector<double>vec_min_fNp_err;
+		vector<double>vec_min_f0p_val;
+		vector<double>vec_min_f0p_err;    
+	
+		std::cout << "i file: " << ifile << "\n";
+
+		if (ifile==-2){
+			std::cout << "creating mixed Asimov/data root file\n";
+			roostr = TString("sub_fit_mixed_Asimov_data.root");
+		} else if (ifile==-1) {
+			std::cout << "creating asimov root file\n";
+			roostr = TString("sub_fit_Asimov.root");
+		} else if (ifile==0) {
+			roostr = TString("sub_fit_data.root");
+		} else {
+			roostr = TString::Format("sub_fit_%06d.root", ifile);
+		}
+		
+		TFile *subroofile = new TFile(roostr, "recreate");
+		TTree *tree = new TTree("tree", "tree");
+
+		tree->Branch( "grid_Np",          &grid_Np,          "grid_Np/I" );
+		tree->Branch( "grid_0p",          &grid_0p,          "grid_0p/I" );
+		tree->Branch( "true_Np",          &true_Np,          "true_Np/D" );
+		tree->Branch( "true_0p",          &true_0p,          "true_0p/D" );    
+		tree->Branch( "vec_min_status",   &vec_min_status );    
+		tree->Branch( "vec_chi2_var",     &vec_chi2_var );
+		tree->Branch( "vec_min_chi2",     &vec_min_chi2 );
+		tree->Branch( "vec_dchi2",        &vec_dchi2 );
+		tree->Branch( "vec_min_fNp_val",  &vec_min_fNp_val );
+		tree->Branch( "vec_min_fNp_err",  &vec_min_fNp_err );
+		tree->Branch( "vec_min_f0p_val",  &vec_min_f0p_val );
+		tree->Branch( "vec_min_f0p_err",  &vec_min_f0p_err );
+
+		
+		///////
+		int Ntoys = 100; // number of toy-MC used to generate the distribution_dchi2
+
+		if (ifile==0 || ifile==-1 || ifile==-2) { // run it with data or Asimov
+			Ntoys = 1;
+		}
+		
+		/////// 2d space of (Np, 0p)
+		int bins_Np = 3;
+		int bins_0p = 3;
+
+		double pars_2d[2] = {0};
+
+		std::cout << "opening spectra text file at " << "spectra_" + std::to_string(ifile) + ".txt" << "\n";
+		ofstream spectra_text_file;
+		spectra_text_file.open("spectra_" + std::to_string(ifile) + ".txt");
+
+		/////// scan the entrie space defined
+		for(int bin_Np=1; bin_Np<=bins_Np; bin_Np++) {
+			for(int bin_0p=1; bin_0p<=bins_0p; bin_0p++) {
+
+				cout<<TString::Format(" processing Np/0p: %3d %3d", bin_Np, bin_0p)<<endl;
+
+				double grid_Np_val = -1;
+				double grid_0p_val = -1;
+
+				if (bin_Np == 1) grid_Np_val = 1;
+				if (bin_Np == 2) grid_Np_val = 7;
+				if (bin_Np == 3) grid_Np_val = 15;
+				if (bin_0p == 1) grid_0p_val = 1;
+				if (bin_0p == 2) grid_0p_val = 7;
+				if (bin_0p == 3) grid_0p_val = 15;
+
+				/// 
+				grid_Np = bin_Np;
+				grid_0p = bin_0p;
+				true_Np = grid_Np_val;
+				true_0p = grid_0p_val;
+				vec_min_status.clear();
+				vec_chi2_var.clear();
+				vec_min_chi2.clear();
+				vec_dchi2.clear();
+				vec_min_fNp_val.clear();
+				vec_min_fNp_err.clear();
+				vec_min_f0p_val.clear();
+				vec_min_f0p_err.clear();
+				
+				pars_2d[0] = grid_Np_val;
+				pars_2d[1] = grid_0p_val;
+				
+				/// generate pseudo experiments
+				
+				if (ifile==-2) {
+					Lee_test->scaleF_Lee_Np = 1.;
+					Lee_test->scaleF_Lee_0p = 1.;
+					Lee_test->Set_Collapse();
+					Lee_test->Set_first_eight_bins_asimov_rest_measured();
+				} else if (ifile==0) { // make the data file
+					Lee_test->Set_measured_data();
+				} else if (ifile==-1) { // make the Asimov file at the Standard Model
+					Lee_test->scaleF_Lee_Np = 1.;
+					Lee_test->scaleF_Lee_0p = 1.;
+					Lee_test->Set_Collapse();// apply the values
+					Lee_test->Set_toy_Asimov();
+				} else { // make the variations file
+					Lee_test->scaleF_Lee_Np = grid_Np_val;
+					Lee_test->scaleF_Lee_0p = grid_0p_val;
+					Lee_test->Set_Collapse();// apply the values
+					Lee_test->Set_Variations( Ntoys );
+				}
+			
+				for(int itoy=1; itoy<=Ntoys; itoy++) {// scan each pseudo experiment
+				
+					spectra_text_file << "new pseudo-experiment" << grid_Np_val << " " << grid_0p_val << "\n";
+				
+					if (ifile > 0) { // only for variation files	
+						Lee_test->Set_toy_Variation(itoy);
+					}
+
+					for (int ibin=0; ibin<72; ibin++) {
+						spectra_text_file << Lee_test->matrix_pred_newworld(0, ibin) << " ";
+					}
+					spectra_text_file << "\n";
+
+					double chi2_var = Lee_test->FCN_Np_0p( pars_2d );// calcualte the chi2 value at the point
+				
+					//cout << "    pars2d: " << pars_2d[0] << ", " << pars_2d[1] << "\n";
+
+					/////// do minimization: initial value is important. May find local minimum if the values are not suitable
+					
+					double initial_Np = grid_Np_val;
+					double initial_0p = grid_0p_val;
+					
+					/// a simple way: the true values as the initial value
+					//if( 1 ) {
+					//  initial_Np = grid_Np_val;
+					//  initial_0p = grid_0p_val;
+					//}
+
+					/// a more exact way: scan the space to find suitable initial values	  
+					
+					///////
+
+					Lee_test->Minimization_Lee_Np_0p_strength_FullCov(initial_Np, initial_0p, "");
+
+					double chi2_min = Lee_test->minimization_chi2;
+					
+					double dchi2 = chi2_var - chi2_min;
+					
+					if (dchi2 < 0.) dchi2 = 0.; // protects against small negative values, mostly relevant for Asimov at the exact grid point
+
+					spectra_text_file << "chi2_var, chi2_min, dchi2: " << chi2_var << ", " << chi2_min << ", " << dchi2 << "\n";
+
+					/////// 
+					vec_min_status.push_back( Lee_test->minimization_status );
+					vec_chi2_var.push_back( chi2_var );
+					vec_min_chi2.push_back( chi2_min );
+					vec_dchi2.push_back( dchi2 );
+					vec_min_fNp_val.push_back( Lee_test->minimization_Lee_Np_strength_val );
+					vec_min_fNp_err.push_back( Lee_test->minimization_Lee_Np_strength_err);
+					vec_min_f0p_val.push_back( Lee_test->minimization_Lee_0p_strength_val );
+					vec_min_f0p_err.push_back( Lee_test->minimization_Lee_0p_strength_err);
+			
+
+				}// for(int itoy=1; itoy<=Ntoys; itoy++)
+
+				////// save the information into root-file for each space point
+		
+				tree->Fill();
+		
+			}// for(int bin_0p=1; bin_0p<=bins_0p; bin_0p++)
+		}// for(int bin_Np=1; bin_Np<=bins_Np; bin_Np++)
+
+		spectra_text_file.close();
+
+		tree->Write();
+		subroofile->Close();
+      
+  	}
 	
 
 
 	// full grid
-    if( 1 ) {
+    if( 0 ) {
 
 		bool thirty_by_thirty = false;
 
@@ -1738,6 +1933,7 @@ int main(int argc, char** argv)
 
 		double pars_2d[2] = {0};
 
+		
 		/////// scan the entrie space defined
 		for(int bin_Np=1; bin_Np<=bins_Np; bin_Np++) {
 			for(int bin_0p=1; bin_0p<=bins_0p; bin_0p++) {
@@ -1787,7 +1983,7 @@ int main(int argc, char** argv)
 				}
 			
 				for(int itoy=1; itoy<=Ntoys; itoy++) {// scan each pseudo experiment
-				
+
 					if (ifile > 0) { // only for variation files	
 						Lee_test->Set_toy_Variation(itoy);
 					}

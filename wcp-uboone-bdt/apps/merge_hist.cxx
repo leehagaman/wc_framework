@@ -206,48 +206,48 @@ int main( int argc, char** argv )
       //if (obsch !=1) continue;
       
       for (int i=0;i!=h1->GetNbinsX()+1;i++){
-	Bayes bayes;
-	//	if (i!=0) continue;
-	//double temp = 0, temp1=0;
-	//std::cout << bayes_inputs.size() << std::endl;
+        Bayes bayes;
+        //	if (i!=0) continue;
+        //double temp = 0, temp1=0;
+        //std::cout << bayes_inputs.size() << std::endl;
 
-	double zero_weight = 0, zero_count = 0;
-	double nonzero_meas = 0, nonzero_sigma2 = 0, nonzero_weight = 0;
-	for (auto it1 = bayes_inputs.begin(); it1!=bayes_inputs.end(); it1++){
-	  // approximation for zeros ...
-	  if (std::get<0>((*it1).at(i)) == 0){
-	    zero_weight += pow(std::get<2>((*it1).at(i)),2);
-	    zero_count += std::get<2>((*it1).at(i));
-	  }else{
-	    nonzero_meas += std::get<0>((*it1).at(i));
-	    nonzero_sigma2 += std::get<1>((*it1).at(i));
-	    nonzero_weight += std::get<2>((*it1).at(i));
-	  }
-	  // bayes.add_meas_component(std::get<0>((*it1).at(i)), std::get<1>((*it1).at(i)), std::get<2>((*it1).at(i)));
-	  // temp += std::get<0>((*it1).at(i));
-	  // temp1 += std::get<1>((*it1).at(i));
-	  // std::cout << i << " " << std::get<0>((*it1).at(i)) << " " << std::get<1>((*it1).at(i)) << " " << std::get<2>((*it1).at(i)) << " " << std::endl;
-	}
-	if (zero_count != 0)	bayes.add_meas_component(0,0,zero_weight/zero_count);
-	if (nonzero_meas != 0)  bayes.add_meas_component(nonzero_meas, nonzero_sigma2, nonzero_weight);
-	
-	bayes.do_convolution();
-
-
-	double cov = bayes.get_covariance();
-	//	double cov1 = bayes.get_covariance_mc(); //cov = cov1;
-	if(isnan(cov) || isinf(cov)) {
-            cov = bayes.get_covariance_mc();
-            //cov = h1->SetBinError(i+1, h1->GetBinError(i));
+        double zero_weight = 0, zero_count = 0;
+        double nonzero_meas = 0, nonzero_sigma2 = 0, nonzero_weight = 0;
+        for (auto it1 = bayes_inputs.begin(); it1!=bayes_inputs.end(); it1++){
+          // approximation for zeros ...
+          if (std::get<0>((*it1).at(i)) == 0){
+            zero_weight += pow(std::get<2>((*it1).at(i)),2);
+            zero_count += std::get<2>((*it1).at(i));
+          }else{
+            nonzero_meas += std::get<0>((*it1).at(i));
+            nonzero_sigma2 += std::get<1>((*it1).at(i));
+            nonzero_weight += std::get<2>((*it1).at(i));
+          }
+          // bayes.add_meas_component(std::get<0>((*it1).at(i)), std::get<1>((*it1).at(i)), std::get<2>((*it1).at(i)));
+          // temp += std::get<0>((*it1).at(i));
+          // temp1 += std::get<1>((*it1).at(i));
+          // std::cout << i << " " << std::get<0>((*it1).at(i)) << " " << std::get<1>((*it1).at(i)) << " " << std::get<2>((*it1).at(i)) << " " << std::endl;
         }
-	//	std::cout << obsch << " " << i << " "	  << h1->GetBinContent(i+1) << " " << cov  << " "  << h2->GetBinContent(i+1) << " " << cov1 << std::endl;
+        if (zero_count != 0)	bayes.add_meas_component(0,0,zero_weight/zero_count);
+        if (nonzero_meas != 0)  bayes.add_meas_component(nonzero_meas, nonzero_sigma2, nonzero_weight);
+        
+        bayes.do_convolution();
 
-	std::cout << obsch << " " << i << " "	  << h1->GetBinContent(i+1) << " " << cov  << " "  << h2->GetBinContent(i+1)  << std::endl;
 
-	
-	// std::cout << temp << " " << temp1 << " " << h1->GetBinContent(i+1) << " " << h2->GetBinContent(i+1) << std::endl;
-       
-	h1->SetBinError(i+1,sqrt(cov));
+        double cov = bayes.get_covariance();
+        //	double cov1 = bayes.get_covariance_mc(); //cov = cov1;
+        if(isnan(cov) || isinf(cov)) {
+                  cov = bayes.get_covariance_mc();
+                  //cov = h1->SetBinError(i+1, h1->GetBinError(i));
+              }
+        //	std::cout << obsch << " " << i << " "	  << h1->GetBinContent(i+1) << " " << cov  << " "  << h2->GetBinContent(i+1) << " " << cov1 << std::endl;
+
+        std::cout << obsch << " " << i << " "	  << h1->GetBinContent(i+1) << " " << cov  << " "  << h2->GetBinContent(i+1)  << std::endl;
+
+        
+        // std::cout << temp << " " << temp1 << " " << h1->GetBinContent(i+1) << " " << h2->GetBinContent(i+1) << std::endl;
+            
+        h1->SetBinError(i+1,sqrt(cov));
       }
       // obsch --> bin with overflow bin --> vector of all channels (merge certain channels) --> mean and err2 
       //std::map<int, std::vector< std::vector< std::tuple<double, double, double> > > > map_obsch_bayes;
