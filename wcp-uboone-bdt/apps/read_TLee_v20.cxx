@@ -608,7 +608,7 @@ int main(int argc, char** argv)
   }
 
   // WC 1gNp and 1g0p and gLEE 1g1p and 1g0p
-  if (1 || make_one_bin_plots){
+  if (make_one_bin_plots){
 
     Lee_test->scaleF_Lee = 15;
     Lee_test->Set_Collapse();
@@ -1704,7 +1704,7 @@ int main(int argc, char** argv)
 
   }
 
-  if( 0 ) {
+  if( 1 ) {
 
     cout << "making chi2 distribution for FC fitting:\n";
 
