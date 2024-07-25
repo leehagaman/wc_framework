@@ -2479,7 +2479,7 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 	if( index==1 || index==7 ) { lg_top_no->SetX1(0.2); lg_top_no->SetX2(0.4);}
 	lg_top_no->AddEntry(gh_data, "Data", "lep");
 	lg_top_no->AddEntry(h1_pred_Y_noConstraint, TString::Format("#color[%d]{Pred no constraint}", color_no), "lf");
-	lg_top_no->AddEntry("", TString::Format("#color[%d]{#chi^{2}/ndf: %3.2f/%d}", color_no, val_chi2_noConstraint, num_Y), "");
+	lg_top_no->AddEntry("", TString::Format("#color[%d]{#chi^{2}/ndf: %4.4f/%d}", color_no, val_chi2_noConstraint, num_Y), "");
 	lg_top_no->Draw();
 	lg_top_no->SetBorderSize(0); lg_top_no->SetFillStyle(0); lg_top_no->SetTextSize(0.065);
 
@@ -2729,7 +2729,7 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 	if( index==1 || index==7 ) { lg_top_wi->SetX1(0.2); lg_top_wi->SetX2(0.4);}
 	lg_top_wi->AddEntry(gh_data, "Data", "lep");
 	lg_top_wi->AddEntry(h1_pred_Y_wiConstraint, TString::Format("#color[%d]{Pred wi constraint}", color_wi), "lf");
-	lg_top_wi->AddEntry("", TString::Format("#color[%d]{#chi^{2}/ndf: %3.2f/%d}", color_wi, val_chi2_wiConstraint, num_Y), "");
+	lg_top_wi->AddEntry("", TString::Format("#color[%d]{#chi^{2}/ndf: %4.4f/%d}", color_wi, val_chi2_wiConstraint, num_Y), "");
 	lg_top_wi->Draw();
 	lg_top_wi->SetBorderSize(0); lg_top_wi->SetFillStyle(0); lg_top_wi->SetTextSize(0.065);
 
@@ -2910,9 +2910,9 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 
 	lg_top_total->AddEntry(gh_data, "Data", "lep");
 	lg_top_total->AddEntry(h1_pred_Y_noConstraint, TString::Format("#color[%d]{Pred no constraint}", color_no), "lf");
-	lg_top_total->AddEntry("", TString::Format("#color[%d]{#chi^{2}/ndf: %3.2f/%d}", color_no, val_chi2_noConstraint, num_Y), "");
+	lg_top_total->AddEntry("", TString::Format("#color[%d]{#chi^{2}/ndf: %4.4f/%d}", color_no, val_chi2_noConstraint, num_Y), "");
 	lg_top_total->AddEntry(h1_pred_Y_wiConstraint, TString::Format("#color[%d]{Pred wi constraint}", color_wi), "lf");
-	lg_top_total->AddEntry("", TString::Format("#color[%d]{#chi^{2}/ndf: %3.2f/%d}", color_wi, val_chi2_wiConstraint, num_Y), "");
+	lg_top_total->AddEntry("", TString::Format("#color[%d]{#chi^{2}/ndf: %4.4f/%d}", color_wi, val_chi2_wiConstraint, num_Y), "");
 	lg_top_total->Draw();
 	lg_top_total->SetBorderSize(0); lg_top_total->SetFillStyle(0); lg_top_total->SetTextSize(0.065);
 
@@ -4131,7 +4131,7 @@ void TLee::Set_Spectra_MatrixCov()
 		cout<<TString::Format(" %2d %s", idx, roostr.Data())<<endl;
 
 		
-		int disable_BR_uncertainty_2d = 1; 
+		int disable_BR_uncertainty_2d = 0; 
 		if (disable_BR_uncertainty_2d) {
 
 			// zero is bkg, 1 is Np, 2 is 0p
@@ -4189,12 +4189,71 @@ void TLee::Set_Spectra_MatrixCov()
 						}
 					}   
 				}
+			}
+		}
 
-				// try to fix to make sure the XS fractional covariance matrix is positive semidefinite
-				// IDEA: do this on more uncertainty types added together
-				// IDEA: do this on the collapsed covariance matrix, only with 1g channel subtraction
-				// IDEA: think of a way to do this on the constrained covariance matrix. Constrain then collapse the signal channels
+		int disable_BR_uncertainty_sig_bkg_constrt_v3_2d = 1; 
+		if (disable_BR_uncertainty_sig_bkg_constrt_v3_2d) {
 
+			// zero is bkg, 1 is Np, 2 is 0p, 3 is Np+0p
+			// two bins; Np sig, 0p sig, Np sig next to other sig, 0p sig next to other sig, both sig unified, bkg, bkg next to sig, sig next to bkg, other sig next to bkg; four signal selections
+			// then 16 bins, bkg and Np sig and 0p sig, four channels
+			// ext appears twice per signal bin (bkg and sig+bkg)
+			int bkg_Np_0p_bin[2*9*4 + 16*3*4 + 2*2*4 + 16*4] = { 
+				1, 1, 2, 2, 1, 1, 2, 2, 3, 3, 0, 0, 0, 0, 1, 1, 2, 2, // wc 1gNp
+				1, 1, 2, 2, 1, 1, 2, 2, 3, 3, 0, 0, 0, 0, 1, 1, 2, 2, // wc 1g0p
+				1, 1, 2, 2, 1, 1, 2, 2, 3, 3, 0, 0, 0, 0, 1, 1, 2, 2, // gLEE 1g1p
+				1, 1, 2, 2, 1, 1, 2, 2, 3, 3, 0, 0, 0, 0, 1, 1, 2, 2, // gLEE 1g0p
+
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 Np bkg
+				1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // NC Pi0 Np Np sig
+				2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, // NC Pi0 Np 0p sig
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 0p bkg
+				1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // NC Pi0 0p Np sig
+				2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, // NC Pi0 0p 0p sig
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC Np bkg
+				1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // numuCC Np Np sig
+				2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, // numuCC Np 0p sig
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC 0p bkg
+				1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // numuCC 0p Np sig
+				2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, // numuCC 0p 0p sig
+				0, 0, 0, 0, // wc 1gNp EXT
+				0, 0, 0, 0, // wc 1g0p EXT
+				0, 0, 0, 0, // gLEE 1g1p EXT
+				0, 0, 0, 0, // gLEE 1g0p EXT
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 Np EXT
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 0p EXT
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC Np EXT
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC Np EXT
+			};
+
+     
+			if (idx == 17) {
+
+				std::cout << "subtracting one from uncollapsed sig-sig XS frac cov matrix bins\n";
+
+				for (int ibin=0; ibin<bins_oldworld; ibin++) {
+					for (int jbin=0; jbin<bins_oldworld; jbin++) {
+						// Here, we assume that true Np NC Delta events are fully correlated with 
+						// true Np NC Delta events in other selection channels. Even if this isn't fully accurate,
+						// the non-1g signal channels should basically not matter at all (the gLEE data release didn't
+						// include this information because of a similar approximation).
+
+						// So, the covariance matrix associated with the NC Delta BR uncertainty is fully correlated,
+						// so we just need the sigma associated with the row and column to calculate it and subtract it off.
+						// See 2022_06_01 slack between Mark and Lee for more information about this approximation.
+
+						float old_val = (*map_matrix_flux_Xs_frac[idx])(ibin, jbin);
+
+						// lhagaman changed 2023_07_25, stats can cause zeros in Xs file with nonzeros in CV file, don't subtract in that case
+
+						if (bkg_Np_0p_bin[ibin] > 0 && bkg_Np_0p_bin[jbin] > 0) { // this entry corresponds to signal and signal correlated bins
+							if (old_val > 0) { // this entry is nonzero, it includes BR uncertainty already
+								(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
+							}
+						}
+					}   
+				}
 			}
 		}
 				

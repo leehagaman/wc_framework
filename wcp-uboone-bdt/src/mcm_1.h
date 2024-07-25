@@ -91,50 +91,56 @@ void LEEana::CovMatrix::gen_det_cov_matrix(int run, std::map<int, TH1F*>& map_co
       hpred->Reset();
       
       for (auto it1 = it->second.begin(); it1 != it->second.end(); it1++){
-	TH1F *htemp = (TH1F*)hpred->Clone("htemp");
-	htemp->Reset();
-	std::map<int, double> temp_map_mc_acc_pot;
-	
-	for (auto it2 = it1->begin(); it2 != it1->end(); it2++){
-	  TString histoname = (*it2).first;
-	  TString input_filename = map_histogram_inputfile[histoname];
-	  auto it3 = map_inputfile_info.find(input_filename);
-	  int period = std::get<1>(it3->second);  if (period != run) continue; // skip ...
-	  int norm_period = std::get<6>(it3->second);
-	  double mc_pot = map_filename_pot[input_filename];
-	  //std::cout << mc_pot << std::endl;
-	  if (temp_map_mc_acc_pot.find(norm_period) == temp_map_mc_acc_pot.end()){
-	    temp_map_mc_acc_pot[norm_period] = mc_pot;
-	  }else{
-	    temp_map_mc_acc_pot[norm_period] += mc_pot;
-	  }
-	}
-	
-	for (auto it2 = it1->begin(); it2 != it1->end(); it2++){
-	  TString histoname = (*it2).first;
-	  TString input_filename = map_histogram_inputfile[histoname];
-	  auto it3 = map_inputfile_info.find(input_filename);
-	  int period = std::get<1>(it3->second);  if (period != run) continue; // skip ...
-	  int norm_period = std::get<6>(it3->second);
-	  data_pot = std::get<5>(map_inputfile_info[input_filename]);
-	  double ratio = data_pot/temp_map_mc_acc_pot[norm_period];
-	  
-	  TH1F *hmc = map_histoname_hist[histoname];
-	  htemp->Add(hmc, ratio);
-	  //	std::cout << covch << " " << histoname << " " << ratio << std::endl;
-	}
-	
-	hpred->Add(htemp);
-	delete htemp;
+        TH1F *htemp = (TH1F*)hpred->Clone("htemp");
+        htemp->Reset();
+        std::map<int, double> temp_map_mc_acc_pot;
+        
+        for (auto it2 = it1->begin(); it2 != it1->end(); it2++){
+          TString histoname = (*it2).first;
+          TString input_filename = map_histogram_inputfile[histoname];
+          auto it3 = map_inputfile_info.find(input_filename);
+          int period = std::get<1>(it3->second);  if (period != run) continue; // skip ...
+          int norm_period = std::get<6>(it3->second);
+          double mc_pot = map_filename_pot[input_filename];
+          //std::cout << mc_pot << std::endl;
+          if (temp_map_mc_acc_pot.find(norm_period) == temp_map_mc_acc_pot.end()){
+            temp_map_mc_acc_pot[norm_period] = mc_pot;
+          }else{
+            temp_map_mc_acc_pot[norm_period] += mc_pot;
+          }
+        }
+        
+        for (auto it2 = it1->begin(); it2 != it1->end(); it2++){
+          TString histoname = (*it2).first;
+          TString input_filename = map_histogram_inputfile[histoname];
+          auto it3 = map_inputfile_info.find(input_filename);
+          int period = std::get<1>(it3->second);  if (period != run) continue; // skip ...
+          int norm_period = std::get<6>(it3->second);
+          data_pot = std::get<5>(map_inputfile_info[input_filename]);
+          double ratio = data_pot/temp_map_mc_acc_pot[norm_period];
+          
+          TH1F *hmc = map_histoname_hist[histoname];
+          htemp->Add(hmc, ratio);
+          //	std::cout << covch << " " << histoname << " " << ratio << std::endl;
+        }
+        
+        hpred->Add(htemp);
+        delete htemp;
       }
       
       int start_bin = map_covch_startbin[covch];
       for (int i=0;i!=hpred->GetNbinsX()+1;i++){
-	x[start_bin+i] = hpred->GetBinContent(i+1) ;
-	//std::cout << x[start_bin+i] << std::endl;
+        x[start_bin+i] = hpred->GetBinContent(i+1) ;
+        //std::cout << x[start_bin+i] << std::endl;
       }
       
     }
+
+    std::cout << "lhagaman gen_det_cov_matrix debug, x = ";
+    for (int i=0;i!=rows;i++){
+      std::cout << x[i] << ", ";
+    }
+    std::cout << "\n";
 
     prin.AddRow(x);
     
@@ -170,9 +176,9 @@ void LEEana::CovMatrix::gen_det_cov_matrix(int run, std::map<int, TH1F*>& map_co
     TMatrixD matrix_element(rows,1);
     for (int j=0;j!=rows;j++){
       if (matrix_eigenvalue(j) >=0)
-	matrix_element(j,0) = random3.Gaus(0,sqrt(matrix_eigenvalue(j)));
+	      matrix_element(j,0) = random3.Gaus(0,sqrt(matrix_eigenvalue(j)));
       else
-	matrix_element(j,0) = 0;
+	      matrix_element(j,0) = 0;
     }
     TMatrixD matrix_variation = matrix_eigenvector * matrix_element;
     double rel_err = random3.Gaus(0,1);
@@ -211,37 +217,37 @@ void LEEana::CovMatrix::gen_det_cov_matrix(int run, std::map<int, TH1F*>& map_co
      hpred->Reset();
      
      for (auto it1 = it->second.begin(); it1 != it->second.end(); it1++){
-       TH1F *htemp = (TH1F*)hpred->Clone("htemp");
-       htemp->Reset();
-       std::map<int, double> temp_map_mc_acc_pot;
-       
-       for (auto it2 = it1->begin(); it2 != it1->end(); it2++){
-	 TString histoname = (*it2).first;
-	 TString input_filename = map_histogram_inputfile[histoname];
-	 auto it3 = map_inputfile_info.find(input_filename);
-	 int period = std::get<1>(it3->second);  if (period != run) continue; // skip ...
-	 int norm_period = std::get<6>(it3->second);
-	 double mc_pot = map_filename_pot[input_filename];
-	 //std::cout << mc_pot << std::endl;
-	 if (temp_map_mc_acc_pot.find(norm_period) == temp_map_mc_acc_pot.end()){
-	   temp_map_mc_acc_pot[norm_period] = mc_pot;
-	 }else{
-	   temp_map_mc_acc_pot[norm_period] += mc_pot;
-	 }
+        TH1F *htemp = (TH1F*)hpred->Clone("htemp");
+        htemp->Reset();
+        std::map<int, double> temp_map_mc_acc_pot;
+        
+        for (auto it2 = it1->begin(); it2 != it1->end(); it2++){
+         TString histoname = (*it2).first;
+         TString input_filename = map_histogram_inputfile[histoname];
+         auto it3 = map_inputfile_info.find(input_filename);
+         int period = std::get<1>(it3->second);  if (period != run) continue; // skip ...
+         int norm_period = std::get<6>(it3->second);
+         double mc_pot = map_filename_pot[input_filename];
+         //std::cout << mc_pot << std::endl;
+         if (temp_map_mc_acc_pot.find(norm_period) == temp_map_mc_acc_pot.end()){
+           temp_map_mc_acc_pot[norm_period] = mc_pot;
+         }else{
+           temp_map_mc_acc_pot[norm_period] += mc_pot;
+         }
        }
        
        for (auto it2 = it1->begin(); it2 != it1->end(); it2++){
-	 TString histoname = (*it2).first;
-	 TString input_filename = map_histogram_inputfile[histoname];
-	 auto it3 = map_inputfile_info.find(input_filename);
-	 int period = std::get<1>(it3->second);  if (period != run) continue; // skip ...
-	 int norm_period = std::get<6>(it3->second);
-	 data_pot = std::get<5>(map_inputfile_info[input_filename]);
-	 double ratio = data_pot/temp_map_mc_acc_pot[norm_period];
-	 
-	 TH1F *hmc = map_histoname_hist[histoname];
-	 htemp->Add(hmc, ratio);
-	 //	std::cout << covch << " " << histoname << " " << ratio << std::endl;
+        TString histoname = (*it2).first;
+        TString input_filename = map_histogram_inputfile[histoname];
+        auto it3 = map_inputfile_info.find(input_filename);
+        int period = std::get<1>(it3->second);  if (period != run) continue; // skip ...
+        int norm_period = std::get<6>(it3->second);
+        data_pot = std::get<5>(map_inputfile_info[input_filename]);
+        double ratio = data_pot/temp_map_mc_acc_pot[norm_period];
+        
+        TH1F *hmc = map_histoname_hist[histoname];
+        htemp->Add(hmc, ratio);
+        //	std::cout << covch << " " << histoname << " " << ratio << std::endl;
        }
        
        hpred->Add(htemp);
@@ -278,36 +284,36 @@ void LEEana::CovMatrix::fill_det_histograms(std::map<TString, TH1D*> map_filenam
       double weight_lee = std::get<3>(it->second.at(global_index));
 
       for (auto it1 = std::get<4>(it->second.at(global_index)).begin(); it1 != std::get<4>(it->second.at(global_index)).end(); it1++){
-	   int no = std::get<0>(*it1);
-	   double val_cv = std::get<1>(*it1);
-	   bool flag_cv = std::get<2>(*it1);
-	   double val_det = std::get<3>(*it1);
-	   bool flag_det = std::get<4>(*it1);
+        int no = std::get<0>(*it1);
+        double val_cv = std::get<1>(*it1);
+        bool flag_cv = std::get<2>(*it1);
+        double val_det = std::get<3>(*it1);
+        bool flag_det = std::get<4>(*it1);
 
-	   TString histoname = map_no_histoname[no];
-       	   TH1F *htemp = map_histoname_hist[histoname];
-	   int flag_lee = std::get<2>(map_histoname_infos[histoname]);
+        TString histoname = map_no_histoname[no];
+        TH1F *htemp = map_histoname_hist[histoname];
+        int flag_lee = std::get<2>(map_histoname_infos[histoname]);
 
-	   // central value ...
-	   if (flag_cv){
-	     if (flag_lee){
-	       htemp->Fill(val_cv, -weight_lee);
-	     }else{
-	       htemp->Fill(val_cv, -1);
-	     }
-	   }
-	   if (flag_det){
-	     if (flag_lee){
-	       htemp->Fill(val_det, weight_lee);
-	     }else{
-	       htemp->Fill(val_det, 1);
-	     }
-	   }
-	   
-	   // if (no==2)
-	   //std::cout << std::get<0>(it->second.at(i)) << " " << std::get<1>(it->second.at(i)) << " " << val_cv << " " << weight << std::endl;
-	   // std::cout << weight << " " << weight_lee << " " << flag_lee << " " << histoname << std::endl;
-	 }
+        // central value ...
+        if (flag_cv){
+          if (flag_lee){
+            htemp->Fill(val_cv, -weight_lee);
+          }else{
+            htemp->Fill(val_cv, -1);
+          }
+        }
+        if (flag_det){
+          if (flag_lee){
+            htemp->Fill(val_det, weight_lee);
+          }else{
+            htemp->Fill(val_det, 1);
+          }
+        }
+        
+        // if (no==2)
+        //std::cout << std::get<0>(it->second.at(i)) << " " << std::get<1>(it->second.at(i)) << " " << val_cv << " " << weight << std::endl;
+        // std::cout << weight << " " << weight_lee << " " << flag_lee << " " << histoname << std::endl;
+      }
       
     }
   }

@@ -1856,6 +1856,10 @@ int LEEana::get_cut_pass(TString ch_name_0, TString add_cut, bool flag_data, Eva
   if (ch_name.EndsWith("_dup_2")) ch_name = ch_name.ReplaceAll("_dup_2","");
   if (ch_name.EndsWith("_dup_3")) ch_name = ch_name.ReplaceAll("_dup_3","");
   if (ch_name.EndsWith("_dup_4")) ch_name = ch_name.ReplaceAll("_dup_4","");
+  if (ch_name.EndsWith("_dup_5")) ch_name = ch_name.ReplaceAll("_dup_5","");
+  if (ch_name.EndsWith("_dup_6")) ch_name = ch_name.ReplaceAll("_dup_6","");
+  if (ch_name.EndsWith("_dup_7")) ch_name = ch_name.ReplaceAll("_dup_7","");
+  if (ch_name.EndsWith("_dup_8")) ch_name = ch_name.ReplaceAll("_dup_8","");
 
 	//std::cout << "lhagaman debug, inside get_cut_pass\n";
     	

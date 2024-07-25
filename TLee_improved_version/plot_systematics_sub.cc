@@ -86,6 +86,45 @@ void plot_systematics_sub()
   TMatrixD* matrix_absolute_mc_stat_cov_newworld = (TMatrixD*)roofile_syst->Get("matrix_absolute_mc_stat_cov_newworld");
   TMatrixD* matrix_absolute_additional_cov_newworld = (TMatrixD*)roofile_syst->Get("matrix_absolute_additional_cov_newworld");
 
+  // modifying matrix_absolute_Xs_cov_newworld eigenvalues, since this isn't guaranteed to be pos. semi. def
+  TMatrixD myMatrix = *matrix_absolute_Xs_cov_newworld;
+	if (!myMatrix.IsSymmetric()) {
+		myMatrix = 0.5 * (myMatrix + myMatrix.T()); // Symmetrization, should be only very small changes
+	}
+	TMatrixDSym symMatrix(myMatrix.GetNrows());
+	for (Int_t i = 0; i < symMatrix.GetNrows(); ++i) {
+		for (Int_t j = 0; j <= i; ++j) {
+			symMatrix(i, j) = myMatrix(i, j);
+		}
+	}
+	// get the eigenvalues and eigenvectors
+	TMatrixDSymEigen eig(symMatrix);
+	TVectorD eigenvalues = eig.GetEigenValues();
+	TMatrixD eigenvectors = eig.GetEigenVectors();
+	TVectorD abs_val_neg_eigenvalues = eigenvalues;
+	//TVectorD zeroed_neg_eigenvalues = eigenvalues;
+	for (Int_t i = 0; i < eigenvalues.GetNrows(); ++i) {
+		Double_t eigenvalue = eigenvalues[i];
+		if (eigenvalue < 0) {
+			//cout << "    negative eigenvalue: " << eigenvalue << "\n";
+			abs_val_neg_eigenvalues[i] = -eigenvalue;
+			//zeroed_neg_eigenvalues[i] = 0;
+		}
+	}
+	bool abs_val_neg_eigenvals = true;
+	if (abs_val_neg_eigenvals) {
+		//std::cout << "absolute valuing those negative eigenvalues:\n";
+		TMatrixD diagEigenvalues(eigenvalues.GetNrows(), eigenvalues.GetNrows());
+		diagEigenvalues.Zero();
+		for (Int_t i = 0; i < eigenvalues.GetNrows(); ++i) {
+			diagEigenvalues(i, i) = abs_val_neg_eigenvalues[i];
+		}
+		TMatrixD eigenvectors_original = eigenvectors;
+		TMatrixD eigenvectors_transpose = eigenvectors.T();
+		TMatrixD modifiedMatrix = eigenvectors_original * diagEigenvalues * eigenvectors_transpose;
+		*matrix_absolute_Xs_cov_newworld = modifiedMatrix;
+	}
+
   // skipping this part, file doesn't have the necessary info
   map<int, TMatrixD*>matrix_fgx_sub;
   for(int idx=1; idx<=17; idx++) {
@@ -246,30 +285,31 @@ void plot_systematics_sub()
 
       //std::cout << "loop i, j: " << ibin << ", " << jbin << "\n";
 
+
       for(int idx=flux_bgn; idx<=flux_end; idx++) {
-	double sub_cov = (*matrix_fgx_sub[idx])(ibin-1, jbin-1);	
-	double cov_i = (*matrix_fgx_sub[idx])(ibin-1, ibin-1);
-	double cov_j = (*matrix_fgx_sub[idx])(jbin-1, jbin-1);
+        double sub_cov = (*matrix_fgx_sub[idx])(ibin-1, jbin-1);	
+        double cov_i = (*matrix_fgx_sub[idx])(ibin-1, ibin-1);
+        double cov_j = (*matrix_fgx_sub[idx])(jbin-1, jbin-1);
 
-	total_cov_ij += sub_cov;
-	total_cov_i += cov_i;
-	total_cov_j += cov_j;
-	
-	double rel_cov = 0;
-	double correlation = 0;
-	if(cv_i==0 || cv_j==0) {
-	  if( ibin==jbin ) correlation = 1;
-	}
-	else {
-	  rel_cov = sub_cov/cv_i/cv_j;
-	  correlation = sub_cov/sqrt(cov_i)/sqrt(cov_j);
-	}
+        total_cov_ij += sub_cov;
+        total_cov_i += cov_i;
+        total_cov_j += cov_j;
+        
+        double rel_cov = 0;
+        double correlation = 0;
+        if(cv_i==0 || cv_j==0) {
+          if( ibin==jbin ) correlation = 1;
+        }
+        else {
+          rel_cov = sub_cov/cv_i/cv_j;
+          correlation = sub_cov/sqrt(cov_i)/sqrt(cov_j);
+        }
 
-	if( ibin==jbin ) correlation = 1;
-	
-	h2_sub_flux_abs_cov[idx]->SetBinContent(ibin, jbin, sub_cov);
-	h2_sub_flux_rel_cov[idx]->SetBinContent(ibin, jbin, rel_cov);
-	h2_sub_flux_correlation[idx]->SetBinContent(ibin, jbin, correlation);
+        if( ibin==jbin ) correlation = 1;
+        
+        h2_sub_flux_abs_cov[idx]->SetBinContent(ibin, jbin, sub_cov);
+        h2_sub_flux_rel_cov[idx]->SetBinContent(ibin, jbin, rel_cov);
+        h2_sub_flux_correlation[idx]->SetBinContent(ibin, jbin, correlation);
 	
       }// idx
 
@@ -277,11 +317,11 @@ void plot_systematics_sub()
       double rel_cov = 0;
       double correlation = 0;      
       if(cv_i==0 || cv_j==0) {
-	if( ibin==jbin ) correlation = 1;
+	      if( ibin==jbin ) correlation = 1;
       }
       else {
-	rel_cov = total_cov_ij/cv_i/cv_j;
-	correlation = total_cov_ij/sqrt(total_cov_i)/sqrt(total_cov_j);
+        rel_cov = total_cov_ij/cv_i/cv_j;
+        correlation = total_cov_ij/sqrt(total_cov_i)/sqrt(total_cov_j);
       }
       
       if( ibin==jbin ) correlation = 1;
@@ -422,31 +462,31 @@ void plot_systematics_sub()
       double total_cov_j = 0;
 
       for(int idx=geant_bgn; idx<=geant_end; idx++) {
-	double sub_cov = (*matrix_fgx_sub[idx])(ibin-1, jbin-1);	
-	double cov_i = (*matrix_fgx_sub[idx])(ibin-1, ibin-1);
-	double cov_j = (*matrix_fgx_sub[idx])(jbin-1, jbin-1);
+        double sub_cov = (*matrix_fgx_sub[idx])(ibin-1, jbin-1);	
+        double cov_i = (*matrix_fgx_sub[idx])(ibin-1, ibin-1);
+        double cov_j = (*matrix_fgx_sub[idx])(jbin-1, jbin-1);
 
-	
-	total_cov_ij += sub_cov;
-	total_cov_i += cov_i;
-	total_cov_j += cov_j;
-	
-	
-	double rel_cov = 0;
-	double correlation = 0;
-	if(cv_i==0 || cv_j==0) {
-	  if( ibin==jbin ) correlation = 1;
-	}
-	else {
-	  rel_cov = sub_cov/cv_i/cv_j;
-	  correlation = sub_cov/sqrt(cov_i)/sqrt(cov_j);
-	}
-	
-	if( ibin==jbin ) correlation = 1;
-	
-	h2_sub_geant_abs_cov[idx]->SetBinContent(ibin, jbin, sub_cov);
-	h2_sub_geant_rel_cov[idx]->SetBinContent(ibin, jbin, rel_cov);
-	h2_sub_geant_correlation[idx]->SetBinContent(ibin, jbin, correlation);
+        
+        total_cov_ij += sub_cov;
+        total_cov_i += cov_i;
+        total_cov_j += cov_j;
+        
+        
+        double rel_cov = 0;
+        double correlation = 0;
+        if(cv_i==0 || cv_j==0) {
+          if( ibin==jbin ) correlation = 1;
+        }
+        else {
+          rel_cov = sub_cov/cv_i/cv_j;
+          correlation = sub_cov/sqrt(cov_i)/sqrt(cov_j);
+        }
+        
+        if( ibin==jbin ) correlation = 1;
+        
+        h2_sub_geant_abs_cov[idx]->SetBinContent(ibin, jbin, sub_cov);
+        h2_sub_geant_rel_cov[idx]->SetBinContent(ibin, jbin, rel_cov);
+        h2_sub_geant_correlation[idx]->SetBinContent(ibin, jbin, correlation);
 	
       }// idx
 
@@ -454,11 +494,11 @@ void plot_systematics_sub()
       double rel_cov = 0;
       double correlation = 0;      
       if(cv_i==0 || cv_j==0) {
-	if( ibin==jbin ) correlation = 1;
+	      if( ibin==jbin ) correlation = 1;
       }
       else {
-	rel_cov = total_cov_ij/cv_i/cv_j;
-	correlation = total_cov_ij/sqrt(total_cov_i)/sqrt(total_cov_j);
+        rel_cov = total_cov_ij/cv_i/cv_j;
+        correlation = total_cov_ij/sqrt(total_cov_i)/sqrt(total_cov_j);
       }
          	
       if( ibin==jbin ) correlation = 1;
@@ -790,11 +830,11 @@ void plot_systematics_sub()
       double rel_cov = 0;
       double correlation = 0;      
       if(cv_i==0 || cv_j==0) {
-	if( ibin==jbin ) correlation = 1;
+	      if( ibin==jbin ) correlation = 1;
       }
       else {
-	rel_cov = cov_ij/cv_i/cv_j;
-	correlation = cov_ij/sqrt(cov_i)/sqrt(cov_j);
+        rel_cov = cov_ij/cv_i/cv_j;
+        correlation = cov_ij/sqrt(cov_i)/sqrt(cov_j);
       }
 	
       if( ibin==jbin ) correlation = 1;
@@ -1447,4 +1487,3 @@ void plot_systematics_sub()
   //canv_h2_basic_stack_detector_userworld->SaveAs("canv_h2_basic_stack_detector_userworld.pdf");
   
 }
-

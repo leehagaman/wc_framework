@@ -661,22 +661,164 @@ int main(int argc, char** argv)
 
 	}
 
-	bool constraints_at_certain_bins = false;
+	bool make_sig_bkg_constr_v3_plot = true;
+	if (make_sig_bkg_constr_v3_plot) {
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->scaleF_Lee = 1;
+		Lee_test->Set_Collapse();
 
-	if (constraints_at_certain_bins) {
+		vector<int>vc_target_chs;
+		for (int i=0; i < 2*6*4; i++){
+			vc_target_chs.push_back(i);
+		}
+		vector<int>vc_support_chs;
+		for (int i=2*6*4; i < 2*6*4 + 16 * 4; i++){
+		vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 123123 );
+	}
 
-		cout << "getting constrained predictions at (1, 15) point...\n";
 
+	bool make_one_bin_plots = false;
+
+	// WC 1gNp
+	if (make_one_bin_plots){
+
+		Lee_test->scaleF_Lee = 1;
+		Lee_test->Set_Collapse();
+
+		vector<int>vc_target_chs;
+		vc_target_chs.push_back(0);
+		vector<int>vc_support_chs;
+		for (int i=8; i < 8 + 16 * 4; i++){
+		vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333001 );
+	}
+
+	// WC 1g0p
+	if (make_one_bin_plots){
+
+		Lee_test->scaleF_Lee = 1;
+		Lee_test->Set_Collapse();
+
+		vector<int>vc_target_chs;
+		vc_target_chs.push_back(2);
+		vector<int>vc_support_chs;
+		for (int i=8; i < 8 + 16 * 4; i++){
+		vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333002 );
+	}
+
+	// gLEE 1g1p
+	if (make_one_bin_plots){
+
+		Lee_test->scaleF_Lee = 1;
+		Lee_test->Set_Collapse();
+
+		vector<int>vc_target_chs;
+		vc_target_chs.push_back(4);
+		vector<int>vc_support_chs;
+		for (int i=8; i < 8 + 16 * 4; i++){
+		vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333003 );
+	}
+
+	// gLEE 1g0p
+	if (make_one_bin_plots){
+
+		Lee_test->scaleF_Lee = 1;
+		Lee_test->Set_Collapse();
+
+		vector<int>vc_target_chs;
+		vc_target_chs.push_back(6);
+		vector<int>vc_support_chs;
+		for (int i=8; i < 8 + 16 * 4; i++){
+		vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333004 );
+	}
+
+	// WC 1gNp and 1g0p
+	if (make_one_bin_plots){
+
+		Lee_test->scaleF_Lee = 1;
+		Lee_test->Set_Collapse();
+
+		vector<int>vc_target_chs;
+		vc_target_chs.push_back(0);
+		vc_target_chs.push_back(2);
+		vector<int>vc_support_chs;
+		for (int i=8; i < 8 + 16 * 4; i++){
+		vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333006 );
+	}
+
+	// gLEE 1g1p and 1g0p
+	if (make_one_bin_plots){
+
+		Lee_test->scaleF_Lee = 1;
+		Lee_test->Set_Collapse();
+
+		vector<int>vc_target_chs;
+		vc_target_chs.push_back(4);
+		vc_target_chs.push_back(6);
+		vector<int>vc_support_chs;
+		for (int i=8; i < 8 + 16 * 4; i++){
+		vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333007 );
+	}
+
+	// WC 1gNp and 1g0p and gLEE 1g1p and 1g0p
+	if (make_one_bin_plots){
+
+		Lee_test->scaleF_Lee = 15;
+		Lee_test->Set_Collapse();
+
+		vector<int>vc_target_chs;
+		vc_target_chs.push_back(0);
+		vc_target_chs.push_back(2);
+		vc_target_chs.push_back(4);
+		vc_target_chs.push_back(6);
+		vector<int>vc_support_chs;
+		for (int i=8; i < 8 + 16 * 4; i++){
+		vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333008 );
+	}
+
+	// Constraining channels (constrained by signal channels, but shouldn't actually use or care about the constrained result)
+	if (make_one_bin_plots){
+
+		Lee_test->scaleF_Lee = 1;
+		Lee_test->Set_Collapse();
+
+		vector<int>vc_target_chs;
+		for (int i=8; i < 8 + 16 * 4; i++){
+		vc_target_chs.push_back(i);
+		}
+		vector<int>vc_support_chs;
+		vc_support_chs.push_back(0);
+		vc_support_chs.push_back(2);
+		vc_support_chs.push_back(4);
+		vc_support_chs.push_back(6);
+
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333009 );
+	}
+
+	if (make_one_bin_plots) {
+		cout << "getting constrained predictions at (1, 1) point...\n";
 		Lee_test->scaleF_Lee_Np = 1;
 		Lee_test->scaleF_Lee_0p = 1;
 		Lee_test->Set_Collapse(); // prediction is ready
-
 		Lee_test->Set_measured_data(); // measurement is ready, real data
-
-		double pars_2d[2] = {1, 15};
+		double pars_2d[2] = {1, 1};
 		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
-		//cout << "all bins: chi2 = " << chi2_var << "\n";
-
 		vector<int>vc_target_chs;
 		vc_target_chs.push_back(0);
 		vc_target_chs.push_back(2);
@@ -686,27 +828,16 @@ int main(int argc, char** argv)
 		for (int i=8; i < 8 + 16 * 4; i++){
 			vc_support_chs.push_back(i);
 		}
-				
-		//Lee_test->Get_Constrained_Chi2_detailed( vc_target_chs, vc_support_chs, 111001 );
-		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 112001 );
-
-		cout << "done\n";
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333101 );
 	}
-
-	if (constraints_at_certain_bins ) {
-
-		cout << "getting constrained predictions at (15, 15) point...\n";
-
-		Lee_test->scaleF_Lee_Np = 1;
-		Lee_test->scaleF_Lee_0p = 1;
+	if (make_one_bin_plots) {
+		cout << "getting constrained predictions at (0, 0) point...\n";
+		Lee_test->scaleF_Lee_Np = 0;
+		Lee_test->scaleF_Lee_0p = 0;
 		Lee_test->Set_Collapse(); // prediction is ready
-
 		Lee_test->Set_measured_data(); // measurement is ready, real data
-
-		double pars_2d[2] = {15, 15};
+		double pars_2d[2] = {0, 0};
 		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
-		//cout << "all bins: chi2 = " << chi2_var << "\n";
-
 		vector<int>vc_target_chs;
 		vc_target_chs.push_back(0);
 		vc_target_chs.push_back(2);
@@ -716,12 +847,47 @@ int main(int argc, char** argv)
 		for (int i=8; i < 8 + 16 * 4; i++){
 			vc_support_chs.push_back(i);
 		}
-				
-		//Lee_test->Get_Constrained_Chi2_detailed( vc_target_chs, vc_support_chs, 111001 );
-		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 112002 );
-
-		cout << "done\n";
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333102 );
 	}
+	if (make_one_bin_plots) {
+		cout << "getting constrained predictions at (1, 0) point...\n";
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 0;
+		Lee_test->Set_Collapse(); // prediction is ready
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+		double pars_2d[2] = {1, 0};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		vector<int>vc_target_chs;
+		vc_target_chs.push_back(0);
+		vc_target_chs.push_back(2);
+		vc_target_chs.push_back(4);
+		vc_target_chs.push_back(6);
+		vector<int>vc_support_chs;
+		for (int i=8; i < 8 + 16 * 4; i++){
+			vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333103 );
+	}
+	if (make_one_bin_plots) {
+		cout << "getting constrained predictions at (0, 1) point...\n";
+		Lee_test->scaleF_Lee_Np = 0;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse(); // prediction is ready
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+		double pars_2d[2] = {0, 1};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		vector<int>vc_target_chs;
+		vc_target_chs.push_back(0);
+		vc_target_chs.push_back(2);
+		vc_target_chs.push_back(4);
+		vc_target_chs.push_back(6);
+		vector<int>vc_support_chs;
+		for (int i=8; i < 8 + 16 * 4; i++){
+			vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333104 );
+	}
+
 
 	/*
 
@@ -1856,7 +2022,7 @@ int main(int argc, char** argv)
 
 
 	// full grid
-    if( 1 ) {
+    if( 0 ) {
 
 		bool thirty_by_thirty = false;
 

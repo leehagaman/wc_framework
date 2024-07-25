@@ -890,11 +890,11 @@ void plot_systematics_sub()
       double rel_cov = 0;
       double correlation = 0;      
       if(cv_i==0 || cv_j==0) {
-	if( ibin==jbin ) correlation = 1;
+	      if( ibin==jbin ) correlation = 1;
       }
       else {
-	rel_cov = cov_ij/cv_i/cv_j;
-	correlation = cov_ij/sqrt(cov_i)/sqrt(cov_j);
+        rel_cov = cov_ij/cv_i/cv_j;
+        correlation = cov_ij/sqrt(cov_i)/sqrt(cov_j);
       }
 	
       if( ibin==jbin ) correlation = 1;
