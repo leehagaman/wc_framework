@@ -5,7 +5,7 @@ wc_1gNp_overlay          		            kine_reco_Enu		15	    0      1500    1   
 wc_1gNp_nc_pi0_overlay   		            kine_reco_Enu		15	    0      1500    1       1               1       0               0               1               6       cv_spline       0
 wc_1gNp_cc_pi0_overlay   		            kine_reco_Enu		15	    0      1500    1       1               1       0               0               1               8       cv_spline       0
 wc_1gNp_nue_overlay   			            kine_reco_Enu		15	    0      1500    1       1               1       0               0               1               1       cv_spline       0
-wc_1gNp_nc_delta_overlay 		            kine_reco_Enu		15	    0      1500    1       1               1       0               0               2               7       cv_spline   	1
+wc_1gNp_nc_delta_overlay 		            kine_reco_Enu		15	    0      1500    1       1               1       0               0               2               7       cv_spline   	   0
 wc_1g0p                                     kine_reco_Enu   	15	    0      1500    2       0               0       0               0               0               5       unity           0
 wc_1g0p_ext                                 kine_reco_Enu   	15	    0      1500    2       0               0       0               0               30              3       unity           0
 wc_1g0p_dirt                                kine_reco_Enu   	15	    0      1500    2       1               0       0.5             0               3               4       cv_spline       0
@@ -13,7 +13,7 @@ wc_1g0p_overlay                             kine_reco_Enu   	15	    0      1500 
 wc_1g0p_nc_pi0_overlay                      kine_reco_Enu   	15	    0      1500    2       1               1       0               0               3               6       cv_spline       0
 wc_1g0p_cc_pi0_overlay                      kine_reco_Enu   	15	    0      1500    2       1               1       0               0               3               8       cv_spline       0
 wc_1g0p_nue_overlay                         kine_reco_Enu   	15	    0      1500    2       1               1       0               0               3               1       cv_spline       0
-wc_1g0p_nc_delta_overlay 		            kine_reco_Enu   	15	    0      1500    2       1               1       0               0               4               7       cv_spline   	1
+wc_1g0p_nc_delta_overlay 		            kine_reco_Enu   	15	    0      1500    2       1               1       0               0               4               7       cv_spline   	   0
 
 wc_1gNp_dup_2                  		        reco_showerKE		15	    0      1500    3       0               0       0               0               0               5       unity           0
 wc_1gNp_ext_dup_2              		        reco_showerKE		15	    0      1500    3       0               0       0               0               31              3       unity           0
@@ -22,7 +22,7 @@ wc_1gNp_overlay_dup_2          		        reco_showerKE		15	    0      1500    3 
 wc_1gNp_nc_pi0_overlay_dup_2   		        reco_showerKE		15	    0      1500    3       1               1       0               0               5               6       cv_spline       0
 wc_1gNp_cc_pi0_overlay_dup_2   		        reco_showerKE		15	    0      1500    3       1               1       0               0               5               8       cv_spline       0
 wc_1gNp_nue_overlay_dup_2   			    reco_showerKE		15	    0      1500    3       1               1       0               0               5               1       cv_spline       0
-wc_1gNp_nc_delta_overlay_dup_2 		        reco_showerKE		15	    0      1500    3       1               1       0               0               6               7       cv_spline   	1
+wc_1gNp_nc_delta_overlay_dup_2 		        reco_showerKE		15	    0      1500    3       1               1       0               0               6               7       cv_spline   	0
 wc_1g0p_dup_2                               reco_showerKE   	15	    0      1500    4       0               0       0               0               0               5       unity           0
 wc_1g0p_ext_dup_2                           reco_showerKE   	15	    0      1500    4       0               0       0               0               32              3       unity           0
 wc_1g0p_dirt_dup_2                          reco_showerKE   	15	    0      1500    4       1               0       0.5             0               7               4       cv_spline       0
@@ -30,7 +30,7 @@ wc_1g0p_overlay_dup_2                       reco_showerKE   	15	    0      1500 
 wc_1g0p_nc_pi0_overlay_dup_2                reco_showerKE   	15	    0      1500    4       1               1       0               0               7               6       cv_spline       0
 wc_1g0p_cc_pi0_overlay_dup_2                reco_showerKE   	15	    0      1500    4       1               1       0               0               7               8       cv_spline       0
 wc_1g0p_nue_overlay_dup_2                   reco_showerKE   	15	    0      1500    4       1               1       0               0               7               1       cv_spline       0
-wc_1g0p_nc_delta_overlay_dup_2 		        reco_showerKE   	15	    0      1500    4       1               1       0               0               8               7       cv_spline   	1
+wc_1g0p_nc_delta_overlay_dup_2 		        reco_showerKE   	15	    0      1500    4       1               1       0               0               8               7       cv_spline   	0
 
 glee_1g1p                  		            gl_reco_Eshower		6 	    0       600    5       0               0       0               0               0               5       unity           	0
 glee_1g1p_ext              		            gl_reco_Eshower		6 	    0       600    5       0               0       0               0               33              3       unity_ovlp	0
@@ -39,7 +39,7 @@ glee_1g1p_overlay          		            gl_reco_Eshower		6 	    0       600    
 glee_1g1p_nc_pi0_overlay   		            gl_reco_Eshower		6 	    0       600    5       1               1       0               0               9               6       cv_spline_ovlp	0
 glee_1g1p_cc_pi0_overlay   		            gl_reco_Eshower		6 	    0       600    5       1               1       0               0               9               8       cv_spline_ovlp	0
 glee_1g1p_nue_overlay   		            gl_reco_Eshower		6 	    0       600    5       1               1       0               0               9               1       cv_spline_ovlp	0
-glee_1g1p_nc_delta_overlay 		            gl_reco_Eshower		6 	    0       600    5       1               1       0               0               10               7       cv_spline_ovlp   1
+glee_1g1p_nc_delta_overlay 		            gl_reco_Eshower		6 	    0       600    5       1               1       0               0               10               7       cv_spline_ovlp   0
 glee_1g0p                                   gl_reco_Eshower   	12      100     700    6       0               0       0               0               0               5       unity           	0
 glee_1g0p_ext                               gl_reco_Eshower   	12      100     700    6       0               0       0               0               34              3       unity_ovlp	0
 glee_1g0p_dirt                              gl_reco_Eshower   	12      100     700    6       1               0       0.5             0               11              4       cv_spline_ovlp	0
@@ -47,7 +47,7 @@ glee_1g0p_overlay                           gl_reco_Eshower   	12      100     7
 glee_1g0p_nc_pi0_overlay                    gl_reco_Eshower   	12      100     700    6       1               1       0               0               11              6       cv_spline_ovlp	0
 glee_1g0p_cc_pi0_overlay                    gl_reco_Eshower   	12      100     700    6       1               1       0               0               11              8       cv_spline_ovlp	0
 glee_1g0p_nue_overlay                       gl_reco_Eshower   	12      100     700    6       1               1       0               0               11              1       cv_spline_ovlp	0
-glee_1g0p_nc_delta_overlay 		            gl_reco_Eshower   	12      100     700    6       1               1       0               0               12              7       cv_spline_ovlp   1
+glee_1g0p_nc_delta_overlay 		            gl_reco_Eshower   	12      100     700    6       1               1       0               0               12              7       cv_spline_ovlp   0
 
 
 wc_1gNp_dup_1                  		        shower_costheta		10	    -1.000001      1.000001       7       0               0       0               0               0               5       unity           0
@@ -57,7 +57,7 @@ wc_1gNp_overlay_dup_1          		        shower_costheta		10	    -1.000001      
 wc_1gNp_nc_pi0_overlay_dup_1   		        shower_costheta		10	    -1.000001      1.000001       7       1               1       0               0               13              6       cv_spline       0
 wc_1gNp_cc_pi0_overlay_dup_1   		        shower_costheta		10	    -1.000001      1.000001       7       1               1       0               0               13              8       cv_spline       0
 wc_1gNp_nue_overlay_dup_1   			    shower_costheta		10	    -1.000001      1.000001       7       1               1       0               0               13              1       cv_spline       0
-wc_1gNp_nc_delta_overlay_dup_1 		        shower_costheta		10	    -1.000001      1.000001       7       1               1       0               0               14               7       cv_spline   	1
+wc_1gNp_nc_delta_overlay_dup_1 		        shower_costheta		10	    -1.000001      1.000001       7       1               1       0               0               14               7       cv_spline   	0
 wc_1g0p_dup_1                               shower_costheta   	10	    -1.000001      1.000001       8       0               0       0               0               0               5       unity           0
 wc_1g0p_ext_dup_1                           shower_costheta   	10	    -1.000001      1.000001       8       0               0       0               0               36              3       unity           0
 wc_1g0p_dirt_dup_1                          shower_costheta   	10	    -1.000001      1.000001       8       1               0       0.5             0               15              4       cv_spline       0
@@ -65,7 +65,7 @@ wc_1g0p_overlay_dup_1                       shower_costheta   	10	    -1.000001 
 wc_1g0p_nc_pi0_overlay_dup_1                shower_costheta   	10	    -1.000001      1.000001       8       1               1       0               0               15              6       cv_spline       0
 wc_1g0p_cc_pi0_overlay_dup_1                shower_costheta   	10	    -1.000001      1.000001       8       1               1       0               0               15              8       cv_spline       0
 wc_1g0p_nue_overlay_dup_1                   shower_costheta   	10	    -1.000001      1.000001       8       1               1       0               0               15              1       cv_spline       0
-wc_1g0p_nc_delta_overlay_dup_1 		        shower_costheta   	10	    -1.000001      1.000001       8       1               1       0               0               16              7       cv_spline   	1
+wc_1g0p_nc_delta_overlay_dup_1 		        shower_costheta   	10	    -1.000001      1.000001       8       1               1       0               0               16              7       cv_spline   	0
 
 glee_1g1p_dup_1                  		    gl_reco_shower_dirz 10	    -1.000001      1.000001       9       0               0       0               0               0               5       unity           	0
 glee_1g1p_ext_dup_1              		    gl_reco_shower_dirz 10	    -1.000001      1.000001       9       0               0       0               0               37              3       unity_ovlp	0
@@ -74,7 +74,7 @@ glee_1g1p_overlay_dup_1          		    gl_reco_shower_dirz 10	    -1.000001     
 glee_1g1p_nc_pi0_overlay_dup_1   		    gl_reco_shower_dirz 10	    -1.000001      1.000001       9       1               1       0               0               17              6       cv_spline_ovlp	0
 glee_1g1p_cc_pi0_overlay_dup_1   		    gl_reco_shower_dirz 10	    -1.000001      1.000001       9       1               1       0               0               17              8       cv_spline_ovlp	0
 glee_1g1p_nue_overlay_dup_1   		        gl_reco_shower_dirz 10	    -1.000001      1.000001       9       1               1       0               0               17              1       cv_spline_ovlp	0
-glee_1g1p_nc_delta_overlay_dup_1 		    gl_reco_shower_dirz 10	    -1.000001      1.000001       9       1               1       0               0               18              7       cv_spline_ovlp   1
+glee_1g1p_nc_delta_overlay_dup_1 		    gl_reco_shower_dirz 10	    -1.000001      1.000001       9       1               1       0               0               18              7       cv_spline_ovlp   0
 glee_1g0p_dup_1                             gl_reco_shower_dirz 10	    -1.000001      1.000001       10      0               0       0               0               0               5       unity           	0
 glee_1g0p_ext_dup_1                         gl_reco_shower_dirz 10	    -1.000001      1.000001       10      0               0       0               0               38              3       unity_ovlp	0
 glee_1g0p_dirt_dup_1                        gl_reco_shower_dirz 10	    -1.000001      1.000001       10      1               0       0.5             0               19              4       cv_spline_ovlp	0
@@ -82,7 +82,7 @@ glee_1g0p_overlay_dup_1                     gl_reco_shower_dirz 10	    -1.000001
 glee_1g0p_nc_pi0_overlay_dup_1              gl_reco_shower_dirz 10	    -1.000001      1.000001       10      1               1       0               0               19              6       cv_spline_ovlp	0
 glee_1g0p_cc_pi0_overlay_dup_1              gl_reco_shower_dirz 10	    -1.000001      1.000001       10      1               1       0               0               19              8       cv_spline_ovlp	0
 glee_1g0p_nue_overlay_dup_1                 gl_reco_shower_dirz 10	    -1.000001      1.000001       10      1               1       0               0               19              1       cv_spline_ovlp	0
-glee_1g0p_nc_delta_overlay_dup_1 		    gl_reco_shower_dirz 10	    -1.000001      1.000001       10      1               1       0               0               20              7       cv_spline_ovlp   1
+glee_1g0p_nc_delta_overlay_dup_1 		    gl_reco_shower_dirz 10	    -1.000001      1.000001       10      1               1       0               0               20              7       cv_spline_ovlp   0
 
 
 

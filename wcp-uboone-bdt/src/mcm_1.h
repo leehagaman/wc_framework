@@ -75,6 +75,7 @@ void LEEana::CovMatrix::gen_det_cov_matrix(int run, std::map<int, TH1F*>& map_co
   
   // working on the bootstrapping ...
   for (int qx = 0; qx != 1000; qx++){
+    //for (int qx = 0; qx != 3; qx++){
     if (qx % 500 ==0) std::cout << qx << std::endl;
     
     for (int i=0;i!=rows;i++){
@@ -82,7 +83,9 @@ void LEEana::CovMatrix::gen_det_cov_matrix(int run, std::map<int, TH1F*>& map_co
     }
     
     // fill the histogram with CV
+    //std::cout << "\nnew histogram filling:\n";
     fill_det_histograms(map_filename_histo, map_all_events, map_histoname_infos, map_no_histoname, map_histoname_hist);
+
     // merge histograms according to POTs ...
     for (auto it = map_pred_covch_histos.begin(); it!=map_pred_covch_histos.end();it++){
       //std::cout << it->first << std::endl;
@@ -136,11 +139,11 @@ void LEEana::CovMatrix::gen_det_cov_matrix(int run, std::map<int, TH1F*>& map_co
       
     }
 
-    std::cout << "lhagaman gen_det_cov_matrix debug, x = ";
-    for (int i=0;i!=rows;i++){
-      std::cout << x[i] << ", ";
-    }
-    std::cout << "\n";
+    //std::cout << "lhagaman gen_det_cov_matrix debug, x = ";
+    //for (int i=0;i!=rows;i++){
+    //  std::cout << x[i] << ", ";
+    //}
+    //std::cout << "\n";
 
     prin.AddRow(x);
     
@@ -208,7 +211,9 @@ void LEEana::CovMatrix::gen_det_cov_matrix(int run, std::map<int, TH1F*>& map_co
    }
   
    // fill the histogram with CV
+   //std::cout << "fill_det_histograms second time\n";
    fill_det_histograms(map_all_events, map_histoname_infos, map_no_histoname, map_histoname_hist);
+   //std::cout << "done with fill_det_histograms second time\n";
    // merge histograms according to POTs ...
    for (auto it = map_pred_covch_histos.begin(); it!=map_pred_covch_histos.end();it++){
      //std::cout << it->first << std::endl;
@@ -276,6 +281,7 @@ void LEEana::CovMatrix::fill_det_histograms(std::map<TString, TH1D*> map_filenam
   // loop over files
   for (auto it = map_all_events.begin(); it!=map_all_events.end(); it++){
     TString filename = it->first;
+    //std::cout << "file " << filename << "\n";
     TH1D *hweight = map_filename_histo[filename];
     double sum = hweight->GetSum();
     for (size_t i=0;i<sum;i++){
@@ -293,6 +299,12 @@ void LEEana::CovMatrix::fill_det_histograms(std::map<TString, TH1D*> map_filenam
         TString histoname = map_no_histoname[no];
         TH1F *htemp = map_histoname_hist[histoname];
         int flag_lee = std::get<2>(map_histoname_infos[histoname]);
+
+        //std::cout << "    here, at least one event in this file, event, and bin\n";
+        //std::cout << "    global_index, weight, weight_lee: " << global_index << " " << weight << " " << weight_lee << "\n";
+        //std::cout << "    val_cv, flag_cv, val_det, flag_det: " << val_cv << " " << flag_cv << " " << val_det << " " << flag_det << "\n";
+
+        //std::cout << "        val_cv, weight_lee: " << val_cv << " " << weight_lee << "\n";
 
         // central value ...
         if (flag_cv){
@@ -313,8 +325,7 @@ void LEEana::CovMatrix::fill_det_histograms(std::map<TString, TH1D*> map_filenam
         // if (no==2)
         //std::cout << std::get<0>(it->second.at(i)) << " " << std::get<1>(it->second.at(i)) << " " << val_cv << " " << weight << std::endl;
         // std::cout << weight << " " << weight_lee << " " << flag_lee << " " << histoname << std::endl;
-      }
-      
+      }      
     }
   }
 
@@ -350,7 +361,7 @@ void LEEana::CovMatrix::fill_det_histograms(std::map<TString, TH1D*> map_filenam
 	   bool flag_det = std::get<4>(*it1);
 
 	   TString histoname = map_no_histoname[no];
-       	   TH1F *htemp = map_histoname_hist[histoname];
+    TH1F *htemp = map_histoname_hist[histoname];
 	   int flag_lee = std::get<2>(map_histoname_infos[histoname]);
 
 	   // central value ...
@@ -998,6 +1009,7 @@ void LEEana::CovMatrix::fill_pred_histograms(int run, std::map<int, std::vector<
         std::pair<TString, int> err2_lee = map_pred_histo_histo_err2_lee[histoname];
         TString histoname_err2 = err2_lee.first;
         int flag_lee = err2_lee.second;
+
         if (flag_lee == 1 && lee_strength == 0) continue; // no need to add ...
         
         TH1F *hmc = map_name_histogram[histoname].first;

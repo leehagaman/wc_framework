@@ -1351,55 +1351,55 @@ void LEEana::CovMatrix::fill_xs_histograms(int num, int tot_num, int acc_no, int
       if (std::get<3>(*it1).at(num) != tot_no) std::cout << "Mismatch No of Universe! " << std::endl;
       float rel_weight_diff = std::get<2>(*it1).at(acc_no+no);
       for (auto it2 = std::get<4>(*it1).begin(); it2 != std::get<4>(*it1).end(); it2++){
-   	int no = std::get<0>(*it2);
-   	float val = std::get<1>(*it2);
-	bool flag_pass = std::get<2>(*it2);
-	int nsignal_bin = std::get<3>(*it2);
+        int no = std::get<0>(*it2);
+        float val = std::get<1>(*it2);
+        bool flag_pass = std::get<2>(*it2);
+        int nsignal_bin = std::get<3>(*it2);
 
-   	TString histoname = map_no_histoname[no];
-	auto tmp_hists = map_histoname_hists[histoname];
-	TH1F *h1 = std::get<0>(tmp_hists);
-	TH1F *h2 = std::get<1>(tmp_hists);
-	TH1F *h3 = std::get<2>(tmp_hists);
-	TH2F *h4 = std::get<3>(tmp_hists);
-	int num = std::get<4>(tmp_hists);
-	int flag_lee = std::get<2>(map_histoname_infos[histoname]);
+        TString histoname = map_no_histoname[no];
+        auto tmp_hists = map_histoname_hists[histoname];
+        TH1F *h1 = std::get<0>(tmp_hists);
+        TH1F *h2 = std::get<1>(tmp_hists);
+        TH1F *h3 = std::get<2>(tmp_hists);
+        TH2F *h4 = std::get<3>(tmp_hists);
+        int num = std::get<4>(tmp_hists);
+        int flag_lee = std::get<2>(map_histoname_infos[histoname]);
 
-	//std::cout << "lhagaman debug, val = " << val << "\n";
+        //std::cout << "lhagaman debug, val = " << val << "\n";
 
 
-   	if (std::isnan(rel_weight_diff) || std::isinf(rel_weight_diff)) continue;
-	// seems to have extremely small cv weight
-	if (fabs(rel_weight_diff)>100) continue;
+          if (std::isnan(rel_weight_diff) || std::isinf(rel_weight_diff)) continue;
+        // seems to have extremely small cv weight
+        if (fabs(rel_weight_diff)>100) continue;
 
-	if (num==1){
-	  if (flag_lee){
-	    if (flag_pass) h1->Fill(val, rel_weight_diff * weight * weight_lee);
-	  }else{
-	    if (flag_pass) h1->Fill(val,  rel_weight_diff * weight); // rel = (genie-cv)/cv
-	  }
-	}else{
-	  if (nsignal_bin != -1){
-	    if (flag_lee){
-	      if (flag_pass) h1->Fill(val, weight * weight_lee); // CV as the central one ...
+        if (num==1){
+          if (flag_lee){
+            if (flag_pass) h1->Fill(val, rel_weight_diff * weight * weight_lee);
+          }else{
+            if (flag_pass) h1->Fill(val,  rel_weight_diff * weight); // rel = (genie-cv)/cv
+          }
+        }else{
+          if (nsignal_bin != -1){
+            if (flag_lee){
+              if (flag_pass) h1->Fill(val, weight * weight_lee); // CV as the central one ...
 
-	      h2->Fill(nsignal_bin, (1+rel_weight_diff) * weight*weight_lee); // signal
-	      h3->Fill(nsignal_bin, weight*weight_lee); // nominal ...
-	      
-	      if (flag_pass) h4->Fill(val, nsignal_bin, (1+rel_weight_diff) * weight*weight_lee);
-	    }else{
-	      if (flag_pass) h1->Fill(val, weight); // CV as the central one
-        // if (flag_pass) h1->Fill(val, (1+rel_weight_diff) * weight); // hack: alternative CV as the central one
-	      
-	      h2->Fill(nsignal_bin, (1+rel_weight_diff) * weight); // signal
-	      h3->Fill(nsignal_bin, weight); // nominal ...
-	      
-	      if (flag_pass) h4->Fill(val, nsignal_bin, (1+rel_weight_diff) * weight);
-	    }
-	  }else{
-	    std::cout << "Something wrong: cut/channel mismatch !" << std::endl;
-	  }
-	} // else	
+              h2->Fill(nsignal_bin, (1+rel_weight_diff) * weight*weight_lee); // signal
+              h3->Fill(nsignal_bin, weight*weight_lee); // nominal ...
+              
+              if (flag_pass) h4->Fill(val, nsignal_bin, (1+rel_weight_diff) * weight*weight_lee);
+            }else{
+              if (flag_pass) h1->Fill(val, weight); // CV as the central one
+              // if (flag_pass) h1->Fill(val, (1+rel_weight_diff) * weight); // hack: alternative CV as the central one
+              
+              h2->Fill(nsignal_bin, (1+rel_weight_diff) * weight); // signal
+              h3->Fill(nsignal_bin, weight); // nominal ...
+              
+              if (flag_pass) h4->Fill(val, nsignal_bin, (1+rel_weight_diff) * weight);
+            }
+          }else{
+            std::cout << "Something wrong: cut/channel mismatch !" << std::endl;
+          }
+        } // else	
       }
     }
   }

@@ -1,5 +1,5 @@
 glee_1g0p                          	        gl_reco_Eshower   	1       100     700    1       0               0       0               0               0               5       unity            0
-glee_1g0p_true_0p_nc_delta_overlay 	        gl_reco_Eshower   	1       100     700    1       1               1       0               0               1              7       cv_spline_ovlp   1
+glee_1g0p_true_0p_nc_delta_overlay 	        gl_reco_Eshower   	1       100     700    1       1               1       0               0               1              7       cv_spline_ovlp   0
 
 End				End				-1	-1	-1	-1	-1		-1	-1		-1		-1		-1	end		-1
 Name:				#Var:				#bin	#start	#end	#obs	#xs_flux	#det	#add_sys	#same_mc	#cov_sec	#file	#weight		#lee_strength
