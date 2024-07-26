@@ -49,7 +49,7 @@ using namespace std;
 
 void cal_CL_Mixed_Asimov_Data()
 {
-  TString str_file_data = "./fc_files/sub_fit_mixed_Asimov_data.root ";
+  TString str_file_data = "./fc_files/sub_fit_mixed_Asimov_data_v2.root ";
   TString str_file_distribution = "./fc_files/sub_fit_distribution.root";
 
   TFile *file_data = new TFile(str_file_data, "read");

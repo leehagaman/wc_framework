@@ -661,7 +661,7 @@ int main(int argc, char** argv)
 
 	}
 
-	bool make_sig_bkg_constr_v3_plot = true;
+	bool make_sig_bkg_constr_v3_plot = false;
 	if (make_sig_bkg_constr_v3_plot) {
 		Lee_test->scaleF_Lee_Np = 1;
 		Lee_test->scaleF_Lee_0p = 1;
@@ -1935,7 +1935,8 @@ int main(int argc, char** argv)
 					Lee_test->scaleF_Lee_Np = 1.;
 					Lee_test->scaleF_Lee_0p = 1.;
 					Lee_test->Set_Collapse();
-					Lee_test->Set_first_eight_bins_asimov_rest_measured();
+					//Lee_test->Set_first_eight_bins_asimov_rest_measured();
+					Lee_test->Set_first_eight_bins_constr_asimov_rest_measured();
 				} else if (ifile==0) { // make the data file
 					Lee_test->Set_measured_data();
 				} else if (ifile==-1) { // make the Asimov file at the Standard Model
@@ -2022,7 +2023,7 @@ int main(int argc, char** argv)
 
 
 	// full grid
-    if( 0 ) {
+    if( 1 ) {
 
 		bool thirty_by_thirty = false;
 
@@ -2045,7 +2046,7 @@ int main(int argc, char** argv)
 
 		if (ifile==-2){
 			std::cout << "creating mixed Asimov/data root file\n";
-			roostr = TString("sub_fit_mixed_Asimov_data.root");
+			roostr = TString("sub_fit_mixed_Asimov_data_v2.root");
 		} else if (ifile==-1) {
 			std::cout << "creating asimov root file\n";
 			roostr = TString("sub_fit_Asimov.root");
@@ -2133,7 +2134,8 @@ int main(int argc, char** argv)
 					Lee_test->scaleF_Lee_Np = 1.;
 					Lee_test->scaleF_Lee_0p = 1.;
 					Lee_test->Set_Collapse();
-					Lee_test->Set_first_eight_bins_asimov_rest_measured();
+					//Lee_test->Set_first_eight_bins_asimov_rest_measured();
+					Lee_test->Set_first_eight_bins_constr_asimov_rest_measured();
 				} else if (ifile==0) { // make the data file
 					Lee_test->Set_measured_data();
 				} else if (ifile==-1) { // make the Asimov file at the Standard Model

@@ -413,9 +413,9 @@ double TLee::FCN_Np_0p(const double *par)
 	bool use_custom_joint_chi2 = true; // here, joint refers to sig+bkg channels
 	bool use_custom_constrained_chi2 = false;
 	
-	bool all_channels = false;
+	bool all_channels = true;
 	bool just_wc = false;
-	bool just_glee = true;
+	bool just_glee = false;
 
 	// none of these needed anymore, now keep track of explicitly zero bins in Configure_Lee.h, array_no_stat_bins
 	bool exclude_1g_overflow_bins = false; // currently works for joint chi2 but not constrained chi2
@@ -1072,6 +1072,19 @@ void TLee::Set_first_eight_bins_asimov_rest_measured()
 		} else {
 			map_fake_data[ibin] = matrix_data_newworld(0, ibin);
 		}
+	}
+}
+
+void TLee::Set_first_eight_bins_constr_asimov_rest_measured()
+{
+	//cout << "first eight bins asimov, rest measured\n";
+	map_fake_data.clear();
+	for(int ibin=0; ibin<bins_newworld; ibin++) {
+		if (ibin==0) map_fake_data[ibin] = 38.8;
+		else if (ibin==2) map_fake_data[ibin] = 139.5;
+		else if (ibin==4) map_fake_data[ibin] = 22.0;
+		else if (ibin==6) map_fake_data[ibin] = 126.1;
+		else map_fake_data[ibin] = matrix_data_newworld(0, ibin);
 	}
 }
 
@@ -4131,7 +4144,7 @@ void TLee::Set_Spectra_MatrixCov()
 		cout<<TString::Format(" %2d %s", idx, roostr.Data())<<endl;
 
 		
-		int disable_BR_uncertainty_2d = 0; 
+		int disable_BR_uncertainty_2d = 1; 
 		if (disable_BR_uncertainty_2d) {
 
 			// zero is bkg, 1 is Np, 2 is 0p
@@ -4192,7 +4205,7 @@ void TLee::Set_Spectra_MatrixCov()
 			}
 		}
 
-		int disable_BR_uncertainty_sig_bkg_constrt_v3_2d = 1; 
+		int disable_BR_uncertainty_sig_bkg_constrt_v3_2d = 0; 
 		if (disable_BR_uncertainty_sig_bkg_constrt_v3_2d) {
 
 			// zero is bkg, 1 is Np, 2 is 0p, 3 is Np+0p

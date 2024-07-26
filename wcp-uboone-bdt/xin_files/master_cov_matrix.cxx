@@ -1884,8 +1884,8 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
 
       //  std::cout << flag_pass << " " << signal_bin << " " << no << std::endl;
       if (flag_pass || signal_bin !=-1) {
-	std::get<4>(event_info).insert(std::make_tuple(no, val, flag_pass, signal_bin));
-	//	if (no == 0) std::cout << "Xin: " << " " << flag_pass << " " << signal_bin << " " << eval.weight_cv * eval.weight_spline << " " <<eval.run << " " << eval.subrun << " " << eval.event << std::endl;
+        std::get<4>(event_info).insert(std::make_tuple(no, val, flag_pass, signal_bin));
+        //	if (no == 0) std::cout << "Xin: " << " " << flag_pass << " " << signal_bin << " " << eval.weight_cv * eval.weight_spline << " " <<eval.run << " " << eval.subrun << " " << eval.event << std::endl;
       }
       //if (flag_pass || (signal_bin !=-1 && is_preselection(eval))) std::get<4>(event_info).insert(std::make_tuple(no, val, flag_pass, signal_bin));
      }
