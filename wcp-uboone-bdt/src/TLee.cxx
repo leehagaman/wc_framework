@@ -2578,7 +2578,7 @@ void TLee::Set_Collapse()
 				double pred_sigma_i = sqrt( gh_mc_stat_bin[idx]->Eval( scaleF_Lee ) );
 				double pred_sigma_j = sqrt( gh_mc_stat_bin[jdx]->Eval( scaleF_Lee ) );
 				double pred_correlation = matrix_pred_MCstat_correlation(idx, jdx);
-				if (pred_correlation > 1) std::cout << "problem!!! matrix_pred_MCstat_correlation > 1 at (i, j) = (" << idx << ", " << jdx << ")\n";
+				if (pred_correlation > 1.01) std::cout << "problem!!! matrix_pred_MCstat_correlation > 1 at (i, j) = (" << idx << ", " << jdx << "): " << pred_correlation << "\n";
 
 				if (idx==jdx) pred_correlation = 0.; // leave the diagonal entries to be calculated as usual later
 				double pred_stat_cov = pred_correlation * pred_sigma_i * pred_sigma_j;
@@ -2611,49 +2611,33 @@ void TLee::Set_Collapse()
 	matrix_absolute_cov_newworld.ResizeTo(bins_newworld, bins_newworld);
 	matrix_absolute_cov_newworld = matrix_transform_Lee_T * matrix_absolute_cov_oldworld * matrix_transform_Lee;
 
-	//std::cout << "old world diag entry 135: " << matrix_absolute_cov_oldworld(135, 135) << "\n";
-	//std::cout << "old world flux Xs diag entry 135: " << matrix_input_cov_flux_Xs(135, 135) << "\n";
-	
-
-	
-	/*std::cout << "collapsing covariance matrix here!\n";
-	std::cout << "old world:\n";
-	for (int curr_bin_num___ = 0; curr_bin_num___ < bins_oldworld; curr_bin_num___ ++){
-		std::cout << "    " << matrix_absolute_cov_oldworld(curr_bin_num___, curr_bin_num___) << ",\n";
-	}
-	std::cout << "new world:\n";
-	for (int curr_bin_num___ = 0; curr_bin_num___ < bins_newworld; curr_bin_num___ ++){
-		std::cout << "    " << matrix_absolute_cov_newworld(curr_bin_num___, curr_bin_num___) << ",\n";
-	}*/
-
-	TMatrixD myMatrix = matrix_absolute_cov_newworld;
-	if (!myMatrix.IsSymmetric()) {
-		myMatrix = 0.5 * (myMatrix + myMatrix.T()); // Symmetrization, should be only very small changes
-	}
-	TMatrixDSym symMatrix(myMatrix.GetNrows());
-	for (Int_t i = 0; i < symMatrix.GetNrows(); ++i) {
-		for (Int_t j = 0; j <= i; ++j) {
-			symMatrix(i, j) = myMatrix(i, j);
-		}
-	}
-	// get the eigenvalues and eigenvectors
-	TMatrixDSymEigen eig(symMatrix);
-	TVectorD eigenvalues = eig.GetEigenValues();
-	TMatrixD eigenvectors = eig.GetEigenVectors();
-	TVectorD abs_val_neg_eigenvalues = eigenvalues;
-	//TVectorD zeroed_neg_eigenvalues = eigenvalues;
-	for (Int_t i = 0; i < eigenvalues.GetNrows(); ++i) {
-		Double_t eigenvalue = eigenvalues[i];
-		if (eigenvalue < 0) {
-			//cout << "    negative eigenvalue: " << eigenvalue << "\n";
-			abs_val_neg_eigenvalues[i] = -eigenvalue;
-			//zeroed_neg_eigenvalues[i] = 0;
-		}
-	}
 
 	bool abs_val_neg_eigenvals = true;
-	//bool zero_neg_eigenvalues = false;
 	if (abs_val_neg_eigenvals) {
+		TMatrixD myMatrix = matrix_absolute_cov_newworld;
+		if (!myMatrix.IsSymmetric()) {
+			myMatrix = 0.5 * (myMatrix + myMatrix.T()); // Symmetrization, should be only very small changes
+		}
+		TMatrixDSym symMatrix(myMatrix.GetNrows());
+		for (Int_t i = 0; i < symMatrix.GetNrows(); ++i) {
+			for (Int_t j = 0; j <= i; ++j) {
+				symMatrix(i, j) = myMatrix(i, j);
+			}
+		}
+		// get the eigenvalues and eigenvectors
+		TMatrixDSymEigen eig(symMatrix);
+		TVectorD eigenvalues = eig.GetEigenValues();
+		TMatrixD eigenvectors = eig.GetEigenVectors();
+		TVectorD abs_val_neg_eigenvalues = eigenvalues;
+		//TVectorD zeroed_neg_eigenvalues = eigenvalues;
+		for (Int_t i = 0; i < eigenvalues.GetNrows(); ++i) {
+			Double_t eigenvalue = eigenvalues[i];
+			if (eigenvalue < 0) {
+				//cout << "    negative eigenvalue: " << eigenvalue << "\n";
+				abs_val_neg_eigenvalues[i] = -eigenvalue;
+				//zeroed_neg_eigenvalues[i] = 0;
+			}
+		}
 		//std::cout << "absolute valuing those negative eigenvalues:\n";
 		TMatrixD diagEigenvalues(eigenvalues.GetNrows(), eigenvalues.GetNrows());
 		diagEigenvalues.Zero();
@@ -2666,14 +2650,6 @@ void TLee::Set_Collapse()
 		matrix_absolute_cov_newworld = modifiedMatrix;
 	}
 
-	
-
-
-
-
-	// another addition for stat cor here 
-
-	TMatrixD matrix_absolute_cov_newworld_original_copy = matrix_absolute_cov_newworld;
 
 	if(flag_syst_mc_data_stat_cor){
 		//cout << "adding stat cov matrices with shapes (" << matrix_absolute_cov_newworld.GetNrows() << ", " << matrix_absolute_cov_newworld.GetNcols() << ") (" << matrix_absolute_data_stat_cov.GetNrows() << ", " << matrix_absolute_data_stat_cov.GetNcols() << ") (" << matrix_absolute_pred_stat_cov.GetNrows() << ", " << matrix_absolute_pred_stat_cov.GetNcols() << ")\n";
@@ -2684,8 +2660,6 @@ void TLee::Set_Collapse()
 	if( flag_syst_mc_stat ) {
 		for(int ibin=0; ibin<bins_newworld; ibin++) {
 			double val_mc_stat_cov = gh_mc_stat_bin[ibin]->Eval( scaleF_Lee );
-			// gh_mc_stat_bin[idx]->Eval(
-			// gh_mc_stat_bin[ibin]->Eval( 
 
 			// this is explicitly a zero-uncertainty, empty overflow bin.
 			for(int idx=0; idx<num_no_stat_bins; idx++) {
@@ -2697,73 +2671,6 @@ void TLee::Set_Collapse()
 			//matrix_absolute_cov_newworld(ibin, ibin) += val_mc_stat_cov/4.;
 		}
 	}
-
-	TMatrixD additional_mc_stat_cov_newworld = matrix_absolute_cov_newworld - matrix_absolute_cov_newworld_original_copy;
-
-	// print absolute cov matrix, uncollapsed and collapsed, to new file
-
-	std::ofstream collapsing_matrix_file;
-	collapsing_matrix_file.open("./text_cov_matrix_outputs/collapsing_matrix_file.txt");
-	for (int curr_i = 0; curr_i < bins_oldworld; curr_i ++){
-		for (int curr_j = 0; curr_j < bins_newworld; curr_j ++){
-			collapsing_matrix_file << matrix_transform_Lee(curr_i, curr_j) << ",";
-		}
-		collapsing_matrix_file << "\n";
-	}
-	collapsing_matrix_file.close();
-
-	std::ofstream uncollapsed_cov_matrix_file;
-	uncollapsed_cov_matrix_file.open("./text_cov_matrix_outputs/uncollapsed_cov_matrix_file.txt");
-	for (int curr_i = 0; curr_i < bins_oldworld; curr_i ++){
-		for (int curr_j = 0; curr_j < bins_oldworld; curr_j ++){
-			uncollapsed_cov_matrix_file << matrix_absolute_cov_oldworld(curr_i, curr_j) << ",";
-		}
-		uncollapsed_cov_matrix_file << "\n";
-	}
-	uncollapsed_cov_matrix_file.close();
-
-	std::ofstream collapsed_cov_matrix_file;
-	collapsed_cov_matrix_file.open("./text_cov_matrix_outputs/collapsed_cov_matrix_file.txt");
-	for (int curr_i = 0; curr_i < bins_newworld; curr_i ++){
-		for (int curr_j = 0; curr_j < bins_newworld; curr_j ++){
-			collapsed_cov_matrix_file << matrix_absolute_cov_newworld(curr_i, curr_j) << ",";
-		}
-		collapsed_cov_matrix_file << "\n";
-	}
-	collapsed_cov_matrix_file.close();
-
-	std::ofstream collapsed_cov_matrix_diags_file;
-	collapsed_cov_matrix_diags_file.open("./text_cov_matrix_outputs/collapsed_cov_matrix_diags_file.txt");
-	for (int curr_i = 0; curr_i < bins_newworld; curr_i ++){
-		collapsed_cov_matrix_diags_file << curr_i << ", " << matrix_absolute_cov_newworld(curr_i, curr_i) << "\n";
-	}
-	collapsed_cov_matrix_diags_file.close();
-
-	std::ofstream additional_mc_stat_cov_matrix_file;
-	additional_mc_stat_cov_matrix_file.open("./text_cov_matrix_outputs/additional_mc_stat_cov_matrix_file.txt");
-	for (int curr_i = 0; curr_i < bins_newworld; curr_i ++){
-		for (int curr_j = 0; curr_j < bins_newworld; curr_j ++){
-			additional_mc_stat_cov_matrix_file << additional_mc_stat_cov_newworld(curr_i, curr_j) << ",";
-		}
-		additional_mc_stat_cov_matrix_file << "\n";
-	}
-	additional_mc_stat_cov_matrix_file.close();
-
-	std::ofstream uncollapsed_pred_file;
-	uncollapsed_pred_file.open("./text_cov_matrix_outputs/uncollapsed_pred_file.txt");
-	for (int curr_i = 0; curr_i < bins_oldworld; curr_i ++){
-		uncollapsed_pred_file << matrix_pred_oldworld(0, curr_i) << ",";
-	}
-	uncollapsed_pred_file.close();
-
-	std::ofstream collapsed_pred_file;
-	collapsed_pred_file.open("./text_cov_matrix_outputs/collapsed_pred_file.txt");
-	for (int curr_i = 0; curr_i < bins_newworld; curr_i ++){
-		collapsed_pred_file << matrix_pred_newworld(0, curr_i) << ",";
-	}
-	collapsed_pred_file.close();
-
-
 
 	////////////////////////////////////////
 

@@ -25,6 +25,7 @@ void LEEana::CovMatrix::gen_pred_stat_cov_matrix(int run, std::map<int, TH1F*>& 
       int obsch = get_obsch_name(std::get<5>(*it1));
       int covch = get_covch_name(std::get<5>(*it1));
       int flag_lee = std::get<7>(map_ch_hist[ch]);
+      flag_lee = 0; // turning off all lee scaling here, we get pred_stat_cov with nominal scaling
       TString histoname = std::get<0>(*it1);
       TH1F *htemp = map_histoname_hist[histoname];
       //
@@ -290,13 +291,13 @@ void LEEana::CovMatrix::fill_pred_stat_histograms(std::map<TString, TH1D*> map_f
       
       auto it4 = map_ratio_sum.find(ratio);
       if (it4 == map_ratio_sum.end()){
-	double sum = gRandom->Poisson(hweight->GetSum() * ratio);
-	if (sum > max_sum) max_sum = sum;
-	map_histoname_sum[temp_histoname] = sum;
-	map_ratio_sum[ratio] = sum;
+        double sum = gRandom->Poisson(hweight->GetSum() * ratio);
+        if (sum > max_sum) max_sum = sum;
+        map_histoname_sum[temp_histoname] = sum;
+        map_ratio_sum[ratio] = sum;
       }else{
-	double sum = it4->second;
-	map_histoname_sum[temp_histoname] = sum;
+        double sum = it4->second;
+        map_histoname_sum[temp_histoname] = sum;
       }
     }
     
@@ -305,29 +306,30 @@ void LEEana::CovMatrix::fill_pred_stat_histograms(std::map<TString, TH1D*> map_f
       int global_index = hweight->FindBin(hweight->GetRandom())-1;
       double weight_lee = std::get<3>(it->second.at(global_index));
       
-       for (auto it1 = std::get<4>(it->second.at(global_index)).begin(); it1 != std::get<4>(it->second.at(global_index)).end(); it1++){
-	 int no = std::get<0>(*it1);
-	 double val_cv = std::get<1>(*it1);
-	 bool flag_cv = std::get<2>(*it1);
+      for (auto it1 = std::get<4>(it->second.at(global_index)).begin(); it1 != std::get<4>(it->second.at(global_index)).end(); it1++){
+        int no = std::get<0>(*it1);
+        double val_cv = std::get<1>(*it1);
+        bool flag_cv = std::get<2>(*it1);
 
-	 TString histoname = map_no_histoname[no];
-	 TH1F *htemp = map_histoname_hist[histoname];
-	 int flag_lee = std::get<2>(map_histoname_infos[histoname]);
-	 
-	 auto it4 = map_histoname_sum.find(histoname);
-	 if (it4 == map_histoname_sum.end()) std::cout << "something wrong! " << std::endl;
-	 double sum = it4->second;
-	 
-	 if (i>=sum) continue; // go over ...
-	 
-	  if (flag_cv){
-	    if (flag_lee){
-	      htemp->Fill(val_cv,weight_lee);
-	    }else{
-	      htemp->Fill(val_cv,1);
-	    }
-	  }
-       }
+        TString histoname = map_no_histoname[no];
+        TH1F *htemp = map_histoname_hist[histoname];
+        int flag_lee = std::get<2>(map_histoname_infos[histoname]);
+        flag_lee = 0; // turning off all lee scaling here, we get pred_stat_cov with nominal scaling
+        
+        auto it4 = map_histoname_sum.find(histoname);
+        if (it4 == map_histoname_sum.end()) std::cout << "something wrong! " << std::endl;
+        double sum = it4->second;
+        
+        if (i>=sum) continue; // go over ...
+        
+        if (flag_cv){
+          if (flag_lee){
+            htemp->Fill(val_cv,weight_lee);
+          }else{
+            htemp->Fill(val_cv,1);
+          }
+        }
+      }
       
     }
   }
@@ -358,7 +360,8 @@ void LEEana::CovMatrix::fill_pred_stat_histograms(std::map<TString, std::vector<
 
 	TString histoname = map_no_histoname[no];
 	TH1F *htemp = map_histoname_hist[histoname];
-	 int flag_lee = std::get<2>(map_histoname_infos[histoname]);
+  int flag_lee = std::get<2>(map_histoname_infos[histoname]);
+  flag_lee = 0; // turning off all lee scaling here, we get pred_stat_cov with nominal scaling
 	if (flag_cv){
 	  if (flag_lee){
 	    htemp->Fill(val_cv, weight * weight_lee);
@@ -736,7 +739,7 @@ void LEEana::CovMatrix::get_pred_events_info(TString input_filename, std::map<TS
   if (!flag_data){
     T_eval->SetBranchStatus("weight_spline",1);
     T_eval->SetBranchStatus("weight_cv",1);
-    T_eval->SetBranchStatus("weight_lee",1);
+    //T_eval->SetBranchStatus("weight_lee",1);
     T_eval->SetBranchStatus("weight_change",1);
     // MC enable truth information ...
     T_eval->SetBranchStatus("truth_isCC",1);

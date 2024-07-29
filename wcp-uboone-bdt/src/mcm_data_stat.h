@@ -24,6 +24,7 @@ void LEEana::CovMatrix::gen_data_stat_cov_matrix(int run, std::map<int, TH1F*>& 
       int obsch = get_obsch_name(std::get<5>(*it1));
       //      int covch = get_covch_name(std::get<5>(*it1));
       int flag_lee = std::get<7>(map_ch_hist[ch]);
+      flag_lee = 0; // turning off all lee scaling here, we get data_stat_cov with nominal scaling
       TString histoname = std::get<0>(*it1);
       TH1F *htemp = map_histoname_hist[histoname];
       //
@@ -185,17 +186,17 @@ void LEEana::CovMatrix::fill_data_stat_histograms(std::map<TString, TH1D*> map_f
       int global_index = hweight->FindBin(hweight->GetRandom())-1;
 
        for (auto it1 = std::get<2>(it->second.at(global_index)).begin(); it1 != std::get<2>(it->second.at(global_index)).end(); it1++){
-	 int no = std::get<0>(*it1);
-	 double val_cv = std::get<1>(*it1);
-	 bool flag_cv = std::get<2>(*it1);
+          int no = std::get<0>(*it1);
+          double val_cv = std::get<1>(*it1);
+          bool flag_cv = std::get<2>(*it1);
 
-	 TString histoname = map_no_histoname[no];
-	 TH1F *htemp = map_histoname_hist[histoname];
-	 //int flag_lee = std::get<2>(map_histoname_infos[histoname]);
+          TString histoname = map_no_histoname[no];
+          TH1F *htemp = map_histoname_hist[histoname];
+          //int flag_lee = std::get<2>(map_histoname_infos[histoname]);
 
-	  if (flag_cv){
-	    htemp->Fill(val_cv,1);
-	  }
+            if (flag_cv){
+              htemp->Fill(val_cv,1);
+            }
        }
       
     }

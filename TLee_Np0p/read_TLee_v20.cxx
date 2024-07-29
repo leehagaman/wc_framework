@@ -889,6 +889,262 @@ int main(int argc, char** argv)
 	}
 
 
+	bool make_small_set_of_four_bin_excess_plots = true;
+	if (make_small_set_of_four_bin_excess_plots) {
+		cout << "getting constrained predictions at (1, 1) point...\n";
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse(); // prediction is ready
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+		double pars_2d[2] = {1, 1};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		vector<int>vc_target_chs;
+		vc_target_chs.push_back(0);
+		vc_target_chs.push_back(2);
+		vc_target_chs.push_back(4);
+		vc_target_chs.push_back(6);
+		vector<int>vc_support_chs;
+		for (int i=8; i < 8 + 16 * 4; i++){
+			vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 999001001 );
+		cout << "done\n";
+	}
+	if (make_small_set_of_four_bin_excess_plots) {
+		cout << "getting constrained predictions at (15, 1) point...\n";
+		Lee_test->scaleF_Lee_Np = 15;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse(); // prediction is ready
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+		double pars_2d[2] = {15, 1};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		vector<int>vc_target_chs;
+		vc_target_chs.push_back(0);
+		vc_target_chs.push_back(2);
+		vc_target_chs.push_back(4);
+		vc_target_chs.push_back(6);
+		vector<int>vc_support_chs;
+		for (int i=8; i < 8 + 16 * 4; i++){
+			vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 999015001 );
+		cout << "done\n";
+	}
+	if (make_small_set_of_four_bin_excess_plots) {
+		cout << "getting constrained predictions at (1, 15) point...\n";
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 15;
+		Lee_test->Set_Collapse(); // prediction is ready
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+		double pars_2d[2] = {1, 15};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		vector<int>vc_target_chs;
+		vc_target_chs.push_back(0);
+		vc_target_chs.push_back(2);
+		vc_target_chs.push_back(4);
+		vc_target_chs.push_back(6);
+		vector<int>vc_support_chs;
+		for (int i=8; i < 8 + 16 * 4; i++){
+			vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 999001015 );
+		cout << "done\n";
+	}
+	if (make_small_set_of_four_bin_excess_plots) {
+		cout << "getting constrained predictions at (15, 15) point...\n";
+		Lee_test->scaleF_Lee_Np = 15;
+		Lee_test->scaleF_Lee_0p = 15;
+		Lee_test->Set_Collapse(); // prediction is ready
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+		double pars_2d[2] = {15, 15};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		vector<int>vc_target_chs;
+		vc_target_chs.push_back(0);
+		vc_target_chs.push_back(2);
+		vc_target_chs.push_back(4);
+		vc_target_chs.push_back(6);
+		vector<int>vc_support_chs;
+		for (int i=8; i < 8 + 16 * 4; i++){
+			vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 999015015 );
+		cout << "done\n";
+	}
+
+
+	bool make_small_set_of_four_bin_excess_plots_asimov = false;
+	if (make_small_set_of_four_bin_excess_plots_asimov) {
+		cout << "getting asimov constrained predictions at (1, 1) point...\n";
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse(); // prediction is ready
+		Lee_test->Set_toy_Asimov(); // measurement is ready, asimov data, hidden input is prediction
+		Lee_test->matrix_data_newworld = Lee_test->matrix_pred_newworld; // updating so that constrained chi2s use asimov data
+		// dangerous, could mess up things later in the program, does not save the real measurement, have to do one at a time with this method
+		double pars_2d[2] = {1, 1};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		vector<int>vc_target_chs;
+		vc_target_chs.push_back(0);
+		vc_target_chs.push_back(2);
+		vc_target_chs.push_back(4);
+		vc_target_chs.push_back(6);
+		vector<int>vc_support_chs;
+		for (int i=8; i < 8 + 16 * 4; i++){
+			vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 998001001 );
+		cout << "done\n";
+	}
+	if (make_small_set_of_four_bin_excess_plots_asimov) {
+		cout << "getting asimov constrained predictions at (15, 1) point...\n";
+		Lee_test->scaleF_Lee_Np = 15;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse(); // prediction is ready
+		Lee_test->Set_toy_Asimov(); // measurement is ready, asimov data, hidden input is prediction
+		Lee_test->matrix_data_newworld = Lee_test->matrix_pred_newworld; // updating so that constrained chi2s use asimov data
+		// dangerous, could mess up things later in the program, does not save the real measurement, have to do one at a time with this method
+		double pars_2d[2] = {15, 1};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		vector<int>vc_target_chs;
+		vc_target_chs.push_back(0);
+		vc_target_chs.push_back(2);
+		vc_target_chs.push_back(4);
+		vc_target_chs.push_back(6);
+		vector<int>vc_support_chs;
+		for (int i=8; i < 8 + 16 * 4; i++){
+			vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 998015001 );
+		cout << "done\n";
+	}
+	if (make_small_set_of_four_bin_excess_plots_asimov) {
+		cout << "getting asimov constrained predictions at (1, 15) point...\n";
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 15;
+		Lee_test->Set_Collapse(); // prediction is ready
+		Lee_test->Set_toy_Asimov(); // measurement is ready, asimov data, hidden input is prediction
+		Lee_test->matrix_data_newworld = Lee_test->matrix_pred_newworld; // updating so that constrained chi2s use asimov data
+		// dangerous, could mess up things later in the program, does not save the real measurement, have to do one at a time with this method
+		double pars_2d[2] = {1, 15};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		vector<int>vc_target_chs;
+		vc_target_chs.push_back(0);
+		vc_target_chs.push_back(2);
+		vc_target_chs.push_back(4);
+		vc_target_chs.push_back(6);
+		vector<int>vc_support_chs;
+		for (int i=8; i < 8 + 16 * 4; i++){
+			vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 998001015 );
+		cout << "done\n";
+	}
+	if (make_small_set_of_four_bin_excess_plots_asimov) {
+		cout << "getting asimov constrained predictions at (15, 15) point...\n";
+		Lee_test->scaleF_Lee_Np = 15;
+		Lee_test->scaleF_Lee_0p = 15;
+		Lee_test->Set_Collapse(); // prediction is ready
+		Lee_test->Set_toy_Asimov(); // measurement is ready, asimov data, hidden input is prediction
+		Lee_test->matrix_data_newworld = Lee_test->matrix_pred_newworld; // updating so that constrained chi2s use asimov data
+		// dangerous, could mess up things later in the program, does not save the real measurement, have to do one at a time with this method
+		double pars_2d[2] = {15, 15};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		vector<int>vc_target_chs;
+		vc_target_chs.push_back(0);
+		vc_target_chs.push_back(2);
+		vc_target_chs.push_back(4);
+		vc_target_chs.push_back(6);
+		vector<int>vc_support_chs;
+		for (int i=8; i < 8 + 16 * 4; i++){
+			vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 998015015 );
+		cout << "done\n";
+	}
+
+	bool make_small_set_of_four_bin_super_excess_plots = true;
+	if (make_small_set_of_four_bin_super_excess_plots) {
+		cout << "getting constrained predictions at (1, 1) point...\n";
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse(); // prediction is ready
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+		double pars_2d[2] = {1, 1};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		vector<int>vc_target_chs;
+		vc_target_chs.push_back(0);
+		vc_target_chs.push_back(2);
+		vc_target_chs.push_back(4);
+		vc_target_chs.push_back(6);
+		vector<int>vc_support_chs;
+		for (int i=8; i < 8 + 16 * 4; i++){
+			vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 997001001 );
+		cout << "done\n";
+	}
+	if (make_small_set_of_four_bin_super_excess_plots) {
+		cout << "getting constrained predictions at (1000, 1) point...\n";
+		Lee_test->scaleF_Lee_Np = 1000;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse(); // prediction is ready
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+		double pars_2d[2] = {1000, 1};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		vector<int>vc_target_chs;
+		vc_target_chs.push_back(0);
+		vc_target_chs.push_back(2);
+		vc_target_chs.push_back(4);
+		vc_target_chs.push_back(6);
+		vector<int>vc_support_chs;
+		for (int i=8; i < 8 + 16 * 4; i++){
+			vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 997015001 );
+		cout << "done\n";
+	}
+	if (make_small_set_of_four_bin_super_excess_plots) {
+		cout << "getting constrained predictions at (1, 1000) point...\n";
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1000;
+		Lee_test->Set_Collapse(); // prediction is ready
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+		double pars_2d[2] = {1, 1000};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		vector<int>vc_target_chs;
+		vc_target_chs.push_back(0);
+		vc_target_chs.push_back(2);
+		vc_target_chs.push_back(4);
+		vc_target_chs.push_back(6);
+		vector<int>vc_support_chs;
+		for (int i=8; i < 8 + 16 * 4; i++){
+			vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 997001015 );
+		cout << "done\n";
+	}
+	if (make_small_set_of_four_bin_super_excess_plots) {
+		cout << "getting constrained predictions at (1000, 1000) point...\n";
+		Lee_test->scaleF_Lee_Np = 1000;
+		Lee_test->scaleF_Lee_0p = 1000;
+		Lee_test->Set_Collapse(); // prediction is ready
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+		double pars_2d[2] = {1000, 1000};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		vector<int>vc_target_chs;
+		vc_target_chs.push_back(0);
+		vc_target_chs.push_back(2);
+		vc_target_chs.push_back(4);
+		vc_target_chs.push_back(6);
+		vector<int>vc_support_chs;
+		for (int i=8; i < 8 + 16 * 4; i++){
+			vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 997015015 );
+		cout << "done\n";
+	}
+
+
 	/*
 
 	if ( constraints_at_certain_bins ) {
@@ -2023,7 +2279,7 @@ int main(int argc, char** argv)
 
 
 	// full grid
-    if( 1 ) {
+    if( 0 ) {
 
 		bool thirty_by_thirty = false;
 

@@ -22,6 +22,8 @@ void LEEana::CovMatrix::gen_xf_cov_matrix(int run, std::map<int, TH1F*>& map_cov
       int obsch = get_obsch_name(std::get<5>(*it1));
       int covch = get_covch_name(std::get<5>(*it1));
       int flag_lee = std::get<7>(map_ch_hist[ch]);
+      flag_lee = 0; // turning off all lee scaling for XsFlux/DetVar, since it uses eLEE weights and we're making uncollapsed cov matrices
+      
       TString histoname = std::get<0>(*it1);
       TH1F *htemp = map_histoname_hist[histoname];
       //
@@ -263,6 +265,7 @@ void LEEana::CovMatrix::fill_xf_histograms(int num, int tot_num, int acc_no, int
 	TString histoname = map_no_histoname[no];
 	TH1F *htemp = map_histoname_hist[histoname];
 	int flag_lee = std::get<2>(map_histoname_infos[histoname]);
+  flag_lee = 0; // turning off all lee scaling for XsFlux/DetVar, since it uses eLEE weights and we're making uncollapsed cov matrices
 
 	if (std::isnan(rel_weight_diff) || std::isinf(rel_weight_diff)) continue;
 	// seems to have extremely small cv weight
@@ -300,6 +303,7 @@ void LEEana::CovMatrix::fill_xf_histograms(std::map<TString, std::set<std::tuple
 	TString histoname = map_no_histoname[no];
 	TH1F *htemp = map_histoname_hist[histoname];
 	int flag_lee = std::get<2>(map_histoname_infos[histoname]);
+  flag_lee = 0; // turning off all lee scaling for XsFlux/DetVar, since it uses eLEE weights and we're making uncollapsed cov matrices
 	
 	if (flag_lee){
 	  htemp->Fill(val, weight * weight_lee);
@@ -661,7 +665,7 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
   
   T_eval->SetBranchStatus("weight_spline",1);
   T_eval->SetBranchStatus("weight_cv",1);
-  T_eval->SetBranchStatus("weight_lee",1);
+  //T_eval->SetBranchStatus("weight_lee",1);
   T_eval->SetBranchStatus("weight_change",1);
   // MC enable truth information ...
   T_eval->SetBranchStatus("truth_isCC",1);

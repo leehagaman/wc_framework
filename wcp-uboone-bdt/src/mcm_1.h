@@ -30,6 +30,7 @@ void LEEana::CovMatrix::gen_det_cov_matrix(int run, std::map<int, TH1F*>& map_co
       int obsch = get_obsch_name(std::get<5>(*it1));
       int covch = get_covch_name(std::get<5>(*it1));
       int flag_lee = std::get<7>(map_ch_hist[ch]);
+      flag_lee = 0; // turning off all lee scaling for XsFlux/DetVar, since it uses eLEE weights and we're making uncollapsed cov matrices
       TString histoname = std::get<0>(*it1);
       TH1F *htemp = map_histoname_hist[histoname];
       //
@@ -299,6 +300,7 @@ void LEEana::CovMatrix::fill_det_histograms(std::map<TString, TH1D*> map_filenam
         TString histoname = map_no_histoname[no];
         TH1F *htemp = map_histoname_hist[histoname];
         int flag_lee = std::get<2>(map_histoname_infos[histoname]);
+        flag_lee = 0; // turning off all lee scaling for XsFlux/DetVar, since it uses eLEE weights and we're making uncollapsed cov matrices
 
         //std::cout << "    here, at least one event in this file, event, and bin\n";
         //std::cout << "    global_index, weight, weight_lee: " << global_index << " " << weight << " " << weight_lee << "\n";
@@ -363,6 +365,7 @@ void LEEana::CovMatrix::fill_det_histograms(std::map<TString, TH1D*> map_filenam
 	   TString histoname = map_no_histoname[no];
     TH1F *htemp = map_histoname_hist[histoname];
 	   int flag_lee = std::get<2>(map_histoname_infos[histoname]);
+     flag_lee = 0; // turning off all lee scaling for XsFlux/DetVar, since it uses eLEE weights and we're making uncollapsed cov matrices
 
 	   // central value ...
 	   if (flag_cv){
@@ -513,7 +516,7 @@ void LEEana::CovMatrix::fill_det_histograms(std::map<TString, TH1D*> map_filenam
   
   T_eval_cv->SetBranchStatus("weight_spline",1);
   T_eval_cv->SetBranchStatus("weight_cv",1);
-  T_eval_cv->SetBranchStatus("weight_lee",1);
+  //T_eval_cv->SetBranchStatus("weight_lee",1);
   T_eval_cv->SetBranchStatus("weight_change",1);
   // MC enable truth information ...
   T_eval_cv->SetBranchStatus("truth_isCC",1);
@@ -679,7 +682,7 @@ void LEEana::CovMatrix::fill_det_histograms(std::map<TString, TH1D*> map_filenam
   
   T_eval_det->SetBranchStatus("weight_spline",1);
   T_eval_det->SetBranchStatus("weight_cv",1);
-  T_eval_det->SetBranchStatus("weight_lee",1);
+  //T_eval_det->SetBranchStatus("weight_lee",1);
   T_eval_det->SetBranchStatus("weight_change",1);
   // MC enable truth information ...
   T_eval_det->SetBranchStatus("truth_isCC",1);
@@ -1009,6 +1012,8 @@ void LEEana::CovMatrix::fill_pred_histograms(int run, std::map<int, std::vector<
         std::pair<TString, int> err2_lee = map_pred_histo_histo_err2_lee[histoname];
         TString histoname_err2 = err2_lee.first;
         int flag_lee = err2_lee.second;
+        // not turning off flag_lee here, only in the Xs/DetVar histogram building
+        // here, we want this to work, specifically for mc_stat scaling
 
         if (flag_lee == 1 && lee_strength == 0) continue; // no need to add ...
         
@@ -1023,57 +1028,59 @@ void LEEana::CovMatrix::fill_pred_histograms(int run, std::map<int, std::vector<
       }
 
       for (auto it2 = it1->begin(); it2 != it1->end(); it2++){
-	TString histoname = (*it2).first;
-	TString input_filename = map_histogram_inputfile[histoname];
-	auto it3 = map_inputfile_info.find(input_filename);
-	int period = std::get<1>(it3->second);  if (period != run && run !=0) continue; // skip ...
-	auto it_data = map_data_period_pot.find(period); if (it_data == map_data_period_pot.end()) continue; // no corresponding data ...
-	std::pair<TString, int> err2_lee = map_pred_histo_histo_err2_lee[histoname];
-	TString histoname_err2 = err2_lee.first;
-	int flag_lee = err2_lee.second;
-	if (flag_lee == 1 && lee_strength == 0) continue; // no need to add ...
-	TH1F *hmc = map_name_histogram[histoname].first;
-	TH1F *hmc_err2 = map_name_histogram[histoname_err2].first;
-	
-	double ratio = temp_map_data_pot[period]/temp_map_mc_acc_pot[period];
-	
-	temp_map_histo_ratios[histoname] = std::make_pair(ratio, lee_strength);
-	
-  //std::cout << "here 2\n";
+        TString histoname = (*it2).first;
+        TString input_filename = map_histogram_inputfile[histoname];
+        auto it3 = map_inputfile_info.find(input_filename);
+        int period = std::get<1>(it3->second);  if (period != run && run !=0) continue; // skip ...
+        auto it_data = map_data_period_pot.find(period); if (it_data == map_data_period_pot.end()) continue; // no corresponding data ...
+        std::pair<TString, int> err2_lee = map_pred_histo_histo_err2_lee[histoname];
+        TString histoname_err2 = err2_lee.first;
+        int flag_lee = err2_lee.second;
+        // not turning off flag_lee here, only in the Xs/DetVar histogram building
+        // here, we want this to work, specifically for mc_stat scaling
+        if (flag_lee == 1 && lee_strength == 0) continue; // no need to add ...
+        TH1F *hmc = map_name_histogram[histoname].first;
+        TH1F *hmc_err2 = map_name_histogram[histoname_err2].first;
+        
+        double ratio = temp_map_data_pot[period]/temp_map_mc_acc_pot[period];
+        
+        temp_map_histo_ratios[histoname] = std::make_pair(ratio, lee_strength);
+        
+        //std::cout << "here 2\n";
 
-	if (flag_lee == 1) ratio *= lee_strength;
+        if (flag_lee == 1) ratio *= lee_strength;
 
-    /* std::string hhhhhname = hmc->GetName(); */ 
-    /* std::istringstream sss(hhhhhname); */
-    /* for(std::string line; std::getline(sss, line, '_');){ */
-    /*     if(line == "CCQE") */
-    /*     { */
-    /*         ratio*=1.64; */
-    /*     } */
-    /* } */
+          /* std::string hhhhhname = hmc->GetName(); */ 
+          /* std::istringstream sss(hhhhhname); */
+          /* for(std::string line; std::getline(sss, line, '_');){ */
+          /*     if(line == "CCQE") */
+          /*     { */
+          /*         ratio*=1.64; */
+          /*     } */
+          /* } */
 
-	htemp->Add(hmc, ratio);
-	htemp_err2->Add(hmc_err2, ratio*ratio);
-    if(flag_breakdown){
-        TH1F *hbreakdown = (TH1F*)hmc->Clone(Form("breakdown_%s", hmc->GetName()));
-        hbreakdown->Scale(ratio);
-        map_obsch_subhistos[obsch].push_back(hbreakdown);
-        //std::cout<<"DEBUG: "<<obsch<<" "<<hmc->GetName()<<"\n";
-    }
+        htemp->Add(hmc, ratio);
+        htemp_err2->Add(hmc_err2, ratio*ratio);
+          if(flag_breakdown){
+              TH1F *hbreakdown = (TH1F*)hmc->Clone(Form("breakdown_%s", hmc->GetName()));
+              hbreakdown->Scale(ratio);
+              map_obsch_subhistos[obsch].push_back(hbreakdown);
+              //std::cout<<"DEBUG: "<<obsch<<" "<<hmc->GetName()<<"\n";
+          }
 
-	// mean, sigma2, pot_ratio, covch, add_sys2
-	std::vector< std::tuple<double, double, double, int, double> > values;
-	for (int i=0;i!=hmc->GetNbinsX()+1;i++){
-	  values.push_back(std::make_tuple(hmc->GetBinContent(i+1)*ratio , hmc_err2->GetBinContent(i+1)*ratio*ratio, temp_map_data_pot[period]/temp_map_mc_acc_pot[period], map_histogram_covch_add[histoname].first, pow(hmc->GetBinContent(i+1) *ratio * map_histogram_covch_add[histoname].second,2) ));
-	}
-	map_histoname_values[histoname] = values;
+        // mean, sigma2, pot_ratio, covch, add_sys2
+        std::vector< std::tuple<double, double, double, int, double> > values;
+        for (int i=0;i!=hmc->GetNbinsX()+1;i++){
+          values.push_back(std::make_tuple(hmc->GetBinContent(i+1)*ratio , hmc_err2->GetBinContent(i+1)*ratio*ratio, temp_map_data_pot[period]/temp_map_mc_acc_pot[period], map_histogram_covch_add[histoname].first, pow(hmc->GetBinContent(i+1) *ratio * map_histogram_covch_add[histoname].second,2) ));
+        }
+        map_histoname_values[histoname] = values;
 
-	//if (obsch==1){ //std::cout << values.at(2).first << " sep " << values.at(2).second << " " << histoname << std::endl;
-	//  std::cout << histoname << " " << map_histogram_covch_add[histoname].first << " " << period << " " << temp_map_data_pot[period] << " " << temp_map_mc_acc_pot[period] << " " << hmc->GetSum() << " " << ratio << std::endl;
-	// for (int i=0;i!=hmc->GetNbinsX();i++){
-	//    std::cout << i << " " << hmc->GetBinContent(i+1) << std::endl;
-	//  }
-	//}
+        //if (obsch==1){ //std::cout << values.at(2).first << " sep " << values.at(2).second << " " << histoname << std::endl;
+        //  std::cout << histoname << " " << map_histogram_covch_add[histoname].first << " " << period << " " << temp_map_data_pot[period] << " " << temp_map_mc_acc_pot[period] << " " << hmc->GetSum() << " " << ratio << std::endl;
+        // for (int i=0;i!=hmc->GetNbinsX();i++){
+        //    std::cout << i << " " << hmc->GetBinContent(i+1) << std::endl;
+        //  }
+        //}
       }
 
       
