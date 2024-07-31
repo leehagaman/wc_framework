@@ -1145,6 +1145,89 @@ int main(int argc, char** argv)
 	}
 
 
+	bool make_small_set_of_four_bin_super_excess_plots_limited_constraints = false;
+	if (make_small_set_of_four_bin_super_excess_plots_limited_constraints) {
+		cout << "getting constrained predictions at (1, 1) point...\n";
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse(); // prediction is ready
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+		double pars_2d[2] = {1, 1};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		vector<int>vc_target_chs;
+		vc_target_chs.push_back(0);
+		vc_target_chs.push_back(2);
+		vc_target_chs.push_back(4);
+		vc_target_chs.push_back(6);
+		vector<int>vc_support_chs;
+		for (int i=8+16*2; i < 8 + 16 * 4; i++){
+			vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 996001001 );
+		cout << "done\n";
+	}
+	if (make_small_set_of_four_bin_super_excess_plots_limited_constraints) {
+		cout << "getting constrained predictions at (1000, 1) point...\n";
+		Lee_test->scaleF_Lee_Np = 100;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse(); // prediction is ready
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+		double pars_2d[2] = {100, 1};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		vector<int>vc_target_chs;
+		vc_target_chs.push_back(0);
+		vc_target_chs.push_back(2);
+		vc_target_chs.push_back(4);
+		vc_target_chs.push_back(6);
+		vector<int>vc_support_chs;
+		for (int i=8+16*2; i < 8 + 16 * 4; i++){
+			vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 996015001 );
+		cout << "done\n";
+	}
+	if (make_small_set_of_four_bin_super_excess_plots_limited_constraints) {
+		cout << "getting constrained predictions at (1, 1000) point...\n";
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 100;
+		Lee_test->Set_Collapse(); // prediction is ready
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+		double pars_2d[2] = {1, 100};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		vector<int>vc_target_chs;
+		vc_target_chs.push_back(0);
+		vc_target_chs.push_back(2);
+		vc_target_chs.push_back(4);
+		vc_target_chs.push_back(6);
+		vector<int>vc_support_chs;
+		for (int i=8+16*2; i < 8 + 16 * 4; i++){
+			vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 996001015 );
+		cout << "done\n";
+	}
+	if (make_small_set_of_four_bin_super_excess_plots_limited_constraints) {
+		cout << "getting constrained predictions at (1000, 1000) point...\n";
+		Lee_test->scaleF_Lee_Np = 100;
+		Lee_test->scaleF_Lee_0p = 100;
+		Lee_test->Set_Collapse(); // prediction is ready
+		Lee_test->Set_measured_data(); // measurement is ready, real data
+		double pars_2d[2] = {100, 100};
+		double chi2_var = Lee_test->FCN_Np_0p( pars_2d ); // this re-does Set_Collapse
+		vector<int>vc_target_chs;
+		vc_target_chs.push_back(0);
+		vc_target_chs.push_back(2);
+		vc_target_chs.push_back(4);
+		vc_target_chs.push_back(6);
+		vector<int>vc_support_chs;
+		for (int i=8+16*2; i < 8 + 16 * 4; i++){
+			vc_support_chs.push_back(i);
+		}
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 996015015 );
+		cout << "done\n";
+	}
+
+
 	/*
 
 	if ( constraints_at_certain_bins ) {

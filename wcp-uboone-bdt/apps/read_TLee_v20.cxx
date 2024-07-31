@@ -497,6 +497,185 @@ int main(int argc, char** argv)
   }
 
 
+  bool make_nominal_and_excess_four_bin_plots = true;
+
+  if (make_nominal_and_excess_four_bin_plots) {
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    vc_target_chs.push_back(0);
+    vc_target_chs.push_back(2);
+    vc_target_chs.push_back(4);
+    vc_target_chs.push_back(6);
+    vector<int>vc_support_chs;
+    for (int i=8; i < 8 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 999001);
+  }
+  if (make_nominal_and_excess_four_bin_plots) {
+    Lee_test->scaleF_Lee = 15;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    vc_target_chs.push_back(0);
+    vc_target_chs.push_back(2);
+    vc_target_chs.push_back(4);
+    vc_target_chs.push_back(6);
+    vector<int>vc_support_chs;
+    for (int i=8; i < 8 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 9990015);
+  }
+  if (make_nominal_and_excess_four_bin_plots) {
+    Lee_test->scaleF_Lee = 100;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    vc_target_chs.push_back(0);
+    vc_target_chs.push_back(2);
+    vc_target_chs.push_back(4);
+    vc_target_chs.push_back(6);
+    vector<int>vc_support_chs;
+    for (int i=8; i < 8 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 9990050);
+  }
+  if (make_nominal_and_excess_four_bin_plots) {
+    Lee_test->scaleF_Lee = 1000;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    vc_target_chs.push_back(0);
+    vc_target_chs.push_back(2);
+    vc_target_chs.push_back(4);
+    vc_target_chs.push_back(6);
+    vector<int>vc_support_chs;
+    for (int i=8; i < 8 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 9990999);
+  }
+
+
+
+  bool make_nominal_and_excess_glee_only_plots = false;
+  if (make_nominal_and_excess_glee_only_plots) {
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    //vc_target_chs.push_back(0);
+    //vc_target_chs.push_back(2);
+    vc_target_chs.push_back(4);
+    vc_target_chs.push_back(6);
+    vector<int>vc_support_chs;
+    for (int i=8; i < 8 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 995001);
+  }
+  if (make_nominal_and_excess_glee_only_plots) {
+    Lee_test->scaleF_Lee = 15;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    //vc_target_chs.push_back(0);
+    //vc_target_chs.push_back(2);
+    vc_target_chs.push_back(4);
+    vc_target_chs.push_back(6);
+    vector<int>vc_support_chs;
+    for (int i=8; i < 8 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 9950015);
+  }
+  if (make_nominal_and_excess_glee_only_plots) {
+    Lee_test->scaleF_Lee = 100;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    //vc_target_chs.push_back(0);
+    //vc_target_chs.push_back(2);
+    vc_target_chs.push_back(4);
+    vc_target_chs.push_back(6);
+    vector<int>vc_support_chs;
+    for (int i=8; i < 8 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 9950050);
+  }
+  if (make_nominal_and_excess_glee_only_plots) {
+    Lee_test->scaleF_Lee = 1000;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    //vc_target_chs.push_back(0);
+    //vc_target_chs.push_back(2);
+    vc_target_chs.push_back(4);
+    vc_target_chs.push_back(6);
+    vector<int>vc_support_chs;
+    for (int i=8; i < 8 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 9950999);
+  }
+
+
+  bool make_nominal_and_excess_wc_only_plots = false;
+  if (make_nominal_and_excess_wc_only_plots) {
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    vc_target_chs.push_back(0);
+    vc_target_chs.push_back(2);
+    //vc_target_chs.push_back(4);
+    //vc_target_chs.push_back(6);
+    vector<int>vc_support_chs;
+    for (int i=8; i < 8 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 994001);
+  }
+  if (make_nominal_and_excess_wc_only_plots) {
+    Lee_test->scaleF_Lee = 15;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    vc_target_chs.push_back(0);
+    vc_target_chs.push_back(2);
+    //vc_target_chs.push_back(4);
+    //vc_target_chs.push_back(6);
+    vector<int>vc_support_chs;
+    for (int i=8; i < 8 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 9940015);
+  }
+  if (make_nominal_and_excess_wc_only_plots) {
+    Lee_test->scaleF_Lee = 100;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    vc_target_chs.push_back(0);
+    vc_target_chs.push_back(2);
+    //vc_target_chs.push_back(4);
+    //vc_target_chs.push_back(6);
+    vector<int>vc_support_chs;
+    for (int i=8; i < 8 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 9940050);
+  }
+  if (make_nominal_and_excess_wc_only_plots) {
+    Lee_test->scaleF_Lee = 1000;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    vc_target_chs.push_back(0);
+    vc_target_chs.push_back(2);
+    //vc_target_chs.push_back(4);
+    //vc_target_chs.push_back(6);
+    vector<int>vc_support_chs;
+    for (int i=8; i < 8 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 9940999);
+  }
+
+
   bool make_one_bin_plots = false;
 
   // WC 1gNp

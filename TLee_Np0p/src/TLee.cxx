@@ -3489,6 +3489,16 @@ void TLee::Set_Collapse()
 	TMatrixD matrix_transform_Lee_T( bins_newworld, bins_oldworld );
 	matrix_transform_Lee_T.Transpose( matrix_transform_Lee );
 
+	// save matrix_absolute_cov_oldworld to text file
+	ofstream matrix_absolute_cov_oldworld_file("./matrix_absolute_cov_oldworld.txt");
+	for (int i = 0; i < bins_oldworld; i++) {
+		for (int j = 0; j < bins_oldworld; j++) {
+			matrix_absolute_cov_oldworld_file << matrix_absolute_cov_oldworld(i, j) << " ";
+		}
+		matrix_absolute_cov_oldworld_file << "\n";
+	}
+	matrix_absolute_cov_oldworld_file.close();
+
 	matrix_absolute_cov_newworld.Clear();
 	matrix_absolute_cov_newworld.ResizeTo(bins_newworld, bins_newworld);
 	matrix_absolute_cov_newworld = matrix_transform_Lee_T * matrix_absolute_cov_oldworld * matrix_transform_Lee;
@@ -3505,34 +3515,34 @@ void TLee::Set_Collapse()
 
 	//std::cout << "checking matrix_absolute_cov_newworld for pos. semidef. (before mc or data stat uncertainties):\n";
 	// make symmetrical matrix:
-	TMatrixD myMatrix = matrix_absolute_cov_newworld;
-	if (!myMatrix.IsSymmetric()) {
-		myMatrix = 0.5 * (myMatrix + myMatrix.T()); // Symmetrization, should be only very small changes
-	}
-	TMatrixDSym symMatrix(myMatrix.GetNrows());
-	for (Int_t i = 0; i < symMatrix.GetNrows(); ++i) {
-		for (Int_t j = 0; j <= i; ++j) {
-			symMatrix(i, j) = myMatrix(i, j);
-		}
-	}
-	// get the eigenvalues and eigenvectors
-	TMatrixDSymEigen eig(symMatrix);
-	TVectorD eigenvalues = eig.GetEigenValues();
-	TMatrixD eigenvectors = eig.GetEigenVectors();
-	TVectorD abs_val_neg_eigenvalues = eigenvalues;
-	//TVectorD zeroed_neg_eigenvalues = eigenvalues;
-	for (Int_t i = 0; i < eigenvalues.GetNrows(); ++i) {
-		Double_t eigenvalue = eigenvalues[i];
-		if (eigenvalue < 0) {
-			//cout << "    negative eigenvalue: " << eigenvalue << "\n";
-			abs_val_neg_eigenvalues[i] = -eigenvalue;
-			//zeroed_neg_eigenvalues[i] = 0;
-		}
-	}
 
 	bool abs_val_neg_eigenvals = true;
-	//bool zero_neg_eigenvalues = false;
 	if (abs_val_neg_eigenvals) {
+		TMatrixD myMatrix = matrix_absolute_cov_newworld;
+		if (!myMatrix.IsSymmetric()) {
+			myMatrix = 0.5 * (myMatrix + myMatrix.T()); // Symmetrization, should be only very small changes
+		}
+		TMatrixDSym symMatrix(myMatrix.GetNrows());
+		for (Int_t i = 0; i < symMatrix.GetNrows(); ++i) {
+			for (Int_t j = 0; j <= i; ++j) {
+				symMatrix(i, j) = myMatrix(i, j);
+			}
+		}
+		// get the eigenvalues and eigenvectors
+		TMatrixDSymEigen eig(symMatrix);
+		TVectorD eigenvalues = eig.GetEigenValues();
+		TMatrixD eigenvectors = eig.GetEigenVectors();
+		TVectorD abs_val_neg_eigenvalues = eigenvalues;
+		//TVectorD zeroed_neg_eigenvalues = eigenvalues;
+		for (Int_t i = 0; i < eigenvalues.GetNrows(); ++i) {
+			Double_t eigenvalue = eigenvalues[i];
+			if (eigenvalue < 0) {
+				cout << "    negative eigenvalue: " << eigenvalue << "\n";
+				abs_val_neg_eigenvalues[i] = -eigenvalue;
+				//zeroed_neg_eigenvalues[i] = 0;
+			}
+		}
+
 		//std::cout << "absolute valuing those negative eigenvalues:\n";
 		TMatrixD diagEigenvalues(eigenvalues.GetNrows(), eigenvalues.GetNrows());
 		diagEigenvalues.Zero();

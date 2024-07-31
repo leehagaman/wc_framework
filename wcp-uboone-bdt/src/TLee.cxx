@@ -1926,7 +1926,7 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 	TH1D *h1_pred_Y_wiConstraint_rel_error = (TH1D*)h1_pred_Y_noConstraint_rel_error->Clone("h1_pred_Y_wiConstraint_rel_error");
 	h1_pred_Y_wiConstraint_rel_error->Reset();
 	for(int ibin=1; ibin<=num_Y; ibin++) {    
-		double val_cv = h1_pred_Y_noConstraint->GetBinContent(ibin);
+		double val_cv = h1_pred_Y_wiConstraint->GetBinContent(ibin); // lhagaman changed 2024_07_30, was h1_pred_Y_noConstraint
 		double val_err = h1_pred_Y_wiConstraint->GetBinError(ibin);
 		double rel_err = val_err/val_cv;
 		if( val_cv==0 ) rel_err = 0;
@@ -2607,6 +2607,16 @@ void TLee::Set_Collapse()
 	TMatrixD matrix_transform_Lee_T( bins_newworld, bins_oldworld );
 	matrix_transform_Lee_T.Transpose( matrix_transform_Lee );
 
+	// save matrix_absolute_cov_oldworld to text file
+	ofstream matrix_absolute_cov_oldworld_file("./matrix_absolute_cov_oldworld.txt");
+	for (int i = 0; i < bins_oldworld; i++) {
+		for (int j = 0; j < bins_oldworld; j++) {
+			matrix_absolute_cov_oldworld_file << matrix_absolute_cov_oldworld(i, j) << " ";
+		}
+		matrix_absolute_cov_oldworld_file << "\n";
+	}
+	matrix_absolute_cov_oldworld_file.close();
+
 	matrix_absolute_cov_newworld.Clear();
 	matrix_absolute_cov_newworld.ResizeTo(bins_newworld, bins_newworld);
 	matrix_absolute_cov_newworld = matrix_transform_Lee_T * matrix_absolute_cov_oldworld * matrix_transform_Lee;
@@ -3086,7 +3096,7 @@ void TLee::Set_Spectra_MatrixCov()
 		uncollapsed_Xs_frac_cov_file.close();
 	}
 
-	int disable_BR_uncertainty_1d = 0; 
+	int disable_BR_uncertainty_1d = 1; 
 	if (disable_BR_uncertainty_1d) {
 
 		// zero is bkg, 1 is sig
@@ -3147,7 +3157,7 @@ void TLee::Set_Spectra_MatrixCov()
 
 
 
-	int disable_BR_uncertainty_sig_bkg_constrt_v3_2d = 1; 
+	int disable_BR_uncertainty_sig_bkg_constrt_v3_2d = 0; 
 	if (disable_BR_uncertainty_sig_bkg_constrt_v3_2d) {
 
 		// zero is bkg, 1 is Np, 2 is 0p, 3 is Np+0p
