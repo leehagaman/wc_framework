@@ -2622,7 +2622,7 @@ void TLee::Set_Collapse()
 	matrix_absolute_cov_newworld = matrix_transform_Lee_T * matrix_absolute_cov_oldworld * matrix_transform_Lee;
 
 
-	bool abs_val_neg_eigenvals = true;
+	bool abs_val_neg_eigenvals = false;
 	if (abs_val_neg_eigenvals) {
 		TMatrixD myMatrix = matrix_absolute_cov_newworld;
 		if (!myMatrix.IsSymmetric()) {
@@ -3096,7 +3096,7 @@ void TLee::Set_Spectra_MatrixCov()
 		uncollapsed_Xs_frac_cov_file.close();
 	}
 
-	int disable_BR_uncertainty_1d = 1; 
+	int disable_BR_uncertainty_1d = 0; 
 	if (disable_BR_uncertainty_1d) {
 
 		// zero is bkg, 1 is sig

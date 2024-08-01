@@ -661,7 +661,7 @@ int main(int argc, char** argv)
 
 	}
 
-	bool make_sig_bkg_constr_v3_plot = false;
+	bool make_sig_bkg_constr_v3_plot = true;
 	if (make_sig_bkg_constr_v3_plot) {
 		Lee_test->scaleF_Lee_Np = 1;
 		Lee_test->scaleF_Lee_0p = 1;
@@ -889,7 +889,7 @@ int main(int argc, char** argv)
 	}
 
 
-	bool make_small_set_of_four_bin_excess_plots = true;
+	bool make_small_set_of_four_bin_excess_plots = false;
 	if (make_small_set_of_four_bin_excess_plots) {
 		cout << "getting constrained predictions at (1, 1) point...\n";
 		Lee_test->scaleF_Lee_Np = 1;
@@ -1062,7 +1062,7 @@ int main(int argc, char** argv)
 		cout << "done\n";
 	}
 
-	bool make_small_set_of_four_bin_super_excess_plots = true;
+	bool make_small_set_of_four_bin_super_excess_plots = false;
 	if (make_small_set_of_four_bin_super_excess_plots) {
 		cout << "getting constrained predictions at (1, 1) point...\n";
 		Lee_test->scaleF_Lee_Np = 1;

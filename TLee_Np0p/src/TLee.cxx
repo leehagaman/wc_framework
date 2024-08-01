@@ -3516,7 +3516,7 @@ void TLee::Set_Collapse()
 	//std::cout << "checking matrix_absolute_cov_newworld for pos. semidef. (before mc or data stat uncertainties):\n";
 	// make symmetrical matrix:
 
-	bool abs_val_neg_eigenvals = true;
+	bool abs_val_neg_eigenvals = false;
 	if (abs_val_neg_eigenvals) {
 		TMatrixD myMatrix = matrix_absolute_cov_newworld;
 		if (!myMatrix.IsSymmetric()) {
@@ -4154,7 +4154,7 @@ void TLee::Set_Spectra_MatrixCov()
 		cout<<TString::Format(" %2d %s", idx, roostr.Data())<<endl;
 
 		
-		int disable_BR_uncertainty_2d = 1; 
+		int disable_BR_uncertainty_2d = 0; 
 		if (disable_BR_uncertainty_2d) {
 
 			// zero is bkg, 1 is Np, 2 is 0p
