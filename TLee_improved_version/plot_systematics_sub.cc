@@ -111,7 +111,7 @@ void plot_systematics_sub()
 			//zeroed_neg_eigenvalues[i] = 0;
 		}
 	}
-	bool abs_val_neg_eigenvals = true;
+	bool abs_val_neg_eigenvals = false;
 	if (abs_val_neg_eigenvals) {
 		//std::cout << "absolute valuing those negative eigenvalues:\n";
 		TMatrixD diagEigenvalues(eigenvalues.GetNrows(), eigenvalues.GetNrows());
