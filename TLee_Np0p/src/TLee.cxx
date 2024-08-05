@@ -830,7 +830,7 @@ void TLee::Minimization_Lee_strength_FullCov(double Lee_initial_value, bool flag
 
 			// start lhagaman custom chi2 calculation
 
-			
+			// DONT CHANGE IT HERE, this part isn't used
 			bool use_custom_chi2 = false;
 
 			if (use_custom_chi2) {

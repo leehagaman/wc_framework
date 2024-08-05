@@ -661,7 +661,7 @@ int main(int argc, char** argv)
 
 	}
 
-	bool make_sig_bkg_constr_v3_plot = true;
+	bool make_sig_bkg_constr_v3_plot = false;
 	if (make_sig_bkg_constr_v3_plot) {
 		Lee_test->scaleF_Lee_Np = 1;
 		Lee_test->scaleF_Lee_0p = 1;
@@ -680,7 +680,7 @@ int main(int argc, char** argv)
 	}
 
 
-	bool make_one_bin_plots = false;
+	bool make_one_bin_plots = true;
 
 	// WC 1gNp
 	if (make_one_bin_plots){

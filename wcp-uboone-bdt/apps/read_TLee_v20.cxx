@@ -497,7 +497,7 @@ int main(int argc, char** argv)
   }
 
 
-  bool make_nominal_and_excess_four_bin_plots = true;
+  bool make_nominal_and_excess_four_bin_plots = false;
 
   if (make_nominal_and_excess_four_bin_plots) {
     Lee_test->scaleF_Lee = 1;
@@ -1681,7 +1681,7 @@ int main(int argc, char** argv)
   
   //////////////////////////////////////////////////////////////////////////////////////// example: simple versus simple likelihood ratio test
 
-  bool do_two_hypothesis_testing = 0;
+  bool do_two_hypothesis_testing = 1;
   int num_toy = 1000;
   ofstream two_hypothesis_text;
   // append ifile to the name of the file

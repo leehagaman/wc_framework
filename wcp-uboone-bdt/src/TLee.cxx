@@ -326,9 +326,9 @@ void TLee::Minimization_Lee_strength_FullCov(double Lee_initial_value, bool flag
 
 	      bool two_bin_test = false; 
 
-	      bool all_channels = true;
+	      bool all_channels = false;
 	      bool just_wc = false;
-	      bool just_glee = false;
+	      bool just_glee = true;
 
 	      TMatrixD matrix_cov_total_user = matrix_cov_syst_temp;
 
