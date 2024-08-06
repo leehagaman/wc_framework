@@ -310,6 +310,21 @@ int main(int argc, char** argv)
   ///////////////////////// gof
  
   // start lhagaman added
+
+  bool make_bdt_score_plots = true;
+  if (make_bdt_score_plots) {
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    for (int i=0; i < 27*2; i++){
+      vc_target_chs.push_back(i);
+    }
+    vector<int>vc_support_chs;
+    for (int i=27*2; i < 27*2 + 16*4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 456000 );
+  }
   
   bool make_kinematic_plots = false;
 
@@ -1681,7 +1696,7 @@ int main(int argc, char** argv)
   
   //////////////////////////////////////////////////////////////////////////////////////// example: simple versus simple likelihood ratio test
 
-  bool do_two_hypothesis_testing = 1;
+  bool do_two_hypothesis_testing = false;
   int num_toy = 1000;
   ofstream two_hypothesis_text;
   // append ifile to the name of the file
