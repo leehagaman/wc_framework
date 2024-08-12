@@ -685,7 +685,8 @@ int main(int argc, char** argv)
 	// WC 1gNp
 	if (make_one_bin_plots){
 
-		Lee_test->scaleF_Lee = 1;
+		Lee_test->scaleF_Lee_Np = 3.18;
+		Lee_test->scaleF_Lee_0p = 3.18;
 		Lee_test->Set_Collapse();
 
 		vector<int>vc_target_chs;
@@ -700,7 +701,8 @@ int main(int argc, char** argv)
 	// WC 1g0p
 	if (make_one_bin_plots){
 
-		Lee_test->scaleF_Lee = 1;
+		Lee_test->scaleF_Lee_Np = 3.18;
+		Lee_test->scaleF_Lee_0p = 3.18;
 		Lee_test->Set_Collapse();
 
 		vector<int>vc_target_chs;
@@ -715,7 +717,8 @@ int main(int argc, char** argv)
 	// gLEE 1g1p
 	if (make_one_bin_plots){
 
-		Lee_test->scaleF_Lee = 1;
+		Lee_test->scaleF_Lee_Np = 3.18;
+		Lee_test->scaleF_Lee_0p = 3.18;
 		Lee_test->Set_Collapse();
 
 		vector<int>vc_target_chs;
@@ -730,7 +733,8 @@ int main(int argc, char** argv)
 	// gLEE 1g0p
 	if (make_one_bin_plots){
 
-		Lee_test->scaleF_Lee = 1;
+		Lee_test->scaleF_Lee_Np = 3.18;
+		Lee_test->scaleF_Lee_0p = 3.18;
 		Lee_test->Set_Collapse();
 
 		vector<int>vc_target_chs;
@@ -745,7 +749,8 @@ int main(int argc, char** argv)
 	// WC 1gNp and 1g0p
 	if (make_one_bin_plots){
 
-		Lee_test->scaleF_Lee = 1;
+		Lee_test->scaleF_Lee_Np = 3.18;
+		Lee_test->scaleF_Lee_0p = 3.18;
 		Lee_test->Set_Collapse();
 
 		vector<int>vc_target_chs;
@@ -761,7 +766,8 @@ int main(int argc, char** argv)
 	// gLEE 1g1p and 1g0p
 	if (make_one_bin_plots){
 
-		Lee_test->scaleF_Lee = 1;
+		Lee_test->scaleF_Lee_Np = 3.18;
+		Lee_test->scaleF_Lee_0p = 3.18;
 		Lee_test->Set_Collapse();
 
 		vector<int>vc_target_chs;
@@ -777,7 +783,8 @@ int main(int argc, char** argv)
 	// WC 1gNp and 1g0p and gLEE 1g1p and 1g0p
 	if (make_one_bin_plots){
 
-		Lee_test->scaleF_Lee = 15;
+		Lee_test->scaleF_Lee_Np = 3.18;
+		Lee_test->scaleF_Lee_0p = 3.18;
 		Lee_test->Set_Collapse();
 
 		vector<int>vc_target_chs;
@@ -795,7 +802,8 @@ int main(int argc, char** argv)
 	// Constraining channels (constrained by signal channels, but shouldn't actually use or care about the constrained result)
 	if (make_one_bin_plots){
 
-		Lee_test->scaleF_Lee = 1;
+		Lee_test->scaleF_Lee_Np = 3.18;
+		Lee_test->scaleF_Lee_0p = 3.18;
 		Lee_test->Set_Collapse();
 
 		vector<int>vc_target_chs;

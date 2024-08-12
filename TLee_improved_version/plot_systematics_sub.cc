@@ -170,8 +170,12 @@ void plot_systematics_sub()
   int color_mc_stat  = kGreen+1;
   int color_total    = kBlack;
   
-  const int num_ch = 8;
-  int bins_ch[num_ch] = {2, 2, 2, 2, 16, 16, 16, 16};  
+  // here's where the vertical dashed lines are set!
+  //const int num_ch = 8;
+  //int bins_ch[num_ch] = {2, 2, 2, 2, 16, 16, 16, 16};
+
+  const int num_ch = 10;  
+  int bins_ch[num_ch] = {16, 16, 16, 16, 7, 13, 11, 11, 11, 11};
   
   //int bins_ch[num_ch] = {26, 26, 26, 26, 11, 11, 11};  
   int rows = matrix_absolute_additional_cov_newworld->GetNrows();
@@ -217,15 +221,17 @@ void plot_systematics_sub()
   for(int ich=0; ich<num_ch; ich++) {
     for(int ibin=1; ibin<=bins_ch[ich]; ibin++) {
       line_str++;
-      if(ibin==5 || ibin==10 || ibin==15 || ibin==20 || ibin==25) {
-	axis_label_str[line_str-1] = TString::Format("%d", ibin*100);
+      //if(ibin==5 || ibin==10 || ibin==15 || ibin==20 || ibin==25) {
+      if(false) {
+        //if(ibin==16 || ibin==16*2 || ibin==16*3 || ibin==16*4 || ibin==16*4+7 || ibin==16*4+7+13 || ibin==16*4+7+13+11 || ibin==16*4+7+13+11*2 || ibin==16*4+7+13+11*4 || ibin==16*4+7+13+11*4){
+        axis_label_str[line_str-1] = TString::Format("%d", ibin*100);
 
-	line_map_line++;
-	map_line_label_xx[line_map_line] = new TLine(line_str, 0, line_str, 3);
-	map_line_label_yy[line_map_line] = new TLine(0, line_str, 3, line_str);	
+        line_map_line++;
+        map_line_label_xx[line_map_line] = new TLine(line_str, 0, line_str, 3);
+        map_line_label_yy[line_map_line] = new TLine(0, line_str, 3, line_str);	
       }
       else {
-	axis_label_str[line_str-1] ="";
+	      axis_label_str[line_str-1] ="";
       }
     }
   }

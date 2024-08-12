@@ -558,9 +558,9 @@ double LEEana::get_kine_var(KineInfo& kine, EvalInfo& eval, PFevalInfo& pfeval, 
       //return tagger.mip_angle_beam;
       return showerMomentum.Theta()/TMath::Pi()*180.;
 
-    if(var_name == "shower_costheta"){
-      //return TMath::Cos(tagger.mip_angle_beam/180.*TMath::Pi());
-      return TMath::Cos(showerMomentum.Theta());
+    if(var_name == "shower_costheta"){ // switched back to mip_angle_beam, since we don't have DetVar PF files
+      return TMath::Cos(tagger.mip_angle_beam/180.*TMath::Pi());
+      //return TMath::Cos(showerMomentum.Theta());
     }
 
     if(var_name == "shower_phi"){

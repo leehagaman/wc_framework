@@ -311,7 +311,7 @@ int main(int argc, char** argv)
  
   // start lhagaman added
 
-  bool make_bdt_score_plots = true;
+  bool make_bdt_score_plots = false;
   if (make_bdt_score_plots) {
     Lee_test->scaleF_Lee = 1;
     Lee_test->Set_Collapse();
@@ -326,7 +326,7 @@ int main(int argc, char** argv)
     Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 456000 );
   }
   
-  bool make_kinematic_plots = false;
+  bool make_kinematic_plots = true;
 
   // all constrained by constraining
   if (make_kinematic_plots) {
