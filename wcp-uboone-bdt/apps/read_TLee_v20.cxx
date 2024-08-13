@@ -325,8 +325,24 @@ int main(int argc, char** argv)
     }
     Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 456000 );
   }
+
+
+  bool make_2d_kinematic_plot = true;
+  if (make_2d_kinematic_plot) {
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    for (int i=0; i < 21*20; i++){
+      vc_target_chs.push_back(i);
+    }
+    vector<int>vc_support_chs;
+    for (int i=21*20; i < 21*20 + 16*4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 555001 );
+  }
   
-  bool make_kinematic_plots = true;
+  bool make_kinematic_plots = false;
 
   // all constrained by constraining
   if (make_kinematic_plots) {

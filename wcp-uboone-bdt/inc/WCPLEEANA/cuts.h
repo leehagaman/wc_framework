@@ -3655,6 +3655,44 @@ int LEEana::get_cut_pass(TString ch_name_0, TString add_cut, bool flag_data, Eva
 
     return false;
   // start cuts from Lee's cuts.h
+
+  // 2D kinematic cuts
+  }else if (ch_name.Contains("wc_1gXp_angle_slice")){
+    if (!(flag_FC && flag_ncdelta_sel)) return false;
+    TString num_str;
+    num_str += ch_name[20];
+    num_str += ch_name[21];
+    int num = num_str.Atoi();
+    float left_bin_edge = -1.;
+    float right_bin_edge = -0.9;
+    left_bin_edge += 0.1*num;
+    right_bin_edge += 0.1*num;
+    if (left_bin_edge < -0.99) left_bin_edge = -1.000001;
+    if (right_bin_edge > 0.99) right_bin_edge = 1.000001;
+    if (!( (left_bin_edge < TMath::Cos(tagger.mip_angle_beam/180.*TMath::Pi())) && (TMath::Cos(tagger.mip_angle_beam/180.*TMath::Pi()) < right_bin_edge))){
+      return false;
+    }
+    if (ch_name.Contains("data") || ch_name.Contains("ext") || ch_name.Contains("dirt")){
+      return true;
+    }else if (ch_name.Contains("nc_delta_overlay")){
+      if (eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1) return true;
+    }else if (ch_name.Contains("nc_pi0_overlay")){
+      if (eval.truth_isCC==0 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1
+                            && !(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)) return true;
+    }else if (ch_name.Contains("cc_pi0_overlay")){
+      if (eval.truth_isCC==1 && eval.truth_nuPdg==14 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1) return true;
+    }else if (ch_name.Contains("nue_overlay")){
+      if (eval.truth_isCC==1 && fabs(eval.truth_nuPdg)==12 && eval.truth_vtxInside==1) return true;
+    }else if (ch_name.Contains("overlay")){
+      if (!(eval.truth_isCC==0 && pfeval.truth_NCDelta==1 && eval.truth_vtxInside==1)
+			    && !(eval.truth_isCC==0 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1)
+			    && !((eval.run < 8317 || eval.run >= 13697) && eval.truth_isCC==1 && eval.truth_nuPdg==14 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1)
+			    // cutting out run 1 and run 3 CCPi0 only, run 2 CCPi0 should still be included from nu overlay
+			    && !(eval.truth_isCC==1 && fabs(eval.truth_nuPdg)==12 && eval.truth_vtxInside==1)) return true;
+    }else{
+      return false;
+    }
+      
   
   // cuts for joint WC/gLEE analysis
   }else if (ch_name == "wc_1gNp" || ch_name == "wc_1gNp_ext" || ch_name == "wc_1gNp_dirt"){

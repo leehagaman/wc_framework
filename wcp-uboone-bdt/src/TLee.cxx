@@ -1997,6 +1997,7 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 		
 		bin_contents_file << "bin " << ibin << " value no constraint: " << val_noConstraint << "\n"; 
 		bin_contents_file << "bin " << ibin << " value wi constraint: " << val_wiConstraint << "\n"; 
+		bin_contents_file << "bin " << ibin << " data: " << matrix_data_Y(ibin-1, 0) << "\n";
 	}
 	bin_contents_file << "val_chi2_noConstraint, ndf, p_value_noConstraint: " << val_chi2_noConstraint << ", " << num_Y << ", " << p_value_noConstraint << "\n";
 	bin_contents_file << "val_chi2_wiConstraint, ndf, p_value_wiConstraint: " << val_chi2_wiConstraint << ", " << num_Y << ", " << p_value_wiConstraint << "\n";
@@ -2960,6 +2961,7 @@ void TLee::Set_Spectra_MatrixCov()
 			//if( (ich==1 || ich==8) ) content *= h1_spectra_wi2no_101->GetBinContent(ibin);
 
 			map_input_spectrum_ch_bin[ich][ibin-1] = content;
+			//cout << "lhagaman, building map_input_spectrum_ch_bin. ich, ibin-1, content: " << ich << ", " << ibin-1 << ", " << content << "\n";
 		}
 
 		delete h1_spectrum;
@@ -2989,12 +2991,13 @@ void TLee::Set_Spectra_MatrixCov()
 
   bins_oldworld = 0;
   for(auto it_ch=map_input_spectrum_ch_bin.begin(); it_ch!=map_input_spectrum_ch_bin.end(); it_ch++) {
+	//cout << "lhagaman adding to bins_oldworld, bins_oldworld=" << bins_oldworld << "\n";
     int ich = it_ch->first;
-      for(int ibin=0; ibin<(int)map_input_spectrum_ch_bin[ich].size(); ibin++) {
-	bins_oldworld++;
-	int index_oldworld = bins_oldworld - 1;	
-	map_input_spectrum_oldworld_bin[ index_oldworld ] = map_input_spectrum_ch_bin[ich][ibin];
-	if( map_Lee_ch.find(ich)!=map_Lee_ch.end() ) map_Lee_oldworld[index_oldworld] = 1;
+	for(int ibin=0; ibin<(int)map_input_spectrum_ch_bin[ich].size(); ibin++) {
+		bins_oldworld++;
+		int index_oldworld = bins_oldworld - 1;	
+		map_input_spectrum_oldworld_bin[ index_oldworld ] = map_input_spectrum_ch_bin[ich][ibin];
+		if( map_Lee_ch.find(ich)!=map_Lee_ch.end() ) map_Lee_oldworld[index_oldworld] = 1;
     }// ibin
   }// ich
 
@@ -3040,8 +3043,6 @@ void TLee::Set_Spectra_MatrixCov()
   
   for(int idx=syst_cov_flux_Xs_begin; idx<=syst_cov_flux_Xs_end; idx++) {
 
-
-
     if( !(flag_syst_flux_Xs) && idx<18 ){
       matrix_flux_Xs_frac = 0;
       matrix_flux_frac = 0;
@@ -3063,9 +3064,14 @@ void TLee::Set_Spectra_MatrixCov()
 
     cout<<TString::Format(" %2d %s", idx, roostr.Data())<<endl;
 
+	//cout << "lhagaman here, bins_oldworld = " << bins_oldworld << "\n";
+	//cout << "(*map_matrix_flux_Xs_frac[idx]) shape = (" << (*map_matrix_flux_Xs_frac[idx]).GetNrows() << ", " << (*map_matrix_flux_Xs_frac[idx]).GetNcols() << ")\n";
+
     matrix_sub_flux_geant4_Xs_oldworld[idx].Clear();
     matrix_sub_flux_geant4_Xs_oldworld[idx].ResizeTo(bins_oldworld, bins_oldworld);
     matrix_sub_flux_geant4_Xs_oldworld[idx] += (*map_matrix_flux_Xs_frac[idx]); 
+
+	//cout << "lhagaman here, finished some matrix_sub_flux_geant4_Xs_oldworld lines\n\n";
 
 	
 	// cccc
