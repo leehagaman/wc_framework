@@ -311,6 +311,100 @@ int main(int argc, char** argv)
  
   // start lhagaman added
 
+
+  bool make_plots_at_various_scalings = false;
+
+  if (make_plots_at_various_scalings) { // 1g1p + 1g0p signal constrained by background
+    for (int LEEx = 0; LEEx <= 10; LEEx+=2){
+      Lee_test->scaleF_Lee = LEEx;
+      Lee_test->Set_Collapse();
+      vector<int>vc_target_chs;
+      for (int i=4; i < 8; i+=2){
+        vc_target_chs.push_back(i);
+      }
+      vector<int>vc_support_chs;
+      for (int i=8; i < 8 + 16 * 4; i++){
+        vc_support_chs.push_back(i);
+      }
+      Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 4545000 + LEEx );
+    }
+  }
+  if (make_plots_at_various_scalings) { // 1g1p signal constrained by background
+    for (int LEEx = 0; LEEx <= 10; LEEx+=2){
+      Lee_test->scaleF_Lee = LEEx;
+      Lee_test->Set_Collapse();
+      vector<int>vc_target_chs;
+      vc_target_chs.push_back(4);
+      vector<int>vc_support_chs;
+      for (int i=8; i < 8 + 16 * 4; i++){
+        vc_support_chs.push_back(i);
+      }
+      Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 4545100 + LEEx );
+    }
+  }
+  if (make_plots_at_various_scalings) { // 1g0p signal constrained by background
+    for (int LEEx = 0; LEEx <= 10; LEEx+=2){
+      Lee_test->scaleF_Lee = LEEx;
+      Lee_test->Set_Collapse();
+      vector<int>vc_target_chs;
+      vc_target_chs.push_back(6);
+      vector<int>vc_support_chs;
+      for (int i=8; i < 8 + 16 * 4; i++){
+        vc_support_chs.push_back(i);
+      }
+      Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 4545200 + LEEx );
+    }
+  }
+
+  if (make_plots_at_various_scalings) { // 1g1p and 1g0p and sidebands constrained by an empty bin
+    for (int LEEx = 0; LEEx <= 10; LEEx+=2){
+      Lee_test->scaleF_Lee = LEEx;
+      Lee_test->Set_Collapse();
+      vector<int>vc_target_chs;
+      for (int i=4; i < 8; i+=2){
+        vc_target_chs.push_back(i);
+      }
+      for (int i=8; i < 8 + 16 * 4; i++){
+        vc_target_chs.push_back(i);
+      }
+      vector<int>vc_support_chs;
+      vc_support_chs.push_back(1);
+
+      Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 4646000 + LEEx );
+    }
+  }
+  if (make_plots_at_various_scalings) { // 1g1p and sidebands constrained by an empty bin
+    for (int LEEx = 0; LEEx <= 10; LEEx+=2){
+      Lee_test->scaleF_Lee = LEEx;
+      Lee_test->Set_Collapse();
+      vector<int>vc_target_chs;
+      vc_target_chs.push_back(4);
+      for (int i=8; i < 8 + 16 * 4; i++){
+        vc_target_chs.push_back(i);
+      }
+      vector<int>vc_support_chs;
+      vc_support_chs.push_back(1);
+      Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 4647000 + LEEx );
+    }
+  }
+  if (make_plots_at_various_scalings) { // 1g0p and sidebands constrained by an empty bin
+    for (int LEEx = 0; LEEx <= 10; LEEx+=2){
+      Lee_test->scaleF_Lee = LEEx;
+      Lee_test->Set_Collapse();
+      vector<int>vc_target_chs;
+      vc_target_chs.push_back(6);
+      for (int i=8; i < 8 + 16 * 4; i++){
+        vc_target_chs.push_back(i);
+      }
+      vector<int>vc_support_chs;
+      vc_support_chs.push_back(1);
+      Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 4648000 + LEEx );
+    }
+  }
+
+
+
+
   bool make_bdt_score_plots = false;
   if (make_bdt_score_plots) {
     Lee_test->scaleF_Lee = 1;
@@ -327,7 +421,7 @@ int main(int argc, char** argv)
   }
 
 
-  bool make_2d_kinematic_plot = true;
+  bool make_2d_kinematic_plot = false;
   if (make_2d_kinematic_plot) {
     Lee_test->scaleF_Lee = 1;
     Lee_test->Set_Collapse();
@@ -1913,7 +2007,7 @@ int main(int argc, char** argv)
 
   }
 
-  if( 0 ) {
+  if( 1 ) {
 
     cout << "making chi2 distribution for FC fitting:\n";
 

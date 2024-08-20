@@ -328,7 +328,9 @@ void TLee::Minimization_Lee_strength_FullCov(double Lee_initial_value, bool flag
 
 	      bool all_channels = false;
 	      bool just_wc = false;
-	      bool just_glee = true;
+	      bool just_glee = false;
+
+		  bool just_glee_1g1p = true;
 
 	      TMatrixD matrix_cov_total_user = matrix_cov_syst_temp;
 
@@ -365,6 +367,13 @@ void TLee::Minimization_Lee_strength_FullCov(double Lee_initial_value, bool flag
 		      ind_constr_start = 2*4;
 		      ind_constr_end = 2*4 + 4*16;	
 	      }
+
+		  if (just_glee_1g1p) {
+			ind_tar_start = 2*2;
+			ind_tar_end = 2*2 + 2*1;
+			ind_constr_start = 2*4;
+			ind_constr_end = 2*4 + 4*16;
+		  }
 
 	      TMatrixD user_matrix_pred;
 	      TMatrixD user_matrix_data;
@@ -3075,6 +3084,7 @@ void TLee::Set_Spectra_MatrixCov()
 
 	
 	// cccc
+	/*
 	if (idx == 17) {
 		// loop over (*map_matrix_flux_Xs_frac[idx])
 		ofstream uncollapsed_Xs_frac_cov_file("./plot_outputs/uncollapsed_Xs_frac_cov_file.txt");
@@ -3101,139 +3111,9 @@ void TLee::Set_Spectra_MatrixCov()
 		}
 		uncollapsed_Xs_frac_cov_file.close();
 	}
-
-	int disable_BR_uncertainty_1d = 0; 
-	if (disable_BR_uncertainty_1d) {
-
-		// zero is bkg, 1 is sig
-		int bkg_Np_0p_bin[2*2*4 + 16*2*4 + 2*4 + 16*4] = { // two bins, bkg and sig, four channels, then 16 bins, bkg and sig, four channels
-			0, 0, 1, 1, // wc 1gNp bkg and sig
-			0, 0, 1, 1, // wc 1g0p bkg and sig
-			0, 0, 1, 1, // gLEE 1g1p bkg and sig
-			0, 0, 1, 1, // gLEE 1g0p bkg and sig
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 Np bkg
-			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // NC Pi0 Np sig
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 0p bkg
-			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // NC Pi0 0p sig
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC Np bkg
-			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // numuCC Np sig
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC 0p bkg
-			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // numuCC 0p sig
-			0, 0, // wc 1gNp EXT
-			0, 0, // wc 1g0p EXT
-			0, 0, // gLEE 1g1p EXT
-			0, 0, // gLEE 1g0p EXT
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 Np EXT
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 0p EXT
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC Np EXT
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC Np EXT
-		};
-
-	
-		if (idx == 17) {
-
-			std::cout << "subtracting one from uncollapsed sig-sig XS frac cov matrix bins\n";
-			int num_substractions = 0;
-
-			for (int ibin=0; ibin<bins_oldworld; ibin++) {
-				for (int jbin=0; jbin<bins_oldworld; jbin++) {
-					// Here, we assume that true Np NC Delta events are fully correlated with 
-					// true Np NC Delta events in other selection channels. Even if this isn't fully accurate,
-					// the non-1g signal channels should basically not matter at all (the gLEE data release didn't
-					// include this information because of a similar approximation).
-
-					// So, the covariance matrix associated with the NC Delta BR uncertainty is fully correlated,
-					// so we just need the sigma associated with the row and column to calculate it and subtract it off.
-					// See 2022_06_01 slack between Mark and Lee for more information about this approximation.
-
-					float old_val = (*map_matrix_flux_Xs_frac[idx])(ibin, jbin);
-
-					// lhagaman changed 2023_07_25, stats can cause zeros in Xs file with nonzeros in CV file, don't subtract in that case
-
-					if (bkg_Np_0p_bin[ibin] > 0 && bkg_Np_0p_bin[jbin] > 0) { // this entry corresponds to signal and signal correlated bins
-						if (old_val > 0) { // this entry is nonzero, it includes BR uncertainty already
-							num_substractions += 1;
-							(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
-						}
-					}
-				}   
-			}	
-		}
-	}
-
-
-
-	int disable_BR_uncertainty_sig_bkg_constrt_v3_2d = 0; 
-	if (disable_BR_uncertainty_sig_bkg_constrt_v3_2d) {
-
-		// zero is bkg, 1 is Np, 2 is 0p, 3 is Np+0p
-		// two bins; Np sig, 0p sig, Np sig next to other sig, 0p sig next to other sig, both sig unified, bkg, bkg next to sig, sig next to bkg, other sig next to bkg; four signal selections
-		// then 16 bins, bkg and Np sig and 0p sig, four channels
-		// ext appears twice per signal bin (bkg and sig+bkg)
-		int bkg_Np_0p_bin[2*9*4 + 16*3*4 + 2*2*4 + 16*4] = { 
-			1, 1, 2, 2, 1, 1, 2, 2, 3, 3, 0, 0, 0, 0, 1, 1, 2, 2, // wc 1gNp
-			1, 1, 2, 2, 1, 1, 2, 2, 3, 3, 0, 0, 0, 0, 1, 1, 2, 2, // wc 1g0p
-			1, 1, 2, 2, 1, 1, 2, 2, 3, 3, 0, 0, 0, 0, 1, 1, 2, 2, // gLEE 1g1p
-			1, 1, 2, 2, 1, 1, 2, 2, 3, 3, 0, 0, 0, 0, 1, 1, 2, 2, // gLEE 1g0p
-
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 Np bkg
-			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // NC Pi0 Np Np sig
-			2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, // NC Pi0 Np 0p sig
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 0p bkg
-			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // NC Pi0 0p Np sig
-			2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, // NC Pi0 0p 0p sig
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC Np bkg
-			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // numuCC Np Np sig
-			2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, // numuCC Np 0p sig
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC 0p bkg
-			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // numuCC 0p Np sig
-			2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, // numuCC 0p 0p sig
-			0, 0, 0, 0, // wc 1gNp EXT
-			0, 0, 0, 0, // wc 1g0p EXT
-			0, 0, 0, 0, // gLEE 1g1p EXT
-			0, 0, 0, 0, // gLEE 1g0p EXT
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 Np EXT
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NC Pi0 0p EXT
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC Np EXT
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // numuCC Np EXT
-		};
-
-	
-		if (idx == 17) {
-
-			std::cout << "subtracting one from uncollapsed sig-sig XS frac cov matrix bins\n";
-
-			for (int ibin=0; ibin<bins_oldworld; ibin++) {
-				for (int jbin=0; jbin<bins_oldworld; jbin++) {
-					// Here, we assume that true Np NC Delta events are fully correlated with 
-					// true Np NC Delta events in other selection channels. Even if this isn't fully accurate,
-					// the non-1g signal channels should basically not matter at all (the gLEE data release didn't
-					// include this information because of a similar approximation).
-
-					// So, the covariance matrix associated with the NC Delta BR uncertainty is fully correlated,
-					// so we just need the sigma associated with the row and column to calculate it and subtract it off.
-					// See 2022_06_01 slack between Mark and Lee for more information about this approximation.
-
-					float old_val = (*map_matrix_flux_Xs_frac[idx])(ibin, jbin);
-
-					// lhagaman changed 2023_07_25, stats can cause zeros in Xs file with nonzeros in CV file, don't subtract in that case
-
-					if (bkg_Np_0p_bin[ibin] > 0 && bkg_Np_0p_bin[jbin] > 0) { // this entry corresponds to signal and signal correlated bins
-						if (old_val > 0) { // this entry is nonzero, it includes BR uncertainty already
-							(*map_matrix_flux_Xs_frac[idx])(ibin, jbin) -= 1.;
-						}
-					}
-				}   
-			}
-		}
-	}
-
-
-    //cout << "finished modifying uncollapsed covariance matrix to remove BR uncertainty\n";
+	*/
 
     matrix_flux_Xs_frac += (*map_matrix_flux_Xs_frac[idx]);  
-
-	if (idx==17) std::cout << "Xs frac diag entry 135: " << matrix_flux_Xs_frac(135, 135) << "\n";
   
 
     if( idx<=16 ) {// flux
