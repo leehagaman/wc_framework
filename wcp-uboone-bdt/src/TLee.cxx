@@ -330,7 +330,10 @@ void TLee::Minimization_Lee_strength_FullCov(double Lee_initial_value, bool flag
 	      bool just_wc = false;
 	      bool just_glee = false;
 
-		  bool just_glee_1g1p = true;
+		  bool just_wc_1gNp = false;
+		  bool just_wc_1g0p = true;
+		  bool just_glee_1g1p = false;
+		  bool just_glee_1g0p = false;
 
 	      TMatrixD matrix_cov_total_user = matrix_cov_syst_temp;
 
@@ -368,9 +371,31 @@ void TLee::Minimization_Lee_strength_FullCov(double Lee_initial_value, bool flag
 		      ind_constr_end = 2*4 + 4*16;	
 	      }
 
+
+		  if (just_wc_1gNp) {
+			  ind_tar_start = 0;
+			  ind_tar_end = 0 + 2*1;
+			  ind_constr_start = 2*4;
+			  ind_constr_end = 2*4 + 4*16;	
+		  }
+
+		  if (just_wc_1g0p) {
+			  ind_tar_start = 2*1;
+			  ind_tar_end = 2*1 + 2*1;
+			  ind_constr_start = 2*4;
+			  ind_constr_end = 2*4 + 4*16;	
+		  }
+
 		  if (just_glee_1g1p) {
 			ind_tar_start = 2*2;
 			ind_tar_end = 2*2 + 2*1;
+			ind_constr_start = 2*4;
+			ind_constr_end = 2*4 + 4*16;
+		  }
+
+		  if (just_glee_1g0p) {
+			ind_tar_start = 2*3;
+			ind_tar_end = 2*3 + 2*1;
 			ind_constr_start = 2*4;
 			ind_constr_end = 2*4 + 4*16;
 		  }
