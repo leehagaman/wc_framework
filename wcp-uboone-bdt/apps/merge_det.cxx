@@ -718,6 +718,7 @@ int main( int argc, char** argv )
       T_eval_cv->SetBranchStatus("gl_rem_orig_wc_pot_weight",1);
       T_eval_cv->SetBranchStatus("gl_new_pot_weight",1);
       T_eval_cv->SetBranchStatus("gl_overlap_weight",1);
+      T_eval_cv->SetBranchStatus("gl_overlap_weight_tweaked",1);
       T_eval_cv->SetBranchStatus("gl_wc_total_overlapped_weight",1);
   }
   T_eval_cv->SetBranchStatus("run",1);
@@ -882,6 +883,7 @@ int main( int argc, char** argv )
       T_eval_det->SetBranchStatus("gl_rem_orig_wc_pot_weight",1);
       T_eval_det->SetBranchStatus("gl_new_pot_weight",1);
       T_eval_det->SetBranchStatus("gl_overlap_weight",1);
+      T_eval_det->SetBranchStatus("gl_overlap_weight_tweaked",1);
       T_eval_det->SetBranchStatus("gl_wc_total_overlapped_weight",1);
   }
   T_eval_det->SetBranchStatus("run",1);

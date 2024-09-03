@@ -260,24 +260,46 @@ double LEEana::get_weight(TString weight_name, EvalInfo& eval, PFevalInfo& pfeva
   //if (addtl_weight != 1){ 
   // std::cout << "lhagaman debug, addtl_weight  = " << addtl_weight << "\n";
   //}
+
+  // adding run dependent gLEE POT scaling factor
+  // This is because the gLEE files were merged using cv_dataframe_v5, and the gLEE POT was only fixed in cv_dataframe_v22
+  int run_2_start = 8317;
+  int run_3_start = 13697;
+  double hack_gLEE_pot_factor = -1;
+  if (eval.run < run_2_start) {
+    hack_gLEE_pot_factor = 1.651e+20 / 1.675e+20;
+  } else if (eval.run >= run_2_start && eval.run < run_3_start) {
+    hack_gLEE_pot_factor = 2.614e+20 / 2.626e+20;
+  } else if (eval.run >= run_3_start) {
+    hack_gLEE_pot_factor = 2.538e+20 / 2.551e+20;
+  }
+
   if (weight_name == "cv_spline"){
     return addtl_weight*eval.weight_cv * eval.weight_spline;
   }else if (weight_name == "cv_spline_cv_spline"){
     return pow(addtl_weight*eval.weight_cv * eval.weight_spline,2);
+
   }else if (weight_name == "cv_spline_ovlp"){
-    // adding 1/0.943086 factor since overlap weights were calculated assuming overlapping data POT,
-    // but now we're using the full gLEE pot with the extra data file
-    // calculated from gLEE_CV_builder.ipynb, data overlap_ratio_123
-    // if we redo the overlap weights in the future, can remove this
-    return addtl_weight*eval.weight_cv * eval.weight_spline * eval.gl_overlap_weight * 1/0.943086;
+    return addtl_weight*eval.weight_cv * eval.weight_spline * eval.gl_overlap_weight * hack_gLEE_pot_factor;
   }else if (weight_name == "cv_spline_ovlp_cv_spline_ovlp"){
-    return pow(addtl_weight*eval.weight_cv * eval.weight_spline * eval.gl_overlap_weight * 1/0.943086,2);
+    return pow(addtl_weight*eval.weight_cv * eval.weight_spline * eval.gl_overlap_weight * hack_gLEE_pot_factor, 2);
+  }else if (weight_name == "cv_spline_ovlp_tweaked"){
+    return addtl_weight*eval.weight_cv * eval.weight_spline * eval.gl_overlap_weight_tweaked * hack_gLEE_pot_factor;
+  }else if (weight_name == "cv_spline_ovlp_tweaked_cv_spline_ovlp_tweaked"){
+    return pow(addtl_weight*eval.weight_cv * eval.weight_spline * eval.gl_overlap_weight_tweaked * hack_gLEE_pot_factor, 2);
+
   }else if (weight_name == "unity" || weight_name == "unity_unity"){
     return 1;
+  
   }else if (weight_name == "unity_ovlp"){
-    return 1 * eval.gl_overlap_weight * 1/0.943086;
+    return 1 * eval.gl_overlap_weight * hack_gLEE_pot_factor;
   }else if (weight_name == "unity_ovlp_unity_ovlp"){
-    return pow(1 * eval.gl_overlap_weight * 1/0.943086,2);
+    return pow(1 * eval.gl_overlap_weight * hack_gLEE_pot_factor, 2);
+  }else if (weight_name == "unity_ovlp_tweaked"){
+    return 1 * eval.gl_overlap_weight_tweaked * hack_gLEE_pot_factor;
+  }else if (weight_name == "unity_ovlp_tweaked_unity_ovlp_tweaked"){
+    return pow(1 * eval.gl_overlap_weight_tweaked * hack_gLEE_pot_factor, 2);
+
   }else if (weight_name == "lee_cv_spline"){
     return (eval.weight_lee * addtl_weight*eval.weight_cv * eval.weight_spline);
   }else if (weight_name == "lee_cv_spline_lee_cv_spline"){

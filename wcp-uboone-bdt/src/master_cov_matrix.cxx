@@ -1872,6 +1872,7 @@ std::pair<std::vector<int>, std::vector<int> > LEEana::CovMatrix::get_events_wei
       T_eval->SetBranchStatus("gl_rem_orig_wc_pot_weight",1);
       T_eval->SetBranchStatus("gl_new_pot_weight",1);
       T_eval->SetBranchStatus("gl_overlap_weight",1);
+      T_eval->SetBranchStatus("gl_overlap_weight_tweaked",1);
       T_eval->SetBranchStatus("gl_wc_total_overlapped_weight",1);
   }
   T_eval->SetBranchStatus("run",1);

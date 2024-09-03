@@ -33,7 +33,6 @@ int main( int argc, char** argv )
     }
   }
   
-  
   TFile *file = new TFile(input_filename,"READ");
   
   CovMatrix cov;
@@ -100,7 +99,6 @@ int main( int argc, char** argv )
     }
     std::cout << "end return value of get_histograms\n";
   */
-  
   
   std::copy(histo_infos.begin(), histo_infos.end(), std::back_inserter(all_histo_infos));
   //std::cout << "CV:" << std::endl;
@@ -240,6 +238,7 @@ int main( int argc, char** argv )
       T_eval->SetBranchStatus("gl_rem_orig_wc_pot_weight",1);
       T_eval->SetBranchStatus("gl_new_pot_weight",1);
       T_eval->SetBranchStatus("gl_overlap_weight",1);
+      T_eval->SetBranchStatus("gl_overlap_weight_tweaked",1);
       T_eval->SetBranchStatus("gl_wc_total_overlapped_weight",1);
   }
   T_eval->SetBranchStatus("run",1);

@@ -767,6 +767,7 @@ void LEEana::CovMatrix::get_pred_events_info(TString input_filename, std::map<TS
       T_eval->SetBranchStatus("gl_rem_orig_wc_pot_weight",1);
       T_eval->SetBranchStatus("gl_new_pot_weight",1);
       T_eval->SetBranchStatus("gl_overlap_weight",1);
+      T_eval->SetBranchStatus("gl_overlap_weight_tweaked",1);
       T_eval->SetBranchStatus("gl_wc_total_overlapped_weight",1);
   }
   T_eval->SetBranchStatus("run",1);

@@ -96,6 +96,7 @@ namespace LEEana{
     Float_t gl_rem_orig_wc_pot_weight;
     Float_t gl_new_pot_weight;
     Float_t gl_overlap_weight;
+    Float_t gl_overlap_weight_tweaked;
     Float_t gl_wc_total_overlapped_weight;
 
 };
@@ -137,6 +138,7 @@ void LEEana::set_tree_address(TTree *tree0, EvalInfo& eval_info, int flag){
     tree0->SetBranchAddress("gl_rem_orig_wc_pot_weight",&eval_info.gl_rem_orig_wc_pot_weight);
     tree0->SetBranchAddress("gl_new_pot_weight",&eval_info.gl_new_pot_weight);
     tree0->SetBranchAddress("gl_overlap_weight",&eval_info.gl_overlap_weight);
+    tree0->SetBranchAddress("gl_overlap_weight_tweaked",&eval_info.gl_overlap_weight_tweaked);
     tree0->SetBranchAddress("gl_wc_total_overlapped_weight",&eval_info.gl_wc_total_overlapped_weight);
   }
 
@@ -319,6 +321,7 @@ void LEEana::put_tree_address(TTree *tree0, EvalInfo& eval_info, int flag){
     tree0->Branch("gl_rem_orig_wc_pot_weight",&eval_info.gl_rem_orig_wc_pot_weight,"data/F");
     tree0->Branch("gl_new_pot_weight",&eval_info.gl_new_pot_weight,"data/F");
     tree0->Branch("gl_overlap_weight",&eval_info.gl_overlap_weight,"data/F");
+    tree0->Branch("gl_overlap_weight_tweaked",&eval_info.gl_overlap_weight_tweaked,"data/F");
     tree0->Branch("gl_wc_total_overlapped_weight",&eval_info.gl_wc_total_overlapped_weight,"data/F");
   
   
