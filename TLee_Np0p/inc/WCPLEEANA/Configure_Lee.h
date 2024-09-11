@@ -12,9 +12,9 @@ namespace config_Lee
   int syst_cov_flux_Xs_begin = 1;// files in flux_Xs_directory above
   int syst_cov_flux_Xs_end   = 19;
  
-  int syst_cov_mc_stat_begin = 7;// files in mc_directory above
+  int syst_cov_mc_stat_begin = 0;// files in mc_directory above
   //int syst_cov_mc_stat_end   = 99;
-  int syst_cov_mc_stat_end   = 7; // this version should be for no LEE
+  int syst_cov_mc_stat_end   = 0; // this version should be for no LEE
 
   
   int channels_observation = 0;// data channels (=hdata_obsch_# in spectra_file above)

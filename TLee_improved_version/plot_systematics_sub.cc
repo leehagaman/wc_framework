@@ -149,6 +149,7 @@ void plot_systematics_sub()
   map_name_fgx_sub[15] = "#pi^{-} (Geant4)";
   map_name_fgx_sub[16] = "proton (Geant4)";
   map_name_fgx_sub[17] = "#nu-Ar interaction (GENIE)";
+  
 
   map<int, TMatrixD*>matrix_detector_sub;
   for(int idx=1; idx<=10; idx++) {
@@ -174,8 +175,10 @@ void plot_systematics_sub()
   //const int num_ch = 8;
   //int bins_ch[num_ch] = {2, 2, 2, 2, 16, 16, 16, 16};
 
-  const int num_ch = 10;  
-  int bins_ch[num_ch] = {16, 16, 16, 16, 7, 13, 11, 11, 11, 11};
+  //const int num_ch = 10;  
+  //int bins_ch[num_ch] = {16, 16, 16, 16, 7, 13, 11, 11, 11, 11}; //  total is 128
+  const int num_ch = 10;
+  int bins_ch[num_ch] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
   
   //int bins_ch[num_ch] = {26, 26, 26, 26, 11, 11, 11};  
   int rows = matrix_absolute_additional_cov_newworld->GetNrows();
@@ -218,26 +221,14 @@ void plot_systematics_sub()
   map<int, TLine*>map_line_label_xx;
   map<int, TLine*>map_line_label_yy;
   int line_map_line = 0;  
-  for(int ich=0; ich<num_ch; ich++) {
+ for(int ich=0; ich<num_ch; ich++) {
     for(int ibin=1; ibin<=bins_ch[ich]; ibin++) {
       line_str++;
-      //if(ibin==5 || ibin==10 || ibin==15 || ibin==20 || ibin==25) {
-      if(false) {
-        //if(ibin==16 || ibin==16*2 || ibin==16*3 || ibin==16*4 || ibin==16*4+7 || ibin==16*4+7+13 || ibin==16*4+7+13+11 || ibin==16*4+7+13+11*2 || ibin==16*4+7+13+11*4 || ibin==16*4+7+13+11*4){
-        axis_label_str[line_str-1] = TString::Format("%d", ibin*100);
-
-        line_map_line++;
-        map_line_label_xx[line_map_line] = new TLine(line_str, 0, line_str, 3);
-        map_line_label_yy[line_map_line] = new TLine(0, line_str, 3, line_str);	
-      }
-      else {
-	      axis_label_str[line_str-1] ="";
-      }
+      axis_label_str[line_str-1] ="";
     }
   }
 
 
-  
   /////////////////////////////////////////////////////////////////////////////////////////////////////// flux
   /////////////////////////////////////////////////////////////////////////////////////////////////////// flux
 
@@ -291,9 +282,8 @@ void plot_systematics_sub()
 
       //std::cout << "loop i, j: " << ibin << ", " << jbin << "\n";
 
-
       for(int idx=flux_bgn; idx<=flux_end; idx++) {
-        double sub_cov = (*matrix_fgx_sub[idx])(ibin-1, jbin-1);	
+        double sub_cov = (*matrix_fgx_sub[idx])(ibin-1, jbin-1);	// this line has a warning?
         double cov_i = (*matrix_fgx_sub[idx])(ibin-1, ibin-1);
         double cov_j = (*matrix_fgx_sub[idx])(jbin-1, jbin-1);
 

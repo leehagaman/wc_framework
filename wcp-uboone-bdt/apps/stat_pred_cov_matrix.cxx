@@ -124,19 +124,19 @@ int main( int argc, char** argv )
       double val_2 = (*vec_mean)(j);
       double val = (*cov_mat)(i,j);
       if (val_1 ==0 && val_2 == 0){
-	(*frac_cov_mat)(i,j) = 0;
+	      (*frac_cov_mat)(i,j) = 0;
       }else if (val_1 ==0 || val_2 ==0){
-	if (val !=0){
-	  if (i==j){
-	    (*frac_cov_mat)(i,j) = 1.; //
-	  }else{
-	    (*frac_cov_mat)(i,j) = 0;
-	  }
-	}else{
-	  (*frac_cov_mat)(i,j) = 0;
-	}
+        if (val !=0){
+          if (i==j){
+            (*frac_cov_mat)(i,j) = 1.; //
+          }else{
+            (*frac_cov_mat)(i,j) = 0;
+          }
+        }else{
+          (*frac_cov_mat)(i,j) = 0;
+        }
       }else{
-	(*frac_cov_mat)(i,j) = val/val_1/val_2;
+	      (*frac_cov_mat)(i,j) = val/val_1/val_2;
       }
     }
   }

@@ -357,7 +357,7 @@ int main( int argc, char** argv )
       bool flag_pass = flag_passall > 0;
       int signal_bin = -1;
       if (cov.is_xs_chname(ch_name)){
-	//std::cout << "lhagaman debug, updating signal_bin\n";
+	      //std::cout << "lhagaman debug, updating signal_bin\n";
         signal_bin = get_xs_signal_no(cov.get_cut_file(), cov.get_map_cut_xs_bin(), eval, pfeval, tagger, kine);
       }
       

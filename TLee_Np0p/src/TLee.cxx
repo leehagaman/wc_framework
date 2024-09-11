@@ -413,9 +413,9 @@ double TLee::FCN_Np_0p(const double *par)
 	bool use_custom_joint_chi2 = true; // here, joint refers to sig+bkg channels
 	bool use_custom_constrained_chi2 = false;
 	
-	bool all_channels = false;
+	bool all_channels = true;
 	bool just_wc = false;
-	bool just_glee = true;
+	bool just_glee = false;
 
 	// none of these needed anymore, now keep track of explicitly zero bins in Configure_Lee.h, array_no_stat_bins
 	bool exclude_1g_overflow_bins = false; // currently works for joint chi2 but not constrained chi2
