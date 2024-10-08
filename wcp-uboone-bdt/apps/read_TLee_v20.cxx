@@ -436,18 +436,18 @@ int main(int argc, char** argv)
     Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 555001 );
   }
   
-  bool make_kinematic_plots = false;
+  bool make_kinematic_plots = true;
 
   // all constrained by constraining
   if (make_kinematic_plots) {
     Lee_test->scaleF_Lee = 1;
     Lee_test->Set_Collapse();
     vector<int>vc_target_chs;
-    for (int i=0; i < 16*4 + 7 + 13 + 11*4; i++){
+    for (int i=0; i < 16*2 + 7 + 15 + 7 + 15 + 11*4; i++){
       vc_target_chs.push_back(i);
     }
     vector<int>vc_support_chs;
-    for (int i=16*4 + 7 + 13 + 11*4; i < 16*4 + 7 + 13 + 11*4 + 16*4; i++){
+    for (int i=16*2 + 7 + 15 + 7 + 15 + 11*4; i < 16*2 + 7 + 15 + 7 + 15 + 11*4 + 16*4; i++){
       vc_support_chs.push_back(i);
     }
     Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 444000 );
@@ -462,7 +462,7 @@ int main(int argc, char** argv)
       vc_target_chs.push_back(i);
     }
     vector<int>vc_support_chs;
-    for (int i=16*4 + 7 + 13 + 11*4; i < 16*4 + 7 + 13 + 11*4 + 16*4; i++){
+    for (int i=16*2 + 7 + 15 + 7 + 15 + 11*4; i < 16*2 + 7 + 15 + 7 + 15 + 11*4 + 16*4; i++){
       vc_support_chs.push_back(i);
     }
     Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 444001 );
@@ -477,7 +477,7 @@ int main(int argc, char** argv)
       vc_target_chs.push_back(i);
     }
     vector<int>vc_support_chs;
-    for (int i=16*4 + 7 + 13 + 11*4; i < 16*4 + 7 + 13 + 11*4 + 16*4; i++){
+    for (int i=16*2 + 7 + 15 + 7 + 15 + 11*4; i < 16*2 + 7 + 15 + 7 + 15 + 11*4 + 16*4; i++){
       vc_support_chs.push_back(i);
     }
     Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 444002 );
@@ -488,11 +488,11 @@ int main(int argc, char** argv)
     Lee_test->scaleF_Lee = 1;
     Lee_test->Set_Collapse();
     vector<int>vc_target_chs;
-    for (int i=16*2; i < 16*3; i++){
+    for (int i=16*2; i < 16*2 + 7; i++){
       vc_target_chs.push_back(i);
     }
     vector<int>vc_support_chs;
-    for (int i=16*4 + 7 + 13 + 11*4; i < 16*4 + 7 + 13 + 11*4 + 16*4; i++){
+    for (int i=16*2 + 7 + 15 + 7 + 15 + 11*4; i < 16*2 + 7 + 15 + 7 + 15 + 11*4 + 16*4; i++){
       vc_support_chs.push_back(i);
     }
     Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 444003 );
@@ -503,11 +503,11 @@ int main(int argc, char** argv)
     Lee_test->scaleF_Lee = 1;
     Lee_test->Set_Collapse();
     vector<int>vc_target_chs;
-    for (int i=16*3; i < 16*4; i++){
+    for (int i=16*2 + 7; i < 16*2 + 7 + 15; i++){
       vc_target_chs.push_back(i);
     }
     vector<int>vc_support_chs;
-    for (int i=16*4 + 7 + 13 + 11*4; i < 16*4 + 7 + 13 + 11*4 + 16*4; i++){
+    for (int i=16*2 + 7 + 15 + 7 + 15 + 11*4; i < 16*2 + 7 + 15 + 7 + 15 + 11*4 + 16*4; i++){
       vc_support_chs.push_back(i);
     }
     Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 444004 );
@@ -518,11 +518,11 @@ int main(int argc, char** argv)
     Lee_test->scaleF_Lee = 1;
     Lee_test->Set_Collapse();
     vector<int>vc_target_chs;
-    for (int i=16*4; i < 16*4 + 7; i++){
+    for (int i=16*2 + 7 + 15; i < 16*2 + 7 + 15 + 7; i++){
       vc_target_chs.push_back(i);
     }
     vector<int>vc_support_chs;
-    for (int i=16*4 + 7 + 13 + 11*4; i < 16*4 + 7 + 13 + 11*4 + 16*4; i++){
+    for (int i=16*2 + 7 + 15 + 7 + 15 + 11*4; i < 16*2 + 7 + 15 + 7 + 15 + 11*4 + 16*4; i++){
       vc_support_chs.push_back(i);
     }
     Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 444005 );
@@ -533,11 +533,11 @@ int main(int argc, char** argv)
     Lee_test->scaleF_Lee = 1;
     Lee_test->Set_Collapse();
     vector<int>vc_target_chs;
-    for (int i=16*4 + 7; i < 16*4 + 7 + 13; i++){
+    for (int i=16*2 + 7 + 15 + 7; i < 16*2 + 7 + 15 + 7 + 15; i++){
       vc_target_chs.push_back(i);
     }
     vector<int>vc_support_chs;
-    for (int i=16*4 + 7 + 13 + 11*4; i < 16*4 + 7 + 13 + 11*4 + 16*4; i++){
+    for (int i=16*2 + 7 + 15 + 7 + 15 + 11*4; i < 16*2 + 7 + 15 + 7 + 15 + 11*4 + 16*4; i++){
       vc_support_chs.push_back(i);
     }
     Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 444006 );
@@ -548,11 +548,11 @@ int main(int argc, char** argv)
     Lee_test->scaleF_Lee = 1;
     Lee_test->Set_Collapse();
     vector<int>vc_target_chs;
-    for (int i=16*4 + 7 + 13; i < 16*4 + 7 + 13 + 11; i++){
+    for (int i=16*2 + 7 + 15 + 7 + 15; i < 16*2 + 7 + 15 + 7 + 15 + 11; i++){
       vc_target_chs.push_back(i);
     }
     vector<int>vc_support_chs;
-    for (int i=16*4 + 7 + 13 + 11*4; i < 16*4 + 7 + 13 + 11*4 + 16*4; i++){
+    for (int i=16*2 + 7 + 15 + 7 + 15 + 11*4; i < 16*2 + 7 + 15 + 7 + 15 + 11*4 + 16*4; i++){
       vc_support_chs.push_back(i);
     }
     Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 444007 );
@@ -563,11 +563,11 @@ int main(int argc, char** argv)
     Lee_test->scaleF_Lee = 1;
     Lee_test->Set_Collapse();
     vector<int>vc_target_chs;
-    for (int i=16*4 + 7 + 13 + 11; i < 16*4 + 7 + 13 + 11*2; i++){
+    for (int i=16*2 + 7 + 15 + 7 + 15 + 11; i < 16*2 + 7 + 15 + 7 + 15 + 11*2; i++){
       vc_target_chs.push_back(i);
     }
     vector<int>vc_support_chs;
-    for (int i=16*4 + 7 + 13 + 11*4; i < 16*4 + 7 + 13 + 11*4 + 16*4; i++){
+    for (int i=16*2 + 7 + 15 + 7 + 15 + 11*4; i < 16*2 + 7 + 15 + 7 + 15 + 11*4 + 16*4; i++){
       vc_support_chs.push_back(i);
     }
     Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 444008 );
@@ -578,11 +578,11 @@ int main(int argc, char** argv)
     Lee_test->scaleF_Lee = 1;
     Lee_test->Set_Collapse();
     vector<int>vc_target_chs;
-    for (int i=16*4 + 7 + 13 + 11*2; i < 16*4 + 7 + 13 + 11*3; i++){
+    for (int i=16*2 + 7 + 15 + 7 + 15 + 11*2; i < 16*2 + 7 + 15 + 7 + 15 + 11*3; i++){
       vc_target_chs.push_back(i);
     }
     vector<int>vc_support_chs;
-    for (int i=16*4 + 7 + 13 + 11*4; i < 16*4 + 7 + 13 + 11*4 + 16*4; i++){
+    for (int i=16*2 + 7 + 15 + 7 + 15 + 11*4; i < 16*2 + 7 + 15 + 7 + 15 + 11*4 + 16*4; i++){
       vc_support_chs.push_back(i);
     }
     Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 444009 );
@@ -593,11 +593,11 @@ int main(int argc, char** argv)
     Lee_test->scaleF_Lee = 1;
     Lee_test->Set_Collapse();
     vector<int>vc_target_chs;
-    for (int i=16*4 + 7 + 13 + 11*3; i < 16*4 + 7 + 13 + 11*4; i++){
+    for (int i=16*2 + 7 + 15 + 7 + 15 + 11*3; i < 16*2 + 7 + 15 + 7 + 15 + 11*4; i++){
       vc_target_chs.push_back(i);
     }
     vector<int>vc_support_chs;
-    for (int i=16*4 + 7 + 13 + 11*4; i < 16*4 + 7 + 13 + 11*4 + 16*4; i++){
+    for (int i=16*2 + 7 + 15 + 7 + 15 + 11*4; i < 16*2 + 7 + 15 + 7 + 15 + 11*4 + 16*4; i++){
       vc_support_chs.push_back(i);
     }
     Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 444010 );
@@ -609,12 +609,12 @@ int main(int argc, char** argv)
     Lee_test->Set_Collapse();
     
     vector<int>vc_support_chs;
-    for (int i=0; i < 16*4 + 7 + 13 + 11*4; i++){
+    for (int i=0; i < 16*2 + 7 + 15 + 7 + 15 + 11*4; i++){
       vc_support_chs.push_back(i);
     }
     
     vector<int>vc_target_chs;
-    for (int i=16*4 + 7 + 13 + 11*4; i < 16*4 + 7 + 13 + 11*4 + 16*4; i++){
+    for (int i=16*2 + 7 + 15 + 7 + 15 + 11*4; i < 16*2 + 7 + 15 + 7 + 15 + 11*4 + 16*4; i++){
       vc_target_chs.push_back(i);
     }
 
