@@ -680,7 +680,7 @@ int main(int argc, char** argv)
 	}
 
 
-	bool make_one_bin_plots = true;
+	bool make_one_bin_plots = false;
 
 	// WC 1gNp
 	if (make_one_bin_plots){
@@ -2370,7 +2370,7 @@ int main(int argc, char** argv)
 
 
 	// full grid
-    if( 0 ) {
+    if( 1 ) {
 
 		bool thirty_by_thirty = false;
 
@@ -2421,7 +2421,7 @@ int main(int argc, char** argv)
 
 		
 		///////
-		int Ntoys = 50; // number of toy-MC used to generate the distribution_dchi2
+		int Ntoys = 20; // number of toy-MC used to generate the distribution_dchi2
 		// changed this from 100 to 1 since it shouldn't matter for Asimov
 		// changed this from 100 to 10 to speed it up, same number of toys as for 1D initially
 

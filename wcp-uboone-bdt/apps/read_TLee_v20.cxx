@@ -436,7 +436,7 @@ int main(int argc, char** argv)
     Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 555001 );
   }
   
-  bool make_kinematic_plots = true;
+  bool make_kinematic_plots = false;
 
   // all constrained by constraining
   if (make_kinematic_plots) {
@@ -1967,7 +1967,7 @@ int main(int argc, char** argv)
 
   }
 
-  if( 0 ) {
+  if( 1 ) {
 
     cout << "making chi2 distribution for FC fitting:\n";
 
@@ -1982,7 +1982,10 @@ int main(int argc, char** argv)
     
     // used 100 * 10 for joint, ~10 hours
     // using 100 tests, 30 cores, 10 toys, hopefully ~1 hour, but I'll need to see
-    int num_toy = 10;    
+
+    // updating to 20 toys, I think it should be ~2 hours each?
+    // actually, 40 toys is a bit over 2 hours
+    int num_toy = 80;
     Lee_test->Exe_Feldman_Cousins(Lee_true_low, Lee_true_hgh, Lee_step, num_toy, ifile);
 
   }
