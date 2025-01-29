@@ -3360,12 +3360,12 @@ void TLee::Set_Collapse()
 			//if( map_Lee_oldworld.find(ibin)!=map_Lee_oldworld.end() ) matrix_transform_Lee(ibin, jbin) *= scaleF_Lee;
 
 			if( map_Lee_Np_oldworld.find(ibin)!=map_Lee_Np_oldworld.end() ){
-				matrix_transform_Lee(ibin, jbin) *= scaleF_Lee_Np;
+				matrix_transform_Lee(ibin, jbin) *= scaleF_Lee_Np; // in this branch, true Np events get scaled by scaleF_Lee_Np, which we are using to mean x_Delta
 				matrix_transform_Lee_1_1(ibin, jbin) *= 1;
 			}
 
 			if( map_Lee_0p_oldworld.find(ibin)!=map_Lee_0p_oldworld.end() ){
-				matrix_transform_Lee(ibin, jbin) *= scaleF_Lee_0p;
+				matrix_transform_Lee(ibin, jbin) *= (scaleF_Lee_Np + scaleF_Lee_0p); // in this branch, true 0p events get scaled by scaleF_Lee_Np + scaleF_Lee_0p, which we are using to mean x_Delta + x_0p
 				matrix_transform_Lee_1_1(ibin, jbin) *= 1;
 			}
 		}
