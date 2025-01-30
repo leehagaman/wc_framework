@@ -106,6 +106,146 @@ namespace LEEana{
   int mcc8_pmuon_costheta_bin(float pmuon, float costh);
   int alt_var_index(std::string var1, float val1, std::string var2, float val2, std::string config="./configurations/alt_var_xbins.txt");
   std::map<std::string, TH1F> map_var_hist; // variable name and binning
+
+  std::vector<double> pi0_ke_bins;
+  std::vector<double> pi0_cos_bins; 
+  std::vector<std::vector<double>> pi0_0p_fsi_ratios;
+  std::vector<std::vector<double>> pi0_1p_fsi_ratios;
+  bool pi0_fsi_weights_loaded = false;
+
+  // Add new function declarations
+  void load_pi0_fsi_weights();
+  double get_pi0_fsi_weight(double ke, double cos, int num_protons_35_MeV);
+
+}
+
+void LEEana::load_pi0_fsi_weights() {
+  if (pi0_fsi_weights_loaded) return;
+
+  // iterate over filenames
+  for (int i=0; i<2; i++){
+
+    std::string filename;
+    if (i==0) filename = "/home/lee/wc_framework/pion_fsi_weights/2d_ratio_0p1pi0.csv";
+    if (i==1) filename = "/home/lee/wc_framework/pion_fsi_weights/2d_ratio_1p1pi0.csv";
+
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+      std::cerr << "Error: Could not open pi0 FSI weights file: " << filename << std::endl;
+      return;
+    }
+
+    std::string line;
+    // Skip header
+    std::getline(file, line);
+
+    // First pass to get unique bins
+    std::set<double> ke_bins_set, cos_bins_set;
+    
+    while (std::getline(file, line)) {
+      std::stringstream ss(line);
+      std::string token;
+      std::vector<std::string> tokens;
+      
+      while (std::getline(ss, token, ',')) {
+        tokens.push_back(token);
+      }
+      
+      if (tokens.size() >= 3) {
+        ke_bins_set.insert(std::stod(tokens[0]));
+        cos_bins_set.insert(std::stod(tokens[1]));
+      }
+    }
+
+    pi0_ke_bins.clear();
+    for (double ke = 0; ke <= 1000; ke += 10) {
+      pi0_ke_bins.push_back(ke);
+    }
+
+    pi0_cos_bins.clear();
+    for (double cos = -1; cos <= 1; cos += 0.04) {
+      pi0_cos_bins.push_back(cos);
+    }
+
+    // Initialize ratio matrix
+    if (i==0) pi0_0p_fsi_ratios.resize(pi0_ke_bins.size()-1, std::vector<double>(pi0_cos_bins.size()-1, 1.0));
+    if (i==1) pi0_1p_fsi_ratios.resize(pi0_ke_bins.size()-1, std::vector<double>(pi0_cos_bins.size()-1, 1.0));
+
+    std::getline(file, line); // Skip header again
+
+    while (std::getline(file, line)) {
+      std::stringstream ss(line);
+      std::string token;
+      std::vector<std::string> tokens;
+      
+      while (std::getline(ss, token, ',')) {
+        tokens.push_back(token);
+      }
+      
+      if (tokens.size() >= 3) {
+        double ke = std::stod(tokens[0]);
+        double cos = std::stod(tokens[1]);
+        double ratio = std::stod(tokens[2]);
+        
+        auto ke_it = std::lower_bound(pi0_ke_bins.begin(), pi0_ke_bins.end(), ke);
+        auto cos_it = std::lower_bound(pi0_cos_bins.begin(), pi0_cos_bins.end(), cos);
+        
+        for (int i=0; i<pi0_ke_bins.size()-1; i++){
+          for (int j=0; j<pi0_cos_bins.size()-1; j++){
+            if (ke_it[i] < ke && ke < ke_it[i+1] && cos_it[j] < cos && cos < cos_it[j+1]){
+              if (i==0) pi0_0p_fsi_ratios[i][j] = ratio;
+              if (i==1) pi0_1p_fsi_ratios[i][j] = ratio;
+            }
+          }
+        }
+        
+      }
+    }
+
+    
+    file.close();
+  }
+  pi0_fsi_weights_loaded = true;
+}
+
+double LEEana::get_pi0_fsi_weight(double ke, double cos, int num_protons_35_MeV) {
+  if (!pi0_fsi_weights_loaded) {
+    load_pi0_fsi_weights();
+    if (!pi0_fsi_weights_loaded) return 1.0;
+  }
+
+  // Find closest KE bin
+  auto ke_it = std::lower_bound(pi0_ke_bins.begin(), pi0_ke_bins.end(), ke);
+  if (ke_it == pi0_ke_bins.begin()) {
+    ke_it = pi0_ke_bins.begin();
+  } else if (ke_it == pi0_ke_bins.end()) {
+    --ke_it;
+  } else if (*ke_it != ke) {
+    auto ke_prev = ke_it - 1;
+    if (std::abs(*ke_prev - ke) < std::abs(*ke_it - ke)) {
+      ke_it = ke_prev;
+    }
+  }
+
+  // Find closest cos bin
+  auto cos_it = std::lower_bound(pi0_cos_bins.begin(), pi0_cos_bins.end(), cos);
+  if (cos_it == pi0_cos_bins.begin()) {
+    cos_it = pi0_cos_bins.begin();
+  } else if (cos_it == pi0_cos_bins.end()) {
+    --cos_it;
+  } else if (*cos_it != cos) {
+    auto cos_prev = cos_it - 1;
+    if (std::abs(*cos_prev - cos) < std::abs(*cos_it - cos)) {
+      cos_it = cos_prev;
+    }
+  }
+
+  int ke_idx = ke_it - pi0_ke_bins.begin();
+  int cos_idx = cos_it - pi0_cos_bins.begin();
+  
+  if (num_protons_35_MeV == 0) return pi0_0p_fsi_ratios[ke_idx][cos_idx];
+  if (num_protons_35_MeV == 1) return pi0_1p_fsi_ratios[ke_idx][cos_idx];
+  return 1.0;
 }
 
 
@@ -318,6 +458,44 @@ double LEEana::get_weight(TString weight_name, EvalInfo& eval, PFevalInfo& pfeva
     return eval.weight_lee * pow( eval.weight_spline,2);
   }else if (weight_name == "add_weight"){//for systematics
     return addtl_weight;
+
+  }else if (weight_name == "pion_fsi_rw_cv_spline" || weight_name == "pion_fsi_rw_cv_spline_cv_spline"
+          || weight_name == "pion_fsi_rw_cv_spline_ovlp" || weight_name == "pion_fsi_rw_cv_spline_ovlp_cv_spline_ovlp"){
+
+    bool is_true_NC_1pi0 = (eval.truth_isCC==0 && pfeval.truth_NprimPio==1);
+    double pion_fsi_rw = 1.0;
+    if (is_true_NC_1pi0){
+      double truth_pi0_costheta = -1000.;
+      double truth_pi0_KE = -1000.;
+      double true_num_protons_35_MeV = -1000.;
+      for(int jth=0; jth<1000; jth++){
+        int mother = pfeval.truth_mother[jth];
+        if(mother > 0) continue;
+        int pdgcode = pfeval.truth_pdg[jth];
+        if(abs(pdgcode)==111){
+          double px = pfeval.truth_startMomentum[jth][0]*1000.; // MeV
+          double py = pfeval.truth_startMomentum[jth][1]*1000.; // MeV
+          double pz = pfeval.truth_startMomentum[jth][2]*1000.; // MeV
+          truth_pi0_costheta = pz / sqrt(px*px + py*py + pz*pz);
+          truth_pi0_KE = pfeval.truth_startMomentum[jth][3]*1000. - 134.9768;
+        }
+        if (pdgcode==2212 && pfeval.truth_startMomentum[jth][3]*1000. - 938.272089 > 35.){
+          true_num_protons_35_MeV++;
+        }
+      }
+      pion_fsi_rw = get_pi0_fsi_weight(truth_pi0_KE, truth_pi0_costheta, true_num_protons_35_MeV);
+    }
+
+    if (weight_name == "pion_fsi_rw_cv_spline"){
+      return pion_fsi_rw * eval.weight_cv * eval.weight_spline;
+    }else if (weight_name == "pion_fsi_rw_cv_spline_cv_spline"){
+      return pow(pion_fsi_rw * eval.weight_cv * eval.weight_spline,2);
+    }else if (weight_name == "pion_fsi_rw_cv_spline_ovlp"){
+      return pion_fsi_rw * eval.weight_cv * eval.weight_spline * eval.gl_overlap_weight * hack_gLEE_pot_factor;
+    }else if (weight_name == "pion_fsi_rw_cv_spline_ovlp_cv_spline_ovlp"){
+      return pow(pion_fsi_rw * eval.weight_cv * eval.weight_spline * eval.gl_overlap_weight * hack_gLEE_pot_factor,2);
+    }
+
   //}else if () //remember to add square
   }else{
     std::cout <<"Unknown weights: " << weight_name << std::endl;
