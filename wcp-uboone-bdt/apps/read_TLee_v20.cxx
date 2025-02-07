@@ -801,7 +801,7 @@ int main(int argc, char** argv)
   }
 
 
-  bool make_one_bin_plots = false;
+  bool make_one_bin_plots = true;
 
   // WC 1gNp
   if (make_one_bin_plots){
@@ -863,21 +863,6 @@ int main(int argc, char** argv)
     Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333004 );
   }
 
-  // Overlap WC 1gXp gLEE 1gXp
-  if (make_one_bin_plots){
-
-    Lee_test->scaleF_Lee = 1;
-    Lee_test->Set_Collapse();
-
-    vector<int>vc_target_chs;
-    vc_target_chs.push_back(8);
-    vector<int>vc_support_chs;
-    for (int i=10; i < 10 + 16 * 4; i++){
-      vc_support_chs.push_back(i);
-    }
-    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333005 );
-  }
-
   // WC 1gNp and 1g0p
   if (make_one_bin_plots){
 
@@ -935,7 +920,7 @@ int main(int argc, char** argv)
     Lee_test->Set_Collapse();
 
     vector<int>vc_target_chs;
-    for (int i=10; i < 10 + 16 * 4; i++){
+    for (int i=8; i < 8 + 16 * 4; i++){
       vc_target_chs.push_back(i);
     }
     vector<int>vc_support_chs;
@@ -1967,7 +1952,7 @@ int main(int argc, char** argv)
 
   }
 
-  if( 1 ) {
+  if( 0 ) {
 
     cout << "making chi2 distribution for FC fitting:\n";
 
