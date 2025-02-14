@@ -2632,6 +2632,18 @@ void TLee::Set_Collapse()
 		//cout << "end of first if block, data stat cov shape: (" << matrix_absolute_data_stat_cov.GetNrows() << ", " << matrix_absolute_data_stat_cov.GetNcols() << ")\n";
 	}
 
+	/*
+	// print out matrix_absolute_data_stat_cov to a file, with row and column indices
+	ofstream matrix_absolute_data_stat_cov_file("./for_data_release_matrix_absolute_data_stat_cov.txt");
+	for (int i = 0; i < matrix_absolute_data_stat_cov.GetNrows(); i++) {
+		for (int j = 0; j < matrix_absolute_data_stat_cov.GetNcols(); j++) {
+			matrix_absolute_data_stat_cov_file << matrix_absolute_data_stat_cov(i, j) << " ";
+		}
+		matrix_absolute_data_stat_cov_file << "\n";
+	}
+	matrix_absolute_data_stat_cov_file.close();
+	*/
+
 	// end additions for statistical correlations
 
 

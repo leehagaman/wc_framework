@@ -680,13 +680,13 @@ int main(int argc, char** argv)
 	}
 
 
-	bool make_one_bin_plots = false;
+	bool make_one_bin_plots = true;
 
 	// WC 1gNp
 	if (make_one_bin_plots){
 
-		Lee_test->scaleF_Lee_Np = 3.18;
-		Lee_test->scaleF_Lee_0p = 3.18;
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
 		Lee_test->Set_Collapse();
 
 		vector<int>vc_target_chs;
@@ -701,8 +701,8 @@ int main(int argc, char** argv)
 	// WC 1g0p
 	if (make_one_bin_plots){
 
-		Lee_test->scaleF_Lee_Np = 3.18;
-		Lee_test->scaleF_Lee_0p = 3.18;
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
 		Lee_test->Set_Collapse();
 
 		vector<int>vc_target_chs;
@@ -717,8 +717,8 @@ int main(int argc, char** argv)
 	// gLEE 1g1p
 	if (make_one_bin_plots){
 
-		Lee_test->scaleF_Lee_Np = 3.18;
-		Lee_test->scaleF_Lee_0p = 3.18;
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
 		Lee_test->Set_Collapse();
 
 		vector<int>vc_target_chs;
@@ -733,8 +733,8 @@ int main(int argc, char** argv)
 	// gLEE 1g0p
 	if (make_one_bin_plots){
 
-		Lee_test->scaleF_Lee_Np = 3.18;
-		Lee_test->scaleF_Lee_0p = 3.18;
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
 		Lee_test->Set_Collapse();
 
 		vector<int>vc_target_chs;
@@ -749,8 +749,8 @@ int main(int argc, char** argv)
 	// WC 1gNp and 1g0p
 	if (make_one_bin_plots){
 
-		Lee_test->scaleF_Lee_Np = 3.18;
-		Lee_test->scaleF_Lee_0p = 3.18;
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
 		Lee_test->Set_Collapse();
 
 		vector<int>vc_target_chs;
@@ -766,8 +766,8 @@ int main(int argc, char** argv)
 	// gLEE 1g1p and 1g0p
 	if (make_one_bin_plots){
 
-		Lee_test->scaleF_Lee_Np = 3.18;
-		Lee_test->scaleF_Lee_0p = 3.18;
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
 		Lee_test->Set_Collapse();
 
 		vector<int>vc_target_chs;
@@ -783,8 +783,8 @@ int main(int argc, char** argv)
 	// WC 1gNp and 1g0p and gLEE 1g1p and 1g0p
 	if (make_one_bin_plots){
 
-		Lee_test->scaleF_Lee_Np = 3.18;
-		Lee_test->scaleF_Lee_0p = 3.18;
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
 		Lee_test->Set_Collapse();
 
 		vector<int>vc_target_chs;
@@ -802,8 +802,8 @@ int main(int argc, char** argv)
 	// Constraining channels (constrained by signal channels, but shouldn't actually use or care about the constrained result)
 	if (make_one_bin_plots){
 
-		Lee_test->scaleF_Lee_Np = 3.18;
-		Lee_test->scaleF_Lee_0p = 3.18;
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
 		Lee_test->Set_Collapse();
 
 		vector<int>vc_target_chs;
@@ -817,6 +817,86 @@ int main(int argc, char** argv)
 		vc_support_chs.push_back(6);
 
 		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333009 );
+	}
+
+	// Constraining NC pi0 Np (constrained by signal channels, but shouldn't actually use or care about the constrained result)
+	if (make_one_bin_plots){
+
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse();
+
+		vector<int>vc_target_chs;
+		for (int i=8; i < 8 + 16; i++){
+		vc_target_chs.push_back(i);
+		}
+		vector<int>vc_support_chs;
+		vc_support_chs.push_back(0);
+		vc_support_chs.push_back(2);
+		vc_support_chs.push_back(4);
+		vc_support_chs.push_back(6);
+
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333401 );
+	}
+
+	// Constraining NC pi0 0p (constrained by signal channels, but shouldn't actually use or care about the constrained result)
+	if (make_one_bin_plots){
+
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse();
+
+		vector<int>vc_target_chs;
+		for (int i=8+16; i < 8 + 16 * 2; i++){
+		vc_target_chs.push_back(i);
+		}
+		vector<int>vc_support_chs;
+		vc_support_chs.push_back(0);
+		vc_support_chs.push_back(2);
+		vc_support_chs.push_back(4);
+		vc_support_chs.push_back(6);
+
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333402 );
+	}
+
+	// Constraining numuCC Np (constrained by signal channels, but shouldn't actually use or care about the constrained result)
+	if (make_one_bin_plots){
+
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse();
+
+		vector<int>vc_target_chs;
+		for (int i=8+16*2; i < 8 + 16 * 3; i++){
+		vc_target_chs.push_back(i);
+		}
+		vector<int>vc_support_chs;
+		vc_support_chs.push_back(0);
+		vc_support_chs.push_back(2);
+		vc_support_chs.push_back(4);
+		vc_support_chs.push_back(6);
+
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333403 );
+	}
+
+	// Constraining numuCC 0p (constrained by signal channels, but shouldn't actually use or care about the constrained result)
+	if (make_one_bin_plots){
+
+		Lee_test->scaleF_Lee_Np = 1;
+		Lee_test->scaleF_Lee_0p = 1;
+		Lee_test->Set_Collapse();
+
+		vector<int>vc_target_chs;
+		for (int i=8+16*3; i < 8 + 16 * 4; i++){
+		vc_target_chs.push_back(i);
+		}
+		vector<int>vc_support_chs;
+		vc_support_chs.push_back(0);
+		vc_support_chs.push_back(2);
+		vc_support_chs.push_back(4);
+		vc_support_chs.push_back(6);
+
+		Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 333404 );
 	}
 
 	if (make_one_bin_plots) {
@@ -2370,7 +2450,7 @@ int main(int argc, char** argv)
 
 
 	// full grid
-    if( 1 ) {
+    if( 0 ) {
 
 		bool thirty_by_thirty = false;
 

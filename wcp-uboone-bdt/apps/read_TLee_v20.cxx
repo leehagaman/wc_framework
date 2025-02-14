@@ -801,7 +801,7 @@ int main(int argc, char** argv)
   }
 
 
-  bool make_one_bin_plots = false;
+  bool make_one_bin_plots = true;
 
   // WC 1gNp
   if (make_one_bin_plots){
@@ -1967,7 +1967,7 @@ int main(int argc, char** argv)
 
   }
 
-  if( 1 ) {
+  if( 0 ) {
 
     cout << "making chi2 distribution for FC fitting:\n";
 
