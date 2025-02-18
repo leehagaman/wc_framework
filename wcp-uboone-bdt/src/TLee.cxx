@@ -1865,6 +1865,31 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 	}  
 	matrix_goodness_cov_total_wiConstraint = matrix_goodness_cov_total_wiConstraint + matrix_YY_under_XX;
 
+	// save matrix_goodness_cov_total_wiConstraint to text file
+	ofstream ofs(Form("constrained_syst_%d.txt", index));
+	for (int i = 0; i < matrix_goodness_cov_total_wiConstraint.GetNrows(); i++) {
+		for (int j = 0; j < matrix_goodness_cov_total_wiConstraint.GetNcols(); j++) {
+			ofs << matrix_goodness_cov_total_wiConstraint(i, j) << " ";
+		}
+		ofs << endl;
+	}
+	ofs.close();
+
+	// save constrained prediction to text file
+	ofstream ofs_pred(Form("constrained_pred_%d.txt", index));
+	for (int i = 0; i < matrix_Y_under_X.GetNrows(); i++) {
+		ofs_pred << matrix_Y_under_X(i, 0) << endl;
+	}
+	ofs_pred.close();
+
+	// save data to text file
+	ofstream ofs_data(Form("data_%d.txt", index));
+	for (int i = 0; i < matrix_data_Y.GetNrows(); i++) {
+		ofs_data << matrix_data_Y(i, 0) << endl;
+	}
+	ofs_data.close();
+	
+
 	matrix_Y_under_X.T(); matrix_data_Y.T();
 	TMatrixD matrix_delta_wiConstraint = matrix_Y_under_X - matrix_data_Y;
 	matrix_Y_under_X.T(); matrix_data_Y.T();
