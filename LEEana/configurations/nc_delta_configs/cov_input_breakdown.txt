@@ -65,12 +65,16 @@ glee_1g0p_nue_overlay_dup_3                 gl_reco_Eshower   	1       100     7
 
 wc_1gNp_dup_4                  		        reco_showerKE		1	    0       1500    17      0               0       0               0               0               5       unity           0
 wc_1gNp_overlayoutFV_dup_4   		        reco_showerKE		1	    0       1500    17      1               1       0               0               17               2       cv_spline       0
+wc_1gNp_dirt_dup_4                          reco_showerKE   	1       0       1500    17      1               0       0.5             0               17              4       cv_spline       0
 wc_1g0p_dup_4                  		        reco_showerKE		1	    0       1500    18      0               0       0               0               0               5       unity           0
 wc_1g0p_overlayoutFV_dup_4   		        reco_showerKE		1	    0       1500    18      1               1       0               0               18               2       cv_spline       0
+wc_1g0p_dirt_dup_4                          reco_showerKE   	1       0       1500    18      1               0       0.5             0               18              4       cv_spline       0
 glee_1g1p_dup_4                             gl_reco_Eshower   	1       0       600     19      0               0       0               0               0               5       unity           0
 glee_1g1p_overlayoutFV_dup_4                gl_reco_Eshower   	1       0       600     19      1               1       0               0               19              2       cv_spline_ovlp	0
+glee_1g1p_dirt_dup_4             		    gl_reco_Eshower		1       0       600     19      1               0       0.5             0               19              4       cv_spline_ovlp	0
 glee_1g0p_dup_4                             gl_reco_Eshower   	1       100     700     20      0               0       0               0               0               5       unity           0
 glee_1g0p_overlayoutFV_dup_4                gl_reco_Eshower   	1       100     700     20      1               1       0               0               20              2       cv_spline_ovlp	0
+glee_1g0p_dirt_dup_4                        gl_reco_Eshower   	1       100     700     20      1               0       0.5             0               20              4       cv_spline_ovlp	0
 
 wc_1gNp_dup_5                  		        reco_showerKE		1	    0       1500    21      0               0       0               0               0               5       unity           0
 wc_1gNp_nc_delta_overlay_dup_5   		    reco_showerKE		1	    0       1500    21      1               1       0               0               21               7       cv_spline       0
