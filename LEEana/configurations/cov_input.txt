@@ -43,24 +43,28 @@ glee_1g0p_nc_pi0_overlay_dup_1   		    gl_reco_Eshower		1	    100     700     8 
 
 wc_1gNp_dup_2                  		        reco_showerKE		1	    0       1500    9       0               0       0               0               0               5       unity           0
 wc_1gNp_cc_pi0_overlay_dup_2   		        reco_showerKE		1	    0       1500    9       1               1       0               0               9               8       cv_spline       0
+wc_1gNp_antinumuCCpi0overlay_dup_2          reco_showerKE		1	    0       1500    9       1               1       0               0               1               2       cv_spline       0
 wc_1g0p_dup_2                  		        reco_showerKE		1	    0       1500    10      0               0       0               0               0               5       unity           0
 wc_1g0p_cc_pi0_overlay_dup_2   		        reco_showerKE		1	    0       1500    10      1               1       0               0               10               8       cv_spline       0
+wc_1g0p_antinumuCCpi0overlay_dup_2          reco_showerKE		1	    0       1500    10      1               1       0               0               10              2       cv_spline       0
 glee_1g1p_dup_2                  		    gl_reco_Eshower		1	    0       600     11      0               0       0               0               0               5       unity           0
 glee_1g1p_cc_pi0_overlay_dup_2   		    gl_reco_Eshower		1	    0       600     11      1               1       0               0               11               8       cv_spline_ovlp	0
+glee_1g1p_antinumuCCpi0overlay_dup_2        gl_reco_Eshower		1	    0       600     11      1               1       0               0               11              2       cv_spline_ovlp	0
 glee_1g0p_dup_2                  		    gl_reco_Eshower		1	    100     700     12      0               0       0               0               0               5       unity           0
 glee_1g0p_cc_pi0_overlay_dup_2   		    gl_reco_Eshower		1	    100     700     12      1               1       0               0               12               8       cv_spline_ovlp	0
+glee_1g0p_antinumuCCpi0overlay_dup_2        gl_reco_Eshower   	1       100     700     12      1               1       0               0               12              2       cv_spline_ovlp	0
 
 wc_1gNp_dup_3                  		        reco_showerKE		1	    0       1500    13      0               0       0               0               0               5       unity           0
-wc_1gNp_overlayinFV_dup_3   		        reco_showerKE		1	    0       1500    13      1               1       0               0               13               2       cv_spline       0
+wc_1gNp_overlayinFVno1pi0_dup_3   		    reco_showerKE		1	    0       1500    13      1               1       0               0               13               2       cv_spline       0
 wc_1gNp_nue_overlay_dup_3   		        reco_showerKE		1	    0       1500    13      1               1       0               0               13               1       cv_spline       0
 wc_1g0p_dup_3                  		        reco_showerKE		1	    0       1500    14      0               0       0               0               0               5       unity           0
-wc_1g0p_overlayinFV_dup_3   		        reco_showerKE		1	    0       1500    14      1               1       0               0               14               2       cv_spline       0
+wc_1g0p_overlayinFVno1pi0_dup_3   		    reco_showerKE		1	    0       1500    14      1               1       0               0               14               2       cv_spline       0
 wc_1g0p_nue_overlay_dup_3   		        reco_showerKE		1	    0       1500    14      1               1       0               0               14               1       cv_spline       0
 glee_1g1p_dup_3                             gl_reco_Eshower   	1       0       600     15      0               0       0               0               0               5       unity           0
-glee_1g1p_overlayinFV_dup_3                 gl_reco_Eshower   	1       0       600     15      1               1       0               0               15              2       cv_spline_ovlp	0
+glee_1g1p_overlayinFVno1pi0_dup_3           gl_reco_Eshower   	1       0       600     15      1               1       0               0               15              2       cv_spline_ovlp	0
 glee_1g1p_nue_overlay_dup_3                 gl_reco_Eshower   	1       0       600     15      1               1       0               0               15              1       cv_spline_ovlp	0
 glee_1g0p_dup_3                             gl_reco_Eshower   	1       100     700     16      0               0       0               0               0               5       unity           0
-glee_1g0p_overlayinFV_dup_3                 gl_reco_Eshower   	1       100     700     16      1               1       0               0               16              2       cv_spline_ovlp	0
+glee_1g0p_overlayinFVno1pi0_dup_3           gl_reco_Eshower   	1       100     700     16      1               1       0               0               16              2       cv_spline_ovlp	0
 glee_1g0p_nue_overlay_dup_3                 gl_reco_Eshower   	1       100     700     16      1               1       0               0               16              1       cv_spline_ovlp	0
 
 wc_1gNp_dup_4                  		        reco_showerKE		1	    0       1500    17      0               0       0               0               0               5       unity           0

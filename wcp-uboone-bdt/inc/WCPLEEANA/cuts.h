@@ -3839,6 +3839,18 @@ int LEEana::get_cut_pass(TString ch_name_0, TString add_cut, bool flag_data, Eva
 			    // cutting out run 1 and run 3 CCPi0 only, run 2 CCPi0 should still be included from nu overlay
 			    && !(eval.truth_isCC==1 && fabs(eval.truth_nuPdg)==12 && eval.truth_vtxInside==1)) return true;
 	   return false; 
+  }else if (ch_name == "wc_1gNp_antinumuCCpi0overlay"){
+    if (flag_FC && flag_ncdelta_sel && (!flag_0p) && (eval.truth_isCC==1 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1 && eval.truth_nuPdg==-14)) return true;
+	   return false; 
+  }else if (ch_name == "wc_1g0p_antinumuCCpi0overlay"){
+    if (flag_FC && flag_ncdelta_sel && flag_0p && (eval.truth_isCC==1 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1 && eval.truth_nuPdg==-14)) return true;
+      return false; 
+  }else if (ch_name == "wc_1gNp_overlayinFVno1pi0"){
+    if (flag_FC && flag_ncdelta_sel && (!flag_0p) && (eval.truth_vtxInside==1 && pfeval.truth_NprimPio!=1)) return true;
+      return false; 
+  }else if (ch_name == "wc_1g0p_overlayinFVno1pi0"){
+    if (flag_FC && flag_ncdelta_sel && flag_0p && (eval.truth_vtxInside==1 && pfeval.truth_NprimPio!=1)) return true;
+      return false; 
   }else if (ch_name == "wc_1gNp_presel" || ch_name == "wc_1gNp_presel_ext" || ch_name == "wc_1gNp_presel_dirt"){
     if (flag_FC && flag_ncdelta_presel && (!flag_0p)) return true;
     return false;
@@ -3940,6 +3952,18 @@ int LEEana::get_cut_pass(TString ch_name_0, TString add_cut, bool flag_data, Eva
     return false;
   }else if (ch_name == "glee_1g0p_overlayoutFV"){
     if (flag_glee_1g0p_sel && eval.truth_vtxInside==0) return true;
+    return false;
+  }else if (ch_name == "glee_1g1p_antinumuCCpi0overlay"){
+    if (flag_glee_1g1p_sel && (eval.truth_isCC==1 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1 && eval.truth_nuPdg==-14)) return true;
+    return false;
+  }else if (ch_name == "glee_1g0p_antinumuCCpi0overlay"){
+    if (flag_glee_1g0p_sel && (eval.truth_isCC==1 && eval.truth_vtxInside==1 && pfeval.truth_NprimPio==1 && eval.truth_nuPdg==-14)) return true;
+    return false;
+  }else if (ch_name == "glee_1g1p_overlayinFVno1pi0"){
+    if (flag_glee_1g1p_sel && eval.truth_vtxInside==1 && pfeval.truth_NprimPio!=1) return true;
+    return false;
+  }else if (ch_name == "glee_1g0p_overlayinFVno1pi0"){
+    if (flag_glee_1g0p_sel && eval.truth_vtxInside==1 && pfeval.truth_NprimPio!=1) return true;
     return false;
   }else if (ch_name == "glee_1g1p" || ch_name == "glee_1g1p_ext" || ch_name == "glee_1g1p_dirt"
 	  || ch_name == "glee_1g1p_nc_pi0_overlay" || ch_name == "glee_1g1p_cc_pi0_overlay"

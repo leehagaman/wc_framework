@@ -3047,11 +3047,11 @@ void TLee::Set_Spectra_MatrixCov()
 
   // update 2024_05_01: Want to only scale signal in the signal channels
   
-  
-  map_Lee_ch[2] = 1;
-  map_Lee_ch[4] = 1;
-  map_Lee_ch[6] = 1;
-  map_Lee_ch[8] = 1;
+  // commented out temporarily, for the constrained prediction breakdown
+  //map_Lee_ch[2] = 1;
+  //map_Lee_ch[4] = 1;
+  //map_Lee_ch[6] = 1;
+  //map_Lee_ch[8] = 1;
 
   // never use these
   //map_Lee_ch[10] = 1;

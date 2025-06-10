@@ -801,7 +801,7 @@ int main(int argc, char** argv)
   }
 
 
-  bool make_one_bin_plots = true;
+  bool make_one_bin_plots = false;
 
   // WC 1gNp
   if (make_one_bin_plots){
@@ -1204,6 +1204,93 @@ int main(int argc, char** argv)
     Lee_test->Exe_Goodness_of_fit( vc_target_chs, vc_support_chs, 2003 );
 
   }
+
+  bool make_constrained_prediction_breakdown_plots = true;
+
+  // four-bin total prediction
+  if (make_constrained_prediction_breakdown_plots) {
+    vector<int>vc_target_chs;
+    vc_target_chs.push_back( 0 );
+    vc_target_chs.push_back( 2 );
+    vc_target_chs.push_back( 4 );
+    vc_target_chs.push_back( 6 );
+    vector<int>vc_support_chs;
+    for (int i=4*2*6; i < 4*2*6 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 98650001 );
+  }
+
+  // nc pi0 prediction
+  if (make_constrained_prediction_breakdown_plots) {
+    vector<int>vc_target_chs;
+    vc_target_chs.push_back( 4*2*1 + 0 );
+    vc_target_chs.push_back( 4*2*1 + 2 );
+    vc_target_chs.push_back( 4*2*1 + 4 );
+    vc_target_chs.push_back( 4*2*1 + 6 );
+    vector<int>vc_support_chs;
+    for (int i=4*2*6; i < 4*2*6 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 98650002 );
+  }
+
+  // cc pi0 prediction
+  if (make_constrained_prediction_breakdown_plots) {
+    vector<int>vc_target_chs;
+    vc_target_chs.push_back( 4*2*2 + 0 );
+    vc_target_chs.push_back( 4*2*2 + 2 );
+    vc_target_chs.push_back( 4*2*2 + 4 );
+    vc_target_chs.push_back( 4*2*2 + 6 );
+    vector<int>vc_support_chs;
+    for (int i=4*2*6; i < 4*2*6 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 98650003 );
+  }
+
+  // other prediction
+  if (make_constrained_prediction_breakdown_plots) {
+    vector<int>vc_target_chs;
+    vc_target_chs.push_back( 4*2*3 + 0 );
+    vc_target_chs.push_back( 4*2*3 + 2 );
+    vc_target_chs.push_back( 4*2*3 + 4 );
+    vc_target_chs.push_back( 4*2*3 + 6 );
+    vector<int>vc_support_chs;
+    for (int i=4*2*6; i < 4*2*6 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 98650004 );
+  }
+  
+  // out-FV prediction
+  if (make_constrained_prediction_breakdown_plots) {
+    vector<int>vc_target_chs;
+    vc_target_chs.push_back( 4*2*4 + 0 );
+    vc_target_chs.push_back( 4*2*4 + 2 );
+    vc_target_chs.push_back( 4*2*4 + 4 );
+    vc_target_chs.push_back( 4*2*4 + 6 );
+    vector<int>vc_support_chs;
+    for (int i=4*2*6; i < 4*2*6 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 98650005 );
+  }
+  
+  // nc delta prediction
+  if (make_constrained_prediction_breakdown_plots) {
+    vector<int>vc_target_chs;
+    vc_target_chs.push_back( 4*2*5 + 0 );
+    vc_target_chs.push_back( 4*2*5 + 2 );
+    vc_target_chs.push_back( 4*2*5 + 4 );
+    vc_target_chs.push_back( 4*2*5 + 6 );
+    vector<int>vc_support_chs;
+    for (int i=4*2*6; i < 4*2*6 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 98650006 );
+  }
+
 
 
 
