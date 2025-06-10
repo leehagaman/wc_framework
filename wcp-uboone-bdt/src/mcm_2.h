@@ -96,7 +96,7 @@ void LEEana::CovMatrix::gen_xf_cov_matrix(int run, std::map<int, TH1F*>& map_cov
 
       // merge histograms according to POTs ...
       for (auto it = map_pred_covch_histos.begin(); it!=map_pred_covch_histos.end();it++){
-        std::cout << it->first << std::endl;
+        //std::cout << it->first << std::endl;
         int covch = it->first;
         //std::cout << "looking for " << covch << " in map_covch_hist...";
         TH1F *hpred = map_covch_hist[covch];
