@@ -110,11 +110,25 @@ int main( int argc, char** argv )
   TMatrixD* cov_xf_mat = new TMatrixD(cov_add_mat->GetNrows(), cov_add_mat->GetNcols());
   TVectorD* vec_mean = new TVectorD(cov_add_mat->GetNrows());
 
+  /*
+  std::cout << "Printing map_covch_hist structure:\n";
+  for (const auto& entry : map_covch_hist) {
+      std::cout << "Key (covch): " << entry.first << ", Histogram Name: " << entry.second->GetName() << "\n";
+  }
+  std::cout << "Done printing map_covch_hist\n\n";
+
+  std::cout << "Printing map_histoname_hist structure:\n";
+  for (const auto& entry : map_histoname_hist) {
+      std::cout << "Key (histoname): " << entry.first << ", Histogram Name: " << entry.second->GetName() << "\n";
+  }
+  std::cout << "Done printing map_histoname_hist\n\n";
+
   std::cout << "starting cov.gen_xf_cov_matrix...\n";
 
-  cov.gen_xf_cov_matrix(run, map_covch_hist, map_histoname_hist, vec_mean, cov_xf_mat);
-
   std::cout << "done with cov.gen_xf_cov_matrix\n";
+  */
+
+  cov.gen_xf_cov_matrix(run, map_covch_hist, map_histoname_hist, vec_mean, cov_xf_mat);
   
   TMatrixD* frac_cov_xf_mat = new TMatrixD(cov_add_mat->GetNrows(), cov_add_mat->GetNcols());
   for (size_t i=0; i!= frac_cov_xf_mat->GetNrows(); i++){
