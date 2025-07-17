@@ -1486,6 +1486,16 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 	///////////////////////////////////////////////////////////////////////////////////////////// noConstraint
 
 	TMatrixD matrix_cov_stat(num_Y+num_X, num_Y+num_X);  
+
+	std::cout << "matrix_cov_stat just declared, first 4x4 entries: ";
+	for (int i=0; i<4; i++){
+		for (int j=0; j<4; j++){
+			std::cout << matrix_cov_stat(i, j) << " ";
+		}
+		std::cout << std::endl;
+	}
+	std::cout << std::endl;
+
 	TMatrixD matrix_cov_total(num_Y+num_X, num_Y+num_X);
 	matrix_cov_total = matrix_cov_stat + matrix_syst;
 	// for(int idx=1; idx<=num_Y+num_X; idx++) {
@@ -1787,6 +1797,8 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 	TMatrixD matrix_YX = matrix_cov_total.GetSub(0, num_Y-1, num_Y, num_Y+num_X-1);
 	TMatrixD matrix_XY(num_X, num_Y); matrix_XY.Transpose(matrix_YX);
 
+
+	// this is where the constraint is actually applied to the prediction
 	TMatrixD matrix_Y_under_X = matrix_pred_Y + matrix_YX * matrix_XX_inv * (matrix_data_X - matrix_pred_X);
 
 	for(int ibin=0; ibin<num_Y; ibin++) {
@@ -1866,7 +1878,7 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 	matrix_goodness_cov_total_wiConstraint = matrix_goodness_cov_total_wiConstraint + matrix_YY_under_XX;
 
 	// save matrix_goodness_cov_total_wiConstraint to text file
-	ofstream ofs(Form("constrained_syst_%d.txt", index));
+	ofstream ofs(Form("constraint_text_files/constrained_syst_%d.txt", index));
 	for (int i = 0; i < matrix_goodness_cov_total_wiConstraint.GetNrows(); i++) {
 		for (int j = 0; j < matrix_goodness_cov_total_wiConstraint.GetNcols(); j++) {
 			ofs << matrix_goodness_cov_total_wiConstraint(i, j) << " ";
@@ -1875,20 +1887,56 @@ int TLee::Exe_Goodness_of_fit(int num_Y, int num_X, TMatrixD matrix_pred, TMatri
 	}
 	ofs.close();
 
+	// save unconstrained prediction to text file
+	ofstream ofs_pred_unconstrained(Form("constraint_text_files/unconstrained_pred_%d.txt", index));
+	for (int i = 0; i < matrix_pred.GetNcols(); i++) {
+		ofs_pred_unconstrained << matrix_pred(0, i) << endl;
+	}
+	ofs_pred_unconstrained.close();
+
 	// save constrained prediction to text file
-	ofstream ofs_pred(Form("constrained_pred_%d.txt", index));
+	ofstream ofs_pred(Form("constraint_text_files/constrained_pred_%d.txt", index));
 	for (int i = 0; i < matrix_Y_under_X.GetNrows(); i++) {
 		ofs_pred << matrix_Y_under_X(i, 0) << endl;
 	}
 	ofs_pred.close();
 
 	// save data to text file
-	ofstream ofs_data(Form("data_%d.txt", index));
-	for (int i = 0; i < matrix_data_Y.GetNrows(); i++) {
-		ofs_data << matrix_data_Y(i, 0) << endl;
+	ofstream ofs_data(Form("constraint_text_files/data_%d.txt", index));
+	for (int i = 0; i < matrix_data.GetNcols(); i++) {
+		ofs_data << matrix_data(0, i) << endl;
 	}
 	ofs_data.close();
-	
+
+	// save unconstrained covariance matrix to text file
+	ofstream ofs_cov_unconstrained(Form("constraint_text_files/unconstrained_cov_%d.txt", index));
+	for (int i = 0; i < matrix_cov_total.GetNrows(); i++) {
+		for (int j = 0; j < matrix_cov_total.GetNcols(); j++) {
+			ofs_cov_unconstrained << matrix_cov_total(i, j) << " ";
+		}
+		ofs_cov_unconstrained << endl;
+	}
+	ofs_cov_unconstrained.close();
+
+	// save matrix_XX to text file
+	ofstream ofs_XX(Form("constraint_text_files/XX_%d.txt", index));
+	for (int i = 0; i < matrix_XX.GetNrows(); i++) {
+		for (int j = 0; j < matrix_XX.GetNcols(); j++) {
+			ofs_XX << matrix_XX(i, j) << " ";
+		}
+		ofs_XX << endl;
+	}
+	ofs_XX.close();
+
+	// save constrained covariance matrix to text file
+	ofstream ofs_cov_constrained(Form("constraint_text_files/constrained_cov_%d.txt", index));
+	for (int i = 0; i < matrix_goodness_cov_total_wiConstraint.GetNrows(); i++) {
+		for (int j = 0; j < matrix_goodness_cov_total_wiConstraint.GetNcols(); j++) {
+			ofs_cov_constrained << matrix_goodness_cov_total_wiConstraint(i, j) << " ";
+		}
+		ofs_cov_constrained << endl;
+	}
+	ofs_cov_constrained.close();
 
 	matrix_Y_under_X.T(); matrix_data_Y.T();
 	TMatrixD matrix_delta_wiConstraint = matrix_Y_under_X - matrix_data_Y;

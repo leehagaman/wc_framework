@@ -71,13 +71,13 @@ namespace config_Lee
   TString mc_directory = "./mc_stat/";
 
   
-  int channels_observation = 8;// data channels (=hdata_obsch_# in spectra_file above)
+  int channels_observation = 6;// data channels (=hdata_obsch_# in spectra_file above)
                                // which is equal to the channels after collapse
 			       // I think this isn't used, unless someone added a dependence recently? need to check
 
   int syst_cov_flux_Xs_begin = 1;// files in flux_Xs_directory above
   //int syst_cov_flux_Xs_end   = 17;//cov_18.root is uncorrelated reweighting and cov_19.root is correlated
-  int syst_cov_flux_Xs_end   = 19;//cov_18.root is uncorrelated reweighting and cov_19.root is correlated
+  int syst_cov_flux_Xs_end   = 17;//cov_18.root is uncorrelated reweighting and cov_19.root is correlated
  
   int syst_cov_mc_stat_begin = 0;// files in mc_directory above
   int syst_cov_mc_stat_end   = 0;
@@ -114,11 +114,11 @@ namespace config_Lee
   
 
   // removed temporarily, for the constrained prediction breakdown
-  //int array_no_stat_bins[4] = {1, 3, 5, 7}; // in reco space, these are the explicitly empty overflow bins where we want no uncertainties
-  //int num_no_stat_bins = 4;
+  int array_no_stat_bins[4] = {1, 3, 5, 7}; // in reco space, these are the explicitly empty overflow bins where we want no uncertainties
+  int num_no_stat_bins = 4;
 
-  int array_no_stat_bins[0] = {}; // in reco space, these are the explicitly empty overflow bins where we want no uncertainties
-  int num_no_stat_bins = 0;
+  //int array_no_stat_bins[0] = {}; // in reco space, these are the explicitly empty overflow bins where we want no uncertainties
+  //int num_no_stat_bins = 0;
 
   //int array_no_stat_bins[0] = {}; // in reco space, these are the explicitly empty overflow bins where we want no uncertainties
   //int num_no_stat_bins = 0;

@@ -311,6 +311,22 @@ int main(int argc, char** argv)
  
   // start lhagaman added
 
+  bool make_simple_four_bin_constrained_plot = true;
+  if (make_simple_four_bin_constrained_plot) {
+    Lee_test->scaleF_Lee = 1;
+    Lee_test->Set_Collapse();
+    vector<int>vc_target_chs;
+    for (int i=0; i < 8; i+=2){
+      vc_target_chs.push_back(i);
+    }
+    vector<int>vc_support_chs;
+    for (int i=8; i < 8 + 16 * 4; i++){
+      vc_support_chs.push_back(i);
+    }
+    Lee_test->Exe_Goodness_of_fit_detailed( vc_target_chs, vc_support_chs, 314314 );
+  }
+
+
 
   bool make_plots_at_various_scalings = false;
 
@@ -1205,7 +1221,7 @@ int main(int argc, char** argv)
 
   }
 
-  bool make_constrained_prediction_breakdown_plots = true;
+  bool make_constrained_prediction_breakdown_plots = false;
 
   // four-bin total prediction
   if (make_constrained_prediction_breakdown_plots) {
